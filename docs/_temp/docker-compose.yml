@@ -1,0 +1,21 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: nur-mobil-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: nur_mobil
+      MYSQL_USER: nur_user
+      MYSQL_PASSWORD: nur_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+volumes:
+  mariadb_data:
+    driver: local
