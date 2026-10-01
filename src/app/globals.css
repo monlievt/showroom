@@ -1,26 +1,36 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Core Base Palette — Warm Off-White & Dark Ink */
+  --surface: #F7F5F2;
+  --surface-alt: #EFECE8;
+  --border: #D9D4CB;
+  --ink: #1C1917;
+  --ink-muted: #6B6560;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Accent — Warm Amber ("Nur" = Cahaya) */
+  --accent: #D97706;
+  --accent-light: #FEF3C7;
+  --accent-dark: #92400E;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Semantic — Status & Inspeksi Fisik */
+  --ok: #16A34A;
+  --ok-light: #DCFCE7;
+  --warn: #CA8A04;
+  --warn-light: #FEF9C3;
+  --danger: #DC2626;
+  --danger-light: #FEE2E2;
+  --neutral-tag: #64748B;
+  --neutral-light: #F1F5F9;
+
+  /* System Mappings */
+  --background: var(--surface);
+  --foreground: var(--ink);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }

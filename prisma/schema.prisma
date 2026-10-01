@@ -1,0 +1,649 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ── ENUMS ────────────────────────────────────────────────────────────────────
+
+enum VehicleStatus {
+  INTAKE
+  IN_REPAIR
+  READY_FOR_SALE
+  BOOKED
+  AT_SHOWROOM_PENDING
+  SOLD_SETTLED
+}
+
+enum DocumentStatus {
+  READY
+  PROCESS_1_2_WEEKS
+  LOST_NEED_REPLACEMENT
+  MUTATION_REQUIRED
+}
+
+enum SourceType {
+  AUCTION
+  BROKER
+  DIRECT_BUY
+}
+
+// Hanya relevan jika sourceType == AUCTION. Null untuk BROKER/DIRECT_BUY.
+enum AuctionLotType {
+  EKS_PERUSAHAAN // BPKB 7-14 hari, dokumen umumnya bersih
+  EKS_TARIKAN_LEASING // BPKB 14-28 hari, berisiko pajak mati/STNK hilang/mutasi
+  UNKNOWN
+}
+
+enum TransmissionType {
+  AUTOMATIC
+  MANUAL
+  CVT
+  DCT
+}
+
+enum ExpenseCategory {
+  TRANSPORT_PICKUP
+  AUCTION_ADMIN_FEE
+  BROKER_COMMISSION
+  OIL_AND_SERVICE
+  BODY_PAINT
+  DETAILING_SALON
+  SPAREPARTS
+  DOCUMENT_TAX_MUTATION
+  OTHER
+}
+
+enum SaleChannel {
+  SHOWROOM
+  DIRECT_CUSTOMER
+}
+
+enum InvestorType {
+  OWNER_EQUITY
+  MOTHER_SIBLING // 4 saudara, penerima bagi hasil bertingkat dari modal Ibu
+  THIRD_PARTY
+}
+
+enum Grade {
+  A
+  B
+  C
+  D
+}
+
+enum PanelCondition {
+  ORIGINAL
+  REPAINTED
+  DENTED_SCRATCHED
+  REPLACED
+}
+
+enum InspectionPanelType {
+  HOOD
+  ROOF
+  FENDER_FRONT_RIGHT
+  FENDER_FRONT_LEFT
+  FRONT_DOOR_RIGHT
+  FRONT_DOOR_LEFT
+  REAR_DOOR_RIGHT
+  REAR_DOOR_LEFT
+  TRUNK_LID
+  QUARTER_PANEL_RIGHT
+  QUARTER_PANEL_LEFT
+}
+
+enum InspectionStage {
+  INTAKE
+  AFTER_REPAIR
+  FINAL_LISTING
+}
+
+enum DocumentType {
+  BPKB_SCAN
+  STNK_SCAN
+  FAKTUR
+  KUITANSI
+  KTP_PEMILIK
+  FORM_A
+  KEUR
+  OTHER
+}
+
+enum PhotoCategory {
+  CONDITION_INTAKE
+  CONDITION_BEFORE_REPAIR
+  CONDITION_AFTER_REPAIR
+  FINAL_LISTING
+  DOCUMENT_PROOF
+}
+
+enum CapitalLedgerType {
+  DEPOSIT
+  ALLOCATED
+  RETURNED
+  PROFIT_PAID
+  CORRECTION
+}
+
+enum CashTransactionType {
+  IN_SALE_PAYMENT
+  IN_CAPITAL_DEPOSIT
+  IN_OWNER_EQUITY
+  OUT_VEHICLE_PURCHASE
+  OUT_EXPENSE
+  OUT_OPERATIONAL
+  OUT_OWNER_DRAW
+  OUT_ASSET_PURCHASE
+  OUT_PROFIT_DISTRIBUTION
+  OUT_CAPITAL_RETURN
+  CORRECTION
+}
+
+enum AssetCategory {
+  INSPECTION_TOOLS
+  WORKSHOP_EQUIPMENT
+  OFFICE_ELECTRONICS
+  FACILITY_FURNITURE
+  OPERATIONAL_VEHICLE
+  OTHER
+}
+
+enum AssetCondition {
+  EXCELLENT
+  GOOD
+  FAIR
+  DAMAGED
+}
+
+enum OperationalCategory {
+  RENT_SHOWROOM
+  UTILITIES_WIFI
+  MARKETING_ADS
+  SALARY_WAGES
+  OFFICE_SUPPLIES
+  CONSUMPTION_GUEST
+  MAINTENANCE
+  OTHER
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  RETRY
+}
+
+enum NotificationType {
+  PIUTANG_DUE // jatuh tempo sisa pembayaran showroom
+  PAJAK_EXPIRY // masa berlaku pajak STNK akan habis
+  UNIT_SOLD // pemberitahuan unit laku ke investor & owner
+  PROFIT_DISTRIBUTION // rincian laba dan pencairan bagi hasil ke rekening investor
+  DOCUMENT_READY // BPKB / STNK / Faktur selesai mutasi & siap diambil pembeli
+}
+
+enum UserRole {
+  ADMIN
+  INVESTOR
+}
+
+// ── MODELS ───────────────────────────────────────────────────────────────────
+
+model UserProfile {
+  id         String    @id @default(uuid())
+  authUserId String    @unique // Auth user ID (Auth.js / Better Auth / custom credentials)
+  role       UserRole
+  fullName   String
+  phone      String?
+  investorId String?   @unique
+  investor   Investor? @relation(fields: [investorId], references: [id])
+  createdAt  DateTime  @default(now())
+}
+
+model Vehicle {
+  id                 String           @id @default(uuid())
+  plateNumber        String           @unique
+  brand              String
+  model              String
+  year               Int
+  color              String
+  odometer           Int
+  transmission       TransmissionType
+  engineCapacity     Int
+  sourceType         SourceType       @default(AUCTION)
+  auctionHouse       String?
+  auctionLotType     AuctionLotType? // null jika sourceType != AUCTION
+  purchasePrice      Decimal          @db.Decimal(15, 2)
+  purchaseDate       DateTime
+  targetSellingPrice Decimal?         @db.Decimal(15, 2) // Harga pasang / listing di katalog & medsos
+  minSellingPrice    Decimal?         @db.Decimal(15, 2) // Batas bawah harga lepas / acuan negosiasi sales (internal)
+  status             VehicleStatus    @default(INTAKE)
+  currentLocation    String           @default("Garasi Utama")
+  taxExpiryDate      DateTime?
+  stnkStatus         DocumentStatus   @default(READY)
+  bpkbStatus         DocumentStatus   @default(READY)
+  bpkbLeadDays       Int              @default(7) // eks perusahaan: 7-14, eks leasing: 14-28
+  stnkLeadDays       Int? // hari tambahan setelah BPKB ready, khusus eks leasing
+  estimatedReadyDate DateTime? // diisi manual saat intake; dasar proyeksi arus kas
+  youtubeVideoId     String? // ID video walkaround; embed: youtube.com/embed/{id}
+  chassisNumber      String? // Nomor Rangka (VIN)
+  engineNumber       String? // Nomor Mesin
+  fuelType           String?          @default("BENSIN") // BENSIN / DIESEL / HYBRID
+  driveType          String?          @default("4x2") // 4x2 / 4x4 / AWD
+  notes              String?          @db.Text
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  expenses             Expense[]
+  inspections          Inspection[]
+  documents            VehicleDocument[]
+  photos               VehiclePhoto[]
+  investments          VehicleInvestment[]
+  capitalLedgerEntries CapitalLedger[]
+  sale                 Sale?
+  tradeInPayments      SalePayment[]       @relation("TradeInPayment")
+  cashTransactions     CashTransaction[]
+  notificationLogs     NotificationLog[]
+  supplyUsages         WorkshopSupplyUsage[]
+
+  @@index([status])
+  @@index([plateNumber])
+  @@index([purchaseDate])
+  @@index([estimatedReadyDate])
+  @@index([auctionLotType])
+}
+
+model VehicleDocument {
+  id         String       @id @default(uuid())
+  vehicleId  String
+  vehicle    Vehicle      @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  type       DocumentType
+  fileUrl    String       @db.Text
+  uploadedAt DateTime     @default(now())
+  uploadedBy String
+
+  @@index([vehicleId])
+}
+
+model VehiclePhoto {
+  id           String        @id @default(uuid())
+  vehicleId    String
+  vehicle      Vehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  inspectionId String?
+  inspection   Inspection?   @relation(fields: [inspectionId], references: [id])
+  category     PhotoCategory
+  fileUrl      String        @db.Text
+  tag          String? // e.g. "FRONT", "REAR", "SIDE_RIGHT", "SIDE_LEFT", "ENGINE_BAY", "DOOR_SEALER", "UNDERBODY", "UNDER_DASHBOARD", "INTERIOR", "TRUNK_SPARE_TIRE"
+  title        String? // e.g. "Tampak Depan (Front 3/4)", "Bawah Dashboard (Cek Bebas Banjir)"
+  uploadedAt   DateTime      @default(now())
+
+  @@index([vehicleId])
+  @@index([tag])
+}
+
+model Expense {
+  id         String          @id @default(uuid())
+  vehicleId  String
+  vehicle    Vehicle         @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  category   ExpenseCategory
+  vendorName String?
+  amount     Decimal         @db.Decimal(15, 2)
+  date       DateTime        @default(now())
+  notes      String?         @db.Text
+  receiptUrl String?         @db.Text // Bukti dukung kuitansi/struk/nota fisik
+  createdAt  DateTime        @default(now())
+  createdBy  String
+
+  cashTransactions CashTransaction[]
+
+  @@index([vehicleId])
+}
+
+model Inspection {
+  id              String          @id @default(uuid())
+  vehicleId       String
+  vehicle         Vehicle         @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  version         Int             @default(1)
+  isCurrent       Boolean         @default(true)
+  stage           InspectionStage @default(INTAKE)
+  engineGrade     Grade           @default(B)
+  interiorGrade   Grade           @default(B)
+  exteriorGrade   Grade           @default(B)
+  frameGrade      Grade           @default(A) // A = bebas laka, D = laka berat
+  accidentHistory Boolean         @default(false)
+  floodHistory    Boolean         @default(false)
+  engineNotes     String?         @db.Text
+  interiorNotes   String?         @db.Text
+  exteriorNotes   String?         @db.Text
+  checklistData   Json? // Rincian checklist per komponen: eksterior, interior, mekanikal, rangka (ala ACV IBID)
+  inspectedBy     String
+  inspectedAt     DateTime        @default(now())
+
+  panels InspectionPanel[]
+  photos VehiclePhoto[]
+
+  @@unique([vehicleId, version])
+  @@index([vehicleId, isCurrent])
+}
+
+model InspectionPanel {
+  id             String              @id @default(uuid())
+  inspectionId   String
+  inspection     Inspection          @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  panelType      InspectionPanelType
+  paintThickness Int? // dalam mikron (um) - Nilai Rata-rata Panel
+  pointRight     Int? // Titik Kanan (um)
+  pointCenter    Int? // Titik Tengah (um)
+  pointLeft      Int? // Titik Kiri (um)
+  pointExtra     Int? // Titik ke-4 (khusus Atap Kanan/Kiri Belakang)
+  condition      PanelCondition      @default(ORIGINAL)
+  defectCode     String? // kode standar lelang: A1, A2, U1, D, P, OK
+  notes          String?             @db.Text
+
+  @@unique([inspectionId, panelType])
+  @@index([inspectionId])
+}
+
+// Buyer terpisah dari Sale untuk tracking riwayat per showroom dan ketepatan pembayaran.
+model Buyer {
+  id         String   @id @default(uuid())
+  name       String
+  phone      String?
+  isShowroom Boolean  @default(false)
+  address    String?  @db.Text
+  notes      String?  @db.Text
+  createdAt  DateTime @default(now())
+
+  sales Sale[]
+}
+
+model Sale {
+  id           String      @id @default(uuid())
+  vehicleId    String      @unique
+  vehicle      Vehicle     @relation(fields: [vehicleId], references: [id])
+  saleDate     DateTime
+  saleType     SaleChannel @default(SHOWROOM)
+  buyerId      String
+  buyer        Buyer       @relation(fields: [buyerId], references: [id])
+  sellingPrice Decimal     @db.Decimal(15, 2)
+  dueDate      DateTime?
+  createdAt    DateTime    @default(now())
+
+  payments         SalePayment[]
+  distributions    ProfitDistribution[]
+  cashTransactions CashTransaction[]
+  notificationLogs NotificationLog[]
+
+  // isFullyPaid tidak disimpan — dihitung dari SUM(payments.amount) >= sellingPrice.
+  @@index([buyerId])
+  @@index([saleDate])
+}
+
+model SalePayment {
+  id               String   @id @default(uuid())
+  saleId           String
+  sale             Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  amount           Decimal  @db.Decimal(15, 2)
+  paidAt           DateTime @default(now())
+  method           String? // "CASH" | "TRANSFER" | "TRADE_IN" | dll
+  tradeInVehicleId String? // Referensi ID mobil lama jika pembayaran via tukar tambah
+  tradeInVehicle   Vehicle? @relation("TradeInPayment", fields: [tradeInVehicleId], references: [id])
+  notes            String?  @db.Text
+  recordedBy       String
+
+  @@index([saleId])
+  @@index([tradeInVehicleId])
+}
+
+model Investor {
+  id        String       @id @default(uuid())
+  name      String
+  phone     String?
+  type      InvestorType @default(THIRD_PARTY)
+  createdAt DateTime     @default(now())
+
+  investments   VehicleInvestment[]
+  ledgerEntries CapitalLedger[]
+  distributions ProfitDistribution[]
+  userProfile   UserProfile?
+}
+
+model VehicleInvestment {
+  id                 String   @id @default(uuid())
+  vehicleId          String
+  investorId         String
+  vehicle            Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  investor           Investor @relation(fields: [investorId], references: [id])
+  capitalShare       Decimal  @db.Decimal(15, 2)
+  profitSharePercent Decimal  @db.Decimal(5, 2) // 50.00 = 50%, BUKAN 0.50
+
+  @@index([vehicleId])
+  @@index([investorId])
+}
+
+model CapitalLedger {
+  id             String            @id @default(uuid())
+  investorId     String
+  investor       Investor          @relation(fields: [investorId], references: [id])
+  type           CapitalLedgerType
+  amount         Decimal           @db.Decimal(15, 2)
+  vehicleId      String?
+  vehicle        Vehicle?          @relation(fields: [vehicleId], references: [id])
+  runningBalance Decimal           @db.Decimal(15, 2)
+  notes          String?           @db.Text
+  createdAt      DateTime          @default(now())
+  createdBy      String
+
+  @@index([investorId])
+}
+
+model CashTransaction {
+  id               String              @id @default(uuid())
+  type             CashTransactionType
+  amount           Decimal             @db.Decimal(15, 2) // selalu positif; arah ditentukan oleh type
+  relatedVehicleId String?
+  relatedVehicle   Vehicle?            @relation(fields: [relatedVehicleId], references: [id])
+  relatedSaleId    String?
+  relatedSale      Sale?               @relation(fields: [relatedSaleId], references: [id])
+  relatedExpenseId String?
+  relatedExpense   Expense?            @relation(fields: [relatedExpenseId], references: [id])
+  relatedLedgerId  String? // CapitalLedger.id — plain String, tidak perlu cascade
+  operationalExpense OperationalExpense?
+  runningBalance   Decimal             @db.Decimal(15, 2)
+  notes            String?             @db.Text
+  createdAt        DateTime            @default(now())
+  createdBy        String
+
+  @@index([type])
+  @@index([createdAt])
+}
+
+model OperationalExpense {
+  id                String              @id @default(uuid())
+  category          OperationalCategory
+  recipient         String?             // Toko / Vendor / Karyawan / Pihak luar
+  amount            Decimal             @db.Decimal(15, 2)
+  date              DateTime            @default(now())
+  notes             String?             @db.Text
+  receiptUrl        String?             @db.Text
+  createdAt         DateTime            @default(now())
+  createdBy         String
+
+  cashTransactionId String?             @unique
+  cashTransaction   CashTransaction?    @relation(fields: [cashTransactionId], references: [id])
+
+  @@index([category])
+  @@index([date])
+}
+
+model ShowroomAsset {
+  id           String         @id @default(uuid())
+  name         String
+  category     AssetCategory
+  purchaseDate DateTime       @default(now())
+  purchaseCost Decimal        @db.Decimal(15, 2)
+  currentValue Decimal?       @db.Decimal(15, 2)
+  condition    AssetCondition @default(GOOD)
+  location     String?
+  notes        String?        @db.Text
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([category])
+  @@index([condition])
+}
+
+// maxProfit null = tidak terbatas ke atas. Tier wajib contiguous — validasi di lib/validations/profit-share-rule.ts.
+model ProfitShareRule {
+  id               String    @id @default(uuid())
+  name             String
+  beneficiaryGroup String
+  minProfit        Decimal   @db.Decimal(15, 2)
+  maxProfit        Decimal?  @db.Decimal(15, 2)
+  amountPerPerson  Decimal   @db.Decimal(15, 2)
+  numberOfPeople   Int       @default(4)
+  active           Boolean   @default(true)
+  effectiveFrom    DateTime  @default(now())
+  effectiveUntil   DateTime?
+  createdAt        DateTime  @default(now())
+
+  distributions ProfitDistribution[]
+}
+
+// Snapshot wajib diisi saat kalkulasi — tidak pernah dihitung ulang dari data terkini.
+model ProfitDistribution {
+  id                     String           @id @default(uuid())
+  saleId                 String
+  sale                   Sale             @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  investorId             String? // null jika penerima adalah Owner
+  investor               Investor?        @relation(fields: [investorId], references: [id])
+  beneficiaryType        String // "INVESTOR_EXTERNAL" | "MOTHER_SIBLING" | "OWNER"
+  beneficiaryName        String?
+  grossProfitAtCalc      Decimal          @db.Decimal(15, 2)
+  totalUnitCapitalAtCalc Decimal          @db.Decimal(15, 2)
+  investorCapitalAtCalc  Decimal?         @db.Decimal(15, 2)
+  agreedPercentAtCalc    Decimal?         @db.Decimal(5, 2)
+  ruleVersionId          String?
+  ruleVersion            ProfitShareRule? @relation(fields: [ruleVersionId], references: [id])
+  calculatedAmount       Decimal          @db.Decimal(15, 2)
+  isPaid                 Boolean          @default(false)
+  paidAt                 DateTime?
+  calculatedAt           DateTime         @default(now())
+  notes                  String?          @db.Text
+
+  @@index([saleId])
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  actorUserId String
+  action      String // "CREATE" | "UPDATE" | "VOID" | "CORRECTION"
+  entityType  String
+  entityId    String
+  beforeData  Json?
+  afterData   Json?
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([actorUserId])
+  @@index([createdAt])
+}
+
+// Setiap notifikasi WA wajib dicatat PENDING sebelum dikirim. Update ke SENT/FAILED setelah request selesai.
+model NotificationLog {
+  id               String             @id @default(uuid())
+  type             NotificationType
+  status           NotificationStatus @default(PENDING)
+  recipientPhone   String
+  recipientName    String?
+  messageBody      String             @db.Text
+  relatedVehicleId String?
+  relatedVehicle   Vehicle?           @relation(fields: [relatedVehicleId], references: [id])
+  relatedSaleId    String?
+  relatedSale      Sale?              @relation(fields: [relatedSaleId], references: [id])
+  sentAt           DateTime?
+  failureReason    String?            @db.Text
+  retryCount       Int                @default(0)
+  createdAt        DateTime           @default(now())
+
+  @@index([status])
+  @@index([type, status])
+  @@index([createdAt])
+}
+
+// taxType diisi manual oleh Owner/akuntan — tidak ada logika tarif di kode.
+model TaxRecord {
+  id            String   @id @default(uuid())
+  periodLabel   String // contoh: "2026-Q3"
+  taxableAmount Decimal  @db.Decimal(15, 2)
+  taxAmountPaid Decimal  @default(0) @db.Decimal(15, 2)
+  taxType       String
+  status        String   @default("BELUM_DIBAYAR")
+  notes         String?  @db.Text
+  createdAt     DateTime @default(now())
+}
+
+// Pengaturan sistem & Kunci API (Gemini, reCAPTCHA, Telegram, WA Gateway, dll)
+model SystemSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String   @db.Text
+  group       String   @default("GENERAL") // "AI" | "SECURITY" | "NOTIFICATIONS" | "GENERAL"
+  label       String?
+  description String?  @db.Text
+  isSecret    Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@index([group])
+}
+
+enum SupplyCategory {
+  OIL_AND_FLUIDS       // Oli mesin, transmisi, gardan, minyak rem, coolant
+  FAST_MOVING_PARTS   // Filter oli, filter udara, busi, bohlam, sekring, wiper
+  DETAILING_CHEMICALS // Compound poles, shampoo salju, obat jamur kaca, semir ban, cleaner interior
+  OTHER_SUPPLIES      // Klip bumper, lakban, lap microfiber, sarung tangan
+}
+
+model WorkshopSupply {
+  id                String          @id @default(uuid())
+  name              String          // Cth: Oli Pertamina Fastron 10W-40 Galon, Filter Oli Avanza
+  category          SupplyCategory  @default(OIL_AND_FLUIDS)
+  unit              String          @default("Galon") // Galon, Pcs, Botol, Liter, Kaleng, Set
+  currentStock      Int             @default(0)
+  minStockAlert     Int             @default(2) // Batas peringatan stok menipis
+  costPerUnit       Decimal         @db.Decimal(15, 2) // Harga beli modal fisik per unit
+  standardHppCharge Decimal?        @db.Decimal(15, 2) // Standar tarif alokasi HPP ke mobil (misal 500rb)
+  location          String?         @default("Rak Gudang Garasi")
+  notes             String?         @db.Text
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  usages            WorkshopSupplyUsage[]
+
+  @@index([category])
+}
+
+model WorkshopSupplyUsage {
+  id               String         @id @default(uuid())
+  supplyId         String
+  supply           WorkshopSupply @relation(fields: [supplyId], references: [id], onDelete: Cascade)
+  vehicleId        String
+  vehicle          Vehicle        @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  quantityUsed     Int            @default(1)
+  unitCostAtUsage  Decimal        @db.Decimal(15, 2) // Modal bahan terpakai
+  chargedHppAmount Decimal        @db.Decimal(15, 2) // HPP yang dibebankan ke mobil (misal 500rb)
+  workshopMargin   Decimal        @db.Decimal(15, 2) // chargedHppAmount - unitCostAtUsage (misal 180rb)
+  serviceType      String?        @default("GANTI_OLI") // GANTI_OLI | SALON_MANDIRI | GANTI_BOHLAM | LAINNYA
+  usedDate         DateTime       @default(now())
+  recordedBy       String         @default("Owner/Garasi")
+  notes            String?        @db.Text
+
+  @@index([supplyId])
+  @@index([vehicleId])
+  @@index([usedDate])
+}
+

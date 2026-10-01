@@ -1,0 +1,29 @@
+# WAHA (WhatsApp HTTP API) Docker Compose
+# Digunakan sebagai WhatsApp Gateway resmi Showroom Nur Mobil
+# Port eksternal: 2026 (Port internal: 3000)
+# Dashboard WAHA: http://localhost:2026/dashboard
+
+services:
+  waha:
+    image: devlikeapro/waha:latest
+    container_name: waha_nurmobil
+    restart: unless-stopped
+    ports:
+      - "2026:3000"
+    environment:
+      # Aktifkan dashboard web untuk scan QR WhatsApp
+      - WAHA_DASHBOARD_ENABLED=true
+      - WAHA_DASHBOARD_USERNAME=admin
+      - WAHA_DASHBOARD_PASSWORD=nurmobil
+      # Engine default (NOWEB / GOWS / BAILEYS)
+      - WHATSAPP_DEFAULT_ENGINE=NOWEB
+      - WAHA_LOG_LEVEL=info
+      # Sesi default yang otomatis aktif
+      - WAHA_WORKER_ID=nurmobil-worker
+    volumes:
+      - ./waha_data:/app/.sessions
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/server/version"]
+      interval: 10s
+      timeout: 5s
+      retries: 3

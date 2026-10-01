@@ -132,11 +132,42 @@ enum CapitalLedgerType {
 enum CashTransactionType {
   IN_SALE_PAYMENT
   IN_CAPITAL_DEPOSIT
+  IN_OWNER_EQUITY
   OUT_VEHICLE_PURCHASE
   OUT_EXPENSE
+  OUT_OPERATIONAL
+  OUT_OWNER_DRAW
+  OUT_ASSET_PURCHASE
   OUT_PROFIT_DISTRIBUTION
   OUT_CAPITAL_RETURN
   CORRECTION
+}
+
+enum AssetCategory {
+  INSPECTION_TOOLS
+  WORKSHOP_EQUIPMENT
+  OFFICE_ELECTRONICS
+  FACILITY_FURNITURE
+  OPERATIONAL_VEHICLE
+  OTHER
+}
+
+enum AssetCondition {
+  EXCELLENT
+  GOOD
+  FAIR
+  DAMAGED
+}
+
+enum OperationalCategory {
+  RENT_SHOWROOM
+  UTILITIES_WIFI
+  MARKETING_ADS
+  SALARY_WAGES
+  OFFICE_SUPPLIES
+  CONSUMPTION_GUEST
+  MAINTENANCE
+  OTHER
 }
 
 enum NotificationStatus {
@@ -149,6 +180,9 @@ enum NotificationStatus {
 enum NotificationType {
   PIUTANG_DUE // jatuh tempo sisa pembayaran showroom
   PAJAK_EXPIRY // masa berlaku pajak STNK akan habis
+  UNIT_SOLD // pemberitahuan unit laku ke investor & owner
+  PROFIT_DISTRIBUTION // rincian laba dan pencairan bagi hasil ke rekening investor
+  DOCUMENT_READY // BPKB / STNK / Faktur selesai mutasi & siap diambil pembeli
 }
 
 enum UserRole {
@@ -195,6 +229,10 @@ model Vehicle {
   stnkLeadDays       Int? // hari tambahan setelah BPKB ready, khusus eks leasing
   estimatedReadyDate DateTime? // diisi manual saat intake; dasar proyeksi arus kas
   youtubeVideoId     String? // ID video walkaround; embed: youtube.com/embed/{id}
+  chassisNumber      String? // Nomor Rangka (VIN)
+  engineNumber       String? // Nomor Mesin
+  fuelType           String?          @default("BENSIN") // BENSIN / DIESEL / HYBRID
+  driveType          String?          @default("4x2") // 4x2 / 4x4 / AWD
   notes              String?          @db.Text
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
@@ -237,9 +275,12 @@ model VehiclePhoto {
   inspection   Inspection?   @relation(fields: [inspectionId], references: [id])
   category     PhotoCategory
   fileUrl      String        @db.Text
+  tag          String? // e.g. "FRONT", "REAR", "SIDE_RIGHT", "SIDE_LEFT", "ENGINE_BAY", "DOOR_SEALER", "UNDERBODY", "UNDER_DASHBOARD", "INTERIOR", "TRUNK_SPARE_TIRE"
+  title        String? // e.g. "Tampak Depan (Front 3/4)", "Bawah Dashboard (Cek Bebas Banjir)"
   uploadedAt   DateTime      @default(now())
 
   @@index([vehicleId])
+  @@index([tag])
 }
 
 model Expense {
@@ -251,6 +292,7 @@ model Expense {
   amount     Decimal         @db.Decimal(15, 2)
   date       DateTime        @default(now())
   notes      String?         @db.Text
+  receiptUrl String?         @db.Text // Bukti dukung kuitansi/struk/nota fisik
   createdAt  DateTime        @default(now())
   createdBy  String
 
@@ -275,6 +317,7 @@ model Inspection {
   engineNotes     String?         @db.Text
   interiorNotes   String?         @db.Text
   exteriorNotes   String?         @db.Text
+  checklistData   Json? // Rincian checklist per komponen: eksterior, interior, mekanikal, rangka (ala ACV IBID)
   inspectedBy     String
   inspectedAt     DateTime        @default(now())
 
@@ -290,8 +333,13 @@ model InspectionPanel {
   inspectionId   String
   inspection     Inspection          @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
   panelType      InspectionPanelType
-  paintThickness Int? // dalam mikron (um)
+  paintThickness Int? // dalam mikron (um) - Nilai Rata-rata Panel
+  pointRight     Int? // Titik Kanan (um)
+  pointCenter    Int? // Titik Tengah (um)
+  pointLeft      Int? // Titik Kiri (um)
+  pointExtra     Int? // Titik ke-4 (khusus Atap Kanan/Kiri Belakang)
   condition      PanelCondition      @default(ORIGINAL)
+  defectCode     String? // kode standar lelang: A1, A2, U1, D, P, OK
   notes          String?             @db.Text
 
   @@unique([inspectionId, panelType])
@@ -402,6 +450,7 @@ model CashTransaction {
   relatedExpenseId String?
   relatedExpense   Expense?            @relation(fields: [relatedExpenseId], references: [id])
   relatedLedgerId  String? // CapitalLedger.id — plain String, tidak perlu cascade
+  operationalExpense OperationalExpense?
   runningBalance   Decimal             @db.Decimal(15, 2)
   notes            String?             @db.Text
   createdAt        DateTime            @default(now())
@@ -409,6 +458,41 @@ model CashTransaction {
 
   @@index([type])
   @@index([createdAt])
+}
+
+model OperationalExpense {
+  id                String              @id @default(uuid())
+  category          OperationalCategory
+  recipient         String?             // Toko / Vendor / Karyawan / Pihak luar
+  amount            Decimal             @db.Decimal(15, 2)
+  date              DateTime            @default(now())
+  notes             String?             @db.Text
+  receiptUrl        String?             @db.Text
+  createdAt         DateTime            @default(now())
+  createdBy         String
+
+  cashTransactionId String?             @unique
+  cashTransaction   CashTransaction?    @relation(fields: [cashTransactionId], references: [id])
+
+  @@index([category])
+  @@index([date])
+}
+
+model ShowroomAsset {
+  id           String         @id @default(uuid())
+  name         String
+  category     AssetCategory
+  purchaseDate DateTime       @default(now())
+  purchaseCost Decimal        @db.Decimal(15, 2)
+  currentValue Decimal?       @db.Decimal(15, 2)
+  condition    AssetCondition @default(GOOD)
+  location     String?
+  notes        String?        @db.Text
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([category])
+  @@index([condition])
 }
 
 // maxProfit null = tidak terbatas ke atas. Tier wajib contiguous — validasi di lib/validations/profit-share-rule.ts.
@@ -500,3 +584,19 @@ model TaxRecord {
   notes         String?  @db.Text
   createdAt     DateTime @default(now())
 }
+
+// Pengaturan sistem & Kunci API (Gemini, reCAPTCHA, Telegram, WA Gateway, dll)
+model SystemSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String   @db.Text
+  group       String   @default("GENERAL") // "AI" | "SECURITY" | "NOTIFICATIONS" | "GENERAL"
+  label       String?
+  description String?  @db.Text
+  isSecret    Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@index([group])
+}
+
