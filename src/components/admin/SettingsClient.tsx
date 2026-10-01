@@ -17,6 +17,12 @@ import {
   Smartphone,
   MessageSquare,
   Radio,
+  Download,
+  Cloud,
+  HardDrive,
+  Terminal,
+  Copy,
+  Check,
 } from "lucide-react";
 import { formatDate, cn } from "@/lib/utils";
 import { retryNotificationLog } from "@/lib/services/whatsapp";
@@ -569,39 +575,154 @@ export function SettingsClient({ logs, auditLogs, initialSettings = [] }: Settin
         </div>
       )}
 
-      {/* TAB 3: BACKUP & TAX INFO */}
+      {/* TAB 3: BACKUP MULTI-LAYER & DISASTER RECOVERY */}
       {activeTab === "backup" && (
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-sm space-y-4">
-            <div className="flex items-center gap-2">
-              <Database className="w-5 h-5 text-[#D97706]" />
-              <h3 className="font-bold text-base text-[#1C1917]">
-                Backup & Disaster Recovery Database MariaDB
-              </h3>
+          {/* Header & Instant Download Action */}
+          <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent rounded-2xl border border-[#D97706]/30 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Database className="w-5 h-5 text-[#D97706]" />
+                <h3 className="font-extrabold text-base text-[#1C1917]">
+                  Strategi Multi-Layer Backup (VPS Mandiri 100% Bebas Biaya)
+                </h3>
+              </div>
+              <p className="text-xs text-[#6B6560] max-w-2xl leading-relaxed">
+                Menjamin keamanan data transaksi & foto mobil garasi tanpa biaya bulanan AWS/S3. Menggunakan 4 lapis perlindungan: lokal VPS, Telegram Bot Cloud, Google Drive Rclone, dan Git.
+              </p>
             </div>
-            <p className="text-xs text-[#6B6560] leading-relaxed">
-              Karena aplikasi ini di-host mandiri pada VPS / Homeserver pribadi (ARCHITECTURE.md §14.7), pencadangan database dilakukan secara otomatis harian menggunakan skrip executable:
-            </p>
-            <div className="bg-[#FAF9F6] p-3 rounded-xl border border-[#EBE7E1] font-mono text-xs text-[#1C1917]">
-              bash /Volumes/Backup/Antigravity/showroom-app/scripts/backup-db.sh
+
+            <a
+              href="/api/backup/download"
+              download
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#D97706] hover:bg-[#B45309] text-white font-bold text-xs rounded-xl shadow-sm transition-all shrink-0 cursor-pointer"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download Snapshot JSON Instan</span>
+            </a>
+          </div>
+
+          {/* 4 Lapisan Backup Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Lapis 1: Lokal VPS */}
+            <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+                    L1
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-[#1C1917]">Snapshot Lokal VPS</h4>
+                    <span className="text-[11px] text-emerald-700 font-semibold">Rotasi Otomatis 7 Hari</span>
+                  </div>
+                </div>
+                <HardDrive className="w-4 h-4 text-emerald-600" />
+              </div>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Dump database <code>.sql.gz</code> dan arsip foto mobil <code>.tar.gz</code> otomatis setiap malam. Backup lama &gt; 7 hari otomatis dibersihkan agar kapasitas disk VPS tetap lega.
+              </p>
+              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[#EBE7E1] text-[11px] font-mono text-stone-700">
+                Lokasi: <code>/backups/db/</code> &amp; <code>/backups/media/</code>
+              </div>
             </div>
-            <div className="text-xs text-[#6B6560] space-y-1">
-              <p>• Lokasi backup: <code>/backups/nur_mobil_YYYYMMDD_HHMMSS.sql.gz</code></p>
-              <p>• Retensi otomatis: 7 hari terakhir (arsip lama dihapus otomatis agar hemat disk).</p>
+
+            {/* Lapis 2: Telegram Bot Cloud */}
+            <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs">
+                    L2
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-[#1C1917]">Off-Site Telegram Bot</h4>
+                    <span className="text-[11px] text-blue-700 font-semibold">100% Gratis &amp; Unlimited Storage</span>
+                  </div>
+                </div>
+                <Cloud className="w-4 h-4 text-blue-600" />
+              </div>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Setiap malam database terkompresi dikirim langsung ke chat Telegram pribadi Owner. Jika VPS terbakar/rusak fatal, file cadangan tetap utuh dan aman di server cloud Telegram.
+              </p>
+              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[#EBE7E1] text-[11px] font-mono text-stone-700">
+                Setup: <code>TELEGRAM_BOT_TOKEN</code> &amp; <code>TELEGRAM_CHAT_ID</code>
+              </div>
+            </div>
+
+            {/* Lapis 3: Google Drive via Rclone */}
+            <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
+                    L3
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-[#1C1917]">Google Drive Rclone Sync</h4>
+                    <span className="text-[11px] text-amber-800 font-semibold">Gratis Kuota Akun Google 15 GB</span>
+                  </div>
+                </div>
+                <Cloud className="w-4 h-4 text-amber-600" />
+              </div>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Menggunakan utility open-source <code>rclone</code> untuk menyinkronkan seluruh folder foto mobil garasi ke Google Drive secara otomatis tanpa intervensi manual.
+              </p>
+              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[#EBE7E1] text-[11px] font-mono text-stone-700">
+                Folder: <code>gdrive:nur_mobil_backups/</code>
+              </div>
+            </div>
+
+            {/* Lapis 4: GitHub Repository */}
+            <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-stone-200 text-stone-800 flex items-center justify-center font-bold text-xs">
+                    L4
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-[#1C1917]">GitHub Repository</h4>
+                    <span className="text-[11px] text-stone-700 font-semibold">Source Code &amp; Skema DB</span>
+                  </div>
+                </div>
+                <Database className="w-4 h-4 text-stone-700" />
+              </div>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Seluruh kode program aplikasi, skema Prisma, dan dokumentasi operasional ter-commit aman di repositori GitHub. Memungkinkan deploy ulang ke VPS baru dalam hitungan menit.
+              </p>
+              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[#EBE7E1] text-[11px] font-mono text-stone-700 truncate">
+                Repo: <code>monlievt/showroom.git</code>
+              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-sm space-y-4">
+          {/* Panduan Setup Cron Job VPS (1 Baris) */}
+          <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-sm space-y-3">
             <div className="flex items-center gap-2">
-              <FileSpreadsheet className="w-5 h-5 text-[#D97706]" />
-              <h3 className="font-bold text-base text-[#1C1917]">
-                Pencatatan Pajak Fleksibel (ARCHITECTURE.md §11)
-              </h3>
+              <Terminal className="w-4 h-4 text-[#D97706]" />
+              <h4 className="font-bold text-sm text-[#1C1917]">
+                Konfigurasi Penjadwalan Otomatis di VPS (Cron Job)
+              </h4>
             </div>
-            <p className="text-xs text-[#6B6560] leading-relaxed">
-              Model <code>TaxRecord</code> mencatat pelaporan pajak tanpa hardcoding tarif hukum di dalam sistem.
-              Owner bersama akuntan menentukan tarif dan skema di luar aplikasi, lalu mencatatnya untuk keperluan pelaporan SPT tahunan.
+            <p className="text-xs text-[#6B6560]">
+              Jalankan perintah berikut di terminal SSH VPS Anda untuk mengaktifkan backup otomatis setiap malam pukul 02:00 WIB:
             </p>
+            <div className="bg-stone-900 text-stone-100 p-3.5 rounded-xl font-mono text-xs overflow-x-auto">
+              <code>0 2 * * * cd /path/to/showroom-app &amp;&amp; bash scripts/backup-multi-layer.sh &gt;&gt; /var/log/nur_mobil_backup.log 2&gt;&amp;1</code>
+            </div>
+          </div>
+
+          {/* Panduan Disaster Recovery (Restore Cepat) */}
+          <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-sm space-y-3">
+            <div className="flex items-center gap-2">
+              <RotateCcw className="w-4 h-4 text-red-600" />
+              <h4 className="font-bold text-sm text-[#1C1917]">
+                Pemulihan Bencana (Disaster Recovery Restore)
+              </h4>
+            </div>
+            <p className="text-xs text-[#6B6560]">
+              Bila server mengalami kendala atau database rusak, jalankan script restore 1 klik untuk memulihkan seluruh data dari snapshot terakhir:
+            </p>
+            <div className="bg-stone-900 text-stone-100 p-3 rounded-xl font-mono text-xs">
+              <code>bash scripts/restore-db.sh</code>
+            </div>
           </div>
         </div>
       )}
