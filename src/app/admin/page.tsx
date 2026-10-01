@@ -23,6 +23,7 @@ export default async function AdminDashboardPage() {
       <main className="flex-1 p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
         <DashboardClient
           initialData={result.data}
+          initialOrchestration={result.initialOrchestration}
           hasGeminiKey={result.hasGeminiKey}
           geminiKeySet={result.geminiKeySet}
           geminiEnabled={result.geminiEnabled}

@@ -157,6 +157,55 @@ export interface BusinessPatternAnalytics {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// EXECUTIVE AI ORCHESTRATION INTERFACE
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface ExecutiveAiOrchestration {
+  healthScore: number; // 0 - 100
+  healthStatus: "PRIMA" | "WASPADA" | "KRITIS";
+  headline: string;
+  executiveSummary: string;
+  generatedAt: string;
+  metrics: {
+    cashRunwayDays: number;
+    cashRunwayVerdict: string;
+    projectedNet14DaysRupiah: number;
+    safeBuyingUnits: number;
+    safeBuyingMaxBudget: number;
+    bpkbPendingRiskCount: number;
+    taxAlertCount: number;
+  };
+  directiveActions: Array<{
+    id: string;
+    priority: "CRITICAL" | "HIGH" | "MEDIUM";
+    category: "PIUTANG_TEMPO" | "PAJAK_STNK" | "KULAKAN_LELANG" | "UNIT_STAGNANT" | "OPERASIONAL";
+    badgeText: string;
+    title: string;
+    description: string;
+    actionLabel: string;
+    actionHref: string;
+  }>;
+  auctionStrategy: {
+    canBuy: boolean;
+    recommendedUnits: number;
+    recommendedMaxBudgetRupiah: number;
+    targetSegment: string;
+    preferredHouse: string;
+    tacticalAdvice: string;
+  };
+  salesAcceleration: {
+    headline: string;
+    tactics: string[];
+  };
+  riskMitigation: {
+    bpkbStatus: string;
+    taxStatus: string;
+    receivableStatus: string;
+  };
+  fullBriefingText: string;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // BUSINESS PATTERN ANALYTICS ENGINE
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -457,6 +506,7 @@ async function computeBusinessPatterns(): Promise<BusinessPatternAnalytics> {
 export async function getDashboardData(): Promise<{
   success: boolean;
   data: DashboardOperationalData;
+  initialOrchestration?: ExecutiveAiOrchestration;
   hasGeminiKey: boolean;
   geminiKeySet?: boolean;
   geminiEnabled?: boolean;
@@ -763,24 +813,27 @@ export async function getDashboardData(): Promise<{
     const isEnabled = geminiEnabled !== "false";
     const hasGeminiKey = isKeySet && isEnabled;
 
+    const operationalData: DashboardOperationalData = {
+      totalActiveVehicles: activeVehicles.length,
+      readyCount, intakeCount, inRepairCount, bookedCount, stagnantCount,
+      pendingBpkbCount, pendingSalonCount, pendingPaintCount,
+      cashBalance, totalInventoryHpp, garageCapacity, emptyGarageSlots,
+      buyingPowerRecommendation: { recommendedUnits, recommendedBudget: availableForPurchase, reserveFund, targetSegment, advice },
+      urgentVehicles,
+      pendingReceivables,
+      taxAlertSummary,
+      auctionPipeline,
+      cashflowProjection,
+      businessPatterns,
+    };
+
     return {
       success: true,
       hasGeminiKey,
       geminiKeySet: isKeySet,
       geminiEnabled: isEnabled,
-      data: {
-        totalActiveVehicles: activeVehicles.length,
-        readyCount, intakeCount, inRepairCount, bookedCount, stagnantCount,
-        pendingBpkbCount, pendingSalonCount, pendingPaintCount,
-        cashBalance, totalInventoryHpp, garageCapacity, emptyGarageSlots,
-        buyingPowerRecommendation: { recommendedUnits, recommendedBudget: availableForPurchase, reserveFund, targetSegment, advice },
-        urgentVehicles,
-        pendingReceivables,
-        taxAlertSummary,
-        auctionPipeline,
-        cashflowProjection,
-        businessPatterns,
-      },
+      initialOrchestration: buildDeterministicOrchestration(operationalData),
+      data: operationalData,
     };
   } catch (error: any) {
     console.error("[getDashboardData] Error:", error);
@@ -811,47 +864,286 @@ export async function getDashboardData(): Promise<{
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GEMINI API CALLER (with fallback)
+// DETERMINISTIC ORCHESTRATION BUILDER (100% Reliable Baseline)
 // ─────────────────────────────────────────────────────────────────────────────
 
-async function callGeminiGenerate(prompt: string, modelChoice: string, apiKey: string): Promise<{ success: boolean; text?: string; error?: string }> {
+function buildDeterministicOrchestration(data: DashboardOperationalData): ExecutiveAiOrchestration {
+  const cf = data.cashflowProjection;
+  const bp = data.businessPatterns;
+  const tax = data.taxAlertSummary;
+  const ap = data.auctionPipeline;
+
+  // 1. Calculate Health Score
+  let score = 88;
+  if (cf.netCashflow14Days < 0) score -= 15;
+  if (cf.cashRunwayDays < 30) score -= 12;
+  if (data.stagnantCount > 0) score -= Math.min(data.stagnantCount * 6, 18);
+  if (tax.overdueCount > 0) score -= Math.min(tax.overdueCount * 8, 16);
+  if (tax.expiringSoonCount > 0) score -= Math.min(tax.expiringSoonCount * 4, 12);
+  if (data.pendingReceivables.some((r) => r.dueCategory === "OVERDUE")) score -= 15;
+  if (data.readyCount >= 3) score += 6;
+  if (data.cashBalance >= 50000000) score += 5;
+
+  score = Math.max(25, Math.min(score, 98));
+
+  let healthStatus: "PRIMA" | "WASPADA" | "KRITIS" = "PRIMA";
+  if (score < 60) healthStatus = "KRITIS";
+  else if (score < 80) healthStatus = "WASPADA";
+
+  // 2. Generate Headline & Executive Summary
+  const headline =
+    healthStatus === "PRIMA"
+      ? `Arus Kas 14 Hari Positif (${cf.netCashflow14Days >= 0 ? "+" : ""}${formatRupiah(cf.netCashflow14Days)}), Kondisi Garasi Prima dengan ${data.readyCount} Unit Siap Jual.`
+      : healthStatus === "WASPADA"
+      ? `Perhatian: Perlu Prioritas Penagihan Piutang & Perpanjangan Dokumen Pajak untuk Menjaga Likuiditas.`
+      : `Peringatan Kritis: Cash Runway ${cf.cashRunwayDays} Hari dan Terdapat Piutang/Pajak Overdue yang Harus Segera Diatasi.`;
+
+  const executiveSummary = `Showroom saat ini memiliki ${data.totalActiveVehicles} unit aktif di garasi (sisa ${data.emptyGarageSlots} slot kosong). Saldo kas BCA tercatat ${formatRupiah(data.cashBalance)} dengan cadangan modal HPP ${formatRupiah(data.totalInventoryHpp)}. Proyeksi arus kas 14 hari menghasilkan estimasi ${cf.netCashflow14Days >= 0 ? "surplus" : "defisit"} ${formatRupiah(cf.netCashflow14Days)} dengan runway operasional ${cf.cashRunwayDays} hari.`;
+
+  // 3. Build Directive Action Cards
+  const directiveActions: ExecutiveAiOrchestration["directiveActions"] = [];
+
+  // Action: Overdue or near-due receivables
+  const urgentRec = data.pendingReceivables.find(
+    (r) => r.dueCategory === "OVERDUE" || r.dueCategory === "DUE_TODAY" || r.dueCategory === "DUE_SOON" || r.daysSinceSale >= 10
+  );
+  if (urgentRec) {
+    directiveActions.push({
+      id: "act-rec-" + urgentRec.id,
+      priority: urgentRec.dueCategory === "OVERDUE" ? "CRITICAL" : "HIGH",
+      category: "PIUTANG_TEMPO",
+      badgeText: urgentRec.dueCategory === "OVERDUE" ? "Piutang Macet" : "Jatuh Tempo H-7",
+      title: `Tagih Pelunasan ${urgentRec.vehicleBrand} ${urgentRec.vehicleModel} (${urgentRec.vehiclePlate})`,
+      description: `Pembeli ${urgentRec.buyerName} memiliki sisa piutang ${formatRupiah(urgentRec.remainingAmount)} (${urgentRec.daysSinceSale} hari sejak transaksi). Ingatkan penyerahan BPKB/STNK setelah lunas.`,
+      actionLabel: "Buka Buku Piutang",
+      actionHref: "/admin/sales",
+    });
+  }
+
+  // Action: Tax / STNK Overdue
+  const criticalTax = tax.criticalUnits[0];
+  if (criticalTax) {
+    directiveActions.push({
+      id: "act-tax-" + criticalTax.id,
+      priority: criticalTax.status === "OVERDUE" ? "CRITICAL" : "HIGH",
+      category: "PAJAK_STNK",
+      badgeText: criticalTax.status === "OVERDUE" ? "Pajak Mati" : "Jatuh Tempo H-30",
+      title: `Perpanjang Pajak STNK ${criticalTax.brand} ${criticalTax.model} (${criticalTax.plateNumber})`,
+      description: `Masa berlaku PKB ${criticalTax.status === "OVERDUE" ? "telah lewat jatuh tempo" : `tersisa ${criticalTax.daysRemaining} hari`}. Estimasi biaya PKB: ${formatRupiah(criticalTax.taxNominal || 2500000)}.`,
+      actionLabel: "Lihat Radar Pajak",
+      actionHref: "/admin/inventory",
+    });
+  }
+
+  // Action: Stagnant Units
+  if (data.stagnantCount > 0) {
+    const stagnantUnit = data.urgentVehicles.find((u) => u.days > 45) || data.urgentVehicles[0];
+    if (stagnantUnit) {
+      directiveActions.push({
+        id: "act-stagnant-" + stagnantUnit.id,
+        priority: "HIGH",
+        category: "UNIT_STAGNANT",
+        badgeText: "Unit Macet >45 Hari",
+        title: `Evaluasi Harga / Promo ${stagnantUnit.name} (${stagnantUnit.plateNumber})`,
+        description: `Sudah mengendap ${stagnantUnit.days} hari di garasi (modal terikat ${formatRupiah(stagnantUnit.hpp)}). Pertimbangkan diskon harga atau promo display akhir pekan.`,
+        actionLabel: "Kelola Inventori",
+        actionHref: "/admin/inventory",
+      });
+    }
+  }
+
+  // Action: Auction Buying Recommendation
+  if (data.buyingPowerRecommendation.recommendedUnits > 0 && data.emptyGarageSlots > 0) {
+    directiveActions.push({
+      id: "act-auction-buy",
+      priority: "MEDIUM",
+      category: "KULAKAN_LELANG",
+      badgeText: "Daya Beli Aman",
+      title: `Rekomendasi Lelang: Ambil ${data.buyingPowerRecommendation.recommendedUnits} Unit (${data.buyingPowerRecommendation.targetSegment})`,
+      description: `Alokasikan maksimal ${formatRupiah(data.buyingPowerRecommendation.recommendedBudget)} hammer lelang untuk menjaga cadangan kas aman minimal ${formatRupiah(data.buyingPowerRecommendation.reserveFund)}.`,
+      actionLabel: "Cek Pipeline Lelang",
+      actionHref: "/admin/inventory/new",
+    });
+  }
+
+  // Action: BPKB Pending
+  const bpkbArriving = ap.unitsBpkbArrivingSoon[0];
+  if (bpkbArriving) {
+    directiveActions.push({
+      id: "act-bpkb-" + bpkbArriving.plateNumber,
+      priority: bpkbArriving.estimatedBpkbArrivalDays <= 0 ? "HIGH" : "MEDIUM",
+      category: "OPERASIONAL",
+      badgeText: "Follow-up BPKB",
+      title: `Pantau Kedatangan BPKB ${bpkbArriving.name} (${bpkbArriving.plateNumber})`,
+      description: `Unit lelang ${bpkbArriving.auctionLotType}. Masa tunggu BPKB ${bpkbArriving.estimatedBpkbArrivalDays <= 0 ? "HARI INI / TERLAMBAT" : `estimasi tiba ${bpkbArriving.estimatedBpkbArrivalDays} hari lagi`}.`,
+      actionLabel: "Cek Data Mobil",
+      actionHref: "/admin/inventory",
+    });
+  }
+
+  // Ensure at least 3 actions
+  if (directiveActions.length < 3) {
+    directiveActions.push({
+      id: "act-ready-promo",
+      priority: "MEDIUM",
+      category: "OPERASIONAL",
+      badgeText: "Marketing Showroom",
+      title: `Promosikan ${data.readyCount} Unit Siap Jual di Media Sosial`,
+      description: "Pastikan foto HD, cetak Price Tag gantung spion, dan bagikan tautan katalog publik ke WhatsApp calon pembeli.",
+      actionLabel: "Buka Katalog",
+      actionHref: "/katalog",
+    });
+  }
+
+  // 4. Build Auction Strategy
+  const auctionStrategy: ExecutiveAiOrchestration["auctionStrategy"] = {
+    canBuy: data.buyingPowerRecommendation.recommendedUnits > 0 && data.emptyGarageSlots > 0,
+    recommendedUnits: data.buyingPowerRecommendation.recommendedUnits,
+    recommendedMaxBudgetRupiah: data.buyingPowerRecommendation.recommendedBudget,
+    targetSegment: data.buyingPowerRecommendation.targetSegment || "LMPV Toyota Avanza / Honda Brio",
+    preferredHouse: bp.topAuctionHouses[0]?.name ? `${bp.topAuctionHouses[0].name} (Eks Perusahaan)` : "IBID / JBA Eks Perusahaan",
+    tacticalAdvice: data.buyingPowerRecommendation.advice,
+  };
+
+  // 5. Build Sales Acceleration
+  const salesAcceleration: ExecutiveAiOrchestration["salesAcceleration"] = {
+    headline: `Fokus putar modal pada ${data.readyCount} unit Ready Siap Jual dan mitigasi ${data.stagnantCount} unit macet.`,
+    tactics: [
+      `Tawarkan skema Cash Tempo SOP Garasi (DP minimal 70%, pelunasan maks 30 hari, BPKB/STNK asli aman ditahan).`,
+      `Unit favorit perputaran tercepat di showroom: ${bp.fastestSegments[0]?.brandModel || "Toyota Avanza / Daihatsu Xenia"}.`,
+      data.stagnantCount > 0
+        ? `Lakukan koreksi harga Rp 2.000.000 - Rp 3.000.000 untuk unit > 45 hari agar kas tidak terkunci.`
+        : `Pertahankan batas bawah negosiasi (bottom price) untuk mengamankan margin kotor rata-rata ${bp.avgGrossMarginPct || 12}%.`,
+    ],
+  };
+
+  // 6. Risk Mitigation
+  const riskMitigation: ExecutiveAiOrchestration["riskMitigation"] = {
+    bpkbStatus:
+      ap.unitsBpkbArrivingSoon.length > 0
+        ? `${ap.unitsBpkbArrivingSoon.length} unit lelang dalam masa tunggu BPKB (utamakan eks perusahaan).`
+        : "Seluruh BPKB unit aktif dalam status terkendali.",
+    taxStatus:
+      tax.overdueCount > 0
+        ? `Terdapat ${tax.overdueCount} unit dengan pajak mati (Overdue) dan ${tax.expiringSoonCount} unit H-30 hari.`
+        : tax.expiringSoonCount > 0
+        ? `Terdapat ${tax.expiringSoonCount} unit STNK mendekati batas tempo H-30 hari.`
+        : "Seluruh inventori memiliki status pajak STNK hidup dan aman.",
+    receivableStatus: urgentRec
+      ? `Terdapat piutang tempo yang perlu ditagih proaktif sebelum melewati 30 hari.`
+      : "Arus piutang tempo berjalan lancar sesuai jadwal.",
+  };
+
+  const fullBriefingText = `### Ringkasan Eksekutif
+${headline}
+${executiveSummary}
+
+### Rekomendasi Tindakan Prioritas Hari Ini:
+${directiveActions.map((a, i) => `${i + 1}. **[${a.badgeText}] ${a.title}**: ${a.description}`).join("\n")}
+
+### Strategi Arus Kas & Kulakan Lelang:
+- **Kapasitas Pembelian:** ${auctionStrategy.canBuy ? `Boleh kulakan ${auctionStrategy.recommendedUnits} unit dengan batas anggaran maksimal ${formatRupiah(auctionStrategy.recommendedMaxBudgetRupiah)}` : "Tunda pembelian lelang hari ini untuk mengamankan cadangan operasional"}.
+- **Segmen Target:** ${auctionStrategy.targetSegment}.
+- **Balai Rekomendasi:** ${auctionStrategy.preferredHouse}.
+- **Saran Taktis:** ${auctionStrategy.tacticalAdvice}
+
+### Strategi Akselerasi Penjualan:
+- ${salesAcceleration.tactics.join("\n- ")}
+`;
+
+  return {
+    healthScore: score,
+    healthStatus,
+    headline,
+    executiveSummary,
+    generatedAt: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB",
+    metrics: {
+      cashRunwayDays: cf.cashRunwayDays,
+      cashRunwayVerdict: cf.cashRunwayDays >= 45 ? "Sangat Aman" : cf.cashRunwayDays >= 25 ? "Cukup" : "Siaga Kas",
+      projectedNet14DaysRupiah: cf.netCashflow14Days,
+      safeBuyingUnits: auctionStrategy.recommendedUnits,
+      safeBuyingMaxBudget: auctionStrategy.recommendedMaxBudgetRupiah,
+      bpkbPendingRiskCount: ap.unitsBpkbArrivingSoon.length,
+      taxAlertCount: tax.overdueCount + tax.expiringSoonCount,
+    },
+    directiveActions,
+    auctionStrategy,
+    salesAcceleration,
+    riskMitigation,
+    fullBriefingText,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GEMINI API CALLER (Robust with Zero-Thinking Budget & No Truncation)
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function callGeminiGenerate(
+  prompt: string,
+  modelChoice: string,
+  apiKey: string,
+  options?: { jsonMode?: boolean }
+): Promise<{ success: boolean; text?: string; error?: string }> {
   let model = modelChoice.trim() || "gemini-2.5-flash";
   if (model.includes("1.5-flash")) model = "gemini-2.5-flash";
 
   try {
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: { temperature: 0.35, maxOutputTokens: 1500 },
-      }),
-    });
 
-    const json = await response.json();
-    if (!response.ok) {
-      if (model !== "gemini-2.5-flash") {
-        const fb = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { temperature: 0.35, maxOutputTokens: 1500 } }),
-        });
-        const fbJson = await fb.json();
-        if (fb.ok && fbJson.candidates?.[0]?.content?.parts?.[0]?.text) {
-          return { success: true, text: fbJson.candidates[0].content.parts[0].text };
-        }
-      }
-      const rawMsg = json.error?.message || "Google menolak permintaan AI.";
-      let msg = rawMsg;
-      if (rawMsg.includes("API key not valid") || rawMsg.includes("INVALID_ARGUMENT")) {
-        msg = "Kunci API Gemini tidak valid. Periksa kembali di Pengaturan > Kunci API.";
-      } else if (rawMsg.includes("Resource has been exhausted") || rawMsg.includes("Quota")) {
-        msg = "Kuota gratis Gemini sudah habis. Coba lagi dalam beberapa menit.";
-      }
-      return { success: false, error: msg };
+    const genConfig: Record<string, any> = {
+      temperature: 0.2,
+      maxOutputTokens: 4096,
+      thinkingConfig: {
+        thinkingBudget: 0, // Matikan thinking tokens internal agar tidak menghabiskan kuota output & tidak terpotong
+      },
+    };
+
+    if (options?.jsonMode) {
+      genConfig.responseMimeType = "application/json";
     }
 
+    const payload = {
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: genConfig,
+    };
+
+    let response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    // Fallback jika API endpoint menolak thinkingConfig / responseMimeType
+    if (!response.ok) {
+      const errJson = await response.json().catch(() => ({}));
+      const rawMsg = errJson.error?.message || "";
+      if (
+        rawMsg.includes("thinkingConfig") ||
+        rawMsg.includes("responseMimeType") ||
+        rawMsg.includes("INVALID_ARGUMENT") ||
+        rawMsg.includes("Unknown field")
+      ) {
+        const safePayload = {
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.2, maxOutputTokens: 4096 },
+        };
+        response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(safePayload),
+        });
+      } else {
+        let msg = rawMsg;
+        if (rawMsg.includes("API key not valid") || rawMsg.includes("INVALID_ARGUMENT")) {
+          msg = "Kunci API Gemini tidak valid. Periksa kembali di Pengaturan > Kunci API.";
+        } else if (rawMsg.includes("Resource has been exhausted") || rawMsg.includes("Quota")) {
+          msg = "Kuota gratis Gemini sudah habis. Coba lagi dalam beberapa menit.";
+        }
+        return { success: false, error: msg };
+      }
+    }
+
+    const json = await response.json();
     const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!text) return { success: false, error: "Tidak menerima jawaban dari Gemini AI." };
     return { success: true, text };
@@ -930,13 +1222,6 @@ function buildRealPatternContext(bp: BusinessPatternAnalytics): string {
     lines.push(`- % pembeli bayar lunas dalam 7 hari: ${bp.pctPaidWithin7Days}%`);
     lines.push(`- % pembeli bayar lunas dalam 14 hari: ${bp.pctPaidWithin14Days}%`);
     lines.push(`- % transaksi masih belum lunas: ${bp.pctStillPending}%`);
-    if (bp.avgPaymentLagDays <= 7) {
-      lines.push(`  → Pembeli Anda cenderung CEPAT bayar (< 1 minggu rata-rata). Piutang hari ke-${Math.round(bp.avgPaymentLagDays * 1.5)} sudah perlu ditagih.`);
-    } else if (bp.avgPaymentLagDays <= 14) {
-      lines.push(`  → Pembeli Anda cenderung bayar dalam 1-2 minggu. Tagih di hari ke-${bp.avgPaymentLagDays - 2} untuk pastikan tepat waktu.`);
-    } else {
-      lines.push(`  → Rata-rata pelunasan ${bp.avgPaymentLagDays} hari — lebih lama dari target. Pertimbangkan perjanjian DP & tempo lebih ketat.`);
-    }
   } else {
     lines.push(`- Belum ada data pelunasan yang cukup untuk menghitung rata-rata pembayaran`);
   }
@@ -955,25 +1240,41 @@ function buildRealPatternContext(bp: BusinessPatternAnalytics): string {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// AI BRIEFING GENERATOR
+// AI BRIEFING GENERATOR (Orchestrates Dashboard With JSON & No Chat Fluff)
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function generateExecutiveAiBriefing(): Promise<{ success: boolean; briefing?: string; error?: string }> {
+export async function generateExecutiveAiBriefing(): Promise<{
+  success: boolean;
+  orchestration?: ExecutiveAiOrchestration;
+  briefing?: string;
+  error?: string;
+}> {
   try {
     const geminiKey = await getSettingValue("GEMINI_API_KEY");
     const geminiEnabled = await getSettingValue("GEMINI_ENABLED");
     const geminiModel = (await getSettingValue("GEMINI_MODEL")) || "gemini-2.5-flash";
 
+    const { data } = await getDashboardData();
+    const deterministicOrchestration = buildDeterministicOrchestration(data);
+
     if (geminiEnabled === "false") {
-      return { success: false, error: "Fitur Gemini AI dinonaktifkan di Pengaturan. Aktifkan sakelar Gemini terlebih dahulu." };
+      return {
+        success: true,
+        orchestration: deterministicOrchestration,
+        briefing: deterministicOrchestration.fullBriefingText,
+        error: "Fitur Gemini AI dinonaktifkan di Pengaturan. Menampilkan orkestrasi deterministik lokal.",
+      };
     }
     if (!geminiKey || !geminiKey.trim()) {
-      return { success: false, error: "Kunci API Gemini belum disimpan. Masukkan API Key di Pengaturan > Kunci API." };
+      return {
+        success: true,
+        orchestration: deterministicOrchestration,
+        briefing: deterministicOrchestration.fullBriefingText,
+        error: "Kunci API Gemini belum disimpan. Menampilkan orkestrasi deterministik lokal.",
+      };
     }
 
-    const { data } = await getDashboardData();
     const bp = data.businessPatterns;
-
     const bpkbArrivingText =
       data.auctionPipeline.unitsBpkbArrivingSoon.length > 0
         ? data.auctionPipeline.unitsBpkbArrivingSoon
@@ -987,10 +1288,13 @@ export async function generateExecutiveAiBriefing(): Promise<{ success: boolean;
         .map((p) => `  * [${p.vehiclePlate}] ${p.buyerName}: sisa ${formatRupiah(p.amount)} (${p.daysSinceSale} hari sejak jual)`)
         .join("\n") || "  (Tidak ada piutang mendekati jatuh tempo)";
 
-    const systemPrompt = `Anda adalah Asisten Eksekutif Senior Showroom Mobil Bekas "Nur Mobil" yang SANGAT CERDAS dan ANALITIS.
+    const systemPrompt = `Anda adalah Mesin Orkestrasi Dashboard & Asisten Eksekutif Senior Showroom Mobil Bekas "Nur Mobil".
+TUGAS UTAMA: Mengorkestrasi tampilan dashboard eksekutif dengan data intelijen bisnis yang TAJAM, TERUKUR, dan LANGSUNG DAPAT DIEKSEKUSI (ACTIONABLE).
 
-Tugas Anda: Memberikan "Daily Executive Briefing" yang BENAR-BENAR PERSONAL dan berbasis DATA NYATA dari sistem showroom ini.
-PENTING: Jangan gunakan asumsi umum. Analisa dan komentari berdasarkan ANGKA NYATA yang ada di bawah ini.
+PENTING SEKALI:
+1. DILARANG KERAS menggunakan kata sapaan obrolan atau basa-basi chatting (JANGAN PERNAH tulis "Selamat pagi...", "Halo Bapak/Ibu...", "Berikut adalah daily executive briefing...").
+2. LANGSUNG hasilkan analisis bisnis murni.
+3. KEMBALIKAN DALAM FORMAT JSON VALID yang persis mengikuti skema di bawah. Jangan sertakan teks apapun di luar blok JSON.
 
 ${buildRealPatternContext(bp)}
 
@@ -1001,6 +1305,7 @@ ${buildRealPatternContext(bp)}
 - Mobil di Garasi: ${data.totalActiveVehicles} unit (${data.emptyGarageSlots} slot kosong dari ${data.garageCapacity})
 - Ready Siap Jual: ${data.readyCount} | Intake Baru: ${data.intakeCount} | Di Bengkel: ${data.inRepairCount}
 - BPKB Belum Datang: ${data.pendingBpkbCount} unit | Unit Macet >45 hari: ${data.stagnantCount} unit
+- Pajak STNK: Overdue ${data.taxAlertSummary.overdueCount} unit | H-30 Hari ${data.taxAlertSummary.expiringSoonCount} unit
 
 === AUCTION PIPELINE AKTIF ===
 - Eks Perusahaan di pipeline: ${data.auctionPipeline.eksPerusahaanCount} unit
@@ -1009,39 +1314,127 @@ ${buildRealPatternContext(bp)}
 ${bpkbArrivingText}
 
 === PROYEKSI KAS 14 HARI ===
-- Kas Masuk Proyeksi (piutang mendekati jatuh tempo): ${formatRupiah(data.cashflowProjection.projectedCashIn14Days)}
+- Kas Masuk Proyeksi: ${formatRupiah(data.cashflowProjection.projectedCashIn14Days)}
 - Kas Keluar Proyeksi: ${formatRupiah(data.cashflowProjection.projectedCashOut14Days)}
 - Net Cashflow 14 Hari: ${data.cashflowProjection.netCashflow14Days >= 0 ? "+" : ""}${formatRupiah(data.cashflowProjection.netCashflow14Days)}
 - Cash Runway: ${data.cashflowProjection.cashRunwayDays} hari
-- Piutang mendekati jatuh tempo (rata-rata pelunasan Anda = ${bp.avgPaymentLagDays > 0 ? bp.avgPaymentLagDays + " hari" : "belum ada data"}):
+- Piutang berjalan:
 ${piutangText}
 
 === UNIT PERLU PERHATIAN ===
 ${data.urgentVehicles.map((u) => `* [${u.plateNumber}] ${u.name}: ${u.urgentReason}`).join("\n") || "(Tidak ada unit kritis)"}
 
-=== REKOMENDASI KULAKAN ===
+=== REKOMENDASI KULAKAN SISTEM ===
 ${data.buyingPowerRecommendation.advice}
 
----
+SKEMA JSON YANG WAJIB DIHASILKAN (KEMBALIKAN PERSIS FORMAT INI):
+{
+  "healthScore": 85,
+  "healthStatus": "PRIMA",
+  "headline": "1 kalimat ringkasan eksekutif tajam status bisnis hari ini",
+  "executiveSummary": "2-3 kalimat diagnosis bisnis mendalam tanpa salam sapaan",
+  "directiveActions": [
+    {
+      "id": "act-1",
+      "priority": "HIGH",
+      "category": "PIUTANG_TEMPO",
+      "badgeText": "Jatuh Tempo",
+      "title": "Judul aksi konkret",
+      "description": "Instruksi tindakan spesifik",
+      "actionLabel": "Buka Buku Piutang",
+      "actionHref": "/admin/sales"
+    }
+  ],
+  "auctionStrategy": {
+    "canBuy": true,
+    "recommendedUnits": 1,
+    "recommendedMaxBudgetRupiah": 130000000,
+    "targetSegment": "LMPV Avanza/Xenia/Brio",
+    "preferredHouse": "IBID / JBA Eks Perusahaan",
+    "tacticalAdvice": "Saran lelang agar kas tidak terganggu"
+  },
+  "salesAcceleration": {
+    "headline": "Fokus penjualan hari ini",
+    "tactics": [
+      "Taktik penjualan 1",
+      "Taktik penjualan 2"
+    ]
+  },
+  "riskMitigation": {
+    "bpkbStatus": "Status risiko BPKB lelang",
+    "taxStatus": "Status risiko pajak STNK",
+    "receivableStatus": "Status risiko piutang tempo"
+  },
+  "fullBriefingText": "Laporan eksekutif lengkap dan mendalam (Markdown rapi tanpa kata salam chatting)"
+}`;
 
-Berikan analisa Executive Briefing dalam format Markdown yang TAJAM dan PERSONAL berdasarkan data di atas:
+    const res = await callGeminiGenerate(systemPrompt, geminiModel, geminiKey, { jsonMode: true });
 
-1. ☀️ **Ringkasan Kesehatan Bisnis Hari Ini** — sertakan perbandingan dengan pola historis Anda (misal: "unit ini sudah ${data.urgentVehicles[0]?.days || "X"} hari, padahal rata-rata Anda terjual dalam ${bp.avgTotalCycleDays || "X"} hari")
-2. ⚠️ **Aksi Mendesak** (Maks 4 poin konkret dan spesifik — sebutkan nama unit/plat jika ada)
-3. 💰 **Analisa Cashflow 14 Hari** — apakah aman? Berapa piutang yang perlu dikejar hari ini berdasarkan rata-rata payment lag nyata Anda (${bp.avgPaymentLagDays > 0 ? bp.avgPaymentLagDays + " hari" : "data belum ada"})?
-4. 🏭 **Keputusan Kulakan Lelang** — berdasarkan histori Anda (balai favorit: ${bp.topAuctionHouses[0]?.name || "belum ada data"}, merk terlaris: ${bp.mostBoughtBrands[0]?.brand || "belum ada data"}, avg margin: ${formatRupiah(bp.avgGrossMarginRupiah)}), apa yang sebaiknya dibeli?
-5. 🚀 **Strategi Penjualan Hari Ini** — berdasarkan unit yang ada dan pola historis perputaran terlaris`;
+    if (!res.success || !res.text) {
+      return {
+        success: true,
+        orchestration: deterministicOrchestration,
+        briefing: deterministicOrchestration.fullBriefingText,
+        error: res.error || "Gagal memanggil Gemini, beralih ke orkestrasi lokal.",
+      };
+    }
 
-    const res = await callGeminiGenerate(systemPrompt, geminiModel, geminiKey);
-    if (!res.success) return { success: false, error: res.error };
-    return { success: true, briefing: res.text };
+    try {
+      let cleaned = res.text.trim();
+      if (cleaned.startsWith("```json")) {
+        cleaned = cleaned.replace(/^```json\s*/, "").replace(/\s*```$/, "");
+      } else if (cleaned.startsWith("```")) {
+        cleaned = cleaned.replace(/^```\s*/, "").replace(/\s*```$/, "");
+      }
+
+      const parsed = JSON.parse(cleaned);
+
+      const orchestration: ExecutiveAiOrchestration = {
+        healthScore: typeof parsed.healthScore === "number" ? Math.max(10, Math.min(parsed.healthScore, 100)) : deterministicOrchestration.healthScore,
+        healthStatus: ["PRIMA", "WASPADA", "KRITIS"].includes(parsed.healthStatus) ? parsed.healthStatus : deterministicOrchestration.healthStatus,
+        headline: parsed.headline || deterministicOrchestration.headline,
+        executiveSummary: parsed.executiveSummary || deterministicOrchestration.executiveSummary,
+        generatedAt: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB",
+        metrics: deterministicOrchestration.metrics,
+        directiveActions: Array.isArray(parsed.directiveActions) && parsed.directiveActions.length > 0 ? parsed.directiveActions : deterministicOrchestration.directiveActions,
+        auctionStrategy: parsed.auctionStrategy || deterministicOrchestration.auctionStrategy,
+        salesAcceleration: parsed.salesAcceleration || deterministicOrchestration.salesAcceleration,
+        riskMitigation: parsed.riskMitigation || deterministicOrchestration.riskMitigation,
+        fullBriefingText: parsed.fullBriefingText || deterministicOrchestration.fullBriefingText,
+      };
+
+      return {
+        success: true,
+        orchestration,
+        briefing: orchestration.fullBriefingText,
+      };
+    } catch {
+      let cleanText = res.text
+        .replace(/^(Selamat pagi|Selamat siang|Selamat malam|Halo)[^\n]*\n+/i, "")
+        .replace(/^Berikut adalah[^\n]*\n+/i, "")
+        .trim();
+
+      const hybridOrchestration: ExecutiveAiOrchestration = {
+        ...deterministicOrchestration,
+        fullBriefingText: cleanText || deterministicOrchestration.fullBriefingText,
+      };
+
+      return {
+        success: true,
+        orchestration: hybridOrchestration,
+        briefing: hybridOrchestration.fullBriefingText,
+      };
+    }
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal menghasilkan briefing AI" };
+    return {
+      success: false,
+      error: error.message || "Gagal menghasilkan briefing AI",
+    };
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// INTERACTIVE AI ADVISOR
+// INTERACTIVE AI ADVISOR (Zero Greeting & Direct Strategic Verdict)
 // ─────────────────────────────────────────────────────────────────────────────
 
 export async function askAiShowroomAdvisor(question: string): Promise<{ success: boolean; answer?: string; error?: string }> {
@@ -1063,8 +1456,12 @@ export async function askAiShowroomAdvisor(question: string): Promise<{ success:
     const bp = data.businessPatterns;
 
     const prompt = `Anda adalah Asisten Eksekutif & Decision Advisor Showroom Mobil Bekas "Nur Mobil".
+TUGAS: Menjawab pertanyaan pimpinan showroom dengan analisis bisnis yang TAJAM, RINGKAS, dan LANGSUNG PADA KEPUTUSAN (TO THE POINT).
 
-PENTING: Jawab BERDASARKAN DATA NYATA showroom ini, BUKAN asumsi umum.
+PENTING:
+1. DILARANG KERAS menggunakan kata sapaan atau basa-basi chatting seperti "Selamat pagi...", "Halo...", dll.
+2. Jawab BERDASARKAN DATA NYATA showroom ini di bawah, BUKAN asumsi umum.
+3. Gunakan poin-poin tegas dan akhiri dengan KESIMPULAN REKOMENDASI (AMBIL / TUNDA / NEGO / WASPADA).
 
 ${buildRealPatternContext(bp)}
 
@@ -1080,12 +1477,10 @@ KONTEKS OPERASIONAL TERKINI:
 PERTANYAAN PEMILIK:
 "${question}"
 
-Jawablah dengan:
-- Gunakan data nyata di atas sebagai dasar analisa
-- Jika menyangkut keputusan beli di lelang, bandingkan dengan histori balai dan merk yang Anda ketahui dari data
-- Jika menyangkut harga jual, bandingkan dengan rata-rata margin nyata (${bp.avgGrossMarginPct}%)
-- Jika menyangkut timing pelunasan, gunakan rata-rata payment lag nyata (${bp.avgPaymentLagDays} hari)
-- Berikan KESIMPULAN AKHIR yang tegas: REKOMENDASI AMBIL / TUNDA / NEGO / PERLU DATA LEBIH`;
+Format Jawaban:
+- Analisis Singkat Berbasis Data Riil
+- Pertimbangan Kunci
+- **REKOMENDASI KEPUTUSAN AKHIR:** (AMBIL / TUNDA / NEGO / WASPADA) beserta alasan 1 kalimat.`;
 
     const res = await callGeminiGenerate(prompt, geminiModel, geminiKey);
     if (!res.success) return { success: false, error: res.error };
@@ -1094,3 +1489,4 @@ Jawablah dengan:
     return { success: false, error: error.message || "Gagal menghubungi Gemini AI." };
   }
 }
+

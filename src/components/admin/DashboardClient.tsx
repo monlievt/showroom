@@ -35,20 +35,94 @@ import {
   ArrowDownCircle,
   MessageCircle,
   BellRing,
+  Target,
+  Compass,
+  Activity,
+  Check,
+  CheckSquare,
+  ShieldCheck,
 } from "lucide-react";
 import { formatRupiah, cn } from "@/lib/utils";
 import { generateReceivableReminderLink } from "@/lib/utils/whatsapp";
 import {
   DashboardOperationalData,
   BusinessPatternAnalytics,
+  ExecutiveAiOrchestration,
   generateExecutiveAiBriefing,
   askAiShowroomAdvisor,
 } from "@/app/actions/ai-assistant";
 import { toggleSystemSettingAction } from "@/app/actions/setting";
 
+function parseInlineFormatting(str: string): React.ReactNode[] {
+  const parts = str.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={i} className="text-white font-bold">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    return part;
+  });
+}
+
+function renderExecutiveFormattedText(text: string) {
+  if (!text) return null;
+  const lines = text.split("\n");
+  return (
+    <div className="space-y-2 text-xs sm:text-sm text-stone-200 leading-relaxed">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div key={idx} className="h-1.5" />;
+        if (trimmed.startsWith("### ")) {
+          return (
+            <h4 key={idx} className="text-amber-400 font-bold text-sm sm:text-base pt-2 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+              <span>{trimmed.replace(/^###\s*/, "")}</span>
+            </h4>
+          );
+        }
+        if (trimmed.startsWith("## ")) {
+          return (
+            <h3 key={idx} className="text-white font-black text-base sm:text-lg pt-3 border-b border-stone-800 pb-1">
+              {trimmed.replace(/^##\s*/, "")}
+            </h3>
+          );
+        }
+        if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-2">
+              <span className="text-amber-400 font-bold mt-1 text-xs shrink-0">•</span>
+              <p className="text-stone-300 flex-1 leading-relaxed">
+                {parseInlineFormatting(trimmed.replace(/^[-*]\s*/, ""))}
+              </p>
+            </div>
+          );
+        }
+        if (/^\d+\.\s/.test(trimmed)) {
+          return (
+            <div key={idx} className="flex items-start gap-2 pl-2">
+              <span className="text-amber-400 font-bold text-xs mt-0.5 shrink-0">{trimmed.match(/^\d+\./)?.[0]}</span>
+              <p className="text-stone-300 flex-1 leading-relaxed">
+                {parseInlineFormatting(trimmed.replace(/^\d+\.\s*/, ""))}
+              </p>
+            </div>
+          );
+        }
+        return (
+          <p key={idx} className="text-stone-300 leading-relaxed">
+            {parseInlineFormatting(trimmed)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
 
 interface DashboardClientProps {
   initialData: DashboardOperationalData;
+  initialOrchestration?: ExecutiveAiOrchestration;
   hasGeminiKey: boolean;
   geminiKeySet?: boolean;
   geminiEnabled?: boolean;
@@ -56,6 +130,7 @@ interface DashboardClientProps {
 
 export function DashboardClient({
   initialData,
+  initialOrchestration,
   hasGeminiKey,
   geminiKeySet = false,
   geminiEnabled = true,
@@ -65,8 +140,50 @@ export function DashboardClient({
   const [keyPresent, setKeyPresent] = useState(geminiKeySet || hasGeminiKey);
   const [isEnablingGemini, setIsEnablingGemini] = useState(false);
 
-  // AI Briefing State
-  const [aiBriefing, setAiBriefing] = useState<string | null>(null);
+  // Fallback Orchestration
+  const fallbackOrchestration: ExecutiveAiOrchestration = {
+    healthScore: 88,
+    healthStatus: "PRIMA",
+    headline: "Kondisi Operasional Garasi Siap Terorkestrasi.",
+    executiveSummary: "Memuat orkestrasi data operasional showroom...",
+    generatedAt: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB",
+    metrics: {
+      cashRunwayDays: initialData.cashflowProjection?.cashRunwayDays || 45,
+      cashRunwayVerdict: "Aman",
+      projectedNet14DaysRupiah: initialData.cashflowProjection?.netCashflow14Days || 0,
+      safeBuyingUnits: initialData.buyingPowerRecommendation?.recommendedUnits || 0,
+      safeBuyingMaxBudget: initialData.buyingPowerRecommendation?.recommendedBudget || 0,
+      bpkbPendingRiskCount: initialData.auctionPipeline?.unitsBpkbArrivingSoon?.length || 0,
+      taxAlertCount: (initialData.taxAlertSummary?.overdueCount || 0) + (initialData.taxAlertSummary?.expiringSoonCount || 0),
+    },
+    directiveActions: [],
+    auctionStrategy: {
+      canBuy: (initialData.buyingPowerRecommendation?.recommendedUnits || 0) > 0,
+      recommendedUnits: initialData.buyingPowerRecommendation?.recommendedUnits || 0,
+      recommendedMaxBudgetRupiah: initialData.buyingPowerRecommendation?.recommendedBudget || 0,
+      targetSegment: initialData.buyingPowerRecommendation?.targetSegment || "LMPV",
+      preferredHouse: "IBID / JBA",
+      tacticalAdvice: initialData.buyingPowerRecommendation?.advice || "",
+    },
+    salesAcceleration: {
+      headline: "Optimalkan unit ready di garasi",
+      tactics: ["Terapkan SOP Cash Tempo DP 70% & 30 hari"],
+    },
+    riskMitigation: {
+      bpkbStatus: "Masa tunggu BPKB terkendali",
+      taxStatus: "Pantau STNK di Radar Pajak",
+      receivableStatus: "Tagih piutang tempo secara berkala",
+    },
+    fullBriefingText: "Memuat laporan eksekutif...",
+  };
+
+  // AI Orchestration & Briefing State
+  const [orchestration, setOrchestration] = useState<ExecutiveAiOrchestration>(
+    initialOrchestration || fallbackOrchestration
+  );
+  const [orchestrationTab, setOrchestrationTab] = useState<
+    "DIRECTIVE" | "AUCTION" | "SALES" | "FULL_BRIEFING"
+  >("DIRECTIVE");
   const [briefingLoading, setBriefingLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
 
@@ -92,9 +209,9 @@ export function DashboardClient({
     setAiError(null);
     const res = await generateExecutiveAiBriefing();
     setBriefingLoading(false);
-    if (res.success && res.briefing) {
-      setAiBriefing(res.briefing);
-    } else {
+    if (res.success && res.orchestration) {
+      setOrchestration(res.orchestration);
+    } else if (res.error) {
       setAiError(res.error || "Gagal menghasilkan briefing AI.");
     }
   };
@@ -126,15 +243,15 @@ export function DashboardClient({
 
   return (
     <div className="space-y-8">
-      {/* ── 1. AI EXECUTIVE BRIEFING & DECISION SUPPORT PANEL ── */}
-      <div className="rounded-3xl bg-gradient-to-br from-[#1C1917] via-[#292524] to-[#1C1917] text-white p-6 sm:p-8 shadow-xl border border-stone-800 relative overflow-hidden">
+      {/* ── 1. AI EXECUTIVE BRIEFING & DASHBOARD ORCHESTRATION ── */}
+      <div className="rounded-3xl bg-gradient-to-br from-[#1C1917] via-[#24201D] to-[#141210] text-white p-6 sm:p-8 shadow-2xl border border-stone-800 relative overflow-hidden">
         {/* Glow Accent */}
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#D97706]/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-6">
-          {/* Header AI Panel */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-800 pb-5">
+          {/* Header Panel */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-800/80 pb-5">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#D97706] to-amber-400 text-white flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
                 <Sparkles className="w-6 h-6" />
@@ -142,47 +259,27 @@ export function DashboardClient({
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-lg sm:text-xl font-black tracking-tight text-white">
-                    Asisten Keputusan & Briefing AI Showroom
+                    Orkestrasi Intelijen AI & Command Center
                   </h2>
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                    Gemini AI
+                    Gemini 2.5 Flash Engine
                   </span>
                 </div>
                 <p className="text-xs text-stone-400 mt-0.5">
-                  Analisis cerdas pola lelang eks perusahaan, proyeksi kas 14 hari, dan rekomendasi
-                  kulakan berbasis data real-time.
+                  Mendiagnosis kesehatan showroom, mengarahkan tindakan prioritas garasi, dan memandu kulakan lelang real-time.
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              {activeGemini ? (
-                <button
-                  onClick={handleGenerateBriefing}
-                  disabled={briefingLoading}
-                  className="flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer disabled:opacity-50"
-                >
-                  <RefreshCw className={cn("w-3.5 h-3.5", briefingLoading && "animate-spin")} />
-                  <span>{briefingLoading ? "Sedang Menganalisis..." : "Generate Rangkuman Harian AI"}</span>
-                </button>
-              ) : keyPresent ? (
-                <button
-                  onClick={handleQuickEnableGemini}
-                  disabled={isEnablingGemini}
-                  className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer disabled:opacity-50"
-                >
-                  <Power className="w-3.5 h-3.5" />
-                  <span>{isEnablingGemini ? "Mengaktifkan..." : "Aktifkan Sakelar Gemini (ON)"}</span>
-                </button>
-              ) : (
-                <Link
-                  href="/admin/settings"
-                  className="flex items-center gap-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 px-4 py-2 rounded-xl text-xs font-bold transition-all"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Aktifkan Kunci API Gemini Gratis</span>
-                </Link>
-              )}
+              <button
+                onClick={handleGenerateBriefing}
+                disabled={briefingLoading}
+                className="flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer disabled:opacity-50"
+              >
+                <RefreshCw className={cn("w-3.5 h-3.5", briefingLoading && "animate-spin")} />
+                <span>{briefingLoading ? "Mengorkestrasi..." : "Analisis & Orkestrasi AI"}</span>
+              </button>
             </div>
           </div>
 
@@ -206,144 +303,389 @@ export function DashboardClient({
             </div>
           )}
 
-          {/* AI Daily Briefing Content */}
-          {aiBriefing ? (
-            <div className="bg-stone-900/80 border border-stone-800 rounded-2xl p-5 text-xs sm:text-sm text-stone-200 leading-relaxed space-y-3">
-              <div className="flex items-center justify-between border-b border-stone-800 pb-2 mb-2 text-stone-400 text-xs">
-                <span className="font-semibold text-amber-400 flex items-center gap-1.5">
-                  <Bot className="w-4 h-4" />
-                  Hasil Analisa Asisten Eksekutif (Konteks: Lelang 80%, Eks Perusahaan 90%, Piutang 2 Minggu)
-                </span>
-                <span>{new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })} WIB</span>
-              </div>
-              <div className="whitespace-pre-line font-normal">{aiBriefing}</div>
-            </div>
-          ) : (
-            <div className="bg-stone-900/40 border border-stone-800/80 rounded-2xl p-5 text-xs text-stone-300 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="space-y-1">
-                <strong className="text-stone-100 font-bold block text-sm">
-                  {activeGemini
-                    ? "Siap Menganalisa: Pola Lelang, Proyeksi Kas, & Rekomendasi Kulakan"
-                    : keyPresent
-                    ? "Kunci API Tersimpan, Sakelar Fitur Belum Aktif"
-                    : "Gemini API Key Belum Dikonfigurasi"}
-                </strong>
-                <p className="text-stone-400">
-                  {activeGemini
-                    ? "Klik 'Generate Rangkuman Harian AI' untuk mendapatkan briefing cerdas berdasarkan pola bisnis Anda: 80% lelang, 90% eks perusahaan, piutang 2 minggu."
-                    : keyPresent
-                    ? "Kunci API Gemini sudah tersimpan. Klik 'Aktifkan Sakelar Gemini' untuk menyalakan asisten AI."
-                    : "Masukkan Gemini API Key gratis di halaman Pengaturan untuk mengaktifkan asisten AI showroom."}
-                </p>
-              </div>
-
-              {!activeGemini && (
-                keyPresent ? (
-                  <button
-                    onClick={handleQuickEnableGemini}
-                    disabled={isEnablingGemini}
-                    className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold text-xs shrink-0 shadow-sm cursor-pointer"
-                  >
-                    <Power className="w-3.5 h-3.5" />
-                    <span>Aktifkan Sekarang</span>
-                  </button>
-                ) : (
-                  <Link
-                    href="/admin/settings"
-                    className="inline-flex items-center gap-1.5 bg-[#D97706] text-white px-4 py-2 rounded-xl font-bold text-xs shrink-0 shadow-sm hover:bg-[#B45309]"
-                  >
-                    <span>Buka Pengaturan API</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                )
-              )}
-            </div>
-          )}
-
-          {/* Interactive Q&A Input with AI */}
-          {activeGemini && (
-            <div className="space-y-3 pt-2">
-              <form onSubmit={handleAskAi} className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="Tanya asisten AI (contoh: 'Ada yang nawarin Avanza 2019 harga 135jt eks perusahaan, aman ambil gak dengan kas sekarang?')"
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                  className="flex-1 bg-stone-900/90 border border-stone-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
-                />
-                <button
-                  type="submit"
-                  disabled={askingAi || !question.trim()}
-                  className="bg-[#D97706] hover:bg-[#B45309] text-white px-5 py-3 rounded-xl font-bold text-xs transition-colors shrink-0 disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+          {/* ── EXECUTIVE HEALTH SCORE & STRATEGIC OVERVIEW ── */}
+          <div className="bg-stone-900/90 border border-stone-800/90 rounded-2xl p-5 sm:p-6 shadow-inner space-y-5">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-4 border-b border-stone-800/80">
+              {/* Left: Health Score Card */}
+              <div className="flex items-center gap-4">
+                <div
+                  className={cn(
+                    "w-16 h-16 rounded-2xl flex flex-col items-center justify-center border-2 shrink-0 shadow-lg",
+                    orchestration.healthStatus === "PRIMA"
+                      ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400"
+                      : orchestration.healthStatus === "WASPADA"
+                      ? "bg-amber-500/10 border-amber-500/40 text-amber-400"
+                      : "bg-rose-500/10 border-rose-500/40 text-rose-400"
+                  )}
                 >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>{askingAi ? "Menganalisa..." : "Tanya AI"}</span>
-                </button>
-              </form>
-
-              {/* Quick Prompt Presets */}
-              <div className="flex flex-wrap items-center gap-2 text-[11px] text-stone-400">
-                <span className="font-semibold text-stone-500">Contoh pertanyaan:</span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handlePresetQuestion(
-                      "Berapa unit dan segmen apa yang paling aman kita kulakan di lelang hari ini berdasarkan sisa kas BCA?"
-                    )
-                  }
-                  className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
-                >
-                  Daya Kulakan Kas Hari Ini
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handlePresetQuestion(
-                      "Bagaimana rekomendasi penyesuaian harga dan strategi penjualan untuk mobil yang sudah di atas 30 hari di garasi?"
-                    )
-                  }
-                  className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
-                >
-                  Strategi Unit Macet
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handlePresetQuestion(
-                      "Ada unit eks tarikan leasing ditawarkan di lelang besok, apa risiko yang perlu saya pertimbangkan soal BPKB dan dokumennya?"
-                    )
-                  }
-                  className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
-                >
-                  Risiko Eks Leasing
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    handlePresetQuestion(
-                      "Piutang saya yang mana yang sudah mendekati 2 minggu dan perlu segera saya tagih hari ini?"
-                    )
-                  }
-                  className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
-                >
-                  Piutang Mana Ditagih?
-                </button>
-              </div>
-
-              {/* Answer Box */}
-              {aiAnswer && (
-                <div className="bg-amber-950/20 border border-amber-500/30 rounded-2xl p-4 text-xs sm:text-sm text-amber-100 space-y-2 mt-3 animate-in fade-in">
-                  <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Jawaban AI Advisor (Pola: 80% Lelang, 90% Eks Perusahaan):</span>
+                  <span className="text-xl font-black leading-none">{orchestration.healthScore}</span>
+                  <span className="text-[9px] uppercase tracking-wider font-extrabold mt-0.5">/ 100</span>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={cn(
+                        "text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border",
+                        orchestration.healthStatus === "PRIMA"
+                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                          : orchestration.healthStatus === "WASPADA"
+                          ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                          : "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                      )}
+                    >
+                      Status: {orchestration.healthStatus}
+                    </span>
+                    <span className="text-[11px] text-stone-500 font-medium">
+                      Diperbarui {orchestration.generatedAt}
+                    </span>
                   </div>
-                  <div className="whitespace-pre-line leading-relaxed text-stone-200">
-                    {aiAnswer}
+                  <h3 className="text-sm sm:text-base font-bold text-stone-100 mt-1 leading-snug">
+                    {orchestration.headline}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Right: Quick Metric Pills */}
+              <div className="grid grid-cols-3 gap-2 shrink-0">
+                <div className="bg-stone-800/70 border border-stone-700/60 rounded-xl px-3 py-2 text-center">
+                  <div className="text-[10px] text-stone-400 font-semibold uppercase tracking-wider">Runway Kas</div>
+                  <div className="text-xs sm:text-sm font-bold text-white mt-0.5">
+                    {orchestration.metrics.cashRunwayDays} Hari
+                  </div>
+                  <div className="text-[10px] text-emerald-400 font-medium">
+                    {orchestration.metrics.cashRunwayVerdict}
                   </div>
                 </div>
-              )}
+
+                <div className="bg-stone-800/70 border border-stone-700/60 rounded-xl px-3 py-2 text-center">
+                  <div className="text-[10px] text-stone-400 font-semibold uppercase tracking-wider">Daya Beli</div>
+                  <div className="text-xs sm:text-sm font-bold text-amber-400 mt-0.5">
+                    {orchestration.metrics.safeBuyingUnits} Unit
+                  </div>
+                  <div className="text-[10px] text-stone-400 font-medium truncate max-w-[90px]">
+                    Maks {formatRupiah(orchestration.metrics.safeBuyingMaxBudget)}
+                  </div>
+                </div>
+
+                <div className="bg-stone-800/70 border border-stone-700/60 rounded-xl px-3 py-2 text-center">
+                  <div className="text-[10px] text-stone-400 font-semibold uppercase tracking-wider">Alarm Kritis</div>
+                  <div
+                    className={cn(
+                      "text-xs sm:text-sm font-bold mt-0.5",
+                      orchestration.metrics.taxAlertCount > 0 ? "text-rose-400" : "text-emerald-400"
+                    )}
+                  >
+                    {orchestration.metrics.taxAlertCount} Pajak
+                  </div>
+                  <div className="text-[10px] text-stone-400 font-medium">
+                    {orchestration.metrics.bpkbPendingRiskCount} BPKB Tiba
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
+
+            {/* Executive Summary paragraph */}
+            <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
+              {orchestration.executiveSummary}
+            </p>
+
+            {/* ── TABS SELECTOR ── */}
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-stone-800">
+              <button
+                type="button"
+                onClick={() => setOrchestrationTab("DIRECTIVE")}
+                className={cn(
+                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  orchestrationTab === "DIRECTIVE"
+                    ? "bg-[#D97706] text-white shadow-md"
+                    : "bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700"
+                )}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Kartu Aksi Prioritas ({orchestration.directiveActions.length})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setOrchestrationTab("AUCTION")}
+                className={cn(
+                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  orchestrationTab === "AUCTION"
+                    ? "bg-[#D97706] text-white shadow-md"
+                    : "bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700"
+                )}
+              >
+                <Gavel className="w-3.5 h-3.5" />
+                <span>Panduan Kulakan Lelang</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setOrchestrationTab("SALES")}
+                className={cn(
+                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  orchestrationTab === "SALES"
+                    ? "bg-[#D97706] text-white shadow-md"
+                    : "bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700"
+                )}
+              >
+                <TrendingUp className="w-3.5 h-3.5" />
+                <span>Akselerasi Penjualan</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setOrchestrationTab("FULL_BRIEFING")}
+                className={cn(
+                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  orchestrationTab === "FULL_BRIEFING"
+                    ? "bg-[#D97706] text-white shadow-md"
+                    : "bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700"
+                )}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>Laporan Eksekutif Lengkap</span>
+              </button>
+            </div>
+
+            {/* ── TAB CONTENT ── */}
+            {orchestrationTab === "DIRECTIVE" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-2 animate-in fade-in">
+                {orchestration.directiveActions.map((action) => (
+                  <div
+                    key={action.id}
+                    className={cn(
+                      "rounded-xl p-4 border flex flex-col justify-between transition-all",
+                      action.priority === "CRITICAL"
+                        ? "bg-rose-950/20 border-rose-800/40 hover:border-rose-600/60"
+                        : action.priority === "HIGH"
+                        ? "bg-amber-950/20 border-amber-800/40 hover:border-amber-600/60"
+                        : "bg-stone-800/40 border-stone-700/50 hover:border-stone-500/60"
+                    )}
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                          {action.category.replace("_", " ")}
+                        </span>
+                        <span
+                          className={cn(
+                            "text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border",
+                            action.priority === "CRITICAL"
+                              ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                              : action.priority === "HIGH"
+                              ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                              : "bg-blue-500/20 text-blue-300 border-blue-500/40"
+                          )}
+                        >
+                          {action.badgeText}
+                        </span>
+                      </div>
+                      <h4 className="text-xs sm:text-sm font-bold text-stone-100 leading-snug">
+                        {action.title}
+                      </h4>
+                      <p className="text-xs text-stone-400 leading-relaxed">
+                        {action.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 mt-3 border-t border-stone-800/80">
+                      <Link
+                        href={action.actionHref}
+                        className="inline-flex items-center justify-between w-full text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors"
+                      >
+                        <span>{action.actionLabel}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {orchestrationTab === "AUCTION" && (
+              <div className="bg-stone-800/40 border border-stone-700/60 rounded-xl p-5 space-y-4 animate-in fade-in">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-700/60">
+                  <div className="flex items-center gap-2.5">
+                    <Gavel className="w-5 h-5 text-amber-400" />
+                    <div>
+                      <h4 className="text-sm font-bold text-stone-100">
+                        Rekomendasi Kulakan Balai Lelang
+                      </h4>
+                      <p className="text-xs text-stone-400">
+                        Strategi berbasis histori balai favorit dan margin kotor riil garasi.
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    className={cn(
+                      "text-xs font-bold px-3 py-1 rounded-full border shrink-0",
+                      orchestration.auctionStrategy.canBuy
+                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                        : "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                    )}
+                  >
+                    {orchestration.auctionStrategy.canBuy ? "✅ Aman Kulakan Hari Ini" : "⚠️ Tunda Kulakan Sementara"}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="bg-stone-900/60 border border-stone-800 p-3 rounded-lg">
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold">Target Segmen</span>
+                    <p className="text-xs sm:text-sm font-bold text-stone-200 mt-0.5">
+                      {orchestration.auctionStrategy.targetSegment}
+                    </p>
+                  </div>
+                  <div className="bg-stone-900/60 border border-stone-800 p-3 rounded-lg">
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold">Batas Hammer Aman</span>
+                    <p className="text-xs sm:text-sm font-bold text-amber-400 mt-0.5">
+                      {formatRupiah(orchestration.auctionStrategy.recommendedMaxBudgetRupiah)}
+                    </p>
+                  </div>
+                  <div className="bg-stone-900/60 border border-stone-800 p-3 rounded-lg">
+                    <span className="text-[10px] text-stone-400 uppercase font-semibold">Balai Prioritas</span>
+                    <p className="text-xs sm:text-sm font-bold text-stone-200 mt-0.5">
+                      {orchestration.auctionStrategy.preferredHouse}
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-xs text-stone-300 leading-relaxed bg-stone-900/40 p-3.5 rounded-lg border border-stone-800">
+                  {orchestration.auctionStrategy.tacticalAdvice}
+                </p>
+
+                <div className="flex justify-end pt-1">
+                  <Link
+                    href="/admin/inventory/new"
+                    className="inline-flex items-center gap-1.5 bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-bold px-4 py-2 rounded-xl transition-all"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Input Unit Hasil Lelang Baru</span>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {orchestrationTab === "SALES" && (
+              <div className="bg-stone-800/40 border border-stone-700/60 rounded-xl p-5 space-y-4 animate-in fade-in">
+                <div className="pb-3 border-b border-stone-700/60">
+                  <h4 className="text-sm font-bold text-stone-100 flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-emerald-400" />
+                    <span>{orchestration.salesAcceleration.headline}</span>
+                  </h4>
+                </div>
+
+                <div className="space-y-2.5">
+                  {orchestration.salesAcceleration.tactics.map((tactic, idx) => (
+                    <div key={idx} className="flex items-start gap-2.5 bg-stone-900/50 p-3 rounded-lg border border-stone-800">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <p className="text-xs text-stone-300 leading-relaxed">{tactic}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex justify-end pt-1">
+                  <Link
+                    href="/admin/inventory?status=READY_FOR_SALE"
+                    className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all"
+                  >
+                    <span>Buka Daftar Unit Siap Jual</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {orchestrationTab === "FULL_BRIEFING" && (
+              <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-5 animate-in fade-in">
+                {renderExecutiveFormattedText(orchestration.fullBriefingText)}
+              </div>
+            )}
+          </div>
+
+          {/* ── INTERACTIVE Q&A INPUT WITH AI ADVISOR ── */}
+          <div className="space-y-3 pt-2">
+            <form onSubmit={handleAskAi} className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Tanya asisten AI (contoh: 'Ada yang nawarin Avanza 2019 harga 135jt eks perusahaan, aman ambil gak dengan kas sekarang?')"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                className="flex-1 bg-stone-900/90 border border-stone-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <button
+                type="submit"
+                disabled={askingAi || !question.trim()}
+                className="bg-[#D97706] hover:bg-[#B45309] text-white px-5 py-3 rounded-xl font-bold text-xs transition-colors shrink-0 disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>{askingAi ? "Menganalisa..." : "Tanya AI"}</span>
+              </button>
+            </form>
+
+            {/* Quick Prompt Presets */}
+            <div className="flex flex-wrap items-center gap-2 text-[11px] text-stone-400">
+              <span className="font-semibold text-stone-500">Contoh pertanyaan:</span>
+              <button
+                type="button"
+                onClick={() =>
+                  handlePresetQuestion(
+                    "Berapa unit dan segmen apa yang paling aman kita kulakan di lelang hari ini berdasarkan sisa kas BCA?"
+                  )
+                }
+                className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+              >
+                Daya Kulakan Kas Hari Ini
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  handlePresetQuestion(
+                    "Bagaimana rekomendasi penyesuaian harga dan strategi penjualan untuk mobil yang sudah di atas 30 hari di garasi?"
+                  )
+                }
+                className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+              >
+                Strategi Unit Macet
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  handlePresetQuestion(
+                    "Ada unit eks tarikan leasing ditawarkan di lelang besok, apa risiko yang perlu saya pertimbangkan soal BPKB dan dokumennya?"
+                  )
+                }
+                className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+              >
+                Risiko Eks Leasing
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  handlePresetQuestion(
+                    "Piutang saya yang mana yang sudah mendekati 2 minggu dan perlu segera saya tagih hari ini?"
+                  )
+                }
+                className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+              >
+                Piutang Mana Ditagih?
+              </button>
+            </div>
+
+            {/* Answer Box */}
+            {aiAnswer && (
+              <div className="bg-stone-900/90 border border-amber-500/40 rounded-2xl p-5 text-xs sm:text-sm text-stone-200 space-y-3 mt-3 shadow-lg animate-in fade-in">
+                <div className="flex items-center justify-between border-b border-stone-800 pb-2">
+                  <span className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    Keputusan Strategis AI Advisor
+                  </span>
+                  <span className="text-[11px] text-stone-500">Berdasarkan data riil showroom</span>
+                </div>
+                <div>{renderExecutiveFormattedText(aiAnswer)}</div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
