@@ -55,6 +55,10 @@ interface VehicleItem {
   totalHpp: number;
   daysInInventory: number;
   agingCategory: "FRESH" | "NORMAL" | "WARNING_STAGNANT";
+  taxExpiryDate?: string | Date | null;
+  platExpiryDate?: string | Date | null;
+  taxNominal?: number | null;
+  stnkStatus?: string | null;
   notes?: string | null;
 }
 
@@ -299,6 +303,46 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                         <StatusBadge status={vehicle.status} />
                         <div className="text-[11px] text-[#6B6560] mt-1.5">
                           Lokasi: {vehicle.currentLocation}
+                        </div>
+                        {/* Status Pajak STNK */}
+                        <div className="mt-1.5">
+                          {vehicle.taxExpiryDate ? (() => {
+                            const now = new Date();
+                            now.setHours(0, 0, 0, 0);
+                            const expiry = new Date(vehicle.taxExpiryDate);
+                            expiry.setHours(0, 0, 0, 0);
+                            const diffDays = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                            if (diffDays < 0) {
+                              return (
+                                <span
+                                  className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100 text-red-800 border border-red-200"
+                                  title={`Pajak mati sejak ${new Date(vehicle.taxExpiryDate).toLocaleDateString("id-ID")}`}
+                                >
+                                  🔴 Pajak Mati ({Math.abs(diffDays)}h)
+                                </span>
+                              );
+                            } else if (diffDays <= 30) {
+                              return (
+                                <span
+                                  className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-200"
+                                  title={`Jatuh tempo: ${new Date(vehicle.taxExpiryDate).toLocaleDateString("id-ID")}`}
+                                >
+                                  🟡 Pajak Kritis (sisa {diffDays}h)
+                                </span>
+                              );
+                            } else {
+                              return (
+                                <span
+                                  className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                  title={`Jatuh tempo: ${new Date(vehicle.taxExpiryDate).toLocaleDateString("id-ID")}`}
+                                >
+                                  🟢 Pajak Hidup
+                                </span>
+                              );
+                            }
+                          })() : (
+                            <span className="text-[10px] text-stone-400 italic">Pajak: -</span>
+                          )}
                         </div>
                       </td>
 

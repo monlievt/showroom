@@ -57,6 +57,26 @@ export interface DashboardOperationalData {
     dueCategory: "OVERDUE" | "DUE_TODAY" | "DUE_SOON" | "ON_SCHEDULE";
   }>;
 
+  // ── RADAR ALARM PAJAK STNK & KALENG (PKB) ──────────────────────────────────
+  taxAlertSummary: {
+    overdueCount: number;
+    expiringSoonCount: number;
+    safeCount: number;
+    unknownCount: number;
+    criticalUnits: Array<{
+      id: string;
+      plateNumber: string;
+      brand: string;
+      model: string;
+      year: number;
+      taxExpiryDate: string;
+      platExpiryDate?: string | null;
+      taxNominal?: number | null;
+      daysRemaining: number;
+      status: "OVERDUE" | "EXPIRING_SOON";
+    }>;
+  };
+
   // ── AUCTION PIPELINE ─────────────────────────────────────────────────────
   auctionPipeline: {
     totalAuctionUnits: number;
@@ -664,6 +684,81 @@ export async function getDashboardData(): Promise<{
       monthlyOperationalBurn,
     };
 
+    // ── RADAR ALARM PAJAK STNK PKB (H-30 HARI & OVERDUE) ─────────────────────
+    const criticalTaxUnits: Array<{
+      id: string;
+      plateNumber: string;
+      brand: string;
+      model: string;
+      year: number;
+      taxExpiryDate: string;
+      platExpiryDate?: string | null;
+      taxNominal?: number | null;
+      daysRemaining: number;
+      status: "OVERDUE" | "EXPIRING_SOON";
+    }> = [];
+
+    let taxOverdueCount = 0;
+    let taxExpiringSoonCount = 0;
+    let taxSafeCount = 0;
+    let taxUnknownCount = 0;
+
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+
+    vehicles.forEach((v) => {
+      if (!v.taxExpiryDate) {
+        taxUnknownCount++;
+        return;
+      }
+
+      const expiry = new Date(v.taxExpiryDate);
+      expiry.setHours(0, 0, 0, 0);
+      const diffDays = Math.ceil((expiry.getTime() - todayDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) {
+        taxOverdueCount++;
+        criticalTaxUnits.push({
+          id: v.id,
+          plateNumber: v.plateNumber,
+          brand: v.brand,
+          model: v.model,
+          year: v.year,
+          taxExpiryDate: v.taxExpiryDate.toISOString(),
+          platExpiryDate: v.platExpiryDate ? v.platExpiryDate.toISOString() : null,
+          taxNominal: v.taxNominal ? Number(v.taxNominal) : null,
+          daysRemaining: diffDays,
+          status: "OVERDUE",
+        });
+      } else if (diffDays <= 30) {
+        taxExpiringSoonCount++;
+        criticalTaxUnits.push({
+          id: v.id,
+          plateNumber: v.plateNumber,
+          brand: v.brand,
+          model: v.model,
+          year: v.year,
+          taxExpiryDate: v.taxExpiryDate.toISOString(),
+          platExpiryDate: v.platExpiryDate ? v.platExpiryDate.toISOString() : null,
+          taxNominal: v.taxNominal ? Number(v.taxNominal) : null,
+          daysRemaining: diffDays,
+          status: "EXPIRING_SOON",
+        });
+      } else {
+        taxSafeCount++;
+      }
+    });
+
+    criticalTaxUnits.sort((a, b) => a.daysRemaining - b.daysRemaining);
+
+    const taxAlertSummary = {
+      overdueCount: taxOverdueCount,
+      expiringSoonCount: taxExpiringSoonCount,
+      safeCount: taxSafeCount,
+      unknownCount: taxUnknownCount,
+      criticalUnits: criticalTaxUnits,
+    };
+
     const isKeySet = Boolean(geminiKey && geminiKey.trim().length > 0);
     const isEnabled = geminiEnabled !== "false";
     const hasGeminiKey = isKeySet && isEnabled;
@@ -681,6 +776,7 @@ export async function getDashboardData(): Promise<{
         buyingPowerRecommendation: { recommendedUnits, recommendedBudget: availableForPurchase, reserveFund, targetSegment, advice },
         urgentVehicles,
         pendingReceivables,
+        taxAlertSummary,
         auctionPipeline,
         cashflowProjection,
         businessPatterns,
@@ -705,6 +801,7 @@ export async function getDashboardData(): Promise<{
         cashBalance: 0, totalInventoryHpp: 0, garageCapacity: 8, emptyGarageSlots: 8,
         buyingPowerRecommendation: { recommendedUnits: 0, recommendedBudget: 0, reserveFund: 0, targetSegment: "-", advice: "Data belum tersedia." },
         urgentVehicles: [], pendingReceivables: [],
+        taxAlertSummary: { overdueCount: 0, expiringSoonCount: 0, safeCount: 0, unknownCount: 0, criticalUnits: [] },
         auctionPipeline: { totalAuctionUnits: 0, eksPerusahaanCount: 0, eksTarikLeasingCount: 0, unknownSourceCount: 0, unitsBpkbArrivingSoon: [], avgDaysToReadyEksPerusahaan: 12, avgDaysToReadyEksLeasing: 21 },
         cashflowProjection: { projectedCashIn14Days: 0, projectedCashOut14Days: 0, netCashflow14Days: 0, pendingSettlements: [], estimatedRepairCosts: 0, cashRunwayDays: 0, monthlyOperationalBurn: 0 },
         businessPatterns: emptyPatterns,

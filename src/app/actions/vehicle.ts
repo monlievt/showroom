@@ -163,6 +163,8 @@ export async function createVehicleAction(input: CreateVehicleInput) {
           minSellingPrice: validated.minSellingPrice,
           currentLocation: validated.currentLocation,
           taxExpiryDate: validated.taxExpiryDate,
+          platExpiryDate: validated.platExpiryDate,
+          taxNominal: validated.taxNominal,
           stnkStatus: validated.stnkStatus,
           bpkbStatus: validated.bpkbStatus,
           bpkbLeadDays: validated.bpkbLeadDays,
@@ -341,6 +343,32 @@ export async function getVehicleByIdAction(id: string) {
   } catch (error: any) {
     console.error("Error fetching vehicle by ID:", error);
     return { success: false, error: error.message || "Gagal memuat detail unit" };
+  }
+}
+
+export async function updateVehicleTaxAction(
+  vehicleId: string,
+  taxExpiryDate?: string | null,
+  platExpiryDate?: string | null,
+  taxNominal?: number | null
+) {
+  try {
+    const updated = await prisma.vehicle.update({
+      where: { id: vehicleId },
+      data: {
+        taxExpiryDate: taxExpiryDate ? new Date(taxExpiryDate) : null,
+        platExpiryDate: platExpiryDate ? new Date(platExpiryDate) : null,
+        taxNominal: taxNominal != null ? taxNominal : null,
+      },
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/inventory");
+    revalidatePath(`/admin/inventory/${vehicleId}`);
+    return { success: true, data: updated };
+  } catch (error: any) {
+    console.error("Error updating vehicle tax info:", error);
+    return { success: false, error: error.message || "Gagal memperbarui status pajak unit" };
   }
 }
 

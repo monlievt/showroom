@@ -388,7 +388,7 @@ export function DashboardClient({
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-extrabold text-sm sm:text-base text-stone-900 tracking-tight">
-                      Alarm Piutang Tempo 14 Hari ({urgentReceivables.length} Tagihan Butuh Tindakan)
+                      Alarm Pelunasan Cash Tempo Garasi ({urgentReceivables.length} Tagihan Butuh Tindakan)
                     </h3>
                     <span
                       className={cn(
@@ -402,7 +402,7 @@ export function DashboardClient({
                     </span>
                   </div>
                   <p className="text-xs text-stone-600 mt-0.5">
-                    Data histori menunjukkan pembeli umumnya melunasi dalam 14 hari. Segera konfirmasi dan kirim pengingat ramah via WhatsApp.
+                    Kebijakan Nur Mobil: Cash Tempo maksimal 30 hari. BPKB dan STNK asli tetap ditahan di brankas showroom hingga pelunasan sisa 30% diterima penuh.
                   </p>
                 </div>
               </div>
@@ -1090,6 +1090,138 @@ export function DashboardClient({
                     </td>
                   </tr>
                 ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* ── 5B. RADAR ALARM PAJAK STNK & PLAT KALENG (H-30 HARI & OVERDUE) ── */}
+      <div className="bg-white rounded-2xl border border-[#D9D4CB] shadow-xs overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-[#D9D4CB] flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-[#F7F5F2] to-amber-50/40">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+              <CalendarClock className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-extrabold text-sm text-[#1C1917]">
+                  Radar Alarm Pajak STNK & Plat Kaleng (PKB)
+                </h3>
+                {data.taxAlertSummary.overdueCount > 0 && (
+                  <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200 text-[10px] font-bold animate-pulse">
+                    {data.taxAlertSummary.overdueCount} Overdue
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-[#6B6560]">
+                Pantauan masa berlaku pajak tahunan garasi untuk cegah tilang razia dan kendala saat serah terima
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-700 border border-red-200">
+              🔴 {data.taxAlertSummary.overdueCount} Lewat Jatuh Tempo
+            </span>
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-[#78350F] border border-amber-200">
+              🟡 {data.taxAlertSummary.expiringSoonCount} Kritis H-30
+            </span>
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+              🟢 {data.taxAlertSummary.safeCount} Pajak Hidup
+            </span>
+            {data.taxAlertSummary.unknownCount > 0 && (
+              <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-stone-100 text-stone-600 border border-stone-200">
+                ⚪ {data.taxAlertSummary.unknownCount} Belum Diisi
+              </span>
+            )}
+          </div>
+        </div>
+
+        {data.taxAlertSummary.criticalUnits.length === 0 ? (
+          <div className="p-8 text-center text-[#6B6560] text-xs">
+            <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2 opacity-80" />
+            <strong className="block text-emerald-900 font-bold mb-1">
+              Seluruh Pajak Unit Pajangan Aman!
+            </strong>
+            Tidak ada unit inventori aktif yang pajaknya mati ataupun mendekati jatuh tempo dalam 30 hari ke depan.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs sm:text-sm">
+              <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[#D9D4CB]">
+                <tr>
+                  <th className="py-3 px-4">Plat & Unit Kendaraan</th>
+                  <th className="py-3 px-4">Status & Sisa Waktu</th>
+                  <th className="py-3 px-4">Jatuh Tempo Pajak Tahunan</th>
+                  <th className="py-3 px-4">Kaleng (5 Tahunan)</th>
+                  <th className="py-3 px-4 text-right">Estimasi Biaya PKB</th>
+                  <th className="py-3 px-4 text-right">Tindakan</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#D9D4CB]">
+                {data.taxAlertSummary.criticalUnits.map((u) => {
+                  const isOverdue = u.status === "OVERDUE";
+                  const taxDateFormatted = new Intl.DateTimeFormat("id-ID", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  }).format(new Date(u.taxExpiryDate));
+
+                  const platDateFormatted = u.platExpiryDate
+                    ? new Intl.DateTimeFormat("id-ID", {
+                        month: "short",
+                        year: "numeric",
+                      }).format(new Date(u.platExpiryDate))
+                    : "-";
+
+                  return (
+                    <tr key={u.id} className="hover:bg-[#F7F5F2] transition-colors">
+                      <td className="py-3.5 px-4">
+                        <span className="font-bold text-[#1C1917] block">{u.plateNumber}</span>
+                        <span className="text-xs text-[#6B6560]">
+                          {u.brand} {u.model} ({u.year})
+                        </span>
+                      </td>
+
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        {isOverdue ? (
+                          <span className="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md bg-red-100 text-red-800 border border-red-300">
+                            <ShieldAlert className="w-3.5 h-3.5 text-red-600" />
+                            Lewat {Math.abs(u.daysRemaining)} Hari
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
+                            <Clock className="w-3.5 h-3.5 text-amber-700" />
+                            Sisa {u.daysRemaining} Hari
+                          </span>
+                        )}
+                      </td>
+
+                      <td className="py-3.5 px-4 whitespace-nowrap">
+                        <span className="font-semibold text-[#1C1917]">{taxDateFormatted}</span>
+                      </td>
+
+                      <td className="py-3.5 px-4 whitespace-nowrap text-[#6B6560]">
+                        <span>{platDateFormatted}</span>
+                      </td>
+
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-bold text-[#1C1917]">
+                        {u.taxNominal ? formatRupiah(u.taxNominal) : "-"}
+                      </td>
+
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                        <Link
+                          href={`/admin/inventory`}
+                          className="inline-flex items-center gap-1 text-xs text-[#D97706] hover:underline font-bold"
+                        >
+                          <span>Proses Samsat</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

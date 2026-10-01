@@ -186,7 +186,10 @@ enum NotificationType {
 }
 
 enum UserRole {
+  OWNER
   ADMIN
+  STAFF_ADMIN
+  SALES
   INVESTOR
 }
 
@@ -222,7 +225,9 @@ model Vehicle {
   minSellingPrice    Decimal?         @db.Decimal(15, 2) // Batas bawah harga lepas / acuan negosiasi sales (internal)
   status             VehicleStatus    @default(INTAKE)
   currentLocation    String           @default("Garasi Utama")
-  taxExpiryDate      DateTime?
+  taxExpiryDate      DateTime? // Tanggal jatuh tempo pajak tahunan STNK (PKB)
+  platExpiryDate     DateTime? // Tanggal jatuh tempo plat / kaleng 5 tahunan
+  taxNominal         Decimal?         @db.Decimal(12, 2) // Estimasi besaran PKB tahunan
   stnkStatus         DocumentStatus   @default(READY)
   bpkbStatus         DocumentStatus   @default(READY)
   bpkbLeadDays       Int              @default(7) // eks perusahaan: 7-14, eks leasing: 14-28

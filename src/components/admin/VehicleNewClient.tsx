@@ -24,7 +24,8 @@ import {
   Camera,
   ClipboardCheck,
   Printer,
-  RotateCcw
+  RotateCcw,
+  CalendarClock,
 } from "lucide-react";
 import { createVehicleAction } from "@/app/actions/vehicle";
 import { cn } from "@/lib/utils";
@@ -98,6 +99,10 @@ export function VehicleNewClient() {
     currentLocation: "Garasi Utama",
     bpkbStatus: "PROCESS_1_2_WEEKS",
     bpkbLeadDays: 14,
+    taxExpiryDate: "",
+    platExpiryDate: "",
+    taxNominal: 0,
+    stnkStatus: "READY",
     notes: "",
   });
 
@@ -147,6 +152,10 @@ export function VehicleNewClient() {
       currentLocation: "Garasi Utama",
       bpkbStatus: "PROCESS_1_2_WEEKS",
       bpkbLeadDays: 14,
+      taxExpiryDate: "",
+      platExpiryDate: "",
+      taxNominal: 0,
+      stnkStatus: "READY",
       notes: "",
     });
     setPhysicalChecklist({
@@ -195,6 +204,10 @@ export function VehicleNewClient() {
         auctionLotType: isAuction ? (formData.auctionLotType as any) : undefined,
         bpkbStatus: formData.bpkbStatus as any,
         bpkbLeadDays: Number(formData.bpkbLeadDays),
+        taxExpiryDate: formData.taxExpiryDate ? new Date(formData.taxExpiryDate) : undefined,
+        platExpiryDate: formData.platExpiryDate ? new Date(formData.platExpiryDate) : undefined,
+        taxNominal: formData.taxNominal ? Number(formData.taxNominal) : undefined,
+        stnkStatus: formData.stnkStatus as any,
         physicalChecklist,
       });
 
@@ -462,6 +475,144 @@ export function VehicleNewClient() {
             </div>
           </div>
         )}
+
+        {/* SECTION 2B: Legalitas STNK & Alarm Pajak Tahunan PKB */}
+        <div className="bg-[#FAF9F5] border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
+            <div className="flex items-center gap-2">
+              <CalendarClock className="w-4 h-4 text-[#D97706]" />
+              <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+                Dokumen STNK & Radar Pajak Kendaraan (PKB)
+              </h2>
+            </div>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+              Alarm H-30 Hari Showroom
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Jatuh Tempo Pajak Tahunan (PKB)
+              </label>
+              <input
+                type="date"
+                value={formData.taxExpiryDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, taxExpiryDate: e.target.value })
+                }
+                className="w-full px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Sesuai lembar notice pajak STNK
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Jatuh Tempo Plat / Kaleng (5 Thn)
+              </label>
+              <input
+                type="date"
+                value={formData.platExpiryDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, platExpiryDate: e.target.value })
+                }
+                className="w-full px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Bulan & Tahun plat kaleng mobil
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Estimasi Pajak Tahunan (Rp)
+              </label>
+              <input
+                type="number"
+                min={0}
+                placeholder="Contoh: 2800000"
+                value={formData.taxNominal || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    taxNominal: Number(e.target.value),
+                  })
+                }
+                className="w-full px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Acuan negosiasi / perpanjangan
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Status Fisik STNK
+              </label>
+              <select
+                value={formData.stnkStatus}
+                onChange={(e) =>
+                  setFormData({ ...formData, stnkStatus: e.target.value })
+                }
+                className="w-full px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              >
+                <option value="READY">STNK Asli Ready di Showroom</option>
+                <option value="PROCESS_1_2_WEEKS">Masih Diproses Balai Lelang</option>
+                <option value="MUTATION_REQUIRED">Perlu Mutasi / Balik Nama</option>
+                <option value="LOST_NEED_REPLACEMENT">STNK Hilang (Butuh Duplikat)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Banner Analisis Status Pajak STNK Otomatis */}
+          {formData.taxExpiryDate && (() => {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const target = new Date(formData.taxExpiryDate);
+            target.setHours(0, 0, 0, 0);
+            const diffDays = Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+              return (
+                <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-start gap-2.5">
+                  <ShieldAlert className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="font-bold block">Pajak Kendaraan MATI / Lewat Jatuh Tempo ({Math.abs(diffDays)} Hari Lalu)!</strong>
+                    <p className="mt-0.5 text-[11px] leading-relaxed">
+                      Unit ini berstatus pajak mati. Disarankan untuk segera diproses perpanjangan Samsat sebelum unit dibawa test drive atau diserahterimakan ke konsumen.
+                    </p>
+                  </div>
+                </div>
+              );
+            } else if (diffDays <= 30) {
+              return (
+                <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-start gap-2.5">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="font-bold text-[#78350F] block">Pajak Akan Jatuh Tempo Dalam {diffDays} Hari!</strong>
+                    <p className="mt-0.5 text-[11px] text-[#92400E] leading-relaxed">
+                      Unit masuk dalam Radar Alarm H-30 Dashboard. Siapkan alokasi dana perpanjangan atau informasikan pada kesepakatan jual-beli.
+                    </p>
+                  </div>
+                </div>
+              );
+            } else {
+              return (
+                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="font-bold text-emerald-950 block">Pajak Hidup & Aman (Sisa {diffDays} Hari)</strong>
+                    <p className="mt-0.5 text-[11px] text-emerald-800 leading-relaxed">
+                      Masa berlaku pajak STNK masih panjang dan siap untuk dipajang serta uji jalan tanpa kendala razia.
+                    </p>
+                  </div>
+                </div>
+              );
+            }
+          })()}
+        </div>
 
         {/* SECTION 3: Spesifikasi Unit */}
         <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">

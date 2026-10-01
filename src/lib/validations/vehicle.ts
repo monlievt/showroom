@@ -54,6 +54,8 @@ export const createVehicleSchema = z.object({
     .nullable(),
   currentLocation: z.string().default("Garasi Utama"),
   taxExpiryDate: z.coerce.date().optional().nullable(),
+  platExpiryDate: z.coerce.date().optional().nullable(),
+  taxNominal: z.coerce.number().nonnegative().optional().nullable(),
   stnkStatus: DocumentStatusEnum.default("READY"),
   bpkbStatus: DocumentStatusEnum.default("READY"),
   bpkbLeadDays: z.coerce.number().int().default(7),
