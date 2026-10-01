@@ -4,24 +4,27 @@
 
 ---
 
-## 📋 DAFTAR SKENARIO PENGETESAN
+## 📋 DAFTAR SKENARIO PENGETESAN LENGKAP
 
-| No | Modul / Skenario Pengujian | Cakupan Fitur |
+| No | Modul / Skenario Pengujian | Cakupan Fitur Utama |
 | :--- | :--- | :--- |
 | **01** | **Setup Finansial & Investor** | Pendaftaran Investor, Setoran Modal Pool, Aturan Tiering Bagi Hasil |
 | **02** | **Gudang Bahan Habis Pakai & Alat** | Input Stok Grosir Oli & Filter, Inventaris Peralatan Garasi |
-| **03** | **Kulakan Mobil Lelang (Intake)** | Input Unit Baru Eks Lelang Perusahaan, Uji Next-Step Dialog |
+| **03** | **Kulakan Mobil Lelang (Intake) & Pajak STNK** | Input Unit Eks Lelang, Tanggal Jatuh Tempo PKB & Plat Kaleng, Next-Step Dialog |
 | **04** | **Servis Ganti Oli Mandiri** | Alokasi Stok Bahan, Pemotongan Stok, Verifikasi Laba Jasa Garasi |
 | **05** | **Servis Bengkel Cat Luar** | Catat Biaya Bengkel Luar, Cetak Surat Jalan Bengkel (PDF) |
 | **06** | **Inspeksi Fisik 11 Panel** | Cek Ketebalan Mikron Cat, Grading Mesin/Rangka, Cetak Hasil Inspeksi (PDF) |
 | **07** | **Showroom Display & Tag Spion** | Update Status Ready for Sale, Cetak Price Tag Kaca Spion (PDF) |
 | **08** | **Katalog Publik & Calon Pembeli** | Akses Web Publik, Filter Mobil, Detail Galeri, 1-Klik Chat WhatsApp |
-| **09** | **Transaksi Penjualan Tempo & SPK** | Catat Jual Bertahap, Penerimaan DP, Cetak Surat Perjanjian SPK (PDF) |
-| **10** | **Monitoring Arus Kas & Alarm Piutang** | Dashboard AI, Alarm Tempo 14 Hari, 1-Klik Kirim WhatsApp Tagihan |
+| **09** | **Transaksi Penjualan Cash Tempo & SPK Pasal V** | Validasi DP Minimal 70%, Tempo Maks 30 Hari, Penahanan BPKB/STNK, SPK (PDF) |
+| **10** | **Monitoring Arus Kas & Alarm Piutang** | Dashboard AI, Alarm Tempo, 1-Klik Kirim WhatsApp Tagihan |
 | **11** | **Pelunasan & Dokumen Penyerahan** | Catat Pelunasan Sisa Piutang, Cetak Kuitansi Meterai (PDF) & BAST (PDF) |
 | **12** | **Jembatan Bagi Hasil Investor 1-Klik** | Eksekusi Bagi Hasil Otomatis, Mutasi Capital Ledger, Verifikasi Dividen |
 | **13** | **Portal Khusus Investor** | Login/Akses Portal Investor, Cek Transparansi Alokasi & Dividen |
 | **14** | **Buku Kas BCA, Prive & Asisten AI** | Rekonsiliasi Saldo BCA, Biaya Operasional Showroom, Konsultasi Gemini AI |
+| **15** | **Radar Alarm Pajak STNK & Plat Kaleng** | Deteksi Unit Jatuh Tempo H-30 & Overdue, Proyeksi Beban Kas PKB di Dashboard |
+| **16** | **Pengujian Keamanan RBAC (4 Peran)** | Validasi Hak Akses OWNER, STAFF_ADMIN, SALES, dan INVESTOR |
+| **17** | **Strategi Multi-Layer Backup VPS & Restore** | Download JSON Snapshot Web, Eksekusi Backup 4 Lapis & Simulasi Restore |
 
 ---
 
@@ -89,10 +92,10 @@ Menguji pencatatan stok grosir oli, filter oli, serta inventaris mesin/alat beng
 
 ---
 
-## SKENARIO 03: KULAKAN MOBIL LELANG (INTAKE) & NEXT-STEP DIALOG
+## SKENARIO 03: KULAKAN MOBIL LELANG (INTAKE) & PAJAK STNK
 
 ### 🎯 Tujuan:
-Menguji form input intake mobil lelang dan dialog aksi lanjutan pasca simpan unit.
+Menguji form input intake mobil lelang, pencatatan tanggal jatuh tempo pajak STNK, dan dialog aksi lanjutan pasca simpan unit.
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Sidebar > Data Mobil > + Tambah Mobil Baru** (`/admin/inventory/new`).
@@ -102,6 +105,9 @@ Menguji form input intake mobil lelang dan dialog aksi lanjutan pasca simpan uni
    - **Tahun Pembuatan:** `2019`
    - **Warna:** `Silver Metalik`
    - **Odometer (KM):** `62.000`
+   - **Tanggal Jatuh Tempo PKB (Pajak Tahunan):** Masukkan tanggal `15 hari dari hari ini` (untuk menguji alarm jatuh tempo H-30).
+   - **Tanggal Plat Kaleng 5 Tahunan:** Masukkan tanggal `2028-10-15`.
+   - **Estimasi Biaya PKB:** `Rp 2.450.000`.
    - **Sumber Pembelian:** `AUCTION (Balai Lelang)`
    - **Balai Lelang:** `IBID Jakarta`
    - **Tipe Lot:** `EKS_PERUSAHAAN`
@@ -110,12 +116,13 @@ Menguji form input intake mobil lelang dan dialog aksi lanjutan pasca simpan uni
    - **Target Harga Jual:** `Rp 148.000.000`
    - **Batas Minimal Jual:** `Rp 142.000.000`
    - **Status BPKB:** `PENDING_ARRIVAL` (Estimasi: 7 hari).
-3. Hubungkan ke Investor Bpk. Hendra Gunawan (jika ada pilihan alokasi modal investor).
+3. Hubungkan ke Investor Bpk. Hendra Gunawan.
 4. Klik tombol **Simpan Unit Baru**.
 5. Perhatikan layar pop-up yang muncul: **Next-Step Success Dialog**.
 
 ### ✅ Hasil yang Diharapkan:
 - Unit tersimpan dengan status awal **INTAKE**.
+- Tanggal pajak STNK dan estimasi biaya PKB Rp 2.450.000 tersimpan ke database.
 - Pop-up Next-Step Dialog muncul dengan 4 tombol: *Ganti Oli Mandiri*, *Cetak Surat Jalan Bengkel*, *Inspeksi 11 Panel*, dan *Upload Foto*.
 - HPP awal mobil tercatat **Rp 125.500.000** (Rp 122jt + Rp 3.5jt admin).
 
@@ -224,7 +231,7 @@ Memverifikasi bahwa mobil otomatis muncul di katalog web dan tombol konsultasi W
 3. Klik kartu mobil `Toyota Avanza 2019 (Silver)`.
 4. Di halaman detail (`/katalog/[id]`):
    - Cek galeri foto dan badge hasil inspeksi *Grade A*.
-   - Ubah slider kalkulator DP (misal DP 25%).
+   - Ubah slider kalkulator DP (misal DP 70%).
    - Klik tombol hijau **Tanya Unit via WhatsApp**.
 
 ### ✅ Hasil yang Diharapkan:
@@ -233,78 +240,89 @@ Memverifikasi bahwa mobil otomatis muncul di katalog web dan tombol konsultasi W
 
 ---
 
-## SKENARIO 09: TRANSAKSI PENJUALAN TEMPO & CETAK SPK (PDF)
+## SKENARIO 09: TRANSAKSI PENJUALAN CASH TEMPO GARASI & SPK PASAL V
 
 ### 🎯 Tujuan:
-Menguji pencatatan transaksi penjualan bertahap (tempo) dan pembuatan Surat Perjanjian Jual Beli (SPK).
+Menguji penegakan kebijakan anti-leasing showroom: validasi DP minimal 70%, batas tempo maksimal 30 hari, peringatan penahanan BPKB/STNK asli, dan penerbitan SPK PDF dengan Pasal V.
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Sidebar > Penjualan & Piutang** (`/admin/sales`).
 2. Klik tombol **+ Catat Penjualan Baru** (`/admin/sales/new`).
-3. Masukkan data transaksi:
-   - **Pilih Mobil:** `Toyota Avanza 2019 (B 2489 KMR)`
-   - **Tipe Pembeli:** `Retail Konsumen Perorangan`
+3. Pilih mobil `Toyota Avanza 2019 (B 2489 KMR)` dan isi identitas pembeli:
    - **Nama Pembeli:** `Bpk. Agus Prasetyo`
    - **Nomor HP / WhatsApp:** `081388990011`
    - **Alamat:** `Jl. Melati No. 45, Jakarta Timur`
    - **Harga Jual Disepakati:** `Rp 146.000.000`
-   - **Pembayaran Awal / Uang Muka (DP):** `Rp 46.000.000` (Metode: Transfer BCA).
-   - **Sisa Piutang Berjalan:** `Rp 100.000.000`
-   - **Tanggal Jatuh Tempo Pelunasan:** Masukkan tanggal 14 hari dari hari ini.
-4. Klik **Simpan Transaksi Penjualan**.
-5. Di tabel penjualan, klik tombol **Cetak Surat Perjanjian Jual Beli / SPK (PDF)** (`/api/pdf/agreement/[id]`).
+4. **Uji Validasi Penolakan DP < 70%:**
+   - Coba masukkan DP: `Rp 50.000.000` (hanya ~34% dari harga jual).
+   - Perhatikan pesan validasi yang muncul di bawah input:
+     * *Sistem menampilkan pesan peringatan merah: "Kebijakan Garasi: DP Minimal 70% (Rp 102.200.000)"*.
+     * *Tombol Simpan Transaksi dinonaktifkan (disabled).*
+5. **Uji Validasi Batas Waktu > 30 Hari:**
+   - Coba pilih tanggal jatuh tempo lebih dari 30 hari dari sekarang (misal 60 hari).
+   - Sistem menolak atau membatasi pilihan tanggal maksimal 30 hari.
+6. **Input Transaksi Valid Sesuai SOP:**
+   - Masukkan DP yang valid: `Rp 106.000.000` (~72.6% dari harga jual).
+   - Metode: `Transfer Bank (BCA)`.
+   - Perhatikan sisa piutang otomatis terhitung: `Rp 40.000.000` (sisa ~27.4%).
+   - Pilih tanggal jatuh tempo: `20 hari dari hari ini` (valid <= 30 hari).
+   - Perhatikan box informasi penahanan dokumen BPKB & STNK asli yang tampil di formulir.
+7. Klik tombol **Simpan Transaksi Penjualan**.
+8. Pada tabel penjualan, klik tombol **Cetak Surat Perjanjian Jual Beli / SPK (PDF)** (`/api/pdf/agreement/[id]`).
+9. Buka file PDF SPK dan periksa bagian **PASAL V**.
 
 ### ✅ Hasil yang Diharapkan:
-- Transaksi tercatat dengan status lencana piutang: `ON_SCHEDULE (Kurang Rp 100.000.000)`.
-- Status unit mobil otomatis berubah menjadi **BOOKED / AT_SHOWROOM_PENDING**.
-- Kas BCA showroom otomatis bertambah Rp 46.000.000 dari penerimaan DP.
-- PDF SPK berhasil terunduh lengkap dengan pasal garansi dan tanggal jatuh tempo 14 hari.
+- Transaksi berhasil disimpan dengan DP Rp 106.000.000 dan sisa piutang Rp 40.000.000.
+- Status unit mobil otomatis menjadi **BOOKED / AT_SHOWROOM_PENDING**.
+- Kas BCA showroom otomatis bertambah Rp 106.000.000.
+- Pada dokumen SPK PDF tercetak jelas **PASAL V: KEBIJAKAN CASH TEMPO & PENAHANAN DOKUMEN FISIK**:
+  * Dokumen fisik asli BPKB dan STNK resmi ditahan di brankas Nur Mobil hingga pelunasan penuh.
+  * Kendaraan dilarang digadaikan, dipindahtangankan, atau dibawa keluar pulau sebelum sisa Rp 40.000.000 lunas.
 
 ---
 
-## SKENARIO 10: ALARM PROAKTIF PIUTANG TEMPO 14 HARI & 1-KLIK WA
+## SKENARIO 10: ALARM PROAKTIF PIUTANG TEMPO & 1-KLIK WA
 
 ### 🎯 Tujuan:
 Menguji fungsi deteksi dini piutang di Dashboard Utama dan tombol penagihan WhatsApp otomatis.
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Sidebar > Dashboard** (`/admin`).
-2. Perhatikan bagian atas dashboard:
-   - Kotak **Alarm Piutang Tempo 14 Hari** aktif.
-   - Terlihat tagihan atas nama `Bpk. Agus Prasetyo`, unit `Avanza B 2489 KMR`, sisa `Rp 100.000.000`.
+2. Perhatikan bagian alarm piutang tempo:
+   - Terlihat tagihan atas nama `Bpk. Agus Prasetyo`, unit `Avanza B 2489 KMR`, sisa `Rp 40.000.000`.
 3. Periksa juga widget **Proyeksi Arus Kas 14 Hari**:
-   - Di daftar *Piutang Mendekati 2 Minggu (Tagih Sekarang)*, transaksi Bpk. Agus terdaftar.
+   - Di daftar piutang masuk, transaksi Bpk. Agus terdaftar dengan estimasi kas masuk Rp 40.000.000.
 4. Klik tombol hijau **Kirim WA Tagihan (1-Klik)** pada kartu alarm.
 5. Periksa jendela WhatsApp Web/App yang terbuka.
 
 ### ✅ Hasil yang Diharapkan:
 - WhatsApp Web terbuka dengan format pesan resmi:
-  > *"Halo Pak/Bu Agus Prasetyo, Konfirmasi sisa pelunasan untuk unit Toyota Avanza (Plat B 2489 KMR) sebesar Rp 100.000.000 yang jatuh tempo pada [Tanggal]. Mohon konfirmasi bukti transfer jika sudah melakukan pembayaran ke rekening resmi Nur Mobil. Terima kasih!"*
+  > *"Halo Pak/Bu Agus Prasetyo, Konfirmasi sisa pelunasan Cash Tempo untuk unit Toyota Avanza (Plat B 2489 KMR) sebesar Rp 40.000.000 yang jatuh tempo pada [Tanggal]. Mengingat BPKB & STNK asli siap diserahkan saat pelunasan, mohon konfirmasi bukti transfer jika sudah melakukan pembayaran ke rekening resmi Nur Mobil. Terima kasih!"*
 
 ---
 
 ## SKENARIO 11: PELUNASAN, KUITANSI METERAI (PDF) & BAST (PDF)
 
 ### 🎯 Tujuan:
-Menguji pencatatan pelunasan sisa piutang Rp 100.000.000 dan pencetakan dokumen serah terima fisik.
+Menguji pencatatan pelunasan sisa piutang Rp 40.000.000 dan pencetakan dokumen penyerahan fisik kendaraan beserta BPKB & STNK asli.
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Penjualan & Piutang** (`/admin/sales`), cari transaksi Bpk. Agus Prasetyo.
 2. Klik tombol `+` **Catat Pembayaran Masuk** (`/admin/sales/[id]/payment`).
 3. Di form pelunasan:
-   - **Nominal Pembayaran:** Masukkan `Rp 100.000.000` (Lunas).
+   - **Nominal Pembayaran:** Masukkan `Rp 40.000.000` (Lunas).
    - **Metode Pembayaran:** `Transfer Bank (BCA Rekening Showroom)`
-   - **Catatan:** `Pelunasan via transfer m-BCA Bpk. Agus Prasetyo`.
+   - **Catatan:** `Pelunasan Cash Tempo transfer m-BCA Bpk. Agus Prasetyo`.
 4. Perhatikan live badge di bawah: Status berubah menjadi `LUNAS 100% (Settled)`.
 5. Klik tombol **Simpan Pembayaran Masuk**.
 
 ### ✅ Hasil yang Diharapkan:
-- Sistem tidak me-redirect kosong, melainkan membuka **Settlement Success Dialog Modal**.
+- Sistem membuka **Settlement Success Dialog Modal**.
 - Sisa piutang menjadi **Rp 0**.
 - Status mobil resmi berubah menjadi **SOLD_SETTLED**.
 - Di dalam dialog tersedia tombol:
   * **Cetak Kuitansi Lunas (PDF):** Format resmi nota pelunasan bermeterai Rp 10.000.
-  * **Cetak BAST (PDF):** Berita acara serah terima kunci, STNK, BPKB asli.
+  * **Cetak BAST (PDF):** Berita acara serah terima resmi yang memuat checklist penyerahan BPKB asli dan STNK asli yang sebelumnya ditahan.
 
 ---
 
@@ -316,7 +334,7 @@ Menguji eksekusi pembagian dividen laba ke investor langsung dari dialog pelunas
 ### 📝 Langkah Pengujian:
 1. Di dalam **Settlement Success Dialog Modal** yang sedang terbuka:
    - Perhatikan lencana oranye: *"Unit Sah Didanai Investor: Bpk. Hendra Gunawan"*.
-   - Perhitungan Laba Kotor: Harga Jual Rp 146jt - HPP Total Rp 127.2jt = **Laba Bersih Rp 18.800.000**.
+   - Perhitungan Laba: Harga Jual Rp 146jt - HPP Total Rp 127.2jt = **Laba Bersih Rp 18.800.000**.
 2. Klik tombol utama: **Eksekusi Bagi Hasil Investor Sekarang (1-Klik)**.
 3. Perhatikan proses loading spinner dan konfirmasi yang muncul:
    * *"Bagi Hasil Sukses Dieksekusi! Snapshot aturan deterministik tersimpan, mutasi Capital Ledger tercatat."*
@@ -324,7 +342,6 @@ Menguji eksekusi pembagian dividen laba ke investor langsung dari dialog pelunas
 5. Periksa tabel riwayat pembagian dividen.
 
 ### ✅ Hasil yang Diharapkan:
-- Eksekusi berhasil tanpa error.
 - Pokok modal Bpk. Hendra Gunawan kembali utuh ke *Capital Ledger*.
 - Dividen laba Bpk. Hendra tercatat presisi sesuai tiering rule (misal 50% = Rp 9.400.000).
 - Sisa laba garasi sebesar Rp 9.400.000 masuk ke kas laba showroom.
@@ -357,7 +374,7 @@ Menguji rekonsiliasi akhir saldo kas showroom, pencatatan prive pribadi owner, d
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Sidebar > Keuangan > Buku Kas & Mutasi BCA** (`/admin/finance`):
-   - Periksa mutasi masuk: DP Rp 46jt + Pelunasan Rp 100jt = Rp 146.000.000.
+   - Periksa mutasi masuk: DP Rp 106jt + Pelunasan Rp 40jt = Rp 146.000.000.
    - Periksa mutasi keluar: Beli unit lelang, admin, bengkel cat.
    - Saldo akhir BCA sinkron dengan mutasi fisik.
 2. Buka menu **Biaya & Pengeluaran > Tarik Prive Owner** (`/admin/finance/prive/new`):
@@ -375,8 +392,124 @@ Menguji rekonsiliasi akhir saldo kas showroom, pencatatan prive pribadi owner, d
 
 ---
 
+## SKENARIO 15: RADAR ALARM PAJAK STNK & PLAT KALENG 5 TAHUNAN
+
+### 🎯 Tujuan:
+Menguji pendeteksian otomatis unit mobil yang mendekati jatuh tempo pajak STNK (H-30 Hari) maupun yang sudah lewat waktu (*Overdue*), serta verifikasi proyeksi beban kas PKB di Dashboard.
+
+### 📝 Langkah Pengujian:
+1. Buka menu **Data Mobil (Inventori)** (`/admin/inventory`).
+2. Periksa baris mobil `Avanza B 2489 KMR` yang diinput dengan jatuh tempo PKB 15 hari ke depan:
+   - Amati kolom status pajak STNK: Tampil badge kuning bertuliskan **Jatuh Tempo (H-15)**.
+3. Buka formulir edit mobil lain atau tambahkan unit uji kedua (`B 9999 DUMMY`):
+   - Isi tanggal jatuh tempo PKB: `30 hari yang lalu` (Overdue).
+   - Isi estimasi biaya PKB: `Rp 3.000.000`.
+   - Simpan unit.
+4. Periksa kembali tabel inventori:
+   - Unit kedua menampilkan badge merah **OVERDUE (Pajak Mati)**.
+5. Buka **Dashboard Utama** (`/admin`):
+   - Cari widget **Radar Alarm Pajak STNK & Plat Kaleng**.
+   - Periksa tab filter: *Semua*, *Jatuh Tempo H-30*, dan *Overdue*.
+   - Periksa total estimasi biaya PKB yang harus disiapkan (misal: Rp 2.450.000 + Rp 3.000.000 = Rp 5.450.000).
+
+### ✅ Hasil yang Diharapkan:
+- Sistem secara otomatis menghitung selisih hari tanggal hari ini vs tanggal jatuh tempo tanpa perlu refresh database manual.
+- Widget Radar Alarm Pajak di Dashboard mendeteksi kedua unit tersebut dengan visual kontras (kuning dan merah).
+- Pemilik showroom dapat langsung mengetahui proyeksi kebutuhan kas untuk biro jasa pajak Samsat.
+
+---
+
+## SKENARIO 16: PENGUJIAN KEAMANAN HAK AKSES MULTI-PERAN (RBAC 4 ROLE)
+
+### 🎯 Tujuan:
+Menguji pembatasan wewenang antara `OWNER`, `STAFF_ADMIN`, `SALES`, dan `INVESTOR` untuk memastikan kerahasiaan keuangan dan kepatuhan operasional.
+
+### 📝 Langkah Pengujian:
+
+#### Bagian A: Pengujian Peran `SALES`
+1. Buka halaman login (`/login`), pilih role **SALES (Marketing & Penjualan)**, klik Masuk.
+2. Buka menu navigasi Sidebar:
+   - Verifikasi menu yang muncul: *Dashboard, Data Mobil, Penjualan, Cek Fisik*.
+   - Verifikasi menu yang **TIDAK MUNCUL**: *Buku Kas BCA, Gudang Bahan & Servis Mandiri, Manajemen Investor, Prive, Pengaturan Sistem*.
+3. Coba akses rute terproteksi secara paksa via address bar browser:
+   - Ketik URL: `http://localhost:3000/admin/finance` ➔ Ditolak / Diredirect.
+   - Ketik URL: `http://localhost:3000/admin/investors` ➔ Ditolak / Diredirect.
+   - Ketik URL: `http://localhost:3000/admin/settings` ➔ Ditolak / Diredirect.
+
+#### Bagian B: Pengujian Peran `STAFF_ADMIN`
+1. Logout, lalu login kembali dengan role **STAFF_ADMIN (Operasional Garasi)**.
+2. Buka menu **Gudang Bahan & Alat** (`/admin/finance/assets`):
+   - Akses diizinkan: Admin garasi dapat mencatat stok oli dan alokasi servis mandiri.
+3. Buka menu **Data Mobil** dan catat biaya cat bodi:
+   - Akses diizinkan: Admin garasi dapat mencatat pengeluaran unit dan biaya operasional.
+4. Coba akses rute sensitif via address bar browser:
+   - Ketik URL: `http://localhost:3000/admin/finance` (Kas Besar BCA) ➔ Ditolak.
+   - Ketik URL: `http://localhost:3000/admin/finance/prive/new` (Tarik Prive) ➔ Ditolak.
+   - Ketik URL: `http://localhost:3000/admin/investors` (Dividen Investor) ➔ Ditolak.
+
+#### Bagian C: Pengujian Peran `INVESTOR`
+1. Logout, lalu login dengan role **INVESTOR (Pemodal Mitra)**.
+2. Verifikasi layar: Langsung diarahkan ke portal investor (`/investor`).
+3. Coba ketik URL admin: `http://localhost:3000/admin` ➔ Otomatis ditolak dan dikembalikan ke `/investor`.
+
+#### Bagian D: Pengujian Peran `OWNER`
+1. Logout, lalu login dengan role **OWNER (Pemilik Showroom)**.
+2. Verifikasi: Seluruh menu terbuka 100% tanpa ada batasan (Kas BCA, Prive, Bagi Hasil, Setting, Download Backup).
+
+### ✅ Hasil yang Diharapkan:
+- Seluruh 4 peran bekerja presisi sesuai wewenangnya.
+- Tidak ada kebocoran data kas showroom ke staf lapangan atau tenaga sales.
+- Investor terisolasi di portal transparansi miliknya sendiri.
+
+---
+
+## SKENARIO 17: STRATEGI MULTI-LAYER BACKUP VPS SENDIRI & DISASTER RECOVERY
+
+### 🎯 Tujuan:
+Menguji fungsi pencadangan data mandiri (bebas biaya) untuk instalasi VPS sendiri, pengunduhan snapshot JSON via web, dan simulasi pemulihan database.
+
+### 📝 Langkah Pengujian:
+
+#### Bagian A: Unduh Snapshot Database Instan via Web UI
+1. Login sebagai `OWNER`, buka menu **Pengaturan Sistem** (`/admin/settings`).
+2. Gulir ke bagian **Pencadangan Data & Pemulihan (Backup & Disaster Recovery)**.
+3. Klik tombol **Unduh Snapshot Database (JSON)** (`/api/backup/download`).
+4. Periksa folder Downloads di komputer Anda.
+5. Buka file JSON yang terunduh dengan text editor:
+   - Verifikasi keberadaan tabel: `vehicles`, `sales`, `payments`, `cashTransactions`, `investors`, `users`.
+
+#### Bagian B: Pengujian Script Multi-Layer Backup di VPS
+1. Buka terminal proyek di VPS / server lokal:
+   ```bash
+   chmod +x scripts/backup-multi-layer.sh scripts/restore-db.sh
+   ./scripts/backup-multi-layer.sh
+   ```
+2. Periksa output log terminal:
+   - Status Lapis 1 (Lokal Dump): Terbentuk file `.sql.gz` di folder `backups/db/`.
+   - Status Auto-Purge: Pengecekan file kadaluarsa > 7 hari berjalan normal.
+   - Status Lapis 2 (Telegram Bot): Menampilkan kesiapan token/chat ID atau notifikasi terkirim.
+   - Status Lapis 3 (Google Drive Rclone): Menampilkan status remote rclone.
+   - Status Lapis 4 (GitHub): Memverifikasi status commit git lokal.
+
+#### Bagian C: Pengujian Script Pemulihan (Disaster Recovery Restore)
+1. Jalankan script restore dengan parameter file backup:
+   ```bash
+   ./scripts/restore-db.sh backups/db/<nama_file_backup>.sql.gz
+   ```
+2. Verifikasi dialog keamanan:
+   - Script meminta konfirmasi eksplisit (`Y/N`).
+   - Script otomatis membuat cadangan darurat (*safety pre-restore backup*) sebelum melakukan overwrite.
+   - Data berhasil di-restore dan aplikasi kembali aktif tanpa data korup.
+
+### ✅ Hasil yang Diharapkan:
+- Snapshot web JSON terunduh rapi dan lengkap.
+- Script pencadangan 4 lapis berjalan mulus tanpa error syntax.
+- Script pemulihan dilengkapi pengaman ganda untuk mencegah kehilangan data akibat salah ketik operator.
+
+---
+
 ## 🏁 KESIMPULAN HASIL PENGETESAN
 
-Jika seluruh 14 skenario di atas telah dijalankan dengan hasil checklist **PASSED (LULUS)**:
-1. Sistem Showroom Nur Mobil dinyatakan **100% Siap Produksi (Production Ready)**.
-2. Seluruh siklus bisnis mulai dari kulakan lelang, servis garasi mandiri, inspeksi bodi, display publik, penjualan tempo, penagihan WA, hingga dividen investor telah terhubung secara otomatis, presisi, dan anti-bocor.
+Jika seluruh **17 skenario pengetesan** di atas telah dijalankan dengan hasil checklist **PASSED (LULUS)**:
+1. Sistem Showroom Nur Mobil dinyatakan **100% Siap Produksi (Enterprise & Production Ready)**.
+2. Seluruh siklus bisnis mulai dari kulakan lelang, servis garasi mandiri, inspeksi bodi, display publik, penjualan cash tempo anti-leasing (DP 70% & 30 hari), alarm pajak STNK, dividen investor, hak akses RBAC 4 peran, hingga sistem pencadangan 4 lapis telah terhubung secara otomatis, presisi, dan aman.
