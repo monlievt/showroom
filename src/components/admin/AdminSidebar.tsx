@@ -27,10 +27,23 @@ import {
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/actions/auth";
 
-export function AdminSidebar() {
+interface AdminSidebarProps {
+  userRole?: "OWNER" | "ADMIN" | "STAFF_ADMIN" | "SALES" | "INVESTOR";
+  userName?: string;
+}
+
+export function AdminSidebar({
+  userRole = "ADMIN",
+  userName = "Owner Nur Mobil",
+}: AdminSidebarProps) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  // Peran Pengguna (RBAC)
+  const isOwner = userRole === "OWNER" || userRole === "ADMIN";
+  const isStaff = userRole === "STAFF_ADMIN";
+  const isSales = userRole === "SALES";
 
   // Submenu accordion states
   const [financeOpen, setFinanceOpen] = useState(true);
@@ -106,32 +119,34 @@ export function AdminSidebar() {
         <nav className="p-3 space-y-1 overflow-y-auto flex-1 custom-scrollbar">
           {!isCollapsed && (
             <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#6B6560]">
-              Menu Operasional
+              {isSales ? "Menu Sales" : "Menu Operasional"}
             </div>
           )}
 
-          {/* 0. Dashboard Utama */}
-          <Link
-            href="/admin"
-            title={isCollapsed ? "Dashboard Utama" : undefined}
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
-              pathname === "/admin"
-                ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
-              isCollapsed && "justify-center px-0"
-            )}
-          >
-            <LayoutDashboard
+          {/* 0. Dashboard Utama (Owner & Staff Admin) */}
+          {!isSales && (
+            <Link
+              href="/admin"
+              title={isCollapsed ? "Dashboard Utama" : undefined}
               className={cn(
-                "w-4 h-4 shrink-0",
-                pathname === "/admin" ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                pathname === "/admin"
+                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
+                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                isCollapsed && "justify-center px-0"
               )}
-            />
-            {!isCollapsed && <span className="truncate">Dashboard Utama</span>}
-          </Link>
+            >
+              <LayoutDashboard
+                className={cn(
+                  "w-4 h-4 shrink-0",
+                  pathname === "/admin" ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                )}
+              />
+              {!isCollapsed && <span className="truncate">Dashboard Utama</span>}
+            </Link>
+          )}
 
-          {/* 1. Inventori Unit */}
+          {/* 1. Inventori Unit (Semua Role: Owner, Staff, Sales) */}
           <Link
             href="/admin/inventory"
             title={isCollapsed ? "Inventori Unit" : undefined}
@@ -149,286 +164,302 @@ export function AdminSidebar() {
                 pathname.startsWith("/admin/inventory") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
               )}
             />
-            {!isCollapsed && <span className="truncate">Inventori Unit</span>}
-          </Link>
-
-          {/* 2. Cek Fisik & Inspeksi */}
-          <Link
-            href="/admin/inspections"
-            title={isCollapsed ? "Cek Fisik & Inspeksi" : undefined}
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
-              pathname.startsWith("/admin/inspections")
-                ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
-              isCollapsed && "justify-center px-0"
+            {!isCollapsed && (
+              <span className="truncate">
+                {isSales ? "Katalog Stok Ready" : "Inventori Unit"}
+              </span>
             )}
-          >
-            <ClipboardCheck
-              className={cn(
-                "w-4 h-4 shrink-0",
-                pathname.startsWith("/admin/inspections") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
-              )}
-            />
-            {!isCollapsed && <span className="truncate">Cek Fisik & Inspeksi</span>}
           </Link>
 
-          {/* 3. Gudang Bahan & Alat Garasi (Mandiri di Menu Operasional) */}
-          <Link
-            href="/admin/finance/assets"
-            title={isCollapsed ? "Gudang Bahan & Alat Garasi" : undefined}
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
-              pathname.startsWith("/admin/finance/assets")
-                ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
-              isCollapsed && "justify-center px-0"
-            )}
-          >
-            <Wrench
+          {/* 2. Cek Fisik & Inspeksi (Owner & Staff) */}
+          {!isSales && (
+            <Link
+              href="/admin/inspections"
+              title={isCollapsed ? "Cek Fisik & Inspeksi" : undefined}
               className={cn(
-                "w-4 h-4 shrink-0",
-                pathname.startsWith("/admin/finance/assets") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
-              )}
-            />
-            {!isCollapsed && <span className="truncate">Gudang Bahan &amp; Alat</span>}
-          </Link>
-
-          {/* 4. Penjualan & Piutang */}
-          <Link
-            href="/admin/sales"
-            title={isCollapsed ? "Penjualan & Piutang" : undefined}
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
-              pathname.startsWith("/admin/sales")
-                ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
-              isCollapsed && "justify-center px-0"
-            )}
-          >
-            <ReceiptText
-              className={cn(
-                "w-4 h-4 shrink-0",
-                pathname.startsWith("/admin/sales") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
-              )}
-            />
-            {!isCollapsed && <span className="truncate">Penjualan & Piutang</span>}
-          </Link>
-
-          {/* 5. Keuangan & Kas (With Submenu) */}
-          <div>
-            <div
-              className={cn(
-                "flex items-center justify-between rounded-xl transition-all",
-                isFinanceActive && !pathname.startsWith("/admin/finance/assets")
-                  ? isCollapsed
-                    ? "bg-[#D97706] text-white"
-                    : "bg-[#D97706]/10 text-[#D97706] font-bold"
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                pathname.startsWith("/admin/inspections")
+                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
                   : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
-                isCollapsed ? "justify-center" : "px-3 py-2"
+                isCollapsed && "justify-center px-0"
               )}
             >
-              <Link
-                href="/admin/finance"
-                title={isCollapsed ? "Keuangan & Kas" : undefined}
+              <ClipboardCheck
                 className={cn(
-                  "flex items-center gap-3 text-sm flex-1",
-                  isCollapsed && "p-2.5 justify-center"
+                  "w-4 h-4 shrink-0",
+                  pathname.startsWith("/admin/inspections") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                )}
+              />
+              {!isCollapsed && <span className="truncate">Cek Fisik & Inspeksi</span>}
+            </Link>
+          )}
+
+          {/* 3. Gudang Bahan & Alat Garasi (Owner & Staff) */}
+          {!isSales && (
+            <Link
+              href="/admin/finance/assets"
+              title={isCollapsed ? "Gudang Bahan & Alat Garasi" : undefined}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                pathname.startsWith("/admin/finance/assets")
+                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
+                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                isCollapsed && "justify-center px-0"
+              )}
+            >
+              <Wrench
+                className={cn(
+                  "w-4 h-4 shrink-0",
+                  pathname.startsWith("/admin/finance/assets") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                )}
+              />
+              {!isCollapsed && <span className="truncate">Gudang Bahan &amp; Alat</span>}
+            </Link>
+          )}
+
+          {/* 4. Penjualan & Piutang (Owner & Staff) */}
+          {!isSales && (
+            <Link
+              href="/admin/sales"
+              title={isCollapsed ? "Penjualan & Piutang" : undefined}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                pathname.startsWith("/admin/sales")
+                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
+                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                isCollapsed && "justify-center px-0"
+              )}
+            >
+              <ReceiptText
+                className={cn(
+                  "w-4 h-4 shrink-0",
+                  pathname.startsWith("/admin/sales") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                )}
+              />
+              {!isCollapsed && <span className="truncate">Penjualan & Piutang</span>}
+            </Link>
+          )}
+
+          {/* 5. Keuangan & Kas (HANYA OWNER / ADMIN) */}
+          {isOwner && (
+            <div>
+              <div
+                className={cn(
+                  "flex items-center justify-between rounded-xl transition-all",
+                  isFinanceActive && !pathname.startsWith("/admin/finance/assets")
+                    ? isCollapsed
+                      ? "bg-[#D97706] text-white"
+                      : "bg-[#D97706]/10 text-[#D97706] font-bold"
+                    : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                  isCollapsed ? "justify-center" : "px-3 py-2"
                 )}
               >
-                <Wallet
-                  className={cn(
-                    "w-4 h-4 shrink-0",
-                    isFinanceActive && !pathname.startsWith("/admin/finance/assets")
-                      ? isCollapsed
-                        ? "text-white"
-                        : "text-[#D97706]"
-                      : "text-[#6B6560]"
-                  )}
-                />
-                {!isCollapsed && <span className="truncate">Keuangan & Kas</span>}
-              </Link>
-              {!isCollapsed && (
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setFinanceOpen(!financeOpen);
-                  }}
-                  className="p-1 rounded-md hover:bg-[#D9D4CB]/60 text-[#6B6560] cursor-pointer"
-                  title="Buka/Tutup Submenu"
-                >
-                  <ChevronDown
-                    className={cn(
-                      "w-3.5 h-3.5 transition-transform duration-200",
-                      financeOpen && "rotate-180"
-                    )}
-                  />
-                </button>
-              )}
-            </div>
-
-            {/* Submenu Keuangan */}
-            {!isCollapsed && financeOpen && (
-              <div className="pl-6 pr-1 py-1 space-y-1 mt-0.5 border-l-2 border-[#D97706]/30 ml-4">
                 <Link
                   href="/admin/finance"
+                  title={isCollapsed ? "Keuangan & Kas" : undefined}
                   className={cn(
-                    "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                    pathname === "/admin/finance"
-                      ? "bg-[#D97706] text-white font-semibold"
-                      : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                    "flex items-center gap-3 text-sm flex-1",
+                    isCollapsed && "p-2.5 justify-center"
                   )}
                 >
-                  <Wallet className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">Buku Kas & Mutasi</span>
-                </Link>
-
-                <Link
-                  href="/admin/finance/expenses"
-                  className={cn(
-                    "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                    pathname.startsWith("/admin/finance/expenses")
-                      ? "bg-[#D97706] text-white font-semibold"
-                      : "text-[#44403C] hover:bg-[#D9D4CB]/50"
-                  )}
-                >
-                  <Split className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">Beban & Prive (BCA)</span>
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* 5. Investor & Bagi Hasil (With Submenu) */}
-          <div>
-            <div
-              className={cn(
-                "flex items-center justify-between rounded-xl transition-all",
-                isInvestorActive
-                  ? isCollapsed
-                    ? "bg-[#D97706] text-white"
-                    : "bg-[#D97706]/10 text-[#D97706] font-bold"
-                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
-                isCollapsed ? "justify-center" : "px-3 py-2"
-              )}
-            >
-              <Link
-                href="/admin/investors"
-                title={isCollapsed ? "Investor & Bagi Hasil" : undefined}
-                className={cn(
-                  "flex items-center gap-3 text-sm flex-1",
-                  isCollapsed && "p-2.5 justify-center"
-                )}
-              >
-                <Coins
-                  className={cn(
-                    "w-4 h-4 shrink-0",
-                    isInvestorActive
-                      ? isCollapsed
-                        ? "text-white"
-                        : "text-[#D97706]"
-                      : "text-[#6B6560]"
-                  )}
-                />
-                {!isCollapsed && <span className="truncate">Investor & Bagi Hasil</span>}
-              </Link>
-              {!isCollapsed && (
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setInvestorOpen(!investorOpen);
-                  }}
-                  className="p-1 rounded-md hover:bg-[#D9D4CB]/60 text-[#6B6560] cursor-pointer"
-                  title="Buka/Tutup Submenu"
-                >
-                  <ChevronDown
+                  <Wallet
                     className={cn(
-                      "w-3.5 h-3.5 transition-transform duration-200",
-                      investorOpen && "rotate-180"
+                      "w-4 h-4 shrink-0",
+                      isFinanceActive && !pathname.startsWith("/admin/finance/assets")
+                        ? isCollapsed
+                          ? "text-white"
+                          : "text-[#D97706]"
+                        : "text-[#6B6560]"
                     )}
                   />
-                </button>
+                  {!isCollapsed && <span className="truncate">Keuangan & Kas</span>}
+                </Link>
+                {!isCollapsed && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setFinanceOpen(!financeOpen);
+                    }}
+                    className="p-1 rounded-md hover:bg-[#D9D4CB]/60 text-[#6B6560] cursor-pointer"
+                    title="Buka/Tutup Submenu"
+                  >
+                    <ChevronDown
+                      className={cn(
+                        "w-3.5 h-3.5 transition-transform duration-200",
+                        financeOpen && "rotate-180"
+                      )}
+                    />
+                  </button>
+                )}
+              </div>
+
+              {/* Submenu Keuangan */}
+              {!isCollapsed && financeOpen && (
+                <div className="pl-6 pr-1 py-1 space-y-1 mt-0.5 border-l-2 border-[#D97706]/30 ml-4">
+                  <Link
+                    href="/admin/finance"
+                    className={cn(
+                      "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                      pathname === "/admin/finance"
+                        ? "bg-[#D97706] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                    )}
+                  >
+                    <Wallet className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">Buku Kas & Mutasi</span>
+                  </Link>
+
+                  <Link
+                    href="/admin/finance/expenses"
+                    className={cn(
+                      "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                      pathname.startsWith("/admin/finance/expenses")
+                        ? "bg-[#D97706] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                    )}
+                  >
+                    <Split className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">Beban & Prive (BCA)</span>
+                  </Link>
+                </div>
               )}
             </div>
+          )}
 
-            {/* Submenu Investor */}
-            {!isCollapsed && investorOpen && (
-              <div className="pl-6 pr-1 py-1 space-y-1 mt-0.5 border-l-2 border-[#D97706]/30 ml-4">
+          {/* 6. Investor & Bagi Hasil (HANYA OWNER / ADMIN) */}
+          {isOwner && (
+            <div>
+              <div
+                className={cn(
+                  "flex items-center justify-between rounded-xl transition-all",
+                  isInvestorActive
+                    ? isCollapsed
+                      ? "bg-[#D97706] text-white"
+                      : "bg-[#D97706]/10 text-[#D97706] font-bold"
+                    : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                  isCollapsed ? "justify-center" : "px-3 py-2"
+                )}
+              >
                 <Link
                   href="/admin/investors"
+                  title={isCollapsed ? "Investor & Bagi Hasil" : undefined}
                   className={cn(
-                    "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                    pathname === "/admin/investors"
-                      ? "bg-[#D97706] text-white font-semibold"
-                      : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                    "flex items-center gap-3 text-sm flex-1",
+                    isCollapsed && "p-2.5 justify-center"
                   )}
                 >
-                  <Coins className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">Unit Siap Bagi Hasil</span>
+                  <Coins
+                    className={cn(
+                      "w-4 h-4 shrink-0",
+                      isInvestorActive
+                        ? isCollapsed
+                          ? "text-white"
+                          : "text-[#D97706]"
+                        : "text-[#6B6560]"
+                    )}
+                  />
+                  {!isCollapsed && <span className="truncate">Investor & Bagi Hasil</span>}
                 </Link>
-
-                <Link
-                  href="/admin/investors/accounts"
-                  className={cn(
-                    "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                    pathname.startsWith("/admin/investors/accounts")
-                      ? "bg-[#D97706] text-white font-semibold"
-                      : "text-[#44403C] hover:bg-[#D9D4CB]/50"
-                  )}
-                >
-                  <Users className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">Daftar Akun Investor</span>
-                </Link>
-
-                <Link
-                  href="/admin/investors/history"
-                  className={cn(
-                    "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                    pathname.startsWith("/admin/investors/history")
-                      ? "bg-[#D97706] text-white font-semibold"
-                      : "text-[#44403C] hover:bg-[#D9D4CB]/50"
-                  )}
-                >
-                  <Clock className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">Riwayat Distribusi</span>
-                </Link>
-
-                <Link
-                  href="/admin/investors/tier-rules"
-                  className={cn(
-                    "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                    pathname.startsWith("/admin/investors/tier-rules")
-                      ? "bg-[#D97706] text-white font-semibold"
-                      : "text-[#44403C] hover:bg-[#D9D4CB]/50"
-                  )}
-                >
-                  <Sliders className="w-3.5 h-3.5 shrink-0" />
-                  <span className="truncate">Aturan Tier 4 Saudara</span>
-                </Link>
+                {!isCollapsed && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setInvestorOpen(!investorOpen);
+                    }}
+                    className="p-1 rounded-md hover:bg-[#D9D4CB]/60 text-[#6B6560] cursor-pointer"
+                    title="Buka/Tutup Submenu"
+                  >
+                    <ChevronDown
+                      className={cn(
+                        "w-3.5 h-3.5 transition-transform duration-200",
+                        investorOpen && "rotate-180"
+                      )}
+                    />
+                  </button>
+                )}
               </div>
-            )}
-          </div>
 
-          {/* 6. Sistem & Notifikasi */}
-          <Link
-            href="/admin/settings"
-            title={isCollapsed ? "Sistem & Notifikasi" : undefined}
-            className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
-              pathname.startsWith("/admin/settings")
-                ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
-              isCollapsed && "justify-center px-0"
-            )}
-          >
-            <ShieldCheck
-              className={cn(
-                "w-4 h-4 shrink-0",
-                pathname.startsWith("/admin/settings") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+              {/* Submenu Investor */}
+              {!isCollapsed && investorOpen && (
+                <div className="pl-6 pr-1 py-1 space-y-1 mt-0.5 border-l-2 border-[#D97706]/30 ml-4">
+                  <Link
+                    href="/admin/investors"
+                    className={cn(
+                      "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                      pathname === "/admin/investors"
+                        ? "bg-[#D97706] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                    )}
+                  >
+                    <Coins className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">Unit Siap Bagi Hasil</span>
+                  </Link>
+
+                  <Link
+                    href="/admin/investors/accounts"
+                    className={cn(
+                      "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                      pathname.startsWith("/admin/investors/accounts")
+                        ? "bg-[#D97706] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                    )}
+                  >
+                    <Users className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">Daftar Akun Investor</span>
+                  </Link>
+
+                  <Link
+                    href="/admin/investors/history"
+                    className={cn(
+                      "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                      pathname.startsWith("/admin/investors/history")
+                        ? "bg-[#D97706] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                    )}
+                  >
+                    <Clock className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">Riwayat Distribusi</span>
+                  </Link>
+
+                  <Link
+                    href="/admin/investors/tier-rules"
+                    className={cn(
+                      "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                      pathname.startsWith("/admin/investors/tier-rules")
+                        ? "bg-[#D97706] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                    )}
+                  >
+                    <Sliders className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate">Aturan Tier 4 Saudara</span>
+                  </Link>
+                </div>
               )}
-            />
-            {!isCollapsed && <span className="truncate">Sistem & Notifikasi</span>}
-          </Link>
+            </div>
+          )}
+
+          {/* 7. Sistem & Notifikasi (HANYA OWNER / ADMIN) */}
+          {isOwner && (
+            <Link
+              href="/admin/settings"
+              title={isCollapsed ? "Sistem & Notifikasi" : undefined}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                pathname.startsWith("/admin/settings")
+                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
+                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                isCollapsed && "justify-center px-0"
+              )}
+            >
+              <ShieldCheck
+                className={cn(
+                  "w-4 h-4 shrink-0",
+                  pathname.startsWith("/admin/settings") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                )}
+              />
+              {!isCollapsed && <span className="truncate">Sistem & Notifikasi</span>}
+            </Link>
+          )}
 
           {/* Katalog Web Publik */}
           {!isCollapsed && (
@@ -472,11 +503,27 @@ export function AdminSidebar() {
           {!isCollapsed && (
             <div className="overflow-hidden">
               <div className="text-xs sm:text-sm font-bold text-[#1C1917] truncate">
-                Toko Bu Nur
+                {userName}
               </div>
-              <div className="text-[11px] text-[#16A34A] flex items-center gap-1 font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] animate-pulse"></span>
-                Owner (Aktif)
+              <div className="text-[11px] flex items-center gap-1 font-medium mt-0.5">
+                <span
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full",
+                    isOwner ? "bg-[#16A34A] animate-pulse" : isStaff ? "bg-blue-600" : "bg-amber-600"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "text-[10px] font-bold px-1.5 py-0.5 rounded-md",
+                    isOwner
+                      ? "text-emerald-800 bg-emerald-100/80"
+                      : isStaff
+                      ? "text-blue-800 bg-blue-100/80"
+                      : "text-amber-800 bg-amber-100/80"
+                  )}
+                >
+                  {isOwner ? "👑 Owner Showroom" : isStaff ? "🔧 Staff Garasi" : "🎯 Tim Sales"}
+                </span>
               </div>
             </div>
           )}

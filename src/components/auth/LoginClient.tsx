@@ -21,8 +21,8 @@ export function LoginClient() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  const [role, setRole] = useState<"ADMIN" | "INVESTOR">("ADMIN");
-  const [identifier, setIdentifier] = useState("admin");
+  const [role, setRole] = useState<"OWNER" | "STAFF_ADMIN" | "SALES" | "INVESTOR">("OWNER");
+  const [identifier, setIdentifier] = useState("owner");
   const [pin, setPin] = useState("123456");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +49,11 @@ export function LoginClient() {
     }
   };
 
-  const handleQuickLogin = (targetRole: "ADMIN" | "INVESTOR", targetId: string, targetPin: string = "123456") => {
+  const handleQuickLogin = (
+    targetRole: "OWNER" | "STAFF_ADMIN" | "SALES" | "INVESTOR",
+    targetId: string,
+    targetPin: string = "123456"
+  ) => {
     setRole(targetRole);
     setIdentifier(targetId);
     setPin(targetPin);
@@ -73,24 +77,58 @@ export function LoginClient() {
 
         {/* Card Form */}
         <div className="bg-white rounded-3xl border border-[#D9D4CB] p-6 sm:p-8 shadow-sm space-y-6">
-          {/* Tab Selector: Admin vs Investor */}
-          <div className="grid grid-cols-2 bg-[#F7F5F2] p-1.5 rounded-2xl border border-[#D9D4CB]">
+          {/* Tab Selector: 4 Peran RBAC */}
+          <div className="grid grid-cols-4 gap-1 bg-[#F7F5F2] p-1.5 rounded-2xl border border-[#D9D4CB]">
             <button
               type="button"
               onClick={() => {
-                setRole("ADMIN");
-                setIdentifier("admin");
+                setRole("OWNER");
+                setIdentifier("owner");
                 setPin("123456");
                 setError(null);
               }}
               className={cn(
-                "py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer",
-                role === "ADMIN"
+                "py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center",
+                role === "OWNER"
                   ? "bg-white text-[#1C1917] shadow-sm"
                   : "text-[#6B6560] hover:text-[#1C1917]"
               )}
             >
-              Owner / Admin
+              👑 Owner
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setRole("STAFF_ADMIN");
+                setIdentifier("admin_garasi");
+                setPin("123456");
+                setError(null);
+              }}
+              className={cn(
+                "py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center",
+                role === "STAFF_ADMIN"
+                  ? "bg-white text-[#1C1917] shadow-sm"
+                  : "text-[#6B6560] hover:text-[#1C1917]"
+              )}
+            >
+              🔧 Staff
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setRole("SALES");
+                setIdentifier("sales01");
+                setPin("123456");
+                setError(null);
+              }}
+              className={cn(
+                "py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center",
+                role === "SALES"
+                  ? "bg-white text-[#1C1917] shadow-sm"
+                  : "text-[#6B6560] hover:text-[#1C1917]"
+              )}
+            >
+              🎯 Sales
             </button>
             <button
               type="button"
@@ -101,13 +139,13 @@ export function LoginClient() {
                 setError(null);
               }}
               className={cn(
-                "py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer",
+                "py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center",
                 role === "INVESTOR"
                   ? "bg-white text-[#1C1917] shadow-sm"
                   : "text-[#6B6560] hover:text-[#1C1917]"
               )}
             >
-              Mitra Investor
+              🤝 Investor
             </button>
           </div>
 
@@ -122,28 +160,36 @@ export function LoginClient() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
-                {role === "ADMIN" ? "Username / No. WhatsApp" : "Nomor WhatsApp Terdaftar"}
+                {role === "INVESTOR" ? "Nomor WhatsApp Terdaftar" : "Username / ID Pengguna"}
               </label>
               <div className="relative">
-                {role === "ADMIN" ? (
-                  <User className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
-                ) : (
+                {role === "INVESTOR" ? (
                   <Phone className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
+                ) : (
+                  <User className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
                 )}
                 <input
                   type="text"
                   required
-                  placeholder={role === "ADMIN" ? "admin" : "081298765432"}
+                  placeholder={
+                    role === "INVESTOR"
+                      ? "Contoh: 081298765432"
+                      : role === "OWNER"
+                      ? "owner"
+                      : role === "STAFF_ADMIN"
+                      ? "admin_garasi"
+                      : "sales01"
+                  }
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium focus:outline-none focus:border-[#D97706]"
+                  className="w-full pl-10 pr-3 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
                 />
               </div>
             </div>
 
             <div>
               <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
-                PIN Akses (6 Digit)
+                PIN Akses Keamanan (6 Digit)
               </label>
               <div className="relative">
                 <KeyRound className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
@@ -153,9 +199,12 @@ export function LoginClient() {
                   placeholder="123456"
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium focus:outline-none focus:border-[#D97706]"
+                  className="w-full pl-10 pr-3 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold tracking-widest focus:outline-none focus:border-[#D97706]"
                 />
               </div>
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                PIN demo sistem lokal: <strong>123456</strong>
+              </span>
             </div>
 
             <button
@@ -163,7 +212,19 @@ export function LoginClient() {
               disabled={loading}
               className="w-full flex items-center justify-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow cursor-pointer mt-2"
             >
-              <span>{loading ? "Memverifikasi..." : `Masuk sebagai ${role === "ADMIN" ? "Owner" : "Investor"}`}</span>
+              <span>
+                {loading
+                  ? "Memverifikasi..."
+                  : `Masuk sebagai ${
+                      role === "OWNER"
+                        ? "Owner Showroom"
+                        : role === "STAFF_ADMIN"
+                        ? "Staff Garasi"
+                        : role === "SALES"
+                        ? "Tim Sales"
+                        : "Mitra Investor"
+                    }`}
+              </span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
@@ -173,17 +234,45 @@ export function LoginClient() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B6560] block text-center">
               Pintasan Uji Coba Cepat (Akun Demo)
             </span>
-            <div className="grid grid-cols-1 gap-2 text-xs">
+            <div className="grid grid-cols-2 gap-2 text-xs">
               <button
                 type="button"
-                onClick={() => handleQuickLogin("ADMIN", "admin", "123456")}
+                onClick={() => handleQuickLogin("OWNER", "owner", "123456")}
                 className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
               >
                 <div>
-                  <span className="font-bold text-[#1C1917] block">Owner (Toko Bu Nur)</span>
-                  <span className="text-[11px] text-[#6B6560]">Akses penuh semua modul operasional</span>
+                  <span className="font-bold text-[#1C1917] block">👑 Owner</span>
+                  <span className="text-[10px] text-[#6B6560]">Akses penuh semua</span>
                 </div>
-                <span className="text-[10px] font-bold bg-[#FEF3C7] text-[#92400E] px-2 py-0.5 rounded">
+                <span className="text-[9px] font-bold bg-[#FEF3C7] text-[#92400E] px-1.5 py-0.5 rounded">
+                  PILIH
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickLogin("STAFF_ADMIN", "admin_garasi", "123456")}
+                className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
+              >
+                <div>
+                  <span className="font-bold text-[#1C1917] block">🔧 Staff Garasi</span>
+                  <span className="text-[10px] text-[#6B6560]">Unit, SPK & kasir</span>
+                </div>
+                <span className="text-[9px] font-bold bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">
+                  PILIH
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleQuickLogin("SALES", "sales01", "123456")}
+                className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
+              >
+                <div>
+                  <span className="font-bold text-[#1C1917] block">🎯 Tim Sales</span>
+                  <span className="text-[10px] text-[#6B6560]">Stok ready & harga</span>
+                </div>
+                <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">
                   PILIH
                 </span>
               </button>
@@ -194,24 +283,10 @@ export function LoginClient() {
                 className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
               >
                 <div>
-                  <span className="font-bold text-[#1C1917] block">Ibu Nurdiah (Modal Keluarga)</span>
-                  <span className="text-[11px] text-[#6B6560]">Portal modal & bagi hasil 4 saudara</span>
+                  <span className="font-bold text-[#1C1917] block">🤝 Ibu Nurdiah</span>
+                  <span className="text-[10px] text-[#6B6560]">Portal 4 saudara</span>
                 </div>
-                <span className="text-[10px] font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded">
-                  PILIH
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleQuickLogin("INVESTOR", "081345678901", "123456")}
-                className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
-              >
-                <div>
-                  <span className="font-bold text-[#1C1917] block">Pak Budi (Pihak Ketiga)</span>
-                  <span className="text-[11px] text-[#6B6560]">Portal investor akad custom 50%</span>
-                </div>
-                <span className="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+                <span className="text-[9px] font-bold bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded">
                   PILIH
                 </span>
               </button>

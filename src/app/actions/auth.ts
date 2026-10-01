@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 export async function loginAction(formData: {
   identifier: string; // username, phone, or name
   pin: string;
-  role: "ADMIN" | "INVESTOR";
+  role: "OWNER" | "ADMIN" | "STAFF_ADMIN" | "SALES" | "INVESTOR";
 }) {
   try {
     const { identifier, pin, role } = formData;
@@ -24,17 +24,17 @@ export async function loginAction(formData: {
       return { success: false, error: "PIN atau kata sandi yang Anda masukkan salah" };
     }
 
-    if (role === "ADMIN") {
-      // Cari atau buat UserProfile Admin
-      let adminProfile = await prisma.userProfile.findFirst({
-        where: { role: "ADMIN" },
+    if (role === "OWNER" || role === "ADMIN") {
+      // Cari atau buat UserProfile Owner
+      let profile = await prisma.userProfile.findFirst({
+        where: { role: { in: ["OWNER", "ADMIN"] } },
       });
 
-      if (!adminProfile) {
-        adminProfile = await prisma.userProfile.create({
+      if (!profile) {
+        profile = await prisma.userProfile.create({
           data: {
             authUserId: "admin-owner-001",
-            role: "ADMIN",
+            role: "OWNER",
             fullName: "Owner Nur Mobil (Toko Bu Nur)",
             phone: identifier,
           },
@@ -42,17 +42,68 @@ export async function loginAction(formData: {
       }
 
       await createSession({
-        userId: adminProfile.id,
-        authUserId: adminProfile.authUserId,
-        role: "ADMIN",
-        fullName: adminProfile.fullName,
-        phone: adminProfile.phone,
+        userId: profile.id,
+        authUserId: profile.authUserId,
+        role: "OWNER",
+        fullName: profile.fullName,
+        phone: profile.phone,
+      });
+
+      return { success: true, redirectUrl: "/admin" };
+    } else if (role === "STAFF_ADMIN") {
+      // Cari atau buat UserProfile Staff Admin
+      let profile = await prisma.userProfile.findFirst({
+        where: { role: "STAFF_ADMIN" },
+      });
+
+      if (!profile) {
+        profile = await prisma.userProfile.create({
+          data: {
+            authUserId: "staff-admin-001",
+            role: "STAFF_ADMIN",
+            fullName: "Staff Operasional & Garasi",
+            phone: identifier,
+          },
+        });
+      }
+
+      await createSession({
+        userId: profile.id,
+        authUserId: profile.authUserId,
+        role: "STAFF_ADMIN",
+        fullName: profile.fullName,
+        phone: profile.phone,
       });
 
       return { success: true, redirectUrl: "/admin/inventory" };
+    } else if (role === "SALES") {
+      // Cari atau buat UserProfile Sales
+      let profile = await prisma.userProfile.findFirst({
+        where: { role: "SALES" },
+      });
+
+      if (!profile) {
+        profile = await prisma.userProfile.create({
+          data: {
+            authUserId: "sales-field-001",
+            role: "SALES",
+            fullName: "Tim Sales Nur Mobil",
+            phone: identifier,
+          },
+        });
+      }
+
+      await createSession({
+        userId: profile.id,
+        authUserId: profile.authUserId,
+        role: "SALES",
+        fullName: profile.fullName,
+        phone: profile.phone,
+      });
+
+      return { success: true, redirectUrl: "/admin/inventory?status=READY_FOR_SALE" };
     } else {
       // INVESTOR
-      // Cari investor berdasarkan nomor telepon atau ID atau nama
       const cleanPhone = identifier.replace(/\D/g, "");
       const investor = await prisma.investor.findFirst({
         where: {

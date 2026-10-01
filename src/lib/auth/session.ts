@@ -4,7 +4,7 @@ import crypto from "crypto";
 export interface SessionData {
   userId: string;
   authUserId: string;
-  role: "ADMIN" | "INVESTOR";
+  role: "OWNER" | "ADMIN" | "STAFF_ADMIN" | "SALES" | "INVESTOR";
   fullName: string;
   phone?: string | null;
   investorId?: string | null;
