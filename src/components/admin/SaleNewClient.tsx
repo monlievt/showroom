@@ -14,6 +14,8 @@ import {
   Loader2,
   FileCheck,
   TrendingUp,
+  ShieldAlert,
+  ShieldCheck,
 } from "lucide-react";
 import { createSaleAction } from "@/app/actions/sale";
 import { formatRupiah } from "@/lib/utils";
@@ -70,6 +72,14 @@ export function SaleNewClient({
     ? priceNum - selectedUnit.totalHpp
     : 0;
 
+  // Kebijakan Cash Tempo Khusus Nur Mobil
+  const isTempo = priceNum > 0 && initialNum < priceNum;
+  const minDp70 = Math.ceil(priceNum * 0.7);
+  const isDpValid = !isTempo || initialNum >= minDp70;
+  const maxDueDate = new Date(new Date(saleDate).getTime() + 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!vehicleId) {
@@ -83,6 +93,28 @@ export function SaleNewClient({
     if (!buyerName.trim()) {
       setErrorMsg("Nama pembeli / showroom wajib diisi");
       return;
+    }
+
+    if (isTempo) {
+      if (initialNum < minDp70) {
+        setErrorMsg(
+          `Kebijakan Nur Mobil: Pembelian Cash Tempo wajib DP minimal 70% (${formatRupiah(minDp70)}). Tidak melayani kredit.`
+        );
+        return;
+      }
+      if (!dueDate) {
+        setErrorMsg("Tanggal jatuh tempo pelunasan wajib diisi untuk transaksi tempo.");
+        return;
+      }
+      const saleTime = new Date(saleDate).getTime();
+      const dueTime = new Date(dueDate).getTime();
+      const diffDays = Math.ceil((dueTime - saleTime) / (1000 * 60 * 60 * 24));
+      if (diffDays > 30 || diffDays < 0) {
+        setErrorMsg(
+          "Kebijakan Nur Mobil: Batas jatuh tempo Cash Tempo maksimal 30 hari (1 bulan) dari tanggal transaksi."
+        );
+        return;
+      }
     }
 
     setLoading(true);
@@ -353,23 +385,23 @@ export function SaleNewClient({
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-[#D97706]" />
               <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
-                4. Pembayaran Awal (DP) & Jatuh Tempo
+                4. Pembayaran Awal (DP) & Ketentuan Cash Tempo
               </h2>
             </div>
-            <span className="text-[11px] text-[#6B6560]">
-              Kosongkan jika tempo bayar 100% saat pelunasan
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-stone-100 text-stone-700">
+              100% Cash / Tempo Internal Garasi (Non-Leasing)
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
-                Nominal DP / Pembayaran Masuk (Rp)
+                Nominal DP / Pembayaran Masuk (Rp) *
               </label>
               <input
                 type="number"
                 min={0}
-                placeholder="Contoh: 20000000"
+                placeholder="Contoh: 105000000"
                 value={initialPaymentAmount}
                 onChange={(e) =>
                   setInitialPaymentAmount(
@@ -379,7 +411,11 @@ export function SaleNewClient({
                 className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
               />
               <span className="text-[10px] text-[#6B6560] mt-1 block">
-                Jika sama dengan harga jual = LUNAS langsung
+                {priceNum > 0 && (
+                  <>
+                    Min. DP 70% Tempo: <strong>{formatRupiah(minDp70)}</strong>
+                  </>
+                )}
               </span>
             </div>
 
@@ -400,19 +436,50 @@ export function SaleNewClient({
 
             <div>
               <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
-                Target Jatuh Tempo Pelunasan
+                Target Jatuh Tempo Pelunasan {isTempo && <span className="text-red-500">*</span>}
               </label>
               <input
                 type="date"
+                min={saleDate}
+                max={maxDueDate}
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
               />
               <span className="text-[10px] text-[#6B6560] mt-1 block">
-                Batas waktu 2 minggu atau sesuai kesepakatan
+                Batas maksimal 30 hari (s/d {maxDueDate})
               </span>
             </div>
           </div>
+
+          {/* Banner Kebijakan Cash Tempo Khusus Nur Mobil */}
+          {isTempo && (
+            <div className="space-y-2 pt-1">
+              {!isDpValid ? (
+                <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-start gap-2.5">
+                  <ShieldAlert className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="font-bold block">DP Kurang dari Batas Minimal 70%!</strong>
+                    <p className="mt-0.5 text-[11px] leading-relaxed">
+                      Sesuai aturan garasi Nur Mobil, pembelian tempo wajib membayar DP minimal 70% ({formatRupiah(minDp70)}). Sisa maksimal 30% ({formatRupiah(priceNum - minDp70)}) diselesaikan dalam 30 hari.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-950 text-xs flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="font-bold text-[#78350F] block">
+                      Ketentuan Jaminan Dokumen Cash Tempo Nur Mobil
+                    </strong>
+                    <p className="mt-0.5 text-[11px] text-[#92400E] leading-relaxed">
+                      Asli BPKB dan Asli STNK <strong>wajib ditahan di brankas showroom</strong> sampai sisa pelunasan 100% diterima. Konsumen hanya memegang Surat Jalan resmi sementara.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Live Transaction Summary Card */}

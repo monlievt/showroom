@@ -385,10 +385,10 @@ export function SaleAgreementPdfDocument({
           </Text>
 
           <Text style={styles.articleHeading}>
-            PASAL V: KETENTUAN TEMPO PELUNASAN & KETENTUAN SANKSI
+            PASAL V: KETENTUAN CASH TEMPO GARASI (NON-LEASING) & PENAHANAN DOKUMEN
           </Text>
           <Text style={styles.articleBody}>
-            3. Khusus pembelian dengan sistem tempo / konsinyasi showroom rekanan (pelunasan berjangka hingga 14 hari kerja), Pihak Kedua wajib menyelesaikan pelunasan sesuai tanggal jatuh tempo yang telah disepakati. Apabila Pihak Kedua lalai (wanprestasi) melewati batas waktu tanpa kesepakatan tertulis baru, Pihak Pertama memiliki hak mutlak untuk menarik kembali unit kendaraan dan uang muka yang disetorkan dapat dipotong biaya operasional.
+            3. Showroom Nur Mobil secara tegas TIDAK MELAYANI transaksi kredit leasing. Khusus pembelian dengan skema Cash Tempo Internal Garasi berlaku syarat mutlak: (a) Uang Muka (DP) minimal 70% wajib disetor di muka; (b) Sisa pembayaran (maksimal 30%) wajib diselesaikan paling lambat 30 (tiga puluh) hari kalender sejak tanggal SPK ini; (c) Selama sisa pembayaran belum lunas 100%, Asli BPKB dan Asli STNK DITAHAN di brankas showroom Pihak Pertama, dan Pihak Kedua hanya memegang unit beserta Surat Jalan Resmi Sementara; (d) Apabila Pihak Kedua lalai/wanprestasi melewati batas 30 hari, Pihak Pertama berhak penuh menarik kembali unit kendaraan dan DP dipotong biaya operasional/sewa.
           </Text>
 
           <Text style={styles.articleHeading}>
