@@ -134,6 +134,8 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
             brand={vehicle.brand}
             model={vehicle.model}
             isBooked={isBooked}
+            isSold={isSold}
+            status={vehicle.status}
             youtubeVideoId={vehicle.youtubeVideoId}
           />
 

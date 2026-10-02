@@ -14,7 +14,8 @@ import {
   Wrench,
   FileCheck,
   Play,
-  Video
+  Video,
+  CheckCircle2
 } from "lucide-react";
 
 export interface GalleryPhoto {
@@ -38,6 +39,8 @@ interface VehicleGalleryProps {
   brand: string;
   model: string;
   isBooked: boolean;
+  status?: string;
+  isSold?: boolean;
   youtubeVideoId?: string | null;
   videos?: GalleryVideo[];
 }
@@ -120,6 +123,8 @@ export function VehicleGallery({
   brand,
   model,
   isBooked,
+  status,
+  isSold = false,
   youtubeVideoId,
   videos,
 }: VehicleGalleryProps) {
@@ -332,15 +337,29 @@ export function VehicleGallery({
               className="w-full h-full object-cover cursor-zoom-in transition-transform duration-300 group-hover:scale-[1.01]"
             />
 
+            {/* Overlay Watermark jika unit sudah terjual */}
+            {isSold && (
+              <div className="absolute inset-0 bg-stone-950/35 backdrop-blur-[1px] flex items-center justify-center pointer-events-none z-10">
+                <div className="bg-stone-950/90 border border-amber-500/60 text-amber-400 px-5 py-2 rounded-2xl shadow-2xl transform -rotate-6 font-extrabold text-xs tracking-widest uppercase flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>TERJUAL / SOLD (ARSIP SAH)</span>
+                </div>
+              </div>
+            )}
+
             {/* Status Unit Badge (Top Left) */}
-            <div className="absolute top-3 left-3 flex items-center gap-2">
+            <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
               <span
                 className={cn(
                   "text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm",
-                  isBooked ? "bg-amber-500 text-white" : "bg-emerald-600 text-white"
+                  isSold
+                    ? "bg-stone-900 text-amber-400 border border-amber-500/40"
+                    : isBooked
+                    ? "bg-amber-500 text-white"
+                    : "bg-emerald-600 text-white"
                 )}
               >
-                {isBooked ? "BOOKED (Tanda Jadi)" : "READY FOR SALE"}
+                {isSold ? "TERJUAL (ARSIP SAH)" : isBooked ? "BOOKED (Tanda Jadi)" : "READY FOR SALE"}
               </span>
             </div>
 

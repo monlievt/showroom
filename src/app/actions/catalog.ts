@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { generateVehicleSlug, extractPlateCandidates } from "@/lib/utils/slug";
 
 export interface PublicCatalogFilter {
   brand?: string;
@@ -110,10 +111,7 @@ export async function getPublicCatalog(filters?: PublicCatalogFilter) {
     return {
       success: true,
       data: vehicles.map((v) => {
-        const safeSlug = `${v.brand}-${v.model}-${v.year}-${v.plateNumber}`
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-|-$/g, "");
+        const safeSlug = generateVehicleSlug(v);
 
         const sortedPhotos = v.photos.slice().sort((a, b) => {
           const orderA = a.tag ? (tagOrder[a.tag] ?? 90) : a.category === "FINAL_LISTING" ? 10 : 50;
@@ -205,10 +203,7 @@ export async function getShowroomHomepageData() {
       success: true,
       readyVehicles,
       soldVehicles: soldVehicles.map((v) => {
-        const safeSlug = `${v.brand}-${v.model}-${v.year}-${v.plateNumber}`
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-|-$/g, "");
+        const safeSlug = generateVehicleSlug(v);
 
         return {
           id: v.id,
@@ -262,14 +257,14 @@ export async function getShowroomHomepageData() {
 export async function getPublicVehicleDetail(identifier: string) {
   try {
     const raw = decodeURIComponent(identifier || "").trim();
+    const plateCandidates = extractPlateCandidates(raw);
 
-    // Identifier bisa berupa UUID id atau plateNumber dari slug
+    // 1. Cari berdasarkan UUID langsung atau kandidat plat nomor yang diekstrak dari slug
     let vehicle = await prisma.vehicle.findFirst({
       where: {
         OR: [
           { id: raw },
-          { plateNumber: raw },
-          { plateNumber: raw.toUpperCase() },
+          { plateNumber: { in: plateCandidates } },
         ],
         status: { in: ["READY_FOR_SALE", "BOOKED", "SOLD_SETTLED"] },
       },
@@ -315,20 +310,25 @@ export async function getPublicVehicleDetail(identifier: string) {
       },
     });
 
-    // Jika belum ketemu, coba cari plateNumber yang substring di dalam slug
+    // 2. Fallback cerdas: Cari jika plat nomor terselip di dalam slug teks (termasuk unit READY, BOOKED, maupun SOLD_SETTLED)
     if (!vehicle) {
-      const allReady = await prisma.vehicle.findMany({
-        where: { status: { in: ["READY_FOR_SALE", "BOOKED"] } },
+      const allVehicles = await prisma.vehicle.findMany({
+        where: { status: { in: ["READY_FOR_SALE", "BOOKED", "SOLD_SETTLED"] } },
         select: {
           id: true,
           plateNumber: true,
+          brand: true,
+          model: true,
+          year: true,
         },
       });
 
       const cleanTarget = raw.toLowerCase().replace(/[^a-z0-9]/g, "");
-      const matched = allReady.find((v) => {
+      const matched = allVehicles.find((v) => {
         const cleanPlate = v.plateNumber.toLowerCase().replace(/[^a-z0-9]/g, "");
-        return cleanTarget.includes(cleanPlate);
+        const generatedSlug1 = generateVehicleSlug(v).toLowerCase().replace(/[^a-z0-9]/g, "");
+        const legacySlug = `${v.brand}-${v.model}-${v.year}-${v.plateNumber}`.toLowerCase().replace(/[^a-z0-9]/g, "");
+        return cleanTarget.includes(cleanPlate) || cleanTarget === generatedSlug1 || cleanTarget === legacySlug;
       });
 
       if (matched) {
@@ -346,7 +346,7 @@ export async function getPublicVehicleDetail(identifier: string) {
       success: true,
       data: {
         id: vehicle.id,
-        slug: `${vehicle.brand.toLowerCase()}-${vehicle.model.toLowerCase()}-${vehicle.year}-${vehicle.plateNumber.toLowerCase().replace(/\s+/g, "")}`,
+        slug: generateVehicleSlug(vehicle),
         plateNumber: vehicle.plateNumber,
         brand: vehicle.brand,
         model: vehicle.model,
