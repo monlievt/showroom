@@ -18,6 +18,8 @@ import {
   Palette,
   Wrench,
   Fuel,
+  Eye,
+  FileText,
 } from "lucide-react";
 import { formatRupiah, formatDate, cn } from "@/lib/utils";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
@@ -269,17 +271,40 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
       {/* ── 2. LEMBAR INSPEKSI MENYELURUH & PETA BODI INTERAKTIF (CHECKLIST 5 TAB) ── */}
       {vehicle.inspection && (
         <div className="bg-white rounded-3xl border border-[#D9D4CB] p-6 sm:p-8 shadow-sm space-y-8">
-          <div>
-            <div className="inline-flex items-center gap-2 bg-[#FEF3C7] text-[#92400E] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-              <ShieldCheck className="w-4 h-4 text-[#D97706]" />
-              <span>Transparansi Standar Cek Fisik & Balai Lelang</span>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-[#FEF3C7] text-[#92400E] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+                <ShieldCheck className="w-4 h-4 text-[#D97706]" />
+                <span>Transparansi Standar Cek Fisik & Balai Lelang</span>
+              </div>
+              <h2 className="text-2xl font-bold text-[#1C1917] tracking-tight">
+                Lembar Hasil Inspeksi Fisik & Uji 15 Titik Panel Cat
+              </h2>
+              <p className="text-xs sm:text-sm text-[#6B6560] mt-1">
+                Tanggal inspeksi: {formatDate(vehicle.inspection.inspectedAt)}. Tidak ada yang ditutupi — apa adanya, rusak dibilang rusak.
+              </p>
             </div>
-            <h2 className="text-2xl font-bold text-[#1C1917] tracking-tight">
-              Lembar Hasil Inspeksi Fisik & Uji 11 Panel Cat
-            </h2>
-            <p className="text-xs sm:text-sm text-[#6B6560] mt-1">
-              Tanggal inspeksi: {formatDate(vehicle.inspection.inspectedAt)}. Tidak ada yang ditutupi — apa adanya, rusak dibilang rusak.
-            </p>
+
+            {/* Quick Action Buttons for Certificate */}
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                href={`/inspeksi/${vehicle.inspection.id}`}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#D97706] hover:bg-[#B45309] text-white text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer"
+              >
+                <Eye className="w-4 h-4" />
+                <span>Lihat Sertifikat Digital ACV</span>
+              </Link>
+              <a
+                href={`/api/pdf/inspection/${vehicle.inspection.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] hover:bg-[#F7F5F2] text-[#1C1917] text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
+                title="Unduh File PDF"
+              >
+                <FileText className="w-4 h-4 text-[#6B6560]" />
+                <span className="hidden sm:inline">PDF</span>
+              </a>
+            </div>
           </div>
 
           {/* Checklist 5 Tab Interaktif dengan Siluet Mobil Blueprint & 14 Titik Rangka */}

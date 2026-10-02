@@ -10,7 +10,8 @@ import {
   Printer, 
   Calendar,
   Layers,
-  Sparkles
+  Sparkles,
+  Eye
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { AdminHeader } from "@/components/admin/AdminHeader";
@@ -130,34 +131,86 @@ export default async function VehicleInspectionsPage({
                     </div>
                   </div>
 
-                  <a
-                    href={`/api/pdf/inspection/${currentInspection.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer"
-                  >
-                    <Printer className="w-4 h-4" />
-                    <span>Cetak / Unduh PDF Resmi</span>
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/inspeksi/${currentInspection.id}`}
+                      target="_blank"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#1C1917] hover:bg-[#D97706] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer"
+                    >
+                      <Eye className="w-4 h-4" />
+                      <span>Preview Sertifikat Web (Mobile Friendly)</span>
+                    </Link>
+                    <a
+                      href={`/api/pdf/inspection/${currentInspection.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer"
+                    >
+                      <Printer className="w-4 h-4" />
+                      <span>Cetak PDF</span>
+                    </a>
+                  </div>
                 </div>
 
-                {/* 4 Pilar Grades */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div className="bg-white border border-[#D9D4CB] rounded-xl p-5 text-center">
-                    <span className="text-xs text-[#6B6560] uppercase font-semibold">Mesin & Transmisi</span>
-                    <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.engineGrade}</div>
+                {/* Total Grade & 4 Pilar Grades */}
+                <div className="space-y-3">
+                  <div className="p-4 rounded-xl bg-white border border-[#D9D4CB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2.5 rounded-lg bg-[#FEF3C7] text-[#D97706] border border-[#D97706]/30">
+                        <Sparkles className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <span className="text-xs uppercase font-bold text-[#6B6560]">
+                          Total Grade Standar Astra Car Valuation (ACV)
+                        </span>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-2xl font-black text-[#1C1917]">
+                            Grade {currentInspection.totalGrade || "A"}
+                          </span>
+                          <span className="text-xs font-semibold text-[#6B6560]">
+                            • Skor Gabungan Mesin, Interior, Eksterior & Rangka
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs font-bold">
+                      <span className={cn(
+                        "px-2.5 py-1 rounded-full border",
+                        currentInspection.hasServiceBook !== false
+                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                          : "bg-stone-100 text-stone-600 border-stone-200"
+                      )}>
+                        {currentInspection.hasServiceBook !== false ? "✓ Buku Servis Ada" : "Buku Servis Nihil"}
+                      </span>
+                      <span className={cn(
+                        "px-2.5 py-1 rounded-full border",
+                        currentInspection.hasSpareKey !== false
+                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                          : "bg-stone-100 text-stone-600 border-stone-200"
+                      )}>
+                        {currentInspection.hasSpareKey !== false ? "✓ Kunci Cadangan Ada" : "1 Kunci"}
+                      </span>
+                    </div>
                   </div>
-                  <div className="bg-white border border-[#D9D4CB] rounded-xl p-5 text-center">
-                    <span className="text-xs text-[#6B6560] uppercase font-semibold">Interior & AC</span>
-                    <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.interiorGrade}</div>
-                  </div>
-                  <div className="bg-white border border-[#D9D4CB] rounded-xl p-5 text-center">
-                    <span className="text-xs text-[#6B6560] uppercase font-semibold">Eksterior & Bodi</span>
-                    <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.exteriorGrade}</div>
-                  </div>
-                  <div className="bg-white border border-[#D9D4CB] rounded-xl p-5 text-center">
-                    <span className="text-xs text-[#6B6560] uppercase font-semibold">Rangka / Sasis</span>
-                    <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.frameGrade}</div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 text-center">
+                      <span className="text-xs text-[#6B6560] uppercase font-semibold">Mesin & Transmisi</span>
+                      <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.engineGrade}</div>
+                    </div>
+                    <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 text-center">
+                      <span className="text-xs text-[#6B6560] uppercase font-semibold">Interior & AC</span>
+                      <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.interiorGrade}</div>
+                    </div>
+                    <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 text-center">
+                      <span className="text-xs text-[#6B6560] uppercase font-semibold">Eksterior & Bodi</span>
+                      <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.exteriorGrade}</div>
+                    </div>
+                    <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 text-center">
+                      <span className="text-xs text-[#6B6560] uppercase font-semibold">Rangka / Sasis</span>
+                      <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.frameGrade}</div>
+                    </div>
                   </div>
                 </div>
 
@@ -198,40 +251,76 @@ export default async function VehicleInspectionsPage({
                   </div>
                 </div>
 
-                {/* 11 Panel Table */}
+                {/* 15 Panel Table */}
                 <div className="bg-white border border-[#D9D4CB] rounded-2xl overflow-hidden shadow-sm">
-                  <div className="p-4 bg-[#EFECE8] border-b border-[#D9D4CB] font-bold text-sm text-[#1C1917]">
-                    Hasil Pengukuran 11 Panel Logam Bodi
+                  <div className="p-4 bg-[#EFECE8] border-b border-[#D9D4CB] font-bold text-sm text-[#1C1917] flex items-center justify-between">
+                    <span>Hasil Pengukuran 15 Titik Panel Bodi & Bumper (Standar ACV)</span>
+                    <span className="text-xs font-normal text-[#6B6560]">
+                      Termasuk Rocker Panel & Bumper Plastik Non-Mikron
+                    </span>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
                       <thead>
                         <tr className="border-b border-[#D9D4CB] text-xs font-semibold uppercase text-[#6B6560]">
                           <th className="py-3 px-4">Panel</th>
+                          <th className="py-3 px-4">Material</th>
                           <th className="py-3 px-4">Ketebalan Cat</th>
+                          <th className="py-3 px-4">Kode Cacat</th>
                           <th className="py-3 px-4">Kondisi Panel</th>
                           <th className="py-3 px-4">Catatan</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-[#EFECE8]">
                         {currentInspection.panels.map((panel) => {
-                          const category = getPaintMicronCategory(panel.paintThickness);
+                          const isPlasticBumper = panel.panelType === "BUMPER_FRONT" || panel.panelType === "BUMPER_REAR";
+                          const category = !isPlasticBumper ? getPaintMicronCategory(panel.paintThickness) : null;
 
                           return (
                             <tr key={panel.id}>
                               <td className="py-3 px-4 font-semibold text-xs text-[#1C1917]">
                                 {PANEL_LABELS[panel.panelType] || panel.panelType}
                               </td>
+                              <td className="py-3 px-4 text-xs">
+                                {isPlasticBumper ? (
+                                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                                    Plastik ABS
+                                  </span>
+                                ) : (
+                                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-100 text-stone-700">
+                                    Bodi Logam
+                                  </span>
+                                )}
+                              </td>
                               <td className="py-3 px-4">
-                                <span className="font-bold text-xs">{panel.paintThickness ?? "-"} µm</span>
-                                <span className={cn(
-                                  "ml-2 text-[11px] font-semibold",
-                                  category === "ORIGINAL" && "text-[#16A34A]",
-                                  category === "REPAINT" && "text-[#CA8A04]",
-                                  category === "THICK_FILLER" && "text-[#DC2626]"
-                                )}>
-                                  ({category === "ORIGINAL" ? "Original" : category === "REPAINT" ? "Repaint" : "Dempul"})
-                                </span>
+                                {isPlasticBumper ? (
+                                  <span className="text-[#6B6560] italic text-xs">
+                                    Non-Micron
+                                  </span>
+                                ) : (
+                                  <>
+                                    <span className="font-bold text-xs">{panel.paintThickness ?? "-"} µm</span>
+                                    {category && (
+                                      <span className={cn(
+                                        "ml-2 text-[11px] font-semibold",
+                                        category === "ORIGINAL" && "text-[#16A34A]",
+                                        category === "REPAINT" && "text-[#CA8A04]",
+                                        category === "THICK_FILLER" && "text-[#DC2626]"
+                                      )}>
+                                        ({category === "ORIGINAL" ? "Original" : category === "REPAINT" ? "Repaint" : "Dempul"})
+                                      </span>
+                                    )}
+                                  </>
+                                )}
+                              </td>
+                              <td className="py-3 px-4 text-xs">
+                                {panel.defectCode ? (
+                                  <span className="font-mono font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 text-xs">
+                                    {panel.defectCode}
+                                  </span>
+                                ) : (
+                                  <span className="text-[#6B6560]">-</span>
+                                )}
                               </td>
                               <td className="py-3 px-4 text-xs text-[#1C1917]">
                                 {CONDITION_LABELS[panel.condition] || panel.condition}

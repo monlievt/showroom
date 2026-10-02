@@ -36,6 +36,8 @@ export interface PanelData {
   pointExtra?: number | null;
   condition: string;
   defectCode?: string | null;
+  damageLevel?: number | null;
+  isMetal?: boolean;
   notes?: string | null;
 }
 

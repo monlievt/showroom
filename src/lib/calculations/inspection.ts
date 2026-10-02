@@ -571,3 +571,147 @@ export function calculateOverallVehiclePaint(
     overallConditionLabel,
   };
 }
+
+export interface InspectionPhotoSlot {
+  id: string;
+  tag: string;
+  title: string;
+  group: "EXTERIOR" | "COMPARTMENT" | "LEGALITY" | "EQUIPMENT";
+  groupTitle: string;
+  badge: string;
+  description: string;
+  iconName: string;
+  required: boolean;
+}
+
+export const IBID_STANDARD_PHOTO_SLOTS: InspectionPhotoSlot[] = [
+  // 1. 4 Sudut Eksterior
+  {
+    id: "EXT_FRONT_RIGHT",
+    tag: "EXTERIOR_FRONT_RIGHT",
+    title: "Tampak Serong Depan Kanan (Front Right 3/4)",
+    group: "EXTERIOR",
+    groupTitle: "1. Empat Sudut Eksterior Utama (Standar ACV)",
+    badge: "Sudut Depan Kanan",
+    description: "Menangkap bumper depan, kap mesin, headlamp kanan, fender, dan velg depan kanan.",
+    iconName: "Car",
+    required: true,
+  },
+  {
+    id: "EXT_REAR_RIGHT",
+    tag: "EXTERIOR_REAR_RIGHT",
+    title: "Tampak Serong Belakang Kanan (Rear Right 3/4)",
+    group: "EXTERIOR",
+    groupTitle: "1. Empat Sudut Eksterior Utama (Standar ACV)",
+    badge: "Sudut Belakang Kanan",
+    description: "Menangkap pintu samping kanan, rocker panel kanan, quarter panel, dan stoplamp kanan.",
+    iconName: "Car",
+    required: true,
+  },
+  {
+    id: "EXT_REAR_LEFT",
+    tag: "EXTERIOR_REAR_LEFT",
+    title: "Tampak Serong Belakang Kiri (Rear Left 3/4)",
+    group: "EXTERIOR",
+    groupTitle: "1. Empat Sudut Eksterior Utama (Standar ACV)",
+    badge: "Sudut Belakang Kiri",
+    description: "Menangkap pintu bagasi/trunk, bumper belakang, knalpot, dan stoplamp kiri.",
+    iconName: "Car",
+    required: true,
+  },
+  {
+    id: "EXT_FRONT_LEFT",
+    tag: "EXTERIOR_FRONT_LEFT",
+    title: "Tampak Serong Depan Kiri (Front Left 3/4)",
+    group: "EXTERIOR",
+    groupTitle: "1. Empat Sudut Eksterior Utama (Standar ACV)",
+    badge: "Sudut Depan Kiri",
+    description: "Menangkap sisi bodi kiri, pintu depan/belakang kiri, rocker panel kiri, dan velg depan kiri.",
+    iconName: "Car",
+    required: true,
+  },
+
+  // 2. Ruang Kompartemen Utama
+  {
+    id: "INT_COCKPIT",
+    tag: "INTERIOR_COCKPIT",
+    title: "Interior & Cockpit Pengemudi",
+    group: "COMPARTMENT",
+    groupTitle: "2. Kompartemen Utama (Interior & Mesin)",
+    badge: "Kabin & Stir",
+    description: "Menampilkan kemudi/stir, dashboard utuh, konsol tengah, serta jok kemudi & jok penumpang depan.",
+    iconName: "Gauge",
+    required: true,
+  },
+  {
+    id: "ENG_BAY",
+    tag: "ENGINE_BAY",
+    title: "Ruang Mesin & Apron (Engine Bay)",
+    group: "COMPARTMENT",
+    groupTitle: "2. Kompartemen Utama (Interior & Mesin)",
+    badge: "Mesin & Apron",
+    description: "Menampilkan blok mesin kering, apron depan, radiator core support, silinder head, dan bebas rembes oli.",
+    iconName: "Wrench",
+    required: true,
+  },
+
+  // 3. Legalitas Fisik Kendaraan
+  {
+    id: "CHASSIS_STAMP",
+    tag: "CHASSIS_STAMP",
+    title: "Ketok Nomor Rangka Fisik & STNK",
+    group: "LEGALITY",
+    groupTitle: "3. Legalitas & Identitas Fisik Kendaraan",
+    badge: "No Rangka & STNK",
+    description: "Foto close-up nomor rangka sasis unibody disandingkan dengan lembar STNK asli untuk verifikasi keabsahan hukum 100%.",
+    iconName: "ShieldCheck",
+    required: true,
+  },
+
+  // 4. Kelengkapan & Komponen Kritis
+  {
+    id: "ODO_CLUSTER",
+    tag: "ODOMETER_CLUSTER",
+    title: "Odometer & Indikator Cluster (Ignition ON)",
+    group: "EQUIPMENT",
+    groupTitle: "4. Instrumen & Kelengkapan Kritis",
+    badge: "KM & Airbag/MIL",
+    description: "Menampilkan angka kilometer riil & membuktikan lampu indikator MIL (Check Engine) dan Airbag padam normal setelah starter.",
+    iconName: "Activity",
+    required: true,
+  },
+  {
+    id: "AUDIO_HEADUNIT",
+    tag: "HEAD_UNIT_AUDIO",
+    title: "Head Unit Audio & Kontrol AC",
+    group: "EQUIPMENT",
+    groupTitle: "4. Instrumen & Kelengkapan Kritis",
+    badge: "Head Unit & AC",
+    description: "Menampilkan layar head unit/infotainment menyala, kisi AC dingin, dan konsol transmisi tengah.",
+    iconName: "SlidersHorizontal",
+    required: true,
+  },
+  {
+    id: "TRUNK_SPACE",
+    tag: "TRUNK_REAR",
+    title: "Ruang Lantai Bagasi Belakang",
+    group: "EQUIPMENT",
+    groupTitle: "4. Instrumen & Kelengkapan Kritis",
+    badge: "Lantai Bagasi",
+    description: "Karpet bagasi diangkat untuk membuktikan lantai bagasi bebas kerutan las tabrakan belakang dan bebas lumpur/karat banjir.",
+    iconName: "Archive",
+    required: true,
+  },
+  {
+    id: "SPARE_BATTERY",
+    tag: "SPARE_TIRE_BATTERY",
+    title: "Ban Serep, Toolkit & Kondisi Aki",
+    group: "EQUIPMENT",
+    groupTitle: "4. Instrumen & Kelengkapan Kritis",
+    badge: "Serep & Aki",
+    description: "Menampilkan ban serep siap pakai, dongkrak + kunci roda terpasang, serta terminal aki (baterai) bersih.",
+    iconName: "BatteryCharging",
+    required: true,
+  },
+];
+
