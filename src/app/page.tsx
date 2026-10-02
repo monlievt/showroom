@@ -230,17 +230,18 @@ export default async function HomePage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {readyVehicles.map((v) => (
-                <div
+                <Link
                   key={v.id}
-                  className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+                  href={`/katalog/${v.slug}`}
+                  className="bg-white rounded-2xl border border-[#D9D4CB] hover:border-amber-400/80 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between group cursor-pointer text-inherit no-underline"
                 >
                   <div>
-                    <div className="relative aspect-[16/10] bg-[#EFECE8]">
+                    <div className="relative aspect-[16/10] bg-[#EFECE8] overflow-hidden">
                       {v.photos[0] ? (
                         <img
                           src={v.photos[0].fileUrl}
                           alt={`${v.brand} ${v.model}`}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-[#6B6560]">
@@ -270,11 +271,9 @@ export default async function HomePage() {
                       <div className="text-[11px] font-bold text-[#D97706] uppercase">
                         {v.brand} • {v.year} • {v.transmission}
                       </div>
-                      <Link href={`/katalog/${v.slug}`}>
-                        <h3 className="font-bold text-base text-[#1C1917] hover:text-[#D97706] transition-colors line-clamp-1">
-                          {v.model}
-                        </h3>
-                      </Link>
+                      <h3 className="font-bold text-base text-[#1C1917] group-hover:text-[#D97706] transition-colors line-clamp-1">
+                        {v.model}
+                      </h3>
                       <div className="text-lg font-extrabold text-[#1C1917]">
                         {v.price ? formatRupiah(v.price) : "Hubungi Kami"}
                       </div>
@@ -293,15 +292,12 @@ export default async function HomePage() {
                   </div>
 
                   <div className="p-5 pt-0">
-                    <Link
-                      href={`/katalog/${v.slug}`}
-                      className="w-full flex items-center justify-center gap-1.5 bg-[#F7F5F2] hover:bg-[#EFECE8] border border-[#D9D4CB] text-[#1C1917] text-xs font-bold py-2.5 rounded-xl transition-colors"
-                    >
+                    <div className="w-full flex items-center justify-center gap-1.5 bg-[#F7F5F2] group-hover:bg-[#D97706] group-hover:text-white border border-[#D9D4CB] group-hover:border-[#D97706] text-[#1C1917] text-xs font-bold py-2.5 rounded-xl transition-all">
                       <span>Lihat Detail & Hasil Inspeksi</span>
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
@@ -330,18 +326,19 @@ export default async function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {soldVehicles.map((sold) => (
-                <div
+                <Link
                   key={sold.id}
-                  className="bg-[#FBF9F6] border border-[#E5E0D8] rounded-2xl p-5 flex flex-col sm:flex-row gap-5 relative overflow-hidden"
+                  href={`/katalog/${sold.slug}`}
+                  className="bg-[#FBF9F6] border border-[#E5E0D8] hover:border-stone-400 hover:shadow-lg transition-all duration-200 rounded-2xl p-5 flex flex-col sm:flex-row gap-5 relative overflow-hidden group cursor-pointer text-inherit no-underline"
                 >
                   <div className="sm:w-48 aspect-[16/11] sm:aspect-square rounded-xl overflow-hidden relative shrink-0 bg-[#EFECE8]">
                     <img
                       src={sold.photoUrl}
                       alt={`${sold.brand} ${sold.model}`}
-                      className="w-full h-full object-cover filter grayscale-[15%]"
+                      className="w-full h-full object-cover filter grayscale-[15%] group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-stone-900/40 flex items-center justify-center">
-                      <span className="bg-red-600/95 text-white text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-widest shadow-md">
+                      <span className="bg-stone-950/90 border border-amber-500/50 text-amber-400 text-xs font-black px-3 py-1.5 rounded-lg uppercase tracking-widest shadow-md">
                         TERJUAL
                       </span>
                     </div>
@@ -357,7 +354,7 @@ export default async function HomePage() {
                       </span>
                     </div>
 
-                    <h3 className="font-extrabold text-base text-[#1C1917] leading-snug">
+                    <h3 className="font-extrabold text-base text-[#1C1917] group-hover:text-[#D97706] transition-colors leading-snug">
                       {sold.model}
                     </h3>
 
@@ -383,8 +380,13 @@ export default async function HomePage() {
                         </p>
                       )}
                     </div>
+
+                    <div className="pt-1 flex items-center gap-1 text-xs font-bold text-[#D97706] group-hover:underline">
+                      <span>Buka Lembar Arsip & Cek Fisik</span>
+                      <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>
