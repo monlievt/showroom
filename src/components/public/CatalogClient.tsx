@@ -311,11 +311,12 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
               <div
                 key={v.id}
                 className={cn(
-                  "bg-white rounded-2xl border overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group",
-                  isSold ? "border-stone-300 bg-stone-50/50" : "border-[#D9D4CB]"
+                  "bg-white rounded-2xl border overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between group cursor-pointer relative",
+                  isSold ? "border-stone-300 bg-stone-50/60 hover:border-stone-400" : "border-[#D9D4CB] hover:border-amber-400/80"
                 )}
               >
-                <div>
+                {/* Area Card Atas (Foto, Judul, Spek, Harga) dapat langsung diklik */}
+                <Link href={`/katalog/${v.slug}`} className="block flex-1 text-inherit no-underline">
                   {/* Photo Thumbnail */}
                   <div className="relative aspect-[16/10] bg-[#EFECE8] overflow-hidden">
                     {thumbnail ? (
@@ -378,11 +379,9 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                       <div className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
                         {v.brand} • {v.year}
                       </div>
-                      <Link href={`/katalog/${v.slug}`}>
-                        <h3 className="font-bold text-lg text-[#1C1917] group-hover:text-[#D97706] transition-colors leading-snug">
-                          {v.model}
-                        </h3>
-                      </Link>
+                      <h3 className="font-bold text-lg text-[#1C1917] group-hover:text-[#D97706] transition-colors leading-snug">
+                        {v.model}
+                      </h3>
                       <span className="text-xs font-semibold text-[#6B6560] block mt-0.5">
                         Plat: {v.plateNumber}
                       </span>
@@ -448,10 +447,13 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                       </div>
                     )}
                   </div>
-                </div>
+                </Link>
 
                 {/* Card Actions */}
-                <div className="p-5 pt-0 grid grid-cols-2 gap-2">
+                <div
+                  className="p-5 pt-0 grid grid-cols-2 gap-2 mt-auto relative z-10"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <Link
                     href={`/katalog/${v.slug}`}
                     className="flex items-center justify-center gap-1 bg-[#F7F5F2] hover:bg-[#EFECE8] border border-[#D9D4CB] text-[#1C1917] text-xs font-bold py-2.5 rounded-xl transition-colors"
