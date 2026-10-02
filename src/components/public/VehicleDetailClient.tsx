@@ -92,6 +92,7 @@ interface VehicleDetailProps {
 
 export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
   const isBooked = vehicle.status === "BOOKED";
+  const isSold = vehicle.status === "SOLD_SETTLED";
   const brandCalibration = getBrandPaintStandard(vehicle.brand);
   const overallPaintStats = vehicle.inspection?.panels
     ? calculateOverallVehiclePaint(vehicle.inspection.panels, vehicle.brand)
@@ -162,8 +163,23 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-sm space-y-5">
             <div>
-              <div className="text-xs font-bold text-[#D97706] uppercase tracking-wider mb-1">
-                {vehicle.brand} • {vehicle.year}
+              <div className="flex items-center justify-between gap-2 mb-1">
+                <span className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
+                  {vehicle.brand} • {vehicle.year}
+                </span>
+                {isSold ? (
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-stone-900 text-white">
+                    Terjual (Sold)
+                  </span>
+                ) : isBooked ? (
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-amber-500 text-white">
+                    Sudah Dibooking (DP)
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-600 text-white">
+                    Tersedia di Showroom
+                  </span>
+                )}
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1C1917] tracking-tight">
                 {vehicle.model}
@@ -237,10 +253,14 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                 href={waLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow cursor-pointer"
+                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow cursor-pointer ${
+                  isSold
+                    ? "bg-stone-800 hover:bg-stone-900 text-white"
+                    : "bg-[#D97706] hover:bg-[#B45309] text-white"
+                }`}
               >
                 <Phone className="w-4 h-4" />
-                <span>Tanya Admin / Booking Unit Cepat</span>
+                <span>{isSold ? "Unit Sudah Terjual — Tanya Unit Serupa" : "Tanya Admin / Booking Unit Cepat"}</span>
               </a>
 
               {vehicle.inspection && (

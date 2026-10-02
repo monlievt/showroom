@@ -90,6 +90,7 @@ export default async function PublicInspectionCertificatePage({ params }: Props)
         fuelType: v.fuelType,
         chassisNumber: v.chassisNumber,
         engineNumber: v.engineNumber,
+        status: v.status,
         slug: `${v.brand.toLowerCase()}-${v.model.toLowerCase()}-${v.year}-${v.plateNumber.toLowerCase().replace(/\s+/g, "")}`,
         photos: v.photos || [],
       }}

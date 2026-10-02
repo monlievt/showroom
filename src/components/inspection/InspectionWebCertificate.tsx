@@ -97,6 +97,7 @@ interface InspectionWebCertificateProps {
     fuelType?: string | null;
     chassisNumber?: string | null;
     engineNumber?: string | null;
+    status?: string | null;
     slug?: string | null;
     photos?: InspectionPhoto[];
   };
@@ -149,6 +150,8 @@ export function InspectionWebCertificate({
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   };
 
+  const isSold = vehicle.status === "SOLD_SETTLED";
+
   const certificateNumber = `INSP-${new Date(inspection.inspectedAt).getFullYear()}${(new Date(inspection.inspectedAt).getMonth() + 1).toString().padStart(2, "0")}-${vehicle.plateNumber.replace(/\s+/g, "")}-V${inspection.version}`;
 
   return (
@@ -176,13 +179,20 @@ export function InspectionWebCertificate({
               </Link>
             )}
 
-            <div className="hidden md:block">
-              <span className="text-[10px] uppercase font-bold text-[#D97706] tracking-wider block">
-                Sertifikat Digital Kendaraan
-              </span>
-              <span className="text-xs font-mono font-bold text-[#6B6560]">
-                {certificateNumber}
-              </span>
+            <div className="hidden md:flex items-center gap-2">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-[#D97706] tracking-wider block">
+                  Sertifikat Digital Kendaraan
+                </span>
+                <span className="text-xs font-mono font-bold text-[#6B6560]">
+                  {certificateNumber}
+                </span>
+              </div>
+              {isSold && (
+                <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-emerald-700 text-white shadow-xs">
+                  Terjual (Arsip Sah)
+                </span>
+              )}
             </div>
           </div>
 
@@ -234,6 +244,26 @@ export function InspectionWebCertificate({
         <div className="bg-white border border-[#D9D4CB] rounded-3xl shadow-md overflow-hidden">
           {/* Official Document Header (Ala IBID ACV) */}
           <div className="p-5 sm:p-7 border-b border-[#D9D4CB] bg-gradient-to-b from-[#FAF8F5] to-white">
+            {/* Banner Status Terjual Lunas */}
+            {isSold && (
+              <div className="mb-5 p-3.5 rounded-xl bg-stone-900 border border-stone-800 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0" />
+                  <div>
+                    <span className="text-xs font-black uppercase tracking-wider text-emerald-400 block">
+                      STATUS UNIT: TERJUAL LUNAS (ARCHIVED INSPECTION RECORD)
+                    </span>
+                    <span className="text-[11px] text-stone-300 block">
+                      Kendaraan ini telah resmi terjual dan diserahterimakan kepada pembeli. Lembar sertifikat inspeksi ini tetap diarsipkan secara permanen sebagai bukti transparansi rekam jejak kondisi fisik saat BAST.
+                    </span>
+                  </div>
+                </div>
+                <span className="px-2.5 py-1 rounded-md bg-stone-800 border border-stone-700 text-[10px] font-mono font-bold text-stone-300 shrink-0 self-start sm:self-auto">
+                  ARUS SERAH TERIMA SAH
+                </span>
+              </div>
+            )}
+
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-5 border-b border-[#EBE7E1]">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">

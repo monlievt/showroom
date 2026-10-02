@@ -546,6 +546,12 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
               <Text style={styles.label}>Nomor Mesin</Text>
               <Text style={styles.value}>{vehicle.engineNumber || "-"}</Text>
             </View>
+            <View style={styles.col3}>
+              <Text style={styles.label}>Status Unit Kendaraan</Text>
+              <Text style={[styles.value, { color: vehicle.status === "SOLD_SETTLED" ? "#15803D" : "#D97706" }]}>
+                {vehicle.status === "SOLD_SETTLED" ? "TERJUAL LUNAS (ARSIP BAST)" : "TERSEDIA (READY)"}
+              </Text>
+            </View>
           </View>
         </View>
 
