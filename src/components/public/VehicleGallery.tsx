@@ -342,7 +342,7 @@ export function VehicleGallery({
               <div className="absolute inset-0 bg-stone-950/35 backdrop-blur-[1px] flex items-center justify-center pointer-events-none z-10">
                 <div className="bg-stone-950/90 border border-amber-500/60 text-amber-400 px-5 py-2 rounded-2xl shadow-2xl transform -rotate-6 font-extrabold text-xs tracking-widest uppercase flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>TERJUAL / SOLD (ARSIP SAH)</span>
+                  <span>TERJUAL / SOLD</span>
                 </div>
               </div>
             )}
@@ -359,7 +359,7 @@ export function VehicleGallery({
                     : "bg-emerald-600 text-white"
                 )}
               >
-                {isSold ? "TERJUAL (ARSIP SAH)" : isBooked ? "BOOKED (Tanda Jadi)" : "READY FOR SALE"}
+                {isSold ? "TERJUAL" : isBooked ? "BOOKED (Tanda Jadi)" : "READY FOR SALE"}
               </span>
             </div>
 

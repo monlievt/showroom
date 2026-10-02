@@ -190,7 +190,7 @@ export function InspectionWebCertificate({
               </div>
               {isSold && (
                 <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-emerald-700 text-white shadow-xs">
-                  Terjual (Arsip Sah)
+                  Terjual (Arsip)
                 </span>
               )}
             </div>

@@ -351,7 +351,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                       {isSold ? (
                         <span className="text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm bg-stone-900/90 text-amber-400 border border-amber-500/40 flex items-center gap-1">
                           <Archive className="w-3 h-3 text-amber-400" />
-                          <span>TERJUAL (ARSIP SAH)</span>
+                          <span>TERJUAL</span>
                         </span>
                       ) : isBooked ? (
                         <span className="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm bg-amber-500 text-white">

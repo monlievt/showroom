@@ -173,7 +173,7 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                 {isSold ? (
                   <span className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-stone-900 text-amber-400 border border-amber-500/40 shadow-sm flex items-center gap-1.5">
                     <Archive className="w-3.5 h-3.5 text-amber-400" />
-                    <span>TERJUAL (ARSIP SAH)</span>
+                    <span>TERJUAL</span>
                   </span>
                 ) : isBooked ? (
                   <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500 text-white shadow-sm">
@@ -195,15 +195,15 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
               </div>
             </div>
 
-            {/* Banner Arsip Sah Unit Terjual */}
+            {/* Banner Arsip Unit Terjual */}
             {isSold && (
               <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[#1C1917] space-y-1">
                 <div className="flex items-center gap-2 text-xs font-extrabold text-amber-900 uppercase tracking-wider">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Unit Ini Telah Resmi Terjual Lunas</span>
+                  <span>Unit Ini Telah Resmi Terjual</span>
                 </div>
                 <p className="text-[11px] text-stone-600 leading-relaxed">
-                  Halaman ini diarsipkan permanen sebagai bukti transparansi transaksi fisik dan validasi BAST digital. Seluruh data ketebalan cat & grade inspeksi tetap sah terverifikasi.
+                  Halaman ini disimpan sebagai arsip rekam jejak kondisi fisik dan sertifikat inspeksi digital terverifikasi.
                 </p>
               </div>
             )}
@@ -233,11 +233,11 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                       {vehicle.price ? formatRupiah(vehicle.price) : "Hubungi Kami"}
                     </span>
                     <span className="text-2xl sm:text-3xl font-black text-emerald-700 tracking-tight">
-                      TERJUAL LUNAS
+                      TERJUAL
                     </span>
                   </div>
                   <span className="text-[11px] text-stone-500 block">
-                    *Unit telah diserahterimakan kepada pembeli dengan Berita Acara Serah Terima (BAST) sah.
+                    *Unit telah diserahterimakan kepada pembeli dengan Berita Acara Serah Terima (BAST).
                   </span>
                 </div>
               ) : (
@@ -324,11 +324,13 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
               )}
             </div>
 
-            {/* Lokasi Garasi */}
-            <div className="flex items-center gap-2 text-xs text-[#6B6560] pt-2 border-t border-[#EBE7E1]">
-              <MapPin className="w-4 h-4 text-[#D97706] shrink-0" />
-              <span>Lokasi unit saat ini: <strong>{vehicle.location}</strong></span>
-            </div>
+            {/* Lokasi Garasi (Hanya tampil untuk unit yang belum terjual) */}
+            {!isSold && vehicle.location && (
+              <div className="flex items-center gap-2 text-xs text-[#6B6560] pt-2 border-t border-[#EBE7E1]">
+                <MapPin className="w-4 h-4 text-[#D97706] shrink-0" />
+                <span>Lokasi unit saat ini: <strong>{vehicle.location}</strong></span>
+              </div>
+            )}
           </div>
         </div>
       </div>
