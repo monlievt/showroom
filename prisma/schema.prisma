@@ -73,6 +73,7 @@ enum Grade {
   B
   C
   D
+  E
 }
 
 enum PanelCondition {
@@ -80,6 +81,8 @@ enum PanelCondition {
   REPAINTED
   DENTED_SCRATCHED
   REPLACED
+  PLASTIC_NORMAL
+  PLASTIC_DAMAGED
 }
 
 enum InspectionPanelType {
@@ -94,6 +97,10 @@ enum InspectionPanelType {
   TRUNK_LID
   QUARTER_PANEL_RIGHT
   QUARTER_PANEL_LEFT
+  ROCKER_PANEL_RIGHT
+  ROCKER_PANEL_LEFT
+  BUMPER_FRONT
+  BUMPER_REAR
 }
 
 enum InspectionStage {
@@ -314,16 +321,24 @@ model Inspection {
   version         Int             @default(1)
   isCurrent       Boolean         @default(true)
   stage           InspectionStage @default(INTAKE)
+  totalGrade      Grade?          // Grade komposit A-E ala IBID ACV
   engineGrade     Grade           @default(B)
   interiorGrade   Grade           @default(B)
   exteriorGrade   Grade           @default(B)
-  frameGrade      Grade           @default(A) // A = bebas laka, D = laka berat
+  frameGrade      Grade           @default(A) // A = bebas laka, E = laka berat
   accidentHistory Boolean         @default(false)
   floodHistory    Boolean         @default(false)
+
+  // Kelengkapan Esensial & Malfungsi ala IBID ACV
+  hasServiceBook  Boolean         @default(true) // Buku Servis
+  hasSpareKey     Boolean         @default(true) // Kunci Cadangan
+  milAirbagOk     Boolean         @default(true) // Indikator MIL / Airbag Speedometer Normal
+
   engineNotes     String?         @db.Text
   interiorNotes   String?         @db.Text
   exteriorNotes   String?         @db.Text
-  checklistData   Json? // Rincian checklist per komponen: eksterior, interior, mekanikal, rangka (ala ACV IBID)
+  frameNotes      String?         @db.Text
+  checklistData   Json? // Rincian checklist per komponen: 14 rangka, interior, mekanikal (ala ACV IBID)
   inspectedBy     String
   inspectedAt     DateTime        @default(now())
 
@@ -345,7 +360,9 @@ model InspectionPanel {
   pointLeft      Int? // Titik Kiri (um)
   pointExtra     Int? // Titik ke-4 (khusus Atap Kanan/Kiri Belakang)
   condition      PanelCondition      @default(ORIGINAL)
-  defectCode     String? // kode standar lelang: A1, A2, U1, D, P, OK
+  defectCode     String? // kode standar lelang: A1, A2, U1, Y3, D, P, OK
+  damageLevel    Int?                @default(0) // Level keparahan: 0-4 ala IBID
+  isMetal        Boolean             @default(true) // false untuk bumper plastik
   notes          String?             @db.Text
 
   @@unique([inspectionId, panelType])

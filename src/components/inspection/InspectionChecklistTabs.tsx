@@ -14,22 +14,31 @@ import {
   Wind,
   Layers,
   Sparkles,
-  Info
+  Info,
+  KeyRound,
+  BookOpen,
+  Activity
 } from "lucide-react";
+import { calculateTotalGrade, GRADE_LABELS } from "@/lib/calculations/inspection";
 
 interface InspectionChecklistTabsProps {
   panels: PanelData[];
   inspection: {
     id: string;
+    totalGrade?: string | null;
     engineGrade: string;
     interiorGrade: string;
     exteriorGrade: string;
     frameGrade: string;
     accidentHistory: boolean;
     floodHistory: boolean;
+    hasServiceBook?: boolean;
+    hasSpareKey?: boolean;
+    milAirbagOk?: boolean;
     engineNotes?: string | null;
     interiorNotes?: string | null;
     exteriorNotes?: string | null;
+    frameNotes?: string | null;
     checklistData?: any;
   };
   brand?: string | null;
@@ -45,6 +54,16 @@ export function InspectionChecklistTabs({
   const [activeTab, setActiveTab] = useState<
     "blueprint" | "frame" | "exterior" | "interior" | "mechanical"
   >("blueprint");
+
+  const totalGrade =
+    inspection.totalGrade ||
+    calculateTotalGrade(
+      inspection.engineGrade,
+      inspection.interiorGrade,
+      inspection.exteriorGrade,
+      inspection.frameGrade,
+      inspection.accidentHistory
+    );
 
   // Titik Uji Rangka Utama (14 Titik sesuai standar IBID / JBA)
   const frameCheckpoints = [
@@ -105,6 +124,97 @@ export function InspectionChecklistTabs({
 
   return (
     <div className="space-y-6">
+      {/* ── EXECUTIVE SUMMARY SCORECARD BANNER (ALA IBID ACV HALAMAN 1) ── */}
+      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-[#FAF9F6] via-white to-[#F5F2EC] border border-[#D9D4CB] shadow-xs space-y-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-[#EBE7E1]">
+          <div className="flex items-center gap-3">
+            <div className="w-14 h-14 rounded-2xl bg-[#D97706] text-white flex flex-col items-center justify-center shadow-sm">
+              <span className="text-[9px] uppercase font-bold tracking-wider">Total</span>
+              <span className="text-2xl font-black leading-none">{totalGrade}</span>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-extrabold text-[#1C1917]">
+                  Hasil Valuasi & Grade Keseluruhan (ACV Standar Lelang)
+                </span>
+                <span className="text-[10px] bg-[#FEF3C7] text-[#92400E] font-bold px-2 py-0.5 rounded-full">
+                  {GRADE_LABELS[totalGrade]?.desc || "Prima"}
+                </span>
+              </div>
+              <p className="text-xs text-[#6B6560] mt-0.5">
+                Nilai komposit dari 4 pilar teknis dengan bobot perlindungan struktur sasis.
+              </p>
+            </div>
+          </div>
+
+          {/* 4 Pilar Pill */}
+          <div className="grid grid-cols-4 gap-2 text-center text-xs w-full md:w-auto">
+            <div className="p-2 bg-white rounded-xl border border-[#D9D4CB] px-3 shadow-2xs">
+              <span className="text-[10px] text-[#6B6560] block font-semibold">Mesin</span>
+              <span className="font-extrabold text-[#1C1917] text-sm">Grade {inspection.engineGrade}</span>
+            </div>
+            <div className="p-2 bg-white rounded-xl border border-[#D9D4CB] px-3 shadow-2xs">
+              <span className="text-[10px] text-[#6B6560] block font-semibold">Interior</span>
+              <span className="font-extrabold text-[#1C1917] text-sm">Grade {inspection.interiorGrade}</span>
+            </div>
+            <div className="p-2 bg-white rounded-xl border border-[#D9D4CB] px-3 shadow-2xs">
+              <span className="text-[10px] text-[#6B6560] block font-semibold">Eksterior</span>
+              <span className="font-extrabold text-[#1C1917] text-sm">Grade {inspection.exteriorGrade}</span>
+            </div>
+            <div className="p-2 bg-white rounded-xl border border-[#D9D4CB] px-3 shadow-2xs">
+              <span className="text-[10px] text-[#6B6560] block font-semibold">Rangka</span>
+              <span className="font-extrabold text-[#059669] text-sm">Grade {inspection.frameGrade}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Status Bebas Laka/Banjir & Kelengkapan Kunci/Buku */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-emerald-800">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="font-bold">
+              {inspection.accidentHistory ? "Terindikasi Tabrakan" : "✓ 100% Bebas Tabrakan Berat"}
+            </span>
+          </div>
+
+          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-emerald-800">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="font-bold">
+              {inspection.floodHistory ? "Terindikasi Banjir" : "✓ 100% Bebas Rendaman Banjir"}
+            </span>
+          </div>
+
+          <div className="p-2.5 bg-white border border-[#D9D4CB] rounded-xl flex items-center justify-between text-[#1C1917]">
+            <span className="flex items-center gap-1.5 font-bold">
+              <KeyRound className="w-3.5 h-3.5 text-[#D97706]" />
+              <span>{inspection.hasSpareKey !== false ? "Kunci Serep: 2 Buah" : "Kunci: 1 Buah"}</span>
+            </span>
+            <span className="text-[#6B6560]">•</span>
+            <span className="flex items-center gap-1.5 font-bold">
+              <BookOpen className="w-3.5 h-3.5 text-[#D97706]" />
+              <span>{inspection.hasServiceBook !== false ? "Buku Servis: Ada" : "Buku: Tidak Ada"}</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Ringkasan Catatan Inspektur Terstruktur */}
+        {(inspection.engineNotes || inspection.interiorNotes || inspection.exteriorNotes || inspection.frameNotes) && (
+          <div className="p-3 bg-white rounded-xl border border-[#EBE7E1] text-xs space-y-1">
+            <span className="font-extrabold text-[#1C1917] block text-[11px] uppercase tracking-wider text-[#D97706]">
+              Catatan Resmi Tim Inspektur (Executive Summary):
+            </span>
+            <p className="text-[#57534E] leading-relaxed">
+              {[
+                inspection.engineNotes ? `Mesin: ${inspection.engineNotes}` : null,
+                inspection.interiorNotes ? `Interior: ${inspection.interiorNotes}` : null,
+                inspection.exteriorNotes ? `Eksterior: ${inspection.exteriorNotes}` : null,
+                inspection.frameNotes ? `Rangka: ${inspection.frameNotes}` : null,
+              ].filter(Boolean).join(" • ")}
+            </p>
+          </div>
+        )}
+      </div>
+
       {/* ── TAB SELECTOR ── */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[#D9D4CB]">
         <button
@@ -117,7 +227,7 @@ export function InspectionChecklistTabs({
           )}
         >
           <Car className="w-4 h-4" />
-          <span>1. Peta Bodi & Uji Mikron (Blueprint)</span>
+          <span>1. Peta Bodi & Uji Mikron (15 Panel)</span>
         </button>
 
         <button

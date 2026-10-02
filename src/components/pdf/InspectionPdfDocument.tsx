@@ -6,44 +6,47 @@ import {
   getPaintMicronCategory, 
   getBrandPaintStandard,
   calculateOverallVehiclePaint,
-  calculateMultiPointAnalysis
+  calculateMultiPointAnalysis,
+  calculateTotalGrade,
+  INSPECTION_LEGAL_DISCLAIMER,
+  GRADE_LABELS
 } from "@/lib/calculations/inspection";
 
 const styles = StyleSheet.create({
   page: {
-    padding: 28,
-    fontSize: 9,
+    padding: 24,
+    fontSize: 8.5,
     fontFamily: "Helvetica",
     color: "#1C1917",
     backgroundColor: "#FFFFFF",
   },
   headerContainer: {
     borderBottom: "2px solid #D97706",
-    paddingBottom: 10,
-    marginBottom: 12,
+    paddingBottom: 8,
+    marginBottom: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
   },
   logoText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#D97706",
     letterSpacing: -0.5,
   },
   subLogo: {
-    fontSize: 8,
+    fontSize: 7.5,
     color: "#6B6560",
     marginTop: 2,
   },
   docTitle: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "bold",
     textAlign: "right",
     color: "#1C1917",
   },
   docNumber: {
-    fontSize: 8,
+    fontSize: 7.5,
     color: "#6B6560",
     textAlign: "right",
     marginTop: 2,
@@ -51,8 +54,8 @@ const styles = StyleSheet.create({
   unitCard: {
     backgroundColor: "#F7F5F2",
     borderRadius: 4,
-    padding: 8,
-    marginBottom: 10,
+    padding: 7,
+    marginBottom: 8,
     border: "1px solid #D9D4CB",
   },
   grid: {
@@ -61,50 +64,64 @@ const styles = StyleSheet.create({
   },
   col3: {
     width: "33.3%",
-    marginBottom: 4,
+    marginBottom: 3,
   },
-  col2: {
-    width: "50%",
-    marginBottom: 4,
+  col4: {
+    width: "25%",
+    marginBottom: 3,
   },
   label: {
-    fontSize: 7,
+    fontSize: 6.5,
     color: "#6B6560",
     textTransform: "uppercase",
   },
   value: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: "bold",
     color: "#1C1917",
     marginTop: 1,
   },
   gradeSection: {
     flexDirection: "row",
-    gap: 8,
-    marginBottom: 10,
+    gap: 6,
+    marginBottom: 8,
+  },
+  totalGradeBox: {
+    flex: 1.2,
+    border: "2px solid #D97706",
+    borderRadius: 4,
+    padding: 5,
+    textAlign: "center",
+    backgroundColor: "#FEF3C7",
   },
   gradeBox: {
     flex: 1,
     border: "1px solid #D9D4CB",
     borderRadius: 4,
-    padding: 6,
+    padding: 5,
     textAlign: "center",
     backgroundColor: "#F7F5F2",
   },
-  gradeLetter: {
+  totalGradeLetter: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#D97706",
-    marginTop: 2,
+    color: "#B45309",
+    marginTop: 1,
+  },
+  gradeLetter: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#1C1917",
+    marginTop: 1,
   },
   statusRibbon: {
     flexDirection: "row",
-    gap: 8,
-    marginBottom: 10,
+    gap: 6,
+    marginBottom: 8,
   },
   ribbonItem: {
     flex: 1,
-    padding: 6,
+    padding: 5,
     borderRadius: 4,
     flexDirection: "row",
     alignItems: "center",
@@ -112,17 +129,16 @@ const styles = StyleSheet.create({
   },
   ribbonSuccess: {
     backgroundColor: "#DCFCE7",
-    border: "1px solid #16A34A",
-    color: "#16A34A",
+    border: "1px solid #86EFAC",
   },
   ribbonDanger: {
     backgroundColor: "#FEE2E2",
-    border: "1px solid #DC2626",
-    color: "#DC2626",
+    border: "1px solid #FCA5A5",
   },
   ribbonText: {
-    fontSize: 8,
+    fontSize: 7.5,
     fontWeight: "bold",
+    textAlign: "center",
   },
   sectionTitle: {
     fontSize: 9,
@@ -130,45 +146,12 @@ const styles = StyleSheet.create({
     color: "#1C1917",
     marginBottom: 4,
     marginTop: 4,
-    textTransform: "uppercase",
-    borderBottom: "1px solid #D9D4CB",
-    paddingBottom: 2,
   },
-  table: {
-    width: "100%",
-    border: "1px solid #D9D4CB",
-    borderRadius: 4,
-    marginBottom: 10,
-    overflow: "hidden",
-  },
-  tableRow: {
-    flexDirection: "row",
-    borderBottom: "1px solid #EFECE8",
-    paddingVertical: 3.5,
-    paddingHorizontal: 6,
-    alignItems: "center",
-  },
-  tableHeader: {
-    backgroundColor: "#EFECE8",
-    fontWeight: "bold",
-    fontSize: 7.5,
-    color: "#6B6560",
-    borderBottom: "1px solid #D9D4CB",
-  },
-  colPanel: { width: "24%" },
-  colPoint: { width: "10%", textAlign: "center" },
-  colAvg: { width: "12%", textAlign: "center" },
-  colDelta: { width: "10%", textAlign: "center" },
-  colCategory: { width: "24%" },
-  badgeOk: { color: "#16A34A", fontWeight: "bold" },
-  badgeWarn: { color: "#CA8A04", fontWeight: "bold" },
-  badgeDanger: { color: "#DC2626", fontWeight: "bold" },
-  badgeBelang: { color: "#D97706", fontWeight: "bold" },
   paintSummaryCard: {
     backgroundColor: "#FAF9F6",
-    border: "1px solid #D9D4CB",
+    border: "1px solid #EBE7E1",
     borderRadius: 4,
-    padding: 6,
+    padding: 5,
     marginBottom: 6,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -177,45 +160,114 @@ const styles = StyleSheet.create({
   paintSummaryTitle: {
     fontSize: 7.5,
     fontWeight: "bold",
-    color: "#6B6560",
-    textTransform: "uppercase",
+    color: "#1C1917",
   },
   paintSummaryValue: {
-    fontSize: 9,
+    fontSize: 8.5,
     fontWeight: "bold",
-    color: "#1C1917",
+    color: "#D97706",
+  },
+  table: {
+    border: "1px solid #D9D4CB",
+    borderRadius: 3,
+    marginBottom: 8,
+  },
+  tableRow: {
+    flexDirection: "row",
+    borderBottom: "1px solid #EFECE8",
+    paddingVertical: 3,
+    paddingHorizontal: 4,
+    alignItems: "center",
+  },
+  tableHeader: {
+    backgroundColor: "#EFECE8",
+    borderBottom: "1px solid #D9D4CB",
+    fontWeight: "bold",
+  },
+  colPanel: {
+    width: "28%",
+    fontSize: 7.5,
+  },
+  colPoint: {
+    width: "10%",
+    textAlign: "center",
+    fontSize: 7,
+  },
+  colAvg: {
+    width: "12%",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 7.5,
+  },
+  colDefect: {
+    width: "10%",
+    textAlign: "center",
+    fontSize: 7.5,
+    fontWeight: "bold",
+  },
+  colCategory: {
+    width: "30%",
+    textAlign: "right",
+    fontSize: 7,
+  },
+  badgeOk: {
+    color: "#16A34A",
+    fontWeight: "bold",
+  },
+  badgeWarn: {
+    color: "#D97706",
+    fontWeight: "bold",
+  },
+  badgeDanger: {
+    color: "#DC2626",
+    fontWeight: "bold",
   },
   notesBox: {
     backgroundColor: "#F7F5F2",
-    borderRadius: 4,
-    padding: 6,
+    borderRadius: 3,
+    padding: 5,
+    marginBottom: 4,
     border: "1px solid #D9D4CB",
-    marginBottom: 8,
   },
   notesTitle: {
-    fontSize: 7.5,
+    fontSize: 6.5,
     fontWeight: "bold",
     color: "#6B6560",
-    marginBottom: 2,
+    marginBottom: 1,
+    textTransform: "uppercase",
   },
   notesText: {
-    fontSize: 8,
+    fontSize: 7.5,
     color: "#1C1917",
-    lineHeight: 1.3,
+    lineHeight: 1.25,
+  },
+  disclaimerBox: {
+    backgroundColor: "#FAF9F6",
+    border: "1px solid #D9D4CB",
+    borderRadius: 4,
+    padding: 6,
+    marginTop: 6,
+  },
+  disclaimerTitle: {
+    fontSize: 7,
+    fontWeight: "bold",
+    color: "#B45309",
+    marginBottom: 3,
+    textTransform: "uppercase",
+  },
+  disclaimerPoint: {
+    fontSize: 6,
+    color: "#57534E",
+    lineHeight: 1.25,
+    marginBottom: 2,
   },
   footer: {
     borderTop: "1px solid #D9D4CB",
-    paddingTop: 8,
-    marginTop: "auto",
+    paddingTop: 6,
+    marginTop: 8,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
-  },
-  disclaimer: {
-    fontSize: 6.5,
-    color: "#6B6560",
-    width: "65%",
-    lineHeight: 1.3,
   },
   signatureBox: {
     width: "30%",
@@ -223,8 +275,8 @@ const styles = StyleSheet.create({
   },
   sigLine: {
     borderBottom: "1px solid #1C1917",
-    marginTop: 24,
-    marginBottom: 3,
+    marginTop: 18,
+    marginBottom: 2,
   },
 });
 
@@ -240,14 +292,30 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
     year: "numeric",
   }).format(new Date(inspection.inspectedAt));
 
+  const totalGrade =
+    inspection.totalGrade ||
+    calculateTotalGrade(
+      inspection.engineGrade,
+      inspection.interiorGrade,
+      inspection.exteriorGrade,
+      inspection.frameGrade,
+      inspection.accidentHistory
+    );
+
+  const cal = getBrandPaintStandard(vehicle?.brand);
+  const overallStats = inspection.panels
+    ? calculateOverallVehiclePaint(inspection.panels, vehicle?.brand)
+    : null;
+
   return (
     <Document>
+      {/* ── HALAMAN 1: IDENTITAS, GRADE, UJI MIKRON & CEK FISIK ── */}
       <Page size="A4" style={styles.page}>
-        {/* ── HEADER ──────────────────────────────────────────────── */}
+        {/* ── HEADER ── */}
         <View style={styles.headerContainer}>
           <View>
             <Text style={styles.logoText}>NUR MOBIL</Text>
-            <Text style={styles.subLogo}>Sistem Transparansi Inspeksi Kendaraan • Toko Bu Nur</Text>
+            <Text style={styles.subLogo}>Sistem Transparansi Inspeksi Kendaraan & Valuasi Fisik • Standar Terbuka</Text>
           </View>
           <View>
             <Text style={styles.docTitle}>LEMBAR HASIL INSPEKSI FISIK</Text>
@@ -257,7 +325,7 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
           </View>
         </View>
 
-        {/* ── UNIT CARD (DETAIL IDENTITAS & SPESIFIKASI) ─────────── */}
+        {/* ── UNIT CARD ── */}
         <View style={styles.unitCard}>
           <View style={styles.grid}>
             <View style={styles.col3}>
@@ -288,27 +356,31 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
             </View>
             <View style={styles.col3}>
               <Text style={styles.label}>Nomor Rangka (VIN)</Text>
-              <Text style={styles.value}>{vehicle.chassisNumber || "MHKAB1BY5NK031897"}</Text>
+              <Text style={styles.value}>{vehicle.chassisNumber || "-"}</Text>
             </View>
             <View style={styles.col3}>
               <Text style={styles.label}>Nomor Mesin</Text>
-              <Text style={styles.value}>{vehicle.engineNumber || "2GD885717"}</Text>
+              <Text style={styles.value}>{vehicle.engineNumber || "-"}</Text>
             </View>
             <View style={styles.col3}>
-              <Text style={styles.label}>Tanggal Inspeksi Fisik</Text>
+              <Text style={styles.label}>Tanggal Uji Fisik</Text>
               <Text style={styles.value}>{inspDate}</Text>
             </View>
           </View>
         </View>
 
-        {/* ── GRADE SUMMARY (4 PILAR) ─────────────────────────────── */}
+        {/* ── GRADE SUMMARY (5 PILAR DENGAN TOTAL GRADE ACV) ── */}
         <View style={styles.gradeSection}>
+          <View style={styles.totalGradeBox}>
+            <Text style={[styles.label, { color: "#B45309", fontWeight: "bold" }]}>Total Grade ACV</Text>
+            <Text style={styles.totalGradeLetter}>{totalGrade}</Text>
+          </View>
           <View style={styles.gradeBox}>
-            <Text style={styles.label}>Mesin & Penggerak</Text>
+            <Text style={styles.label}>Mesin & Mekanikal</Text>
             <Text style={styles.gradeLetter}>{inspection.engineGrade}</Text>
           </View>
           <View style={styles.gradeBox}>
-            <Text style={styles.label}>Interior & Kelistrikan</Text>
+            <Text style={styles.label}>Interior & Kabin</Text>
             <Text style={styles.gradeLetter}>{inspection.interiorGrade}</Text>
           </View>
           <View style={styles.gradeBox}>
@@ -316,12 +388,12 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
             <Text style={styles.gradeLetter}>{inspection.exteriorGrade}</Text>
           </View>
           <View style={styles.gradeBox}>
-            <Text style={styles.label}>Rangka & Sasis (Laka)</Text>
+            <Text style={styles.label}>Rangka & Sasis</Text>
             <Text style={styles.gradeLetter}>{inspection.frameGrade}</Text>
           </View>
         </View>
 
-        {/* ── STATUS LAKA & BANJIR RIBBON ─────────────────────────── */}
+        {/* ── STATUS LAKA, BANJIR & KELENGKAPAN RIBBON ── */}
         <View style={styles.statusRibbon}>
           <View style={[styles.ribbonItem, inspection.accidentHistory ? styles.ribbonDanger : styles.ribbonSuccess]}>
             <Text style={styles.ribbonText}>
@@ -330,133 +402,152 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
           </View>
           <View style={[styles.ribbonItem, inspection.floodHistory ? styles.ribbonDanger : styles.ribbonSuccess]}>
             <Text style={styles.ribbonText}>
-              {inspection.floodHistory ? "PERINGATAN: TERDETEKSI BEKAS TERENDAM BANJIR" : "TERVERIFIKASI: BEBAS RENDAMAN BANJIR"}
+              {inspection.floodHistory ? "PERINGATAN: TERDETEKSI BEKAS BANJIR" : "TERVERIFIKASI: BEBAS RENDAMAN BANJIR"}
+            </Text>
+          </View>
+          <View style={[styles.ribbonItem, inspection.hasSpareKey && inspection.hasServiceBook ? styles.ribbonSuccess : styles.ribbonDanger]}>
+            <Text style={styles.ribbonText}>
+              {inspection.hasSpareKey ? "KUNCI SEREP: LENGKAP" : "KUNCI SEREP: 1 BH"} • {inspection.hasServiceBook ? "BUKU SERVIS: ADA" : "BUKU SERVIS: TDK ADA"}
             </Text>
           </View>
         </View>
 
-        {/* ── 11 PANEL BODY TABLE (STANDAR IBID ACV 3-TITIK) ────────── */}
-        {(() => {
-          const cal = getBrandPaintStandard(vehicle?.brand);
-          const overallStats = inspection.panels
-            ? calculateOverallVehiclePaint(inspection.panels, vehicle?.brand)
-            : null;
+        {/* ── 15 PANEL TABLE (LOGAM & PLASTIK BUMPER) ── */}
+        <Text style={styles.sectionTitle}>
+          Pemeriksaan 15 Panel Bodi (13 Panel Logam & 2 Bumper Plastik) • Kalibrasi OEM: {cal.brandGroupName}
+        </Text>
 
-          return (
-            <>
-              <Text style={styles.sectionTitle}>
-                Cek Fisik 11 Panel Logam & Ketebalan Cat (Kalibrasi OEM: {cal.brandGroupName})
+        {overallStats && overallStats.totalPoints > 0 && (
+          <View style={styles.paintSummaryCard}>
+            <View>
+              <Text style={styles.paintSummaryTitle}>
+                Rata-rata Ketebalan Cat Keseluruhan Panel Logam (Standar IBID ACV Astra)
               </Text>
+              <Text style={{ fontSize: 6.5, color: "#6B6560", marginTop: 1 }}>
+                {overallStats.totalPoints} Titik Uji Sensor Digital • Rentang: {overallStats.minMicron}–{overallStats.maxMicron} µm • Bumper plastik non-mikron tidak dihitung.
+              </Text>
+            </View>
+            <View style={{ alignItems: "flex-end" }}>
+              <Text style={styles.paintSummaryValue}>
+                {overallStats.overallAverage} µm ({overallStats.overallConditionLabel})
+              </Text>
+              <Text style={{ fontSize: 6.5, color: overallStats.belangPanelsCount === 0 ? "#16A34A" : "#D97706" }}>
+                {overallStats.belangPanelsCount === 0 ? "Presisi Merata (Delta ≤ 30 µm)" : `Terdeteksi ${overallStats.belangPanelsCount} Panel Belang/Spet`}
+              </Text>
+            </View>
+          </View>
+        )}
 
-              {overallStats && overallStats.totalPoints > 0 && (
-                <View style={styles.paintSummaryCard}>
-                  <View>
-                    <Text style={styles.paintSummaryTitle}>
-                      Hasil Rata-rata Keseluruhan (Standar IBID ACV Astra)
-                    </Text>
-                    <Text style={{ fontSize: 7, color: "#6B6560", marginTop: 1 }}>
-                      {overallStats.totalPoints} Titik Sensor Digital • Rentang: {overallStats.minMicron}–{overallStats.maxMicron} µm
-                    </Text>
-                  </View>
-                  <View style={{ alignItems: "flex-end" }}>
-                    <Text style={styles.paintSummaryValue}>
-                      {overallStats.overallAverage} µm ({overallStats.overallConditionLabel})
-                    </Text>
-                    <Text style={{ fontSize: 6.5, color: overallStats.belangPanelsCount === 0 ? "#16A34A" : "#D97706" }}>
-                      {overallStats.belangPanelsCount === 0 ? "Presisi Merata (Delta ≤ 30 µm)" : `Terdeteksi ${overallStats.belangPanelsCount} Panel Belang/Spet`}
-                    </Text>
-                  </View>
-                </View>
-              )}
+        <View style={styles.table}>
+          <View style={[styles.tableRow, styles.tableHeader]}>
+            <Text style={styles.colPanel}>Bagian Panel Kendaraan</Text>
+            <Text style={styles.colPoint}>Kanan</Text>
+            <Text style={styles.colPoint}>Tengah</Text>
+            <Text style={styles.colPoint}>Kiri</Text>
+            <Text style={styles.colAvg}>Rata-rata</Text>
+            <Text style={styles.colDefect}>Kode</Text>
+            <Text style={styles.colCategory}>Status & Kondisi</Text>
+          </View>
 
-              <View style={styles.table}>
-                <View style={[styles.tableRow, styles.tableHeader]}>
-                  <Text style={styles.colPanel}>Bagian Panel Bodi</Text>
-                  <Text style={styles.colPoint}>Kanan</Text>
-                  <Text style={styles.colPoint}>Tengah</Text>
-                  <Text style={styles.colPoint}>Kiri</Text>
-                  <Text style={styles.colAvg}>Rata-rata</Text>
-                  <Text style={styles.colDelta}>Delta</Text>
-                  <Text style={styles.colCategory}>Status & Kondisi</Text>
-                </View>
+          {inspection.panels &&
+            inspection.panels.map((panel: any) => {
+              const isBumper = panel.panelType === "BUMPER_FRONT" || panel.panelType === "BUMPER_REAR";
+              const points = [panel.pointRight, panel.pointCenter, panel.pointLeft, panel.pointExtra].filter(
+                (val): val is number => typeof val === "number" && !isNaN(val)
+              );
+              const pointStats = points.length > 0 ? calculateMultiPointAnalysis(points, 30) : null;
+              const effectiveMicron = isBumper ? null : pointStats?.average ?? panel.paintThickness;
+              const category = isBumper ? null : getPaintMicronCategory(effectiveMicron, vehicle?.brand);
 
-                {inspection.panels &&
-                  inspection.panels.map((panel: any) => {
-                    const points = [panel.pointRight, panel.pointCenter, panel.pointLeft, panel.pointExtra].filter(
-                      (val): val is number => typeof val === "number" && !isNaN(val)
-                    );
-                    const pointStats = points.length > 0 ? calculateMultiPointAnalysis(points, 30) : null;
-                    const effectiveMicron = pointStats?.average ?? panel.paintThickness;
-                    const category = getPaintMicronCategory(effectiveMicron, vehicle?.brand);
-
-                    return (
-                      <View key={panel.id} style={styles.tableRow}>
-                        <Text style={styles.colPanel}>{PANEL_LABELS[panel.panelType] || panel.panelType}</Text>
-                        <Text style={styles.colPoint}>{panel.pointRight !== null && panel.pointRight !== undefined ? `${panel.pointRight}` : "-"}</Text>
-                        <Text style={styles.colPoint}>{panel.pointCenter !== null && panel.pointCenter !== undefined ? `${panel.pointCenter}` : "-"}</Text>
-                        <Text style={styles.colPoint}>{panel.pointLeft !== null && panel.pointLeft !== undefined ? `${panel.pointLeft}` : "-"}</Text>
-                        <Text style={styles.colAvg}>{effectiveMicron ? `${effectiveMicron} µm` : "-"}</Text>
-                        <Text style={styles.colDelta}>
-                          {pointStats ? (
-                            <Text style={pointStats.isBelang ? styles.badgeBelang : styles.badgeOk}>
-                              {pointStats.isBelang ? `Δ${pointStats.delta}!` : `Δ${pointStats.delta}`}
-                            </Text>
-                          ) : "-"}
+              return (
+                <View key={panel.id} style={styles.tableRow}>
+                  <Text style={styles.colPanel}>
+                    {PANEL_LABELS[panel.panelType] || panel.panelType}
+                    {isBumper ? " (Plastik ABS)" : ""}
+                  </Text>
+                  <Text style={styles.colPoint}>
+                    {isBumper ? "-" : panel.pointRight !== null && panel.pointRight !== undefined ? `${panel.pointRight}` : "-"}
+                  </Text>
+                  <Text style={styles.colPoint}>
+                    {isBumper ? "-" : panel.pointCenter !== null && panel.pointCenter !== undefined ? `${panel.pointCenter}` : "-"}
+                  </Text>
+                  <Text style={styles.colPoint}>
+                    {isBumper ? "-" : panel.pointLeft !== null && panel.pointLeft !== undefined ? `${panel.pointLeft}` : "-"}
+                  </Text>
+                  <Text style={styles.colAvg}>
+                    {isBumper ? "Non-Mikron" : effectiveMicron ? `${effectiveMicron} µm` : "-"}
+                  </Text>
+                  <Text style={styles.colDefect}>{panel.defectCode || "✓"}</Text>
+                  <Text style={styles.colCategory}>
+                    {isBumper ? (
+                      <Text style={{ color: "#D97706" }}>Plastik ABS ({CONDITION_LABELS[panel.condition] || panel.condition})</Text>
+                    ) : (
+                      <>
+                        {category === "ORIGINAL" && <Text style={styles.badgeOk}>Original </Text>}
+                        {category === "REPAINT" && <Text style={styles.badgeWarn}>Repaint </Text>}
+                        {category === "THICK_FILLER" && <Text style={styles.badgeDanger}>Dempul </Text>}
+                        <Text style={{ color: "#6B6560" }}>
+                          ({CONDITION_LABELS[panel.condition] || panel.condition})
                         </Text>
-                        <Text style={styles.colCategory}>
-                          {category === "ORIGINAL" && (
-                            <Text style={styles.badgeOk}>Original </Text>
-                          )}
-                          {category === "REPAINT" && (
-                            <Text style={styles.badgeWarn}>Repaint </Text>
-                          )}
-                          {category === "THICK_FILLER" && (
-                            <Text style={styles.badgeDanger}>Dempul </Text>
-                          )}
-                          <Text style={{ color: "#6B6560" }}>
-                            ({CONDITION_LABELS[panel.condition] || panel.condition})
-                          </Text>
-                        </Text>
-                      </View>
-                    );
-                  })}
-              </View>
-            </>
-          );
-        })()}
+                      </>
+                    )}
+                  </Text>
+                </View>
+              );
+            })}
+        </View>
 
-        {/* ── NOTES SUMMARY ────────────────────────────────────────── */}
+        {/* ── CATATAN EKSEKUTIF PER PILAR (STANDAR IBID ACV) ── */}
         <View style={styles.grid}>
           {inspection.engineNotes && (
-            <View style={[styles.col3, styles.notesBox, { marginRight: 4 }]}>
+            <View style={[styles.col4, styles.notesBox, { marginRight: 3 }]}>
               <Text style={styles.notesTitle}>Catatan Mesin:</Text>
               <Text style={styles.notesText}>{inspection.engineNotes}</Text>
             </View>
           )}
           {inspection.interiorNotes && (
-            <View style={[styles.col3, styles.notesBox, { marginRight: 4 }]}>
+            <View style={[styles.col4, styles.notesBox, { marginRight: 3 }]}>
               <Text style={styles.notesTitle}>Catatan Interior:</Text>
               <Text style={styles.notesText}>{inspection.interiorNotes}</Text>
             </View>
           )}
           {inspection.exteriorNotes && (
-            <View style={[styles.col3, styles.notesBox]}>
+            <View style={[styles.col4, styles.notesBox, { marginRight: 3 }]}>
               <Text style={styles.notesTitle}>Catatan Eksterior:</Text>
               <Text style={styles.notesText}>{inspection.exteriorNotes}</Text>
             </View>
           )}
+          {inspection.frameNotes && (
+            <View style={[styles.col4, styles.notesBox]}>
+              <Text style={styles.notesTitle}>Catatan Rangka:</Text>
+              <Text style={styles.notesText}>{inspection.frameNotes}</Text>
+            </View>
+          )}
         </View>
 
-        {/* ── FOOTER & SIGNATURE ───────────────────────────────────── */}
+        {/* ── KLAUSUL SYARAT & KETENTUAN HUKUM (STANDAR IBID ASTRA) ── */}
+        <View style={styles.disclaimerBox}>
+          <Text style={styles.disclaimerTitle}>
+            ⚖️ Syarat, Ketentuan & Batasan Tanggung Jawab Inspeksi (Legal Disclaimer)
+          </Text>
+          {INSPECTION_LEGAL_DISCLAIMER.points.map((pt) => (
+            <Text key={pt.num} style={styles.disclaimerPoint}>
+              <Text style={{ fontWeight: "bold" }}>{pt.num}. {pt.title}: </Text>
+              {pt.text}
+            </Text>
+          ))}
+        </View>
+
+        {/* ── FOOTER & TANDA TANGAN ── */}
         <View style={styles.footer}>
-          <Text style={styles.disclaimer}>
-            Lembar inspeksi ini diterbitkan secara independen oleh tim teknis Nur Mobil berdasarkan pengecekan fisik nyata menggunakan coating thickness gauge digital. Hasil ini disajikan apa adanya demi menjaga transparansi dan kepercayaan penuh konsumen.
+          <Text style={{ fontSize: 6, color: "#6B6560", width: "65%", lineHeight: 1.25 }}>
+            Sertifikat transparansi fisik ini diterbitkan oleh Divisi Inspeksi & Quality Control Nur Mobil. Pengecekan dilakukan secara profesional untuk transparansi data objektif konsumen.
           </Text>
           <View style={styles.signatureBox}>
-            <Text style={{ fontSize: 7, color: "#6B6560" }}>Inspektur Pemeriksa,</Text>
+            <Text style={{ fontSize: 6.5, color: "#6B6560" }}>Inspektur Pemeriksa,</Text>
             <View style={styles.sigLine} />
-            <Text style={{ fontSize: 8, fontWeight: "bold" }}>{inspection.inspectedBy}</Text>
-            <Text style={{ fontSize: 6.5, color: "#6B6560" }}>Nur Mobil Inspectorate</Text>
+            <Text style={{ fontSize: 7.5, fontWeight: "bold" }}>{inspection.inspectedBy}</Text>
+            <Text style={{ fontSize: 6, color: "#6B6560" }}>Nur Mobil Quality Inspectorate</Text>
           </View>
         </View>
       </Page>

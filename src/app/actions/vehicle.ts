@@ -372,3 +372,33 @@ export async function updateVehicleTaxAction(
   }
 }
 
+export async function deleteVehiclePhotoAction(photoId: string, vehicleId: string) {
+  try {
+    await prisma.vehiclePhoto.delete({
+      where: { id: photoId },
+    });
+    revalidatePath(`/admin/inventory/${vehicleId}`);
+    revalidatePath(`/admin/inventory/${vehicleId}/media`);
+    revalidatePath(`/katalog`);
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error deleting vehicle photo:", error);
+    return { success: false, error: error.message || "Gagal menghapus foto" };
+  }
+}
+
+export async function deleteVehicleDocumentAction(documentId: string, vehicleId: string) {
+  try {
+    await prisma.vehicleDocument.delete({
+      where: { id: documentId },
+    });
+    revalidatePath(`/admin/inventory/${vehicleId}`);
+    revalidatePath(`/admin/inventory/${vehicleId}/media`);
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error deleting vehicle document:", error);
+    return { success: false, error: error.message || "Gagal menghapus dokumen" };
+  }
+}
+
+

@@ -47,10 +47,26 @@ export async function POST(req: NextRequest) {
     }
 
     if (uploadType === "PHOTO") {
+      const tag = (formData.get("tag") as string) || null;
+      const title = (formData.get("title") as string) || null;
+
+      const validCategories = [
+        "CONDITION_INTAKE",
+        "CONDITION_BEFORE_REPAIR",
+        "CONDITION_AFTER_REPAIR",
+        "FINAL_LISTING",
+        "DOCUMENT_PROOF",
+      ];
+      const safeCategory = validCategories.includes(category)
+        ? category
+        : "CONDITION_INTAKE";
+
       const photo = await prisma.vehiclePhoto.create({
         data: {
           vehicleId,
-          category: category as any,
+          category: safeCategory as any,
+          tag: tag || undefined,
+          title: title || undefined,
           fileUrl,
         },
       });

@@ -9,8 +9,22 @@ import {
   detectBodyType,
   calculateMultiPointAnalysis,
   BodyType,
+  DEFECT_CODES,
+  INSPECTION_LEGAL_DISCLAIMER,
 } from "@/lib/calculations/inspection";
-import { ShieldCheck, AlertCircle, CheckCircle2, Info, Eye, Gauge, SlidersHorizontal } from "lucide-react";
+import { 
+  ShieldCheck, 
+  AlertCircle, 
+  CheckCircle2, 
+  Info, 
+  Eye, 
+  Gauge, 
+  SlidersHorizontal,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Scale
+} from "lucide-react";
 
 export interface PanelData {
   id?: string;
@@ -52,6 +66,12 @@ type PanelConfigMap = Record<
 const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
   // 1. MPV & SUV (Innova, Avanza, Fortuner, Pajero, Almaz, Confero, dll) — Kabin 3 Baris Panjang
   MPV_SUV: {
+    BUMPER_FRONT: {
+      label: "Bumper Depan & Grille",
+      path: "M 60 70 Q 180 32 300 70 L 305 82 Q 180 50 55 82 Z",
+      center: { x: 180, y: 55 },
+      defaultCode: "✓",
+    },
     HOOD: {
       label: "Kap Mesin Depan",
       path: "M 105 75 Q 180 50 255 75 L 265 175 Q 180 185 95 175 Z",
@@ -68,6 +88,12 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
       label: "Pintu Bagasi Belakang",
       path: "M 102 475 Q 180 465 258 475 L 250 550 Q 180 565 110 550 Z",
       center: { x: 180, y: 515 },
+      defaultCode: "✓",
+    },
+    BUMPER_REAR: {
+      label: "Bumper Belakang",
+      path: "M 55 565 Q 180 595 305 565 L 300 580 Q 180 605 60 580 Z",
+      center: { x: 180, y: 585 },
       defaultCode: "✓",
     },
     FENDER_FRONT_LEFT: {
@@ -92,6 +118,18 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
       label: "Pintu Kanan Depan (Driver)",
       path: "M 266 238 L 312 235 L 314 325 L 263 325 Z",
       center: { x: 290, y: 280 },
+      defaultCode: "✓",
+    },
+    ROCKER_PANEL_LEFT: {
+      label: "Rocker Panel / Pijakan Kiri",
+      path: "M 36 235 L 45 235 L 45 420 L 36 420 Z",
+      center: { x: 40, y: 328 },
+      defaultCode: "✓",
+    },
+    ROCKER_PANEL_RIGHT: {
+      label: "Rocker Panel / Pijakan Kanan",
+      path: "M 315 235 L 324 235 L 324 420 L 315 420 Z",
+      center: { x: 320, y: 328 },
       defaultCode: "✓",
     },
     REAR_DOOR_LEFT: {
@@ -122,6 +160,12 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
 
   // 2. HATCHBACK & CITY CAR (Honda Brio, Toyota Yaris, Jazz, Agya, Ayla) — Buritan Pendek & Sporty
   HATCHBACK: {
+    BUMPER_FRONT: {
+      label: "Bumper Depan & Grille",
+      path: "M 65 75 Q 180 45 295 75 L 300 88 Q 180 58 60 88 Z",
+      center: { x: 180, y: 64 },
+      defaultCode: "✓",
+    },
     HOOD: {
       label: "Kap Mesin Depan",
       path: "M 102 82 Q 180 58 258 82 L 264 172 Q 180 182 96 172 Z",
@@ -138,6 +182,12 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
       label: "Pintu Bagasi Pendek (Hatch)",
       path: "M 104 430 Q 180 420 256 430 L 250 495 Q 180 510 110 495 Z",
       center: { x: 180, y: 462 },
+      defaultCode: "✓",
+    },
+    BUMPER_REAR: {
+      label: "Bumper Belakang",
+      path: "M 60 505 Q 180 535 300 505 L 295 522 Q 180 545 65 522 Z",
+      center: { x: 180, y: 524 },
       defaultCode: "✓",
     },
     FENDER_FRONT_LEFT: {
@@ -162,6 +212,18 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
       label: "Pintu Kanan Depan (Driver)",
       path: "M 266 235 L 308 232 L 310 308 L 264 308 Z",
       center: { x: 287, y: 270 },
+      defaultCode: "✓",
+    },
+    ROCKER_PANEL_LEFT: {
+      label: "Rocker Panel / Pijakan Kiri",
+      path: "M 40 232 L 49 232 L 49 380 L 40 380 Z",
+      center: { x: 44, y: 306 },
+      defaultCode: "✓",
+    },
+    ROCKER_PANEL_RIGHT: {
+      label: "Rocker Panel / Pijakan Kanan",
+      path: "M 311 232 L 320 232 L 320 380 L 311 380 Z",
+      center: { x: 316, y: 306 },
       defaultCode: "✓",
     },
     REAR_DOOR_LEFT: {
@@ -192,6 +254,12 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
 
   // 3. SEDAN (Vios, Civic, Corolla, Camry, BMW 3/5 Series) — Three-Box Design (Moncong & Bagasi Dek Terpisah)
   SEDAN: {
+    BUMPER_FRONT: {
+      label: "Bumper Depan & Grille",
+      path: "M 65 60 Q 180 22 295 60 L 300 72 Q 180 38 60 72 Z",
+      center: { x: 180, y: 46 },
+      defaultCode: "✓",
+    },
     HOOD: {
       label: "Kap Mesin Depan Panjang",
       path: "M 104 65 Q 180 35 256 65 L 265 180 Q 180 190 95 180 Z",
@@ -208,6 +276,12 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
       label: "Dek Bagasi Belakang Sedan",
       path: "M 104 450 Q 180 440 256 450 L 246 545 Q 180 558 114 545 Z",
       center: { x: 180, y: 495 },
+      defaultCode: "✓",
+    },
+    BUMPER_REAR: {
+      label: "Bumper Belakang",
+      path: "M 62 575 Q 180 600 298 575 L 292 590 Q 180 610 68 590 Z",
+      center: { x: 180, y: 592 },
       defaultCode: "✓",
     },
     FENDER_FRONT_LEFT: {
@@ -232,6 +306,18 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
       label: "Pintu Kanan Depan (Driver)",
       path: "M 266 246 L 314 242 L 316 322 L 262 322 Z",
       center: { x: 292, y: 282 },
+      defaultCode: "✓",
+    },
+    ROCKER_PANEL_LEFT: {
+      label: "Rocker Panel / Pijakan Kiri",
+      path: "M 34 242 L 43 242 L 43 395 L 34 395 Z",
+      center: { x: 38, y: 318 },
+      defaultCode: "✓",
+    },
+    ROCKER_PANEL_RIGHT: {
+      label: "Rocker Panel / Pijakan Kanan",
+      path: "M 317 242 L 326 242 L 326 395 L 317 395 Z",
+      center: { x: 322, y: 318 },
       defaultCode: "✓",
     },
     REAR_DOOR_LEFT: {
@@ -262,6 +348,12 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
 
   // 4. PICKUP & NIAGA (GranMax PU, Carry, L300) — Kabin Depan + Bak Kargo Terbuka
   PICKUP: {
+    BUMPER_FRONT: {
+      label: "Bumper Depan & Grille",
+      path: "M 52 50 Q 180 30 308 50 L 304 65 Q 180 48 56 65 Z",
+      center: { x: 180, y: 48 },
+      defaultCode: "✓",
+    },
     HOOD: {
       label: "Hidung / Moncong Depan",
       path: "M 95 65 Q 180 52 265 65 L 270 140 Q 180 148 90 140 Z",
@@ -278,6 +370,12 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
       label: "Pintu Bak Belakang (Tailgate)",
       path: "M 88 545 L 272 545 L 272 575 L 88 575 Z",
       center: { x: 180, y: 560 },
+      defaultCode: "✓",
+    },
+    BUMPER_REAR: {
+      label: "Bumper Belakang",
+      path: "M 42 575 L 318 575 L 314 590 L 46 590 Z",
+      center: { x: 180, y: 582 },
       defaultCode: "✓",
     },
     FENDER_FRONT_LEFT: {
@@ -302,6 +400,18 @@ const BLUEPRINT_CONFIGS: Record<BodyType, PanelConfigMap> = {
       label: "Pintu Kanan Kabin (Driver)",
       path: "M 274 195 L 316 195 L 316 280 L 270 280 Z",
       center: { x: 294, y: 238 },
+      defaultCode: "✓",
+    },
+    ROCKER_PANEL_LEFT: {
+      label: "Rocker Panel / Pijakan Kiri",
+      path: "M 34 200 L 43 200 L 43 280 L 34 280 Z",
+      center: { x: 38, y: 240 },
+      defaultCode: "✓",
+    },
+    ROCKER_PANEL_RIGHT: {
+      label: "Rocker Panel / Pijakan Kanan",
+      path: "M 317 200 L 326 200 L 326 280 L 317 280 Z",
+      center: { x: 322, y: 240 },
       defaultCode: "✓",
     },
     REAR_DOOR_LEFT: {
@@ -375,11 +485,60 @@ export function CarBlueprintView({
     }
   };
 
+  const [showDisclaimer, setShowDisclaimer] = useState<boolean>(false);
+
   // Pewarnaan dinamis berdasarkan Kalibrasi Brand
   const getPanelColorStyle = (panelType: string) => {
     const data = panelMap.get(panelType);
     const thickness = data?.paintThickness;
     const condition = data?.condition;
+    const isBumper = panelType === "BUMPER_FRONT" || panelType === "BUMPER_REAR";
+
+    // Khusus Bumper Plastik ABS / PP (Non-Mikron)
+    if (isBumper) {
+      const code = data?.defectCode || "";
+      if (
+        condition === "PLASTIC_DAMAGED" ||
+        code.startsWith("Y") ||
+        code === "A3" ||
+        code === "U3" ||
+        code === "C"
+      ) {
+        return {
+          fill: "rgba(239, 68, 68, 0.45)",
+          stroke: "#DC2626",
+          badgeBg: "#EF4444",
+          badgeText: "text-white",
+          dotColor: "bg-red-500",
+          statusName: "BUMPER RETAK / GAP RENGGANG (ABS)",
+        };
+      }
+      if (
+        condition === "REPAINTED" ||
+        condition === "DENTED_SCRATCHED" ||
+        code.startsWith("A") ||
+        code.startsWith("U") ||
+        code.startsWith("AU") ||
+        code === "0"
+      ) {
+        return {
+          fill: "rgba(245, 158, 11, 0.40)",
+          stroke: "#D97706",
+          badgeBg: "#F59E0B",
+          badgeText: "text-white",
+          dotColor: "bg-amber-500",
+          statusName: "BUMPER BARET / REPAINT SPET (ABS)",
+        };
+      }
+      return {
+        fill: "rgba(16, 185, 129, 0.35)",
+        stroke: "#059669",
+        badgeBg: "#10B981",
+        badgeText: "text-white",
+        dotColor: "bg-emerald-500",
+        statusName: "BUMPER UTUH NORMAL (ABS)",
+      };
+    }
 
     if (!thickness && !condition) {
       return {
@@ -439,7 +598,7 @@ export function CarBlueprintView({
         <div>
           <div className="inline-flex items-center gap-1.5 bg-[#FEF3C7] text-[#92400E] px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider mb-1">
             <Eye className="w-3.5 h-3.5 text-[#D97706]" />
-            <span>Peta Bodi Interaktif (Blueprint 11 Panel)</span>
+            <span>Peta Bodi Interaktif (Blueprint 15 Panel)</span>
           </div>
           <h3 className="text-base sm:text-lg font-extrabold text-[#1C1917] tracking-tight">
             Visual Sebaran Titik Baret & Ketebalan Mikron Cat
@@ -872,197 +1031,332 @@ export function CarBlueprintView({
         {/* Kolom Kanan: Kartu Detail Panel yang Sedang Dipilih (5 cols) */}
         <div className="lg:col-span-5 space-y-4">
           <div className="bg-white border-2 border-[#D97706] rounded-2xl p-5 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-3">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#D97706] block">
-                  Panel Terpilih
-                </span>
-                <h4 className="text-base font-extrabold text-[#1C1917]">
-                  {activeConfigs[activePanelType]?.label ||
-                    PANEL_LABELS[activePanelType as keyof typeof PANEL_LABELS] ||
-                    activePanelType}
-                </h4>
-              </div>
-              <div className="text-right">
-                <span className="text-xs text-[#6B6560] block font-semibold">Tebal Cat</span>
-                <span className="text-xl font-extrabold text-[#1C1917]">
-                  {activeData.paintThickness ? `${activeData.paintThickness} µm` : "-"}
-                </span>
-              </div>
-            </div>
-
-            {/* Status & Klasifikasi Berdasarkan Brand Calibration */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <span
-                className={cn(
-                  "text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider",
-                  (activeData.paintThickness || 0) > calibration.repaintMax ||
-                    activeData.condition === "DENTED_SCRATCHED"
-                    ? "bg-red-100 text-red-700 border border-red-300"
-                    : (activeData.paintThickness || 0) > calibration.originalMax ||
-                      activeData.condition === "REPAINTED"
-                    ? "bg-amber-100 text-amber-800 border border-amber-300"
-                    : "bg-emerald-100 text-emerald-800 border border-emerald-300"
-                )}
-              >
-                {(activeData.paintThickness || 0) > calibration.repaintMax
-                  ? "Indikasi Dempol / Tebal"
-                  : (activeData.paintThickness || 0) > calibration.originalMax
-                  ? "Repaint / Cat Ulang Spet"
-                  : "Cat Original Pabrik"}
-              </span>
-              <span className="text-xs font-semibold text-[#6B6560]">
-                Kondisi: {activeData.condition}
-              </span>
-            </div>
-
-            {/* Rincian 3 Titik Pengukuran & Uji Disparitas (Standar IBID ACV Astra) */}
             {(() => {
-              const rawPoints = [
-                activeData.pointRight,
-                activeData.pointCenter,
-                activeData.pointLeft,
-                activeData.pointExtra,
-              ].filter((pt): pt is number => pt != null && !isNaN(pt) && pt > 0);
-
-              const analysis = calculateMultiPointAnalysis(
-                rawPoints.length > 0 ? rawPoints : [activeData.paintThickness || 0]
-              );
+              const isBumper = activePanelType === "BUMPER_FRONT" || activePanelType === "BUMPER_REAR";
+              const isRocker = activePanelType === "ROCKER_PANEL_LEFT" || activePanelType === "ROCKER_PANEL_RIGHT";
+              const isRoof = activePanelType === "ROOF";
+              const defectInfo = DEFECT_CODES[activeData.defectCode || "OK"] || DEFECT_CODES.OK;
 
               return (
-                <div className="bg-[#FAF9F6] p-3.5 rounded-xl border border-[#EBE7E1] space-y-2.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-extrabold text-[#1C1917] flex items-center gap-1.5">
-                      <span>📐</span>
-                      <span>Uji 3 Titik Pengukuran (IBID ACV)</span>
-                    </span>
-                    <span className="text-[11px] font-bold text-[#6B6560]">
-                      Rata2: <strong className="text-[#1C1917]">{analysis.average} µm</strong>
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2 text-center">
-                    <div className="p-2 bg-white rounded-lg border border-[#D9D4CB] shadow-2xs">
-                      <span className="text-[10px] text-[#6B6560] block font-semibold">Kanan</span>
-                      <span className="font-extrabold text-xs text-[#1C1917]">
-                        {activeData.pointRight
-                          ? `${activeData.pointRight} µm`
-                          : activeData.paintThickness
-                            ? `${activeData.paintThickness} µm`
-                            : "-"}
+                <>
+                  <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-3">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#D97706] block">
+                        Panel Terpilih {isRocker ? "• Sasis Samping" : isBumper ? "• Material Plastik" : ""}
                       </span>
+                      <h4 className="text-base font-extrabold text-[#1C1917]">
+                        {activeConfigs[activePanelType]?.label ||
+                          PANEL_LABELS[activePanelType as keyof typeof PANEL_LABELS] ||
+                          activePanelType}
+                      </h4>
                     </div>
-                    <div className="p-2 bg-white rounded-lg border border-[#D9D4CB] shadow-2xs">
-                      <span className="text-[10px] text-[#6B6560] block font-semibold">Tengah</span>
-                      <span className="font-extrabold text-xs text-[#1C1917]">
-                        {activeData.pointCenter
-                          ? `${activeData.pointCenter} µm`
-                          : activeData.paintThickness
-                            ? `${activeData.paintThickness} µm`
-                            : "-"}
+                    <div className="text-right">
+                      <span className="text-xs text-[#6B6560] block font-semibold">
+                        {isBumper ? "Material" : "Tebal Cat"}
                       </span>
-                    </div>
-                    <div className="p-2 bg-white rounded-lg border border-[#D9D4CB] shadow-2xs">
-                      <span className="text-[10px] text-[#6B6560] block font-semibold">Kiri</span>
-                      <span className="font-extrabold text-xs text-[#1C1917]">
-                        {activeData.pointLeft
-                          ? `${activeData.pointLeft} µm`
+                      <span className="text-lg sm:text-xl font-extrabold text-[#1C1917]">
+                        {isBumper
+                          ? "Plastik ABS / PP"
                           : activeData.paintThickness
-                            ? `${activeData.paintThickness} µm`
-                            : "-"}
+                          ? `${activeData.paintThickness} µm`
+                          : "-"}
                       </span>
                     </div>
                   </div>
 
-                  {activeData.pointExtra && (
-                    <div className="text-[11px] text-[#6B6560] bg-white p-1.5 rounded-lg border border-[#D9D4CB] flex justify-between">
-                      <span>Titik Tambahan (Atap Belakang):</span>
-                      <strong>{activeData.pointExtra} µm</strong>
-                    </div>
-                  )}
+                  {/* Status & Klasifikasi */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {isBumper ? (
+                      <span
+                        className={cn(
+                          "text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider",
+                          activeData.defectCode?.startsWith("Y") || activeData.condition === "PLASTIC_DAMAGED"
+                            ? "bg-red-100 text-red-700 border border-red-300"
+                            : activeData.defectCode?.startsWith("A") || activeData.condition === "REPAINTED"
+                            ? "bg-amber-100 text-amber-800 border border-amber-300"
+                            : "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                        )}
+                      >
+                        {activeData.defectCode?.startsWith("Y") || activeData.condition === "PLASTIC_DAMAGED"
+                          ? "Retak / Celah Gap Kendor"
+                          : activeData.defectCode?.startsWith("A") || activeData.condition === "REPAINTED"
+                          ? "Baret / Repaint Plastik"
+                          : "Plastik Bumper Utuh Normal"}
+                      </span>
+                    ) : (
+                      <span
+                        className={cn(
+                          "text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider",
+                          (activeData.paintThickness || 0) > calibration.repaintMax ||
+                            activeData.condition === "DENTED_SCRATCHED"
+                            ? "bg-red-100 text-red-700 border border-red-300"
+                            : (activeData.paintThickness || 0) > calibration.originalMax ||
+                              activeData.condition === "REPAINTED"
+                            ? "bg-amber-100 text-amber-800 border border-amber-300"
+                            : "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                        )}
+                      >
+                        {(activeData.paintThickness || 0) > calibration.repaintMax
+                          ? "Indikasi Dempol / Tebal"
+                          : (activeData.paintThickness || 0) > calibration.originalMax
+                          ? "Repaint / Cat Ulang Spet"
+                          : "Cat Original Pabrik"}
+                      </span>
+                    )}
 
-                  {/* Deteksi Cat Belang (Disparitas > 30 µm) */}
-                  {analysis.pointsCount >= 2 && (
-                    <div
-                      className={cn(
-                        "p-2 rounded-lg text-[11px] font-semibold flex items-center justify-between",
-                        analysis.isBelang
-                          ? "bg-amber-100 text-amber-900 border border-amber-300"
-                          : "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                      )}
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <span>{analysis.isBelang ? "⚠️" : "✓"}</span>
-                        <span>
-                          {analysis.isBelang
-                            ? "Terindikasi Belang / Spet Sebagian"
-                            : "Ketebalan Merata Presisi"}
+                    <span className="text-xs font-semibold text-[#6B6560]">
+                      Kondisi: {activeData.condition}
+                    </span>
+                  </div>
+
+                  {/* Konten Spesifik: Bumper Plastik vs Panel Logam */}
+                  {isBumper ? (
+                    <div className="bg-[#FAF9F6] p-3.5 rounded-xl border border-[#EBE7E1] space-y-2.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-extrabold text-[#1C1917] flex items-center gap-1.5">
+                          <ShieldCheck className="w-4 h-4 text-[#D97706]" />
+                          <span>Pemeriksaan Fisik Bumper Non-Mikron</span>
                         </span>
-                      </span>
-                      <span className="font-bold">
-                        Delta: {analysis.delta} µm {analysis.isBelang ? "(>30)" : "(≤30)"}
-                      </span>
+                        <span className="text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full">
+                          Visual & Gap
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[#6B6560] leading-relaxed">
+                        Bumper mobil terbuat dari plastik resin sintetis (ABS/PP) sehingga alat gauge mikron bodi logam tidak berlaku. Inspektur memeriksa kerapatan klip kancing, celah sambungan bodi (*gap*), retak benturan, dan kelenturan.
+                      </p>
+
+                      <div className="grid grid-cols-2 gap-2 text-xs pt-1">
+                        <div className="p-2 bg-white rounded-lg border border-[#D9D4CB]">
+                          <span className="text-[10px] text-[#6B6560] block font-semibold">Kode Notasi Lelang</span>
+                          <span className="font-extrabold text-xs text-[#1C1917] flex items-center gap-1.5 mt-0.5">
+                            <span className="w-4 h-4 rounded-full bg-[#1C1917] text-white text-[9px] font-bold flex items-center justify-center">
+                              {defectInfo.code}
+                            </span>
+                            <span>{defectInfo.name}</span>
+                          </span>
+                        </div>
+                        <div className="p-2 bg-white rounded-lg border border-[#D9D4CB]">
+                          <span className="text-[10px] text-[#6B6560] block font-semibold">Deskripsi Kerusakan</span>
+                          <span className="text-[11px] font-medium text-[#57534E] block mt-0.5 leading-snug">
+                            {defectInfo.desc}
+                          </span>
+                        </div>
+                      </div>
                     </div>
+                  ) : (
+                    /* Rincian Titik Pengukuran Logam (3 Titik atau 4 Titik untuk Atap) */
+                    (() => {
+                      const rawPoints = [
+                        activeData.pointRight,
+                        activeData.pointCenter,
+                        activeData.pointLeft,
+                        activeData.pointExtra,
+                      ].filter((pt): pt is number => pt != null && !isNaN(pt) && pt > 0);
+
+                      const analysis = calculateMultiPointAnalysis(
+                        rawPoints.length > 0 ? rawPoints : [activeData.paintThickness || 0]
+                      );
+
+                      return (
+                        <div className="bg-[#FAF9F6] p-3.5 rounded-xl border border-[#EBE7E1] space-y-2.5">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-extrabold text-[#1C1917] flex items-center gap-1.5">
+                              <span>📐</span>
+                              <span>
+                                {isRoof
+                                  ? "Uji 4 Penjuru Atap (Standar IBID ACV)"
+                                  : "Uji 3 Titik Pengukuran Presisi"}
+                              </span>
+                            </span>
+                            <span className="text-[11px] font-bold text-[#6B6560]">
+                              Rata2: <strong className="text-[#1C1917]">{analysis.average} µm</strong>
+                            </span>
+                          </div>
+
+                          {isRoof ? (
+                            /* Grid 4 Titik Atap (IBID Hal 2) */
+                            <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                              <div className="p-2 bg-white rounded-lg border border-[#D9D4CB]">
+                                <span className="text-[10px] text-[#6B6560] block font-semibold">Kanan Depan</span>
+                                <span className="font-extrabold text-xs text-[#1C1917]">
+                                  {activeData.pointRight ? `${activeData.pointRight} µm` : `${activeData.paintThickness || "-"} µm`}
+                                </span>
+                              </div>
+                              <div className="p-2 bg-white rounded-lg border border-[#D9D4CB]">
+                                <span className="text-[10px] text-[#6B6560] block font-semibold">Kiri Depan</span>
+                                <span className="font-extrabold text-xs text-[#1C1917]">
+                                  {activeData.pointLeft ? `${activeData.pointLeft} µm` : `${activeData.paintThickness || "-"} µm`}
+                                </span>
+                              </div>
+                              <div className="p-2 bg-white rounded-lg border border-[#D9D4CB]">
+                                <span className="text-[10px] text-[#6B6560] block font-semibold">Kanan Belakang</span>
+                                <span className="font-extrabold text-xs text-[#1C1917]">
+                                  {activeData.pointCenter ? `${activeData.pointCenter} µm` : `${activeData.paintThickness || "-"} µm`}
+                                </span>
+                              </div>
+                              <div className="p-2 bg-white rounded-lg border border-[#D9D4CB]">
+                                <span className="text-[10px] text-[#6B6560] block font-semibold">Kiri Belakang</span>
+                                <span className="font-extrabold text-xs text-[#1C1917]">
+                                  {activeData.pointExtra ? `${activeData.pointExtra} µm` : `${activeData.paintThickness || "-"} µm`}
+                                </span>
+                              </div>
+                            </div>
+                          ) : (
+                            /* Grid 3 Titik Standar */
+                            <div className="grid grid-cols-3 gap-2 text-center">
+                              <div className="p-2 bg-white rounded-lg border border-[#D9D4CB] shadow-2xs">
+                                <span className="text-[10px] text-[#6B6560] block font-semibold">Kanan</span>
+                                <span className="font-extrabold text-xs text-[#1C1917]">
+                                  {activeData.pointRight
+                                    ? `${activeData.pointRight} µm`
+                                    : activeData.paintThickness
+                                    ? `${activeData.paintThickness} µm`
+                                    : "-"}
+                                </span>
+                              </div>
+                              <div className="p-2 bg-white rounded-lg border border-[#D9D4CB] shadow-2xs">
+                                <span className="text-[10px] text-[#6B6560] block font-semibold">Tengah</span>
+                                <span className="font-extrabold text-xs text-[#1C1917]">
+                                  {activeData.pointCenter
+                                    ? `${activeData.pointCenter} µm`
+                                    : activeData.paintThickness
+                                    ? `${activeData.paintThickness} µm`
+                                    : "-"}
+                                </span>
+                              </div>
+                              <div className="p-2 bg-white rounded-lg border border-[#D9D4CB] shadow-2xs">
+                                <span className="text-[10px] text-[#6B6560] block font-semibold">Kiri</span>
+                                <span className="font-extrabold text-xs text-[#1C1917]">
+                                  {activeData.pointLeft
+                                    ? `${activeData.pointLeft} µm`
+                                    : activeData.paintThickness
+                                    ? `${activeData.paintThickness} µm`
+                                    : "-"}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Deteksi Cat Belang (Disparitas > 30 µm) */}
+                          {analysis.pointsCount >= 2 && (
+                            <div
+                              className={cn(
+                                "p-2 rounded-lg text-[11px] font-semibold flex items-center justify-between",
+                                analysis.isBelang
+                                  ? "bg-amber-100 text-amber-900 border border-amber-300"
+                                  : "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                              )}
+                            >
+                              <span className="flex items-center gap-1.5">
+                                <span>{analysis.isBelang ? "⚠️" : "✓"}</span>
+                                <span>
+                                  {analysis.isBelang
+                                    ? "Terindikasi Belang / Spet Sebagian"
+                                    : "Ketebalan Merata Presisi"}
+                                </span>
+                              </span>
+                              <span className="font-bold">
+                                Delta: {analysis.delta} µm {analysis.isBelang ? "(>30)" : "(≤30)"}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()
                   )}
-                </div>
+
+                  {/* Catatan Inspektur */}
+                  <div className="p-3.5 bg-[#FAF9F6] rounded-xl border border-[#EBE7E1] space-y-1">
+                    <span className="text-xs font-bold text-[#1C1917] block">
+                      Catatan Temuan Fisik Inspektur:
+                    </span>
+                    <p className="text-xs text-[#57534E] leading-relaxed">
+                      {activeData.notes || "Kondisi panel mulus, cat original presisi tanpa bekas dempol."}
+                    </p>
+                  </div>
+
+                  {/* Panduan Kode Kerusakan Balai Lelang (ACV) */}
+                  <div className="pt-2 border-t border-[#EBE7E1]">
+                    <span className="text-[11px] font-bold text-[#1C1917] block mb-2">
+                      Kamus Notasi Simbol Standar Lelang (ACV):
+                    </span>
+                    <div className="grid grid-cols-2 gap-2 text-[11px] text-[#57534E]">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-[10px]">
+                          ✓
+                        </span>
+                        <span>Original / Normal</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-5 h-5 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center text-[10px]">
+                          A
+                        </span>
+                        <span>Goresan / Baret</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-5 h-5 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-[10px]">
+                          U
+                        </span>
+                        <span>Penyok / Deformasi</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-5 h-5 rounded-full bg-red-600 text-white font-bold flex items-center justify-center text-[10px]">
+                          Y
+                        </span>
+                        <span>Retak / Gap Bumper</span>
+                      </div>
+                    </div>
+                  </div>
+                </>
               );
             })()}
-
-            {/* Catatan Inspektur */}
-            <div className="p-3.5 bg-[#FAF9F6] rounded-xl border border-[#EBE7E1] space-y-1">
-              <span className="text-xs font-bold text-[#1C1917] block">
-                Catatan Temuan Fisik Inspektur:
-              </span>
-              <p className="text-xs text-[#57534E] leading-relaxed">
-                {activeData.notes || "Kondisi panel mulus, cat original presisi tanpa bekas dempol."}
-              </p>
-            </div>
-
-            {/* Panduan Kode Kerusakan Balai Lelang (ACV) */}
-            <div className="pt-2 border-t border-[#EBE7E1]">
-              <span className="text-[11px] font-bold text-[#1C1917] block mb-2">
-                Kamus Kode Simbol Inspeksi:
-              </span>
-              <div className="grid grid-cols-2 gap-2 text-[11px] text-[#57534E]">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-[10px]">
-                    ✓
-                  </span>
-                  <span>Original / Normal</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center text-[10px]">
-                    D
-                  </span>
-                  <span>Cat Ulang (Spet)</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-red-600 text-white font-bold flex items-center justify-center text-[10px]">
-                    P
-                  </span>
-                  <span>Dempul / Tebal</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-purple-600 text-white font-bold flex items-center justify-center text-[10px]">
-                    A
-                  </span>
-                  <span>Goresan / Baret Tipis</span>
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* Quick Info Transparansi */}
-          <div className="p-4 bg-[#FEF3C7]/40 border border-[#FDE68A] rounded-xl flex items-start gap-3 text-xs text-[#92400E]">
-            <ShieldCheck className="w-5 h-5 shrink-0 text-[#D97706] mt-0.5" />
-            <p>
-              <strong>Komitmen Transparansi Nur Mobil:</strong> Setiap millimeter cat diuji
-              menggunakan coating thickness gauge digital terkalibrasi standar OEM{" "}
-              {calibration.brandGroupName}. Bekas spet dibilang spet, baret dibilang baret.
-            </p>
+          {/* Quick Info Transparansi & Tombol Disclaimer */}
+          <div className="p-4 bg-[#FEF3C7]/50 border border-[#FDE68A] rounded-xl space-y-2 text-xs text-[#92400E]">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="w-5 h-5 shrink-0 text-[#D97706] mt-0.5" />
+              <p>
+                <strong>Komitmen Transparansi Nur Mobil:</strong> Setiap millimeter cat diuji
+                menggunakan coating thickness gauge digital terkalibrasi standar OEM{" "}
+                {calibration.brandGroupName}. Bekas spet dibilang spet, baret dibilang baret.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowDisclaimer(!showDisclaimer)}
+              className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-[#B45309] hover:text-[#92400E] underline cursor-pointer"
+            >
+              <Scale className="w-3.5 h-3.5" />
+              <span>{showDisclaimer ? "Sembunyikan Syarat & Disclaimer Hukum" : "Baca Syarat, Ketentuan & Batasan Tanggung Jawab Inspeksi"}</span>
+              {showDisclaimer ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* ── EXPANDABLE LEGAL DISCLAIMER BOX (ALA IBID ASTRA) ───────────────── */}
+      {showDisclaimer && (
+        <div className="mt-6 p-5 sm:p-6 bg-white border-2 border-[#D9D4CB] rounded-2xl shadow-sm space-y-4 animate-in fade-in duration-200">
+          <div className="flex items-center gap-2.5 pb-3 border-b border-[#EBE7E1]">
+            <Scale className="w-5 h-5 text-[#D97706]" />
+            <h4 className="text-sm sm:text-base font-extrabold text-[#1C1917]">
+              {INSPECTION_LEGAL_DISCLAIMER.title}
+            </h4>
+          </div>
+
+          <div className="space-y-3 text-xs text-[#57534E] leading-relaxed">
+            {INSPECTION_LEGAL_DISCLAIMER.points.map((pt) => (
+              <div key={pt.num} className="p-3 bg-[#FAF9F6] rounded-xl border border-[#EBE7E1] space-y-1">
+                <span className="font-extrabold text-[#1C1917] block">
+                  {pt.num}. {pt.title}
+                </span>
+                <p className="text-[#6B6560]">{pt.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

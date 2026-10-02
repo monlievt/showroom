@@ -292,10 +292,21 @@ export function BastPdfDocument({ sale, vehicle, buyer }: BastPdfProps) {
           </View>
         </View>
 
-        {/* Pernyataan */}
-        <Text style={{ fontSize: 7.5, color: "#44403C", textAlign: "justify", marginTop: 4 }}>
-          Dengan ditandatanganinya Berita Acara ini, Pihak Kedua menyatakan telah menerima kendaraan beserta kelengkapannya dalam kondisi baik sesuai kesepakatan. Segala konsekuensi pemakaian dan tilang elektronik (ETLE) sejak serah terima ini sepenuhnya menjadi tanggung jawab Pihak Kedua.
-        </Text>
+        {/* Klausul Legalitas Serah Terima & Pelepasan Tuntutan Fisik */}
+        <View style={{ marginTop: 6, padding: 6, backgroundColor: "#FAF9F6", border: "1px solid #D9D4CB", borderRadius: 4 }}>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: "#1C1917", marginBottom: 2 }}>
+            KLAUSUL PENERIMAAN FISIK, PELEPASAN TUNTUTAN & GARANSI DOKUMEN (STANDAR LELANG):
+          </Text>
+          <Text style={{ fontSize: 6.5, color: "#44403C", textAlign: "justify", lineHeight: 1.25 }}>
+            1. Pihak Kedua menyatakan telah diberikan kesempatan yang cukup untuk memeriksa fisik kendaraan secara langsung serta melakukan uji jalan (test drive). Dengan menandatangani BAST ini dan membawa kendaraan keluar dari area Nur Mobil, Pihak Kedua menerima kondisi fisik kendaraan apa adanya (as-is), dan kondisi fisik kendaraan tidak dapat dikomplain di kemudian hari.
+          </Text>
+          <Text style={{ fontSize: 6.5, color: "#44403C", textAlign: "justify", lineHeight: 1.25, marginTop: 1.5 }}>
+            2. Segala konsekuensi pemakaian di jalan raya, insiden lalu lintas, serta tilang elektronik (ETLE) sejak tanggal dan jam serah terima ini sepenuhnya beralih menjadi beban tanggung jawab Pihak Kedua.
+          </Text>
+          <Text style={{ fontSize: 6.5, color: "#44403C", textAlign: "justify", lineHeight: 1.25, marginTop: 1.5 }}>
+            3. Komplain resmi pasca serah terima HANYA DAPAT DIPROSES khusus mengenai legalitas dokumen kepemilikan negara (STNK/BPKB terblokir atau bermasalah hukum yang timbul sebelum tanggal transaksi), diajukan secara tertulis maksimal 30 (tiga puluh) hari kalender sejak serah terima dokumen.
+          </Text>
+        </View>
 
         {/* Tanda Tangan */}
         <View style={styles.signatures}>

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { createInspectionSchema, type CreateInspectionInput } from "@/lib/validations/inspection";
+import { calculateTotalGrade } from "@/lib/calculations/inspection";
 
 export async function createInspectionAction(input: CreateInspectionInput) {
   try {
@@ -32,42 +33,64 @@ export async function createInspectionAction(input: CreateInspectionInput) {
         data: { isCurrent: false },
       });
 
-      // 4. Buat record Inspection baru
+      // 4. Hitung totalGrade jika belum ada
+      const totalGrade =
+        validated.totalGrade ||
+        calculateTotalGrade(
+          validated.engineGrade,
+          validated.interiorGrade,
+          validated.exteriorGrade,
+          validated.frameGrade,
+          validated.accidentHistory
+        );
+
+      // 5. Buat record Inspection baru
       const inspection = await tx.inspection.create({
         data: {
           vehicleId: validated.vehicleId,
           version: nextVersion,
           isCurrent: true,
           stage: validated.stage,
+          totalGrade,
           engineGrade: validated.engineGrade,
           interiorGrade: validated.interiorGrade,
           exteriorGrade: validated.exteriorGrade,
           frameGrade: validated.frameGrade,
           accidentHistory: validated.accidentHistory,
           floodHistory: validated.floodHistory,
+          hasServiceBook: validated.hasServiceBook,
+          hasSpareKey: validated.hasSpareKey,
+          milAirbagOk: validated.milAirbagOk,
           engineNotes: validated.engineNotes,
           interiorNotes: validated.interiorNotes,
           exteriorNotes: validated.exteriorNotes,
+          frameNotes: validated.frameNotes,
+          checklistData: validated.checklistData || undefined,
           inspectedBy: validated.inspectedBy,
           inspectedAt: new Date(),
           panels: {
             create: validated.panels.map((p) => {
+              const isBumper = p.panelType === "BUMPER_FRONT" || p.panelType === "BUMPER_REAR";
               const points = [p.pointRight, p.pointCenter, p.pointLeft, p.pointExtra].filter(
                 (v): v is number => typeof v === "number" && !isNaN(v)
               );
-              const computedThickness =
-                points.length > 0
-                  ? Math.round(points.reduce((a, b) => a + b, 0) / points.length)
-                  : p.paintThickness;
+              const computedThickness = isBumper
+                ? null
+                : points.length > 0
+                ? Math.round(points.reduce((a, b) => a + b, 0) / points.length)
+                : p.paintThickness;
 
               return {
                 panelType: p.panelType,
                 paintThickness: computedThickness,
-                pointRight: p.pointRight,
-                pointCenter: p.pointCenter,
-                pointLeft: p.pointLeft,
-                pointExtra: p.pointExtra,
+                pointRight: isBumper ? null : p.pointRight,
+                pointCenter: isBumper ? null : p.pointCenter,
+                pointLeft: isBumper ? null : p.pointLeft,
+                pointExtra: isBumper ? null : p.pointExtra,
                 condition: p.condition,
+                defectCode: p.defectCode || null,
+                damageLevel: p.damageLevel ?? 0,
+                isMetal: !isBumper,
                 notes: p.notes,
               };
             }),
