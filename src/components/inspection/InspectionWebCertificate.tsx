@@ -29,9 +29,14 @@ import {
   ArrowLeft,
   Fuel,
   Settings2,
+  SlidersHorizontal,
   Hash,
 } from "lucide-react";
 import { CarBlueprintView, PanelData } from "./CarBlueprintView";
+import { ExteriorInspectionSheet } from "./ExteriorInspectionSheet";
+import { InteriorInspectionSheet } from "./InteriorInspectionSheet";
+import { EngineInspectionSheet } from "./EngineInspectionSheet";
+import { FrameInspectionSheet } from "./FrameInspectionSheet";
 import {
   calculateTotalGrade,
   GRADE_LABELS,
@@ -105,7 +110,10 @@ export function InspectionWebCertificate({
 }: InspectionWebCertificateProps) {
   const [copied, setCopied] = useState(false);
   const [lightboxImg, setLightboxImg] = useState<{ url: string; title: string } | null>(null);
-  const [activeTab, setActiveTab] = useState<"ringkasan" | "blueprint" | "rangka" | "foto" | "legal">("ringkasan");
+  const [activeTab, setActiveTab] = useState<
+    "ringkasan" | "cat" | "eksterior" | "interior" | "mesin" | "rangka" | "foto" | "legal"
+  >("ringkasan");
+  const [isDossierMode, setIsDossierMode] = useState(false);
 
   const totalGrade =
     inspection.totalGrade ||
@@ -491,76 +499,141 @@ export function InspectionWebCertificate({
           </div>
 
           {/* Interactive Navigation Tabs inside Certificate */}
-          <div className="bg-[#FAF8F5] border-b border-[#D9D4CB] px-4 sm:px-7 flex items-center gap-1 sm:gap-3 overflow-x-auto">
-            <button
-              onClick={() => setActiveTab("ringkasan")}
-              className={cn(
-                "py-3.5 px-3 text-xs sm:text-sm font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
-                activeTab === "ringkasan"
-                  ? "border-[#D97706] text-[#D97706]"
-                  : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
-              )}
-            >
-              <Sparkles className="w-4 h-4" />
-              <span>4 Pilar & Rincian Cat</span>
-            </button>
+          <div className="bg-[#FAF8F5] border-b border-[#D9D4CB] px-4 sm:px-7 flex items-center justify-between gap-2 overflow-x-auto">
+            <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto py-1">
+              <button
+                onClick={() => { setActiveTab("ringkasan"); setIsDossierMode(false); }}
+                className={cn(
+                  "py-3 px-2.5 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
+                  !isDossierMode && activeTab === "ringkasan"
+                    ? "border-[#D97706] text-[#D97706]"
+                    : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+                )}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Ringkasan</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab("blueprint")}
-              className={cn(
-                "py-3.5 px-3 text-xs sm:text-sm font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
-                activeTab === "blueprint"
-                  ? "border-[#D97706] text-[#D97706]"
-                  : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
-              )}
-            >
-              <Car className="w-4 h-4" />
-              <span>Denah Blueprint 15 Titik</span>
-            </button>
+              <button
+                onClick={() => { setActiveTab("cat"); setIsDossierMode(false); }}
+                className={cn(
+                  "py-3 px-2.5 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
+                  !isDossierMode && activeTab === "cat"
+                    ? "border-[#D97706] text-[#D97706]"
+                    : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+                )}
+              >
+                <Gauge className="w-3.5 h-3.5" />
+                <span>Ketebalan Cat</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab("rangka")}
-              className={cn(
-                "py-3.5 px-3 text-xs sm:text-sm font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
-                activeTab === "rangka"
-                  ? "border-[#D97706] text-[#D97706]"
-                  : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
-              )}
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>14 Titik Rangka Sasis</span>
-            </button>
+              <button
+                onClick={() => { setActiveTab("eksterior"); setIsDossierMode(false); }}
+                className={cn(
+                  "py-3 px-2.5 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
+                  !isDossierMode && activeTab === "eksterior"
+                    ? "border-[#7E22CE] text-[#7E22CE]"
+                    : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+                )}
+              >
+                <Car className="w-3.5 h-3.5" />
+                <span>Eksterior (Standar Lelang)</span>
+              </button>
 
-            <button
-              onClick={() => setActiveTab("foto")}
-              className={cn(
-                "py-3.5 px-3 text-xs sm:text-sm font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
-                activeTab === "foto"
-                  ? "border-[#D97706] text-[#D97706]"
-                  : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
-              )}
-            >
-              <FileText className="w-4 h-4" />
-              <span>11 Foto Standar Wajib</span>
-            </button>
+              <button
+                onClick={() => { setActiveTab("interior"); setIsDossierMode(false); }}
+                className={cn(
+                  "py-3 px-2.5 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
+                  !isDossierMode && activeTab === "interior"
+                    ? "border-[#D97706] text-[#D97706]"
+                    : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+                )}
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <span>Interior</span>
+              </button>
 
+              <button
+                onClick={() => { setActiveTab("mesin"); setIsDossierMode(false); }}
+                className={cn(
+                  "py-3 px-2.5 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
+                  !isDossierMode && activeTab === "mesin"
+                    ? "border-emerald-600 text-emerald-700"
+                    : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+                )}
+              >
+                <Activity className="w-3.5 h-3.5" />
+                <span>Mesin</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab("rangka"); setIsDossierMode(false); }}
+                className={cn(
+                  "py-3 px-2.5 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
+                  !isDossierMode && activeTab === "rangka"
+                    ? "border-blue-600 text-blue-700"
+                    : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+                )}
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>14 Rangka</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab("foto"); setIsDossierMode(false); }}
+                className={cn(
+                  "py-3 px-2.5 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
+                  !isDossierMode && activeTab === "foto"
+                    ? "border-[#D97706] text-[#D97706]"
+                    : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+                )}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>11 Foto</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab("legal"); setIsDossierMode(false); }}
+                className={cn(
+                  "py-3 px-2.5 text-xs font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
+                  !isDossierMode && activeTab === "legal"
+                    ? "border-[#D97706] text-[#D97706]"
+                    : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+                )}
+              >
+                <Info className="w-3.5 h-3.5" />
+                <span>Legalitas</span>
+              </button>
+            </div>
+
+            {/* Toggle Mode Dossier Multi-Halaman */}
             <button
-              onClick={() => setActiveTab("legal")}
+              onClick={() => setIsDossierMode(!isDossierMode)}
               className={cn(
-                "py-3.5 px-3 text-xs sm:text-sm font-bold border-b-2 flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer",
-                activeTab === "legal"
-                  ? "border-[#D97706] text-[#D97706]"
-                  : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+                "px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all flex items-center gap-1.5 cursor-pointer border",
+                isDossierMode
+                  ? "bg-[#1C1917] text-white border-[#1C1917] shadow-xs"
+                  : "bg-white text-[#1C1917] border-[#D9D4CB] hover:bg-[#F7F5F2]"
               )}
+              title="Tampilkan semua halaman laporan berurutan ala dokumen resmi"
             >
-              <Info className="w-4 h-4" />
-              <span>Klausul Legalitas & Batas Komplain</span>
+              <BookOpen className="w-3.5 h-3.5 text-[#D97706]" />
+              <span className="hidden sm:inline">
+                {isDossierMode ? "Mode Dossier (Semua Halaman)" : "Mode Dokumen Lengkap (8 Hal)"}
+              </span>
+              <span className="sm:hidden">{isDossierMode ? "Dossier" : "8 Hal"}</span>
             </button>
           </div>
 
           {/* TAB 1: 4 PILAR & RINCIAN TABEL CAT */}
-          {activeTab === "ringkasan" && (
+          {(isDossierMode || activeTab === "ringkasan") && (
             <div className="p-5 sm:p-7 space-y-6">
+              {isDossierMode && (
+                <div className="flex items-center justify-between bg-[#1C1917] text-white px-4 py-2.5 rounded-xl text-xs font-bold mb-2">
+                  <span>📄 Halaman 1 dari 8: Cover & Ringkasan Eksekutif Hasil Inspeksi</span>
+                  <span className="text-[#D97706] font-mono">Nur Mobil Certified</span>
+                </div>
+              )}
               {/* 4 Pilar Detail Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="p-4 rounded-2xl border border-[#D9D4CB] bg-[#FAF8F5] flex flex-col justify-between">
@@ -797,13 +870,19 @@ export function InspectionWebCertificate({
             </div>
           )}
 
-          {/* TAB 2: DENAH BLUEPRINT 15 TITIK */}
-          {activeTab === "blueprint" && (
+          {/* TAB 2: DENAH BLUEPRINT & UJI KETEBALAN CAT 15 TITIK */}
+          {(isDossierMode || activeTab === "cat") && (
             <div className="p-5 sm:p-7 space-y-4">
+              {isDossierMode && (
+                <div className="flex items-center justify-between bg-[#1C1917] text-white px-4 py-2.5 rounded-xl text-xs font-bold mb-2">
+                  <span>📄 Halaman 2 dari 8: Uji Ketebalan Cat Bodi Digital (Multi-Point 15 Panel)</span>
+                  <span className="text-[#D97706] font-mono">Coating Gauge OEM</span>
+                </div>
+              )}
               <div className="bg-[#FAF8F5] p-4 rounded-2xl border border-[#D9D4CB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h3 className="text-sm font-bold text-[#1C1917] flex items-center gap-1.5">
-                    <Car className="w-4 h-4 text-[#D97706]" />
+                    <Gauge className="w-4 h-4 text-[#D97706]" />
                     <span>Visualisasi Denah Mobil Tampak Atas (Top-Down Silhouette)</span>
                   </h3>
                   <p className="text-xs text-[#6B6560] mt-0.5">
@@ -823,52 +902,79 @@ export function InspectionWebCertificate({
             </div>
           )}
 
-          {/* TAB 3: 14 TITIK RANGKA SASIS */}
-          {activeTab === "rangka" && (
-            <div className="p-5 sm:p-7 space-y-5">
-              <div className="bg-[#FAF8F5] p-4 rounded-2xl border border-[#D9D4CB]">
-                <h3 className="text-sm font-bold text-[#1C1917] flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-[#D97706]" />
-                  <span>Hasil Pemeriksaan 14 Titik Rangka Kritis Sasis Unibody</span>
-                </h3>
-                <p className="text-xs text-[#6B6560] mt-1">
-                  Pemeriksaan menyeluruh pada pilar struktural keselamatan kabin penumpang sesuai standar lelang otomotif nasional Astra IBID (Halaman 10).
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {FRAME_CHECKLIST_ITEMS.map((item, idx) => (
-                  <div
-                    key={item.id}
-                    className="p-3.5 rounded-xl border border-[#D9D4CB] bg-white flex items-center justify-between gap-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center text-[10px] font-bold shrink-0">
-                        {idx + 1}
-                      </div>
-                      <div>
-                        <span className="font-bold text-xs text-[#1C1917] block">
-                          {item.label}
-                        </span>
-                        <span className="text-[10px] text-[#6B6560] block">
-                          Pilar Struktur Rangka Unibody (Standar Keselamatan)
-                        </span>
-                      </div>
-                    </div>
-
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 shrink-0">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>UTUH PABRIK</span>
-                    </span>
-                  </div>
-                ))}
-              </div>
+          {/* TAB 3: HASIL PEMERIKSAAN EKSTERIOR (MODEL RESMI BALAI LELANG) */}
+          {(isDossierMode || activeTab === "eksterior") && (
+            <div className="p-5 sm:p-7 space-y-4">
+              {isDossierMode && (
+                <div className="flex items-center justify-between bg-[#7E22CE] text-white px-4 py-2.5 rounded-xl text-xs font-bold mb-2">
+                  <span>📄 Halaman 3 dari 8: Hasil Pemeriksaan Eksterior</span>
+                  <span className="font-mono text-purple-200">Standar Balai Lelang Resmi</span>
+                </div>
+              )}
+              <ExteriorInspectionSheet
+                inspection={inspection}
+                vehicle={vehicle}
+              />
             </div>
           )}
 
-          {/* TAB 4: 11 FOTO STANDAR WAJIB */}
-          {activeTab === "foto" && (
+          {/* TAB 4: HASIL PEMERIKSAAN INTERIOR */}
+          {(isDossierMode || activeTab === "interior") && (
+            <div className="p-5 sm:p-7 space-y-4">
+              {isDossierMode && (
+                <div className="flex items-center justify-between bg-[#D97706] text-white px-4 py-2.5 rounded-xl text-xs font-bold mb-2">
+                  <span>📄 Halaman 4 dari 8: Hasil Pemeriksaan Interior & Kabin</span>
+                  <span className="font-mono text-amber-200">Nur Mobil Certified</span>
+                </div>
+              )}
+              <InteriorInspectionSheet
+                inspection={inspection}
+                vehicle={vehicle}
+              />
+            </div>
+          )}
+
+          {/* TAB 5: HASIL PEMERIKSAAN MESIN & TRANSMISI */}
+          {(isDossierMode || activeTab === "mesin") && (
+            <div className="p-5 sm:p-7 space-y-4">
+              {isDossierMode && (
+                <div className="flex items-center justify-between bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold mb-2">
+                  <span>📄 Halaman 5 dari 8: Hasil Pemeriksaan Mesin, Transmisi & Mekanikal</span>
+                  <span className="font-mono text-emerald-200">Nur Mobil Certified</span>
+                </div>
+              )}
+              <EngineInspectionSheet
+                inspection={inspection}
+                vehicle={vehicle}
+              />
+            </div>
+          )}
+
+          {/* TAB 6: 14 TITIK RANGKA SASIS */}
+          {(isDossierMode || activeTab === "rangka") && (
+            <div className="p-5 sm:p-7 space-y-5">
+              {isDossierMode && (
+                <div className="flex items-center justify-between bg-[#1E3A8A] text-white px-4 py-2.5 rounded-xl text-xs font-bold mb-2">
+                  <span>📄 Halaman 6 dari 8: 14 Titik Rangka Kritis Sasis Unibody</span>
+                  <span className="font-mono text-blue-200">Nur Mobil Certified</span>
+                </div>
+              )}
+              <FrameInspectionSheet
+                inspection={inspection}
+                vehicle={vehicle}
+              />
+            </div>
+          )}
+
+          {/* TAB 7: 11 FOTO STANDAR WAJIB */}
+          {(isDossierMode || activeTab === "foto") && (
             <div className="p-5 sm:p-7 space-y-6">
+              {isDossierMode && (
+                <div className="flex items-center justify-between bg-[#1C1917] text-white px-4 py-2.5 rounded-xl text-xs font-bold mb-2">
+                  <span>📄 Halaman 7 dari 8: Dokumentasi 11 Foto Standar Wajib</span>
+                  <span className="text-[#D97706] font-mono">Nur Mobil Certified</span>
+                </div>
+              )}
               <div className="bg-[#FAF8F5] p-4 rounded-2xl border border-[#D9D4CB]">
                 <h3 className="text-sm font-bold text-[#1C1917] flex items-center gap-1.5">
                   <FileText className="w-4 h-4 text-[#D97706]" />
@@ -949,9 +1055,15 @@ export function InspectionWebCertificate({
             </div>
           )}
 
-          {/* TAB 5: KLAUSUL LEGALITAS & BATAS KOMPLAIN */}
-          {activeTab === "legal" && (
+          {/* TAB 8: KLAUSUL LEGALITAS & BATAS KOMPLAIN */}
+          {(isDossierMode || activeTab === "legal") && (
             <div className="p-5 sm:p-7 space-y-5">
+              {isDossierMode && (
+                <div className="flex items-center justify-between bg-[#1C1917] text-white px-4 py-2.5 rounded-xl text-xs font-bold mb-2">
+                  <span>📄 Halaman 8 dari 8: Syarat, Ketentuan & Batasan Tanggung Jawab Hukum (BAST)</span>
+                  <span className="text-[#D97706] font-mono">Nur Mobil Legal</span>
+                </div>
+              )}
               <div className="bg-[#FAF8F5] p-5 rounded-2xl border border-[#D9D4CB] space-y-4">
                 <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
                   <ShieldCheck className="w-5 h-5 text-[#D97706]" />

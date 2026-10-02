@@ -14,8 +14,13 @@ export async function GET(
     const inspection = await prisma.inspection.findUnique({
       where: { id },
       include: {
-        vehicle: true,
+        vehicle: {
+          include: {
+            photos: true,
+          },
+        },
         panels: true,
+        photos: true,
       },
     });
 

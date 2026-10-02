@@ -332,8 +332,300 @@ export const DAMAGE_LEVELS: Record<number, string> = {
   4: "Besar (Perlu Ganti Panel)",
 };
 
+export const IBID_DEFECT_CODES_LEGEND = [
+  { code: "A", name: "Goresan / Cat Terkelupas / Retak / Terpotong" },
+  { code: "AU", name: "Goresan / Penyok" },
+  { code: "B", name: "Modifikasi" },
+  { code: "C", name: "Retak / Goresan / Karat Berat" },
+  { code: "G", name: "Goresan / Lemparan Batu" },
+  { code: "IP", name: "Warna Pudar / Kilau Memudar" },
+  { code: "S", name: "Karat Ringan" },
+  { code: "SC", name: "Karat Ringan / Karat Berat" },
+  { code: "U", name: "Penyok / Bengkok" },
+  { code: "X", name: "Tidak Bergerak" },
+  { code: "Y", name: "Retak / Gap / Cap Retak / Rusak" },
+];
+
+export const IBID_DAMAGE_LEVELS_LEGEND = [
+  { level: "0", desc: "Rusak / Bekas Perbaikan" },
+  { level: "1", desc: "Minimal" },
+  { level: "2", desc: "Kecil" },
+  { level: "3", desc: "Sedang" },
+  { level: "4", desc: "Besar" },
+];
+
+export interface EvaluatedComponent {
+  no: number;
+  name: string;
+  condition: string;
+  level: string;
+  isDefect: boolean;
+}
+
+export const EXTERIOR_COMPONENTS_LIST: Array<{ name: string; panelType?: string }> = [
+  { name: "Antena" },
+  { name: "Atap", panelType: "ROOF" },
+  { name: "Ban Kanan Belakang" },
+  { name: "Ban Kanan Depan" },
+  { name: "Ban Kiri Belakang" },
+  { name: "Ban Kiri Depan" },
+  { name: "Baut Rangka Bodi" },
+  { name: "Bumper Belakang", panelType: "BUMPER_REAR" },
+  { name: "Bumper Depan", panelType: "BUMPER_FRONT" },
+  { name: "Celah Pintu & Kap (Panel Gap)" },
+  { name: "Emblem & Logo" },
+  { name: "Fender Depan Kanan", panelType: "FENDER_FRONT_RIGHT" },
+  { name: "Fender Depan Kiri", panelType: "FENDER_FRONT_LEFT" },
+  { name: "Grille Depan" },
+  { name: "Kaca Belakang" },
+  { name: "Kaca Depan (Windshield)" },
+  { name: "Kaca Pintu Belakang Kanan" },
+  { name: "Kaca Pintu Belakang Kiri" },
+  { name: "Kaca Pintu Depan Kanan" },
+  { name: "Kaca Pintu Depan Kiri" },
+  { name: "Kap Mesin", panelType: "HOOD" },
+  { name: "Lampu Belakang Kanan (Stoplamp R)" },
+  { name: "Lampu Belakang Kiri (Stoplamp L)" },
+  { name: "Lampu Depan Kanan (Headlamp R)" },
+  { name: "Lampu Depan Kiri (Headlamp L)" },
+  { name: "Lampu Foglamp / DRL" },
+  { name: "Pintu Belakang Kanan", panelType: "REAR_DOOR_RIGHT" },
+  { name: "Pintu Belakang Kiri", panelType: "REAR_DOOR_LEFT" },
+  { name: "Pintu Depan Kanan", panelType: "FRONT_DOOR_RIGHT" },
+  { name: "Pintu Depan Kiri", panelType: "FRONT_DOOR_LEFT" },
+  { name: "Pintu Bagasi", panelType: "TRUNK_LID" },
+  { name: "Quarter Panel Kanan", panelType: "QUARTER_PANEL_RIGHT" },
+  { name: "Quarter Panel Kiri", panelType: "QUARTER_PANEL_LEFT" },
+  { name: "Rocker Panel Kanan", panelType: "ROCKER_PANEL_RIGHT" },
+  { name: "Rocker Panel Kiri", panelType: "ROCKER_PANEL_LEFT" },
+  { name: "Spion Kanan & Sein" },
+  { name: "Spion Kiri & Sein" },
+  { name: "Velg Roda" },
+  { name: "Wiper Depan & Belakang" },
+];
+
+export const INTERIOR_COMPONENTS_LIST: string[] = [
+  "Audio Headunit & Layar Sentuh",
+  "Dashboard Depan & Kisi AC",
+  "Jok Baris Pertama (Driver & Penumpang)",
+  "Jok Baris Kedua",
+  "Jok Baris Ketiga (Kabin Belakang)",
+  "Karpet Dasar Kabin & Peredam Lantai",
+  "Klakson & Tombol Kontrol Kemudi",
+  "Konsol Tengah & Tuas Transmisi",
+  "Lampu Plafon & Baca Kabin",
+  "Panel Pintu Dalam (Doortrim) 4 Pintu",
+  "Pedal Gas, Rem & Kopling",
+  "Plafon Atas Kabin Bebas Noda/Rokok",
+  "Power Window (Semua Pintu)",
+  "Rem Tangan (Handbrake / EPB)",
+  "Sabuk Pengaman (Seatbelt Otomatis)",
+  "Setir Kemudi & Balon Airbag",
+  "Sistem Pendingin AC & Blower",
+  "Speedometer, Odometer & Indikator MIL",
+  "Spion Tengah Anti-Silau",
+];
+
+export const ENGINE_COMPONENTS_LIST: string[] = [
+  "Aki / Baterai & Terminal Bebas Jamur",
+  "Alternator & Pengisian Dinamo Starter",
+  "Asap Knalpot (Warna Bening & Normal)",
+  "Belt & Pulley Pemutar Mesin",
+  "Blok Mesin & Silinder Head (Bebas Rembes Oli)",
+  "Filter Udara & Saluran Intake",
+  "Kabel Busi / Koil Pengapian",
+  "Minyak Rem & Master Rem",
+  "Minyak Power Steering / EPS",
+  "Oli Mesin (Volume & Viskositas)",
+  "Oli Transmisi (Matik / Manual)",
+  "Radiator, Kipas Pendingin & Selang Coolant",
+  "Sistem Starter Mesin Sekali Kontak",
+  "Suara & Getaran Mesin saat Idling",
+  "Suspensi & Shockbreaker Depan",
+  "Suspensi Belakang & Karet Bushing",
+  "Transmisi Responsif Tanpa Hentakan / Delay",
+];
+
+export function getExteriorComponentEvaluation(
+  panels: Array<{
+    panelType: string;
+    condition: string;
+    defectCode?: string | null;
+    damageLevel?: number | null;
+    paintThickness?: number | null;
+  }> = [],
+  checklistData?: any
+): EvaluatedComponent[] {
+  const panelMap = new Map(panels.map((p) => [p.panelType, p]));
+  const customItems: Record<string, { condition: string; level: string }> =
+    checklistData?.exterior || {};
+
+  return EXTERIOR_COMPONENTS_LIST.map((item, idx) => {
+    const no = idx + 1;
+    if (customItems[item.name]) {
+      const custom = customItems[item.name];
+      const isDef = custom.condition !== "Normal" && custom.level !== "-";
+      return {
+        no,
+        name: item.name,
+        condition: custom.condition,
+        level: custom.level,
+        isDefect: isDef,
+      };
+    }
+
+    if (item.panelType && panelMap.has(item.panelType)) {
+      const p = panelMap.get(item.panelType)!;
+      const defect = (p.defectCode || "").trim().toUpperCase();
+      const levelNum = p.damageLevel ?? 0;
+
+      if (p.condition === "ORIGINAL" && (!defect || defect === "OK" || defect === "✓")) {
+        return { no, name: item.name, condition: "Normal", level: "-", isDefect: false };
+      }
+
+      if (p.condition === "REPAINTED") {
+        return {
+          no,
+          name: item.name,
+          condition: "Bekas Perbaikan",
+          level: String(levelNum > 0 ? levelNum : 0),
+          isDefect: true,
+        };
+      }
+
+      if (p.condition === "PLASTIC_DAMAGED" || defect.startsWith("Y")) {
+        const lvl = defect.replace(/\D/g, "") || (levelNum > 0 ? String(levelNum) : "3");
+        return {
+          no,
+          name: item.name,
+          condition: "Retak / Gap / Pecah",
+          level: lvl,
+          isDefect: true,
+        };
+      }
+
+      if (defect.startsWith("AU")) {
+        const lvl = defect.replace(/\D/g, "") || (levelNum > 0 ? String(levelNum) : "2");
+        return {
+          no,
+          name: item.name,
+          condition: "Goresan / Penyok",
+          level: lvl,
+          isDefect: true,
+        };
+      }
+
+      if (defect.startsWith("A")) {
+        const lvl = defect.replace(/\D/g, "") || (levelNum > 0 ? String(levelNum) : "2");
+        return {
+          no,
+          name: item.name,
+          condition: "Goresan",
+          level: lvl,
+          isDefect: true,
+        };
+      }
+
+      if (defect.startsWith("U")) {
+        const lvl = defect.replace(/\D/g, "") || (levelNum > 0 ? String(levelNum) : "2");
+        return {
+          no,
+          name: item.name,
+          condition: "Penyok",
+          level: lvl,
+          isDefect: true,
+        };
+      }
+
+      if (p.condition === "DENTED_SCRATCHED") {
+        return {
+          no,
+          name: item.name,
+          condition: "Goresan / Penyok",
+          level: String(levelNum > 0 ? levelNum : 2),
+          isDefect: true,
+        };
+      }
+
+      if (p.condition === "REPLACED") {
+        return {
+          no,
+          name: item.name,
+          condition: "Penggantian Panel",
+          level: "0",
+          isDefect: true,
+        };
+      }
+    }
+
+    return { no, name: item.name, condition: "Normal", level: "-", isDefect: false };
+  });
+}
+
+export function getInteriorComponentEvaluation(
+  interiorGrade: string = "B",
+  checklistData?: any
+): EvaluatedComponent[] {
+  const customItems: Record<string, { condition: string; level: string }> =
+    checklistData?.interior || {};
+
+  return INTERIOR_COMPONENTS_LIST.map((name, idx) => {
+    const no = idx + 1;
+    if (customItems[name]) {
+      const custom = customItems[name];
+      return {
+        no,
+        name,
+        condition: custom.condition,
+        level: custom.level,
+        isDefect: custom.condition !== "Normal" && custom.level !== "-",
+      };
+    }
+
+    if (interiorGrade === "C" && (name.includes("Plafon") || name.includes("Jok Baris Pertama"))) {
+      return { no, name, condition: "Noda / Pemakaian", level: "2", isDefect: true };
+    }
+    if (interiorGrade === "D" && (name.includes("Dashboard") || name.includes("Doortrim"))) {
+      return { no, name, condition: "Baret / Kendor", level: "3", isDefect: true };
+    }
+
+    return { no, name, condition: "Normal", level: "-", isDefect: false };
+  });
+}
+
+export function getEngineComponentEvaluation(
+  engineGrade: string = "B",
+  checklistData?: any
+): EvaluatedComponent[] {
+  const customItems: Record<string, { condition: string; level: string }> =
+    checklistData?.engine || {};
+
+  return ENGINE_COMPONENTS_LIST.map((name, idx) => {
+    const no = idx + 1;
+    if (customItems[name]) {
+      const custom = customItems[name];
+      return {
+        no,
+        name,
+        condition: custom.condition,
+        level: custom.level,
+        isDefect: custom.condition !== "Normal" && custom.level !== "-",
+      };
+    }
+
+    if (engineGrade === "C" && name.includes("Blok Mesin")) {
+      return { no, name, condition: "Rembes Halus", level: "2", isDefect: true };
+    }
+    if (engineGrade === "D" && (name.includes("Transmisi") || name.includes("Suara"))) {
+      return { no, name, condition: "Kasat / Getar", level: "3", isDefect: true };
+    }
+
+    return { no, name, condition: "Normal", level: "-", isDefect: false };
+  });
+}
+
 /**
- * 14 Titik Rangka Kritis Monokok & Sasis Standar IBID ACV (Hal 10)
+ * 14 Titik Rangka Kritis Monokok & Sasis Standar (14 Pilar)
  */
 export const FRAME_CHECKLIST_ITEMS = [
   { id: "BULLHEAD_FRONT", label: "Rangka Depan (Bullhead / Dudukan Radiator)" },
