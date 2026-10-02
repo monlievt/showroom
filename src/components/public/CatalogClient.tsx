@@ -15,6 +15,8 @@ import {
   Phone,
   SlidersHorizontal,
   X,
+  History,
+  Archive,
 } from "lucide-react";
 import { formatRupiah, cn } from "@/lib/utils";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
@@ -51,10 +53,21 @@ interface VehicleItem {
 }
 
 export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleItem[] }) {
+  const [selectedStatus, setSelectedStatus] = useState<"ALL" | "READY_FOR_SALE" | "BOOKED" | "SOLD_SETTLED">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("ALL");
   const [selectedTransmission, setSelectedTransmission] = useState("ALL");
   const [maxPriceFilter, setMaxPriceFilter] = useState<number | "ALL">("ALL");
+
+  // Hitung jumlah per kategori status
+  const statusCounts = useMemo(() => {
+    return {
+      ALL: initialVehicles.length,
+      READY_FOR_SALE: initialVehicles.filter((v) => v.status === "READY_FOR_SALE").length,
+      BOOKED: initialVehicles.filter((v) => v.status === "BOOKED").length,
+      SOLD_SETTLED: initialVehicles.filter((v) => v.status === "SOLD_SETTLED").length,
+    };
+  }, [initialVehicles]);
 
   // Ekstrak daftar brand unik
   const availableBrands = useMemo(() => {
@@ -64,7 +77,12 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
 
   // Filter unit
   const filteredVehicles = useMemo(() => {
-    return initialVehicles.filter((v) => {
+    const result = initialVehicles.filter((v) => {
+      // 0. Kategori Status
+      if (selectedStatus !== "ALL" && v.status !== selectedStatus) {
+        return false;
+      }
+
       // 1. Search Query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
@@ -93,9 +111,22 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
 
       return true;
     });
-  }, [initialVehicles, searchQuery, selectedBrand, selectedTransmission, maxPriceFilter]);
+
+    // Urutkan: READY_FOR_SALE & BOOKED di atas, SOLD_SETTLED di bawah jika melihat SEMUA
+    if (selectedStatus === "ALL") {
+      const priority: Record<string, number> = {
+        READY_FOR_SALE: 1,
+        BOOKED: 2,
+        SOLD_SETTLED: 3,
+      };
+      result.sort((a, b) => (priority[a.status] || 99) - (priority[b.status] || 99));
+    }
+
+    return result;
+  }, [initialVehicles, selectedStatus, searchQuery, selectedBrand, selectedTransmission, maxPriceFilter]);
 
   const resetFilters = () => {
+    setSelectedStatus("ALL");
     setSearchQuery("");
     setSelectedBrand("ALL");
     setSelectedTransmission("ALL");
@@ -103,6 +134,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
   };
 
   const hasActiveFilters =
+    selectedStatus !== "ALL" ||
     searchQuery !== "" ||
     selectedBrand !== "ALL" ||
     selectedTransmission !== "ALL" ||
@@ -118,12 +150,50 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
             <span>Transparansi 100% — Tanpa Rekayasa</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1C1917] tracking-tight">
-            Katalog Mobil Siap Pakai & Bergaransi Cek Fisik
+            Katalog Mobil Bekas & Arsip Rekam Jejak
           </h1>
           <p className="text-sm sm:text-base text-[#6B6560] leading-relaxed">
-            Setiap unit mobil di Nur Mobil dilengkapi dokumen uji mikron cat 11 panel body, grade 4 pilar mesin/rangka, serta garansi bebas tabrak & bebas banjir.
+            Temukan stok mobil siap pakai dengan dokumen uji mikron cat 11 panel body, garansi bebas tabrak & banjir, serta rekam jejak unit yang telah berhasil terjual lunas ke konsumen kami.
           </p>
         </div>
+      </div>
+
+      {/* Tabs Kategori Status Unit */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        {[
+          { id: "ALL", label: "Semua Unit", count: statusCounts.ALL, icon: Car },
+          { id: "READY_FOR_SALE", label: "Ready Siap Pakai", count: statusCounts.READY_FOR_SALE, icon: ShieldCheck },
+          { id: "BOOKED", label: "Tanda Jadi (Booked)", count: statusCounts.BOOKED, icon: History },
+          { id: "SOLD_SETTLED", label: "Terjual (Sold Out)", count: statusCounts.SOLD_SETTLED, icon: Archive },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = selectedStatus === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setSelectedStatus(tab.id as any)}
+              className={cn(
+                "px-4 py-2.5 rounded-2xl text-xs font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer border shadow-xs",
+                isActive
+                  ? "bg-[#1C1917] text-white border-[#1C1917] shadow-sm"
+                  : "bg-white text-[#6B6560] border-[#D9D4CB] hover:bg-[#F7F5F2] hover:text-[#1C1917]"
+              )}
+            >
+              <Icon className={cn("w-3.5 h-3.5", isActive ? "text-amber-400" : "text-[#8C827A]")} />
+              <span>{tab.label}</span>
+              <span
+                className={cn(
+                  "px-2 py-0.5 rounded-full text-[10px] font-extrabold",
+                  isActive
+                    ? "bg-amber-400 text-stone-950"
+                    : "bg-[#EFECE8] text-[#6B6560]"
+                )}
+              >
+                {tab.count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Filter & Search Bar */}
@@ -213,19 +283,20 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
           <Car className="w-12 h-12 text-[#6B6560] mx-auto opacity-50" />
           <h3 className="text-lg font-bold text-[#1C1917]">Tidak Ada Unit yang Cocok</h3>
           <p className="text-sm text-[#6B6560] max-w-md mx-auto">
-            Maaf, kami belum menemukan unit yang sesuai dengan kriteria filter Anda. Coba reset filter atau tanyakan langsung unit idaman Anda ke admin WhatsApp.
+            Maaf, kami belum menemukan unit yang sesuai dengan kriteria filter Anda. Coba pilih kategori tab lain atau tanyakan unit idaman Anda ke admin WhatsApp.
           </p>
           <button
             onClick={resetFilters}
             className="bg-[#D97706] text-white text-xs font-bold px-4 py-2 rounded-xl shadow-sm hover:bg-[#B45309] transition-colors cursor-pointer"
           >
-            Lihat Semua Unit Ready
+            Tampilkan Semua Stok
           </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredVehicles.map((v) => {
             const isBooked = v.status === "BOOKED";
+            const isSold = v.status === "SOLD_SETTLED";
             const thumbnail = v.photos[0]?.fileUrl;
             const waLink = generateCatalogWhatsAppLink("081234567890", {
               brand: v.brand,
@@ -239,7 +310,10 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
             return (
               <div
                 key={v.id}
-                className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group"
+                className={cn(
+                  "bg-white rounded-2xl border overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between group",
+                  isSold ? "border-stone-300 bg-stone-50/50" : "border-[#D9D4CB]"
+                )}
               >
                 <div>
                   {/* Photo Thumbnail */}
@@ -248,7 +322,10 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                       <img
                         src={thumbnail}
                         alt={`${v.brand} ${v.model}`}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className={cn(
+                          "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300",
+                          isSold && "grayscale-30 contrast-95"
+                        )}
                         loading="lazy"
                       />
                     ) : (
@@ -258,18 +335,32 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                       </div>
                     )}
 
+                    {/* Overlay Watermark Khusus Unit Terjual */}
+                    {isSold && (
+                      <div className="absolute inset-0 bg-stone-900/35 backdrop-blur-[1px] flex items-center justify-center pointer-events-none">
+                        <div className="bg-stone-950/85 border border-amber-500/60 text-amber-400 px-4 py-1.5 rounded-xl shadow-xl transform -rotate-6 font-extrabold text-xs tracking-widest uppercase flex items-center gap-1.5">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <span>TERJUAL / SOLD</span>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Badge Status */}
                     <div className="absolute top-3 left-3">
-                      <span
-                        className={cn(
-                          "text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm",
-                          isBooked
-                            ? "bg-amber-500 text-white"
-                            : "bg-emerald-600 text-white"
-                        )}
-                      >
-                        {isBooked ? "BOOKED (Tanda Jadi)" : "READY FOR SALE"}
-                      </span>
+                      {isSold ? (
+                        <span className="text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm bg-stone-900/90 text-amber-400 border border-amber-500/40 flex items-center gap-1">
+                          <Archive className="w-3 h-3 text-amber-400" />
+                          <span>TERJUAL (ARSIP SAH)</span>
+                        </span>
+                      ) : isBooked ? (
+                        <span className="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm bg-amber-500 text-white">
+                          BOOKED (Tanda Jadi)
+                        </span>
+                      ) : (
+                        <span className="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm bg-emerald-600 text-white">
+                          READY FOR SALE
+                        </span>
+                      )}
                     </div>
 
                     {/* Badge Grade Inspeksi */}
@@ -299,9 +390,24 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
 
                     {/* Price */}
                     <div className="pt-1">
-                      <div className="text-xs text-[#6B6560]">Harga Cash / Kredit:</div>
+                      <div className="text-xs text-[#6B6560]">
+                        {isSold ? "Status Transaksi:" : "Harga Cash / Kredit:"}
+                      </div>
                       <div className="text-xl font-extrabold text-[#1C1917] tracking-tight">
-                        {v.price ? formatRupiah(v.price) : "Hubungi Kami"}
+                        {isSold ? (
+                          <div className="flex items-baseline gap-2">
+                            {v.price && (
+                              <span className="text-stone-400 line-through text-sm font-semibold">
+                                {formatRupiah(v.price)}
+                              </span>
+                            )}
+                            <span className="text-emerald-700 text-base font-extrabold">Terjual Lunas</span>
+                          </div>
+                        ) : v.price ? (
+                          formatRupiah(v.price)
+                        ) : (
+                          "Hubungi Kami"
+                        )}
                       </div>
                     </div>
 
@@ -350,7 +456,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                     href={`/katalog/${v.slug}`}
                     className="flex items-center justify-center gap-1 bg-[#F7F5F2] hover:bg-[#EFECE8] border border-[#D9D4CB] text-[#1C1917] text-xs font-bold py-2.5 rounded-xl transition-colors"
                   >
-                    <span>Cek Detail</span>
+                    <span>{isSold ? "Arsip & Cek Fisik" : "Cek Detail"}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
 
@@ -358,10 +464,15 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                     href={waLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-1.5 bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm"
+                    className={cn(
+                      "flex items-center justify-center gap-1.5 text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm",
+                      isSold
+                        ? "bg-stone-900 hover:bg-stone-800 text-amber-400 border border-stone-800"
+                        : "bg-[#D97706] hover:bg-[#B45309] text-white"
+                    )}
                   >
                     <Phone className="w-3.5 h-3.5" />
-                    <span>Tanya Unit</span>
+                    <span>{isSold ? "Tanya Unit Serupa" : "Tanya Unit"}</span>
                   </a>
                 </div>
               </div>

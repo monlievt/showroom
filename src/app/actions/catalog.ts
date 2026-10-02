@@ -8,21 +8,27 @@ export interface PublicCatalogFilter {
   minPrice?: number;
   maxPrice?: number;
   query?: string;
+  status?: "ALL" | "READY_FOR_SALE" | "BOOKED" | "SOLD_SETTLED";
 }
 
 /**
  * Server Action: Mengambil katalog publik (PRD.md §3 & ARCHITECTURE.md §3)
  * KEAMANAN TINGKAT TINGGI:
- * - Hanya mengambil unit dengan status READY_FOR_SALE atau BOOKED.
+ * - Menampilkan unit READY_FOR_SALE, BOOKED, serta arsip unit TERJUAL (SOLD_SETTLED).
  * - Membuang SEMUA field finansial internal (purchasePrice, expenses, HPP, margin, data investor).
  */
 export async function getPublicCatalog(filters?: PublicCatalogFilter) {
   try {
-    const where: any = {
-      status: {
-        in: ["READY_FOR_SALE", "BOOKED"],
-      },
-    };
+    const allowedStatuses = ["READY_FOR_SALE", "BOOKED", "SOLD_SETTLED"];
+    const where: any = {};
+
+    if (filters?.status && filters.status !== "ALL" && allowedStatuses.includes(filters.status)) {
+      where.status = filters.status;
+    } else {
+      where.status = {
+        in: allowedStatuses,
+      };
+    }
 
     if (filters?.brand) {
       where.brand = { contains: filters.brand };
@@ -151,7 +157,9 @@ export async function getPublicCatalog(filters?: PublicCatalogFilter) {
 export async function getShowroomHomepageData() {
   try {
     const catalogRes = await getPublicCatalog();
-    const readyVehicles = catalogRes.success && catalogRes.data ? catalogRes.data.slice(0, 6) : [];
+    const readyVehicles = catalogRes.success && catalogRes.data
+      ? catalogRes.data.filter((v: any) => v.status === "READY_FOR_SALE" || v.status === "BOOKED").slice(0, 6)
+      : [];
 
     const soldVehicles = await prisma.vehicle.findMany({
       where: { status: "SOLD_SETTLED" },

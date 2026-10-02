@@ -26,7 +26,10 @@ export function generateCatalogWhatsAppLink(
     : "";
   const urlText = vehicle.url ? `\n\nLink unit: ${vehicle.url}` : "";
 
-  const text = `Halo Admin Nur Mobil, saya tertarik unit *${vehicle.brand} ${vehicle.model} ${vehicle.year}* (Plat *${vehicle.plateNumber}*)${priceText}.\nApakah unit ini masih READY atau sudah BOOKED?${urlText}`;
+  let text = `Halo Admin Nur Mobil, saya tertarik unit *${vehicle.brand} ${vehicle.model} ${vehicle.year}* (Plat *${vehicle.plateNumber}*)${priceText}.\nApakah unit ini masih READY atau sudah BOOKED?${urlText}`;
+  if (vehicle.status === "SOLD_SETTLED") {
+    text = `Halo Admin Nur Mobil, saya melihat unit *${vehicle.brand} ${vehicle.model} ${vehicle.year}* (Plat *${vehicle.plateNumber}*) yang sudah TERJUAL di katalog.\nApakah ada rekomendasi stok unit serupa yang sedang intake atau segera ready di showroom?${urlText}`;
+  }
 
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
 }
