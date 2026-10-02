@@ -449,9 +449,10 @@ const styles = StyleSheet.create({
 interface InspectionPdfProps {
   inspection: any;
   vehicle: any;
+  qrCodeUrl?: string | null;
 }
 
-export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProps) {
+export function InspectionPdfDocument({ inspection, vehicle, qrCodeUrl }: InspectionPdfProps) {
   const inspDate = new Intl.DateTimeFormat("id-ID", {
     day: "numeric",
     month: "long",
@@ -623,11 +624,21 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
           </View>
         </View>
 
-        {/* FOOTER */}
+        {/* FOOTER & QR CODE VERIFIKASI */}
         <View style={styles.footer}>
-          <Text style={{ fontSize: 6, color: "#6B6560", width: "65%", lineHeight: 1.25 }}>
-            Sertifikat transparansi fisik ini diterbitkan oleh Divisi Inspeksi & Quality Control Nur Mobil. Dokumen lengkap terdiri dari 8 halaman terperinci.
-          </Text>
+          <View style={{ width: "68%", flexDirection: "row", alignItems: "center" }}>
+            {qrCodeUrl && (
+              <Image src={qrCodeUrl} style={{ width: 42, height: 42, borderRadius: 2 }} />
+            )}
+            <View style={{ marginLeft: 6, flex: 1 }}>
+              <Text style={{ fontSize: 6.5, fontWeight: "bold", color: "#1C1917" }}>
+                VERIFIKASI KEASLIAN DIGITAL
+              </Text>
+              <Text style={{ fontSize: 5.5, color: "#6B6560", marginTop: 1, lineHeight: 1.2 }}>
+                Pindai QR Code untuk memeriksa keaslian rekam jejak fisik unit ini langsung pada server resmi Nur Mobil. Dokumen sah terarsip digital.
+              </Text>
+            </View>
+          </View>
           <View style={styles.signatureBox}>
             <Text style={{ fontSize: 6.5, color: "#6B6560" }}>Inspektur Pemeriksa,</Text>
             <View style={styles.sigLine} />
@@ -1219,8 +1230,22 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
           ))}
         </View>
 
-        <View style={{ marginTop: 24, border: "1px solid #D9D4CB", borderRadius: 4, padding: 8, backgroundColor: "#FAF9F6" }}>
-          <Text style={{ fontSize: 7, fontWeight: "bold", textTransform: "uppercase", marginBottom: 4, textAlign: "center" }}>
+        <View style={{ marginTop: 20, border: "1px solid #D9D4CB", borderRadius: 4, padding: 8, backgroundColor: "#FAF9F6" }}>
+          {qrCodeUrl && (
+            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 8, padding: 4, border: "0.5px solid #D9D4CB", borderRadius: 3, backgroundColor: "#FFFFFF" }}>
+              <Image src={qrCodeUrl} style={{ width: 38, height: 38, borderRadius: 2 }} />
+              <View style={{ marginLeft: 6, flex: 1 }}>
+                <Text style={{ fontSize: 6.5, fontWeight: "bold", color: "#1C1917" }}>
+                  QR Code Validasi BAST Digital
+                </Text>
+                <Text style={{ fontSize: 5.5, color: "#57534E", marginTop: 1, lineHeight: 1.2 }}>
+                  Apabila terjadi perubahan fisik pasca unit diserahkan, data digital yang terverifikasi melalui QR code ini merupakan satu-satunya acuan kondisi sah pada tanggal inspeksi.
+                </Text>
+              </View>
+            </View>
+          )}
+
+          <Text style={{ fontSize: 7, fontWeight: "bold", textTransform: "uppercase", marginBottom: 3, textAlign: "center" }}>
             Pernyataan Persetujuan Kondisi Unit & Berita Acara Serah Terima (BAST)
           </Text>
           <Text style={{ fontSize: 6, color: "#57534E", lineHeight: 1.3, textAlign: "justify", marginBottom: 12 }}>
