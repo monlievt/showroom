@@ -20,6 +20,7 @@ import {
   Fuel,
   Eye,
   FileText,
+  Archive,
 } from "lucide-react";
 import { formatRupiah, formatDate, cn } from "@/lib/utils";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
@@ -170,15 +171,16 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                   {vehicle.brand} • {vehicle.year}
                 </span>
                 {isSold ? (
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-stone-900 text-white">
-                    Terjual (Sold)
+                  <span className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-stone-900 text-amber-400 border border-amber-500/40 shadow-sm flex items-center gap-1.5">
+                    <Archive className="w-3.5 h-3.5 text-amber-400" />
+                    <span>TERJUAL (ARSIP SAH)</span>
                   </span>
                 ) : isBooked ? (
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-amber-500 text-white">
+                  <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500 text-white shadow-sm">
                     Sudah Dibooking (DP)
                   </span>
                 ) : (
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-600 text-white">
+                  <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-600 text-white shadow-sm">
                     Tersedia di Showroom
                   </span>
                 )}
@@ -193,17 +195,61 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
               </div>
             </div>
 
-            {/* Harga */}
-            <div className="p-4 bg-[#FAF9F6] rounded-xl border border-[#EBE7E1] space-y-1">
-              <span className="text-xs text-[#6B6560] font-medium block">
-                Harga Tunai (Cash / Tukar Tambah):
-              </span>
-              <div className="text-3xl font-extrabold text-[#1C1917] tracking-tight">
-                {vehicle.price ? formatRupiah(vehicle.price) : "Hubungi Kami"}
+            {/* Banner Arsip Sah Unit Terjual */}
+            {isSold && (
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[#1C1917] space-y-1">
+                <div className="flex items-center gap-2 text-xs font-extrabold text-amber-900 uppercase tracking-wider">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Unit Ini Telah Resmi Terjual Lunas</span>
+                </div>
+                <p className="text-[11px] text-stone-600 leading-relaxed">
+                  Halaman ini diarsipkan permanen sebagai bukti transparansi transaksi fisik dan validasi BAST digital. Seluruh data ketebalan cat & grade inspeksi tetap sah terverifikasi.
+                </p>
               </div>
-              <span className="text-[11px] text-[#6B6560] block">
-                *Negosiasi langsung di tempat setelah cek fisik & test drive.
-              </span>
+            )}
+
+            {/* Harga */}
+            <div
+              className={cn(
+                "p-4 rounded-xl border space-y-1.5",
+                isSold ? "bg-stone-100/80 border-stone-300" : "bg-[#FAF9F6] border-[#EBE7E1]"
+              )}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-[#6B6560] font-medium block">
+                  {isSold ? "Status Transaksi & Harga Listing:" : "Harga Tunai (Cash / Tukar Tambah):"}
+                </span>
+                {isSold && (
+                  <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-700 text-white tracking-wider">
+                    LUNAS TERJUAL
+                  </span>
+                )}
+              </div>
+
+              {isSold ? (
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-baseline gap-3">
+                    <span className="text-xl sm:text-2xl font-bold text-stone-400 line-through tracking-tight">
+                      {vehicle.price ? formatRupiah(vehicle.price) : "Hubungi Kami"}
+                    </span>
+                    <span className="text-2xl sm:text-3xl font-black text-emerald-700 tracking-tight">
+                      TERJUAL LUNAS
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-stone-500 block">
+                    *Unit telah diserahterimakan kepada pembeli dengan Berita Acara Serah Terima (BAST) sah.
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <div className="text-3xl font-extrabold text-[#1C1917] tracking-tight">
+                    {vehicle.price ? formatRupiah(vehicle.price) : "Hubungi Kami"}
+                  </div>
+                  <span className="text-[11px] text-[#6B6560] block">
+                    *Negosiasi langsung di tempat setelah cek fisik & test drive.
+                  </span>
+                </>
+              )}
             </div>
 
             {/* Quick Specs Grid */}
