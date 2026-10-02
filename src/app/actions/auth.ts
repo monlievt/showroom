@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { createSession, destroySession, getSession } from "@/lib/auth/session";
+import { rateLimiter } from "@/lib/security/rate-limiter";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -17,12 +18,29 @@ export async function loginAction(formData: {
       return { success: false, error: "Nomor HP / Username dan PIN wajib diisi" };
     }
 
+    const cleanIdentifier = identifier.trim().toLowerCase();
+
+    // ── PROTEKSI BRUTE-FORCE RATE LIMITING ──
+    const limitCheck = rateLimiter.check(`login:${cleanIdentifier}`, 5, 5 * 60 * 1000, 15 * 60 * 1000);
+    if (!limitCheck.allowed) {
+      return {
+        success: false,
+        error: `Terlalu banyak percobaan login yang gagal. Akun/IP dibekukan sementara demi keamanan. Silakan coba lagi dalam ${Math.ceil((limitCheck.retryAfterSec || 60) / 60)} menit.`,
+      };
+    }
+
     // Default PIN master operasional untuk demo/lokal: 123456
     // Bisa disesuaikan di production via environment variable MASTER_PIN
     const validPin = process.env.MASTER_PIN || "123456";
     if (pin !== validPin && pin !== "admin123") {
-      return { success: false, error: "PIN atau kata sandi yang Anda masukkan salah" };
+      return {
+        success: false,
+        error: `PIN atau kata sandi yang Anda masukkan salah. Sisa percobaan: ${limitCheck.remaining}.`,
+      };
     }
+
+    // Login sukses: reset penghitung kegagalan
+    rateLimiter.reset(`login:${cleanIdentifier}`);
 
     if (role === "OWNER" || role === "ADMIN") {
       // Cari atau buat UserProfile Owner

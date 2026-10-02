@@ -1,10 +1,92 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
+import { getSession } from "@/lib/auth/session";
+import { rateLimiter, getClientIp } from "@/lib/security/rate-limiter";
+
+// Whitelist ekstensi dan MIME type yang diizinkan (Cegah upload script, HTML, SVG XSS, shell, dll)
+const ALLOWED_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "application/pdf",
+]);
+
+const ALLOWED_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".pdf"]);
+
+// Validasi Magic Bytes (file signature) untuk memastikan isi file asli bukan rekayasa ekstensi
+function validateMagicBytes(buffer: Buffer): { valid: boolean; ext?: string } {
+  if (buffer.length < 12) return { valid: false };
+
+  // JPEG: FF D8 FF
+  if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
+    return { valid: true, ext: ".jpg" };
+  }
+
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  if (
+    buffer[0] === 0x89 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x4e &&
+    buffer[3] === 0x47 &&
+    buffer[4] === 0x0d &&
+    buffer[5] === 0x0a &&
+    buffer[6] === 0x1a &&
+    buffer[7] === 0x0a
+  ) {
+    return { valid: true, ext: ".png" };
+  }
+
+  // WebP: RIFF .... WEBP
+  if (
+    buffer[0] === 0x52 &&
+    buffer[1] === 0x49 &&
+    buffer[2] === 0x46 &&
+    buffer[3] === 0x46 &&
+    buffer[8] === 0x57 &&
+    buffer[9] === 0x45 &&
+    buffer[10] === 0x42 &&
+    buffer[11] === 0x50
+  ) {
+    return { valid: true, ext: ".webp" };
+  }
+
+  // PDF: %PDF (25 50 44 46)
+  if (
+    buffer[0] === 0x25 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x44 &&
+    buffer[3] === 0x46
+  ) {
+    return { valid: true, ext: ".pdf" };
+  }
+
+  return { valid: false };
+}
 
 export async function POST(req: NextRequest) {
   try {
+    // ── 1. PROTEKSI RATE LIMITING (CEGAH SPAM / DISK FLOODING) ──
+    const clientIp = getClientIp(req.headers);
+    const limitCheck = rateLimiter.check(`upload:${clientIp}`, 30, 60 * 1000);
+    if (!limitCheck.allowed) {
+      return NextResponse.json(
+        { error: `Terlalu banyak permintaan unggah. Coba lagi dalam ${limitCheck.retryAfterSec} detik.` },
+        { status: 429, headers: { "Retry-After": String(limitCheck.retryAfterSec) } }
+      );
+    }
+
+    // ── 2. AUTENTIKASI & OTORISASI (HANYA STAFF / ADMIN / OWNER) ──
+    const session = await getSession();
+    if (!session || !["OWNER", "ADMIN", "STAFF_ADMIN"].includes(session.role)) {
+      return NextResponse.json(
+        { error: "Akses ditolak: Anda tidak memiliki wewenang untuk mengunggah file." },
+        { status: 401 }
+      );
+    }
+
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     const vehicleId = formData.get("vehicleId") as string | null;
@@ -19,6 +101,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ── 3. SANITASI INPUT & CEGAH PATH TRAVERSAL ──
+    const safeIdPattern = /^[a-zA-Z0-9_-]+$/;
+    if (!safeIdPattern.test(vehicleId)) {
+      return NextResponse.json(
+        { error: "Format vehicleId tidak valid." },
+        { status: 400 }
+      );
+    }
+
+    const validUploadTypes = ["PHOTO", "DOCUMENT", "RECEIPT"];
+    if (!validUploadTypes.includes(uploadType)) {
+      return NextResponse.json(
+        { error: "Jenis uploadType tidak diizinkan." },
+        { status: 400 }
+      );
+    }
+
     // Validasi ukuran: max 10MB
     if (file.size > 10 * 1024 * 1024) {
       return NextResponse.json(
@@ -27,17 +126,58 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ── 4. VALIDASI MIME TYPE & EXTENSION (CEGAH DEFACEMENT / WEBSHELL / XSS) ──
+    const claimedExt = path.extname(file.name).toLowerCase();
+    if (!ALLOWED_EXTENSIONS.has(claimedExt)) {
+      return NextResponse.json(
+        { error: `Format file '${claimedExt}' dilarang demi keamanan sistem. Hanya JPG, PNG, WEBP, dan PDF yang diizinkan.` },
+        { status: 400 }
+      );
+    }
+
+    if (!ALLOWED_MIME_TYPES.has(file.type.toLowerCase())) {
+      return NextResponse.json(
+        { error: `Tipe MIME '${file.type}' tidak diizinkan.` },
+        { status: 400 }
+      );
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Simpan ke disk lokal server: public/uploads/vehicles/{vehicleId}/{uploadType}
+    // ── 5. VALIDASI MAGIC BYTES (FILE SIGNATURE ASLI) ──
+    const signatureCheck = validateMagicBytes(buffer);
+    if (!signatureCheck.valid) {
+      return NextResponse.json(
+        { error: "Integritas file ditolak: Header biner file tidak cocok dengan format gambar atau PDF yang sah." },
+        { status: 400 }
+      );
+    }
+
+    // ── 6. PENYIMPANAN AMAN DENGAN FILENAME TERISOLASI ──
     const relativeDir = `/uploads/vehicles/${vehicleId}/${uploadType.toLowerCase()}`;
-    const uploadDir = path.join(process.cwd(), "public", relativeDir);
+    const baseUploadRoot = path.join(process.cwd(), "public", "uploads");
+    const uploadDir = path.resolve(process.cwd(), "public", relativeDir.replace(/^\//, ""));
+
+    // Pastikan folder target berada di dalam public/uploads (Anti-Path-Traversal)
+    if (!uploadDir.startsWith(baseUploadRoot)) {
+      return NextResponse.json(
+        { error: "Direktori tujuan tidak valid." },
+        { status: 400 }
+      );
+    }
+
     await mkdir(uploadDir, { recursive: true });
 
-    const originalExt = path.extname(file.name) || ".jpg";
-    const filename = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}${originalExt}`;
-    const fullPath = path.join(uploadDir, filename);
+    // Nama file acak UUID kriptografis + ekstensi terverifikasi (Abaikan nama asli dari client)
+    const secureExt = signatureCheck.ext || claimedExt;
+    const randomSuffix = crypto.randomBytes(8).toString("hex");
+    const filename = `${Date.now()}_${randomSuffix}${secureExt}`;
+    const fullPath = path.resolve(uploadDir, filename);
+
+    if (!fullPath.startsWith(uploadDir)) {
+      return NextResponse.json({ error: "Path file tidak valid." }, { status: 400 });
+    }
 
     await writeFile(fullPath, buffer);
     const fileUrl = `${relativeDir}/${filename}`;
@@ -65,8 +205,8 @@ export async function POST(req: NextRequest) {
         data: {
           vehicleId,
           category: safeCategory as any,
-          tag: tag || undefined,
-          title: title || undefined,
+          tag: tag ? tag.slice(0, 100) : undefined,
+          title: title ? title.slice(0, 200) : undefined,
           fileUrl,
         },
       });
@@ -78,7 +218,7 @@ export async function POST(req: NextRequest) {
           vehicleId,
           type: docType as any,
           fileUrl,
-          uploadedBy: "Admin",
+          uploadedBy: session.fullName || "Admin",
         },
       });
 
@@ -87,7 +227,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("Upload error:", error);
     return NextResponse.json(
-      { error: error.message || "Gagal mengunggah file ke server." },
+      { error: "Gagal memproses file pada server." },
       { status: 500 }
     );
   }

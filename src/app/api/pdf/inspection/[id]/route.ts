@@ -6,6 +6,7 @@ import path from "path";
 import QRCode from "qrcode";
 import { prisma } from "@/lib/prisma";
 import { InspectionPdfDocument } from "@/components/pdf/InspectionPdfDocument";
+import { rateLimiter, getClientIp } from "@/lib/security/rate-limiter";
 
 // Direktori cache lokal untuk dokumen PDF 8 halaman
 const PDF_CACHE_DIR = path.join(process.cwd(), ".cache", "pdf");
@@ -16,6 +17,20 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+
+    // ── 0. VALIDASI FORMAT PARAMETER ID & RATE LIMITING ──
+    if (!id || !/^[a-zA-Z0-9_-]+$/.test(id)) {
+      return NextResponse.json({ error: "Format ID inspeksi tidak valid" }, { status: 400 });
+    }
+
+    const clientIp = getClientIp(req.headers);
+    const limitCheck = rateLimiter.check(`pdf:${clientIp}`, 40, 60 * 1000);
+    if (!limitCheck.allowed) {
+      return new NextResponse("Batas frekuensi unduh tercapai. Silakan coba kembali dalam beberapa saat.", {
+        status: 429,
+        headers: { "Retry-After": String(limitCheck.retryAfterSec) },
+      });
+    }
 
     // ── 1. PROTEKSI ANTI-HOTLINKING & ANTI-EMBEDDING ──
     const referer = req.headers.get("referer");

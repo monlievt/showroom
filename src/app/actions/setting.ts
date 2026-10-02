@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 
 export interface SettingItem {
   key: string;
@@ -196,6 +197,7 @@ export async function getSettingValue(key: string): Promise<string> {
  */
 export async function getSystemSettingsAction() {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const dbSettings = (prisma as any)?.systemSetting?.findMany
       ? await (prisma as any).systemSetting.findMany()
       : [];
@@ -247,6 +249,7 @@ export async function saveSystemSettingsBatchAction(
   settings: Array<{ key: string; value: string; group?: string; label?: string; isSecret?: boolean }>
 ) {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const systemSettingDelegate = (prisma as any).systemSetting;
     if (!systemSettingDelegate) {
       throw new Error("Model SystemSetting belum siap pada Prisma Client.");
@@ -330,6 +333,7 @@ export async function saveSystemSettingsBatchAction(
  */
 export async function toggleSystemSettingAction(key: string, enabled: boolean) {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const stringVal = enabled ? "true" : "false";
     const conf = DEFAULT_CONFIGS.find((c) => c.key === key);
     const systemSettingDelegate = (prisma as any).systemSetting;
@@ -385,6 +389,7 @@ export async function saveSingleServiceAction(
   items: Array<{ key: string; value: string; isSecret?: boolean }>
 ) {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const systemSettingDelegate = (prisma as any).systemSetting;
     if (!systemSettingDelegate) {
       throw new Error("Model SystemSetting belum siap pada Prisma Client.");
@@ -430,6 +435,7 @@ export async function saveSingleServiceAction(
  */
 export async function testGeminiApiKeyAction(apiKeyInput?: string) {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     let key = apiKeyInput?.trim();
     if (!key) {
       key = await getSettingValue("GEMINI_API_KEY");
@@ -482,6 +488,7 @@ export async function testGeminiApiKeyAction(apiKeyInput?: string) {
  */
 export async function testTelegramBotAction(tokenInput?: string, chatIdInput?: string) {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     let token = tokenInput?.trim();
     let chatId = chatIdInput?.trim();
 

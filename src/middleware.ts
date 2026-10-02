@@ -1,28 +1,27 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const sessionCookie = request.cookies.get("nur_mobil_session");
+  const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME);
 
-  let session: { role?: string; investorId?: string } | null = null;
-  if (sessionCookie?.value) {
-    try {
-      const decoded = JSON.parse(
-        Buffer.from(sessionCookie.value, "base64").toString("utf-8")
-      );
-      session = JSON.parse(decoded.payload);
-    } catch {
-      session = null;
-    }
-  }
+  // Verifikasi kriptografis signature HMAC session untuk mencegah Cookie Spoofing / Privilege Escalation
+  let session = sessionCookie?.value ? verifySessionToken(sessionCookie.value) : null;
+
+  // Jika cookie ada tapi tidak valid (dicoba dipalsukan/spoofed), hapus cookie tersebut
+  const isCookieTampered = Boolean(sessionCookie?.value && !session);
 
   // 1. Proteksi Rute /admin/* -> Berdasarkan Role-Based Access Control (RBAC)
   if (pathname.startsWith("/admin")) {
     if (!session) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(loginUrl);
+      const res = NextResponse.redirect(loginUrl);
+      if (isCookieTampered) {
+        res.cookies.delete(SESSION_COOKIE_NAME);
+      }
+      return res;
     }
 
     // Role INVESTOR tidak diizinkan membuka modul admin internal
@@ -60,7 +59,11 @@ export function middleware(request: NextRequest) {
     if (!session) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(loginUrl);
+      const res = NextResponse.redirect(loginUrl);
+      if (isCookieTampered) {
+        res.cookies.delete(SESSION_COOKIE_NAME);
+      }
+      return res;
     }
   }
 
@@ -79,7 +82,14 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  // Bersihkan cookie palsu jika ada pada rute publik
+  if (isCookieTampered) {
+    response.cookies.delete(SESSION_COOKIE_NAME);
+  }
+
+  return response;
 }
 
 export const config = {

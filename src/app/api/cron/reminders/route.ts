@@ -10,11 +10,20 @@ export async function POST(req: NextRequest) {
   try {
     // 1. Validasi Authorization Token (CRON_SECRET)
     const authHeader = req.headers.get("authorization");
-    const cronSecret = process.env.CRON_SECRET || "default_local_cron_secret";
+    const cronSecret = process.env.CRON_SECRET;
 
-    if (authHeader !== `Bearer ${cronSecret}`) {
+    if (process.env.NODE_ENV === "production" && !cronSecret) {
+      console.error("CRON_SECRET belum dikonfigurasi di environment produksi.");
       return NextResponse.json(
-        { error: "Unauthorized: Invalid CRON_SECRET" },
+        { error: "Server misconfiguration: CRON_SECRET is required in production." },
+        { status: 500 }
+      );
+    }
+
+    const expectedHeader = `Bearer ${cronSecret || "default_local_cron_secret"}`;
+    if (authHeader !== expectedHeader) {
+      return NextResponse.json(
+        { error: "Unauthorized: Invalid or missing CRON_SECRET" },
         { status: 401 }
       );
     }

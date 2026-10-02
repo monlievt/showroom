@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 
 export interface ParsedVehicleRow {
   plateNumber: string;
@@ -45,6 +46,7 @@ export async function importVehiclesAction(
   } = { onDuplicate: "SKIP", recordCashExpense: false }
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
     if (!rows || rows.length === 0) {
       return { success: false, error: "Tidak ada baris data yang valid untuk diimpor." };
     }
@@ -192,6 +194,7 @@ export async function importVehiclesAction(
  */
 export async function importExpensesAction(rows: ParsedExpenseRow[]) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
     if (!rows || rows.length === 0) {
       return { success: false, error: "Tidak ada baris pengeluaran yang valid." };
     }

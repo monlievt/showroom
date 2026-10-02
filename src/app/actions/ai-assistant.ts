@@ -5,6 +5,8 @@ import { getSettingValue } from "@/app/actions/setting";
 import { getFinanceSummary } from "@/app/actions/finance";
 import { formatRupiah } from "@/lib/utils";
 import { calculateDaysInInventory } from "@/lib/calculations/hpp";
+import { requireSession } from "@/lib/auth/session";
+import { rateLimiter } from "@/lib/security/rate-limiter";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INTERFACES
@@ -512,6 +514,7 @@ export async function getDashboardData(): Promise<{
   geminiEnabled?: boolean;
 }> {
   try {
+    await requireSession();
     const [vehicles, financeRes, sales, opExes, geminiKey, geminiEnabled, businessPatterns] =
       await Promise.all([
         prisma.vehicle.findMany({
@@ -1250,6 +1253,7 @@ export async function generateExecutiveAiBriefing(): Promise<{
   error?: string;
 }> {
   try {
+    await requireSession();
     const geminiKey = await getSettingValue("GEMINI_API_KEY");
     const geminiEnabled = await getSettingValue("GEMINI_ENABLED");
     const geminiModel = (await getSettingValue("GEMINI_MODEL")) || "gemini-2.5-flash";
@@ -1439,7 +1443,19 @@ SKEMA JSON YANG WAJIB DIHASILKAN (KEMBALIKAN PERSIS FORMAT INI):
 
 export async function askAiShowroomAdvisor(question: string): Promise<{ success: boolean; answer?: string; error?: string }> {
   try {
-    if (!question?.trim()) return { success: false, error: "Pertanyaan tidak boleh kosong." };
+    const session = await requireSession();
+
+    // Proteksi kuota AI dengan Rate Limiter per user
+    const limitCheck = rateLimiter.check(`ai-ask:${session.userId}`, 15, 60 * 1000);
+    if (!limitCheck.allowed) {
+      return {
+        success: false,
+        error: `Pertanyaan AI terlalu sering. Silakan tunggu ${limitCheck.retryAfterSec} detik sebelum bertanya lagi.`,
+      };
+    }
+
+    const cleanQuestion = question?.trim()?.slice(0, 500);
+    if (!cleanQuestion) return { success: false, error: "Pertanyaan tidak boleh kosong." };
 
     const geminiKey = await getSettingValue("GEMINI_API_KEY");
     const geminiEnabled = await getSettingValue("GEMINI_ENABLED");
