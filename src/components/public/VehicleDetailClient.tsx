@@ -292,7 +292,7 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#D97706] hover:bg-[#B45309] text-white text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer"
               >
                 <Eye className="w-4 h-4" />
-                <span>Lihat Sertifikat Digital ACV</span>
+                <span>Lihat Sertifikat Digital</span>
               </Link>
               <a
                 href={`/api/pdf/inspection/${vehicle.inspection.id}`}
@@ -315,7 +315,7 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
             model={vehicle.model}
           />
 
-          {/* Tabel Uji Mikron 11 Panel Body & Rata-rata Keseluruhan ala IBID ACV */}
+          {/* Tabel Uji Mikron 15 Panel Body & Rata-rata Keseluruhan */}
           <div className="space-y-4">
             {overallPaintStats && overallPaintStats.totalPoints > 0 && (
               <div className="p-4 sm:p-5 rounded-2xl border border-[#EBE7E1] bg-gradient-to-br from-white via-[#FAF9F6] to-[#F5F2EC] shadow-sm">
@@ -323,7 +323,7 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-[#1C1917] text-white tracking-wider uppercase">
-                        Standar Astra Car Valuation (ACV)
+                        Standar Uji Coating Gauge
                       </span>
                       <span className="text-xs text-[#6B6560]">
                         Multi-Point Digital Coating Gauge

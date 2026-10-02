@@ -138,7 +138,7 @@ export default async function HomePage() {
                 <span className="text-3xl font-black text-[#1C1917]">{stats.pointsTestedPerCar} Titik</span>
               </div>
               <p className="text-xs font-bold text-[#1C1917] uppercase tracking-wide">Uji Sensor Mikron</p>
-              <p className="text-[11px] text-[#6B6560]">Standar IBID ACV Astra di 11 panel bodi & pilar</p>
+              <p className="text-[11px] text-[#6B6560]">Standar uji presisi di 15 panel bodi & pilar</p>
             </div>
 
             <div className="space-y-1 text-center sm:text-left pt-3 md:pt-0 md:pl-6">

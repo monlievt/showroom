@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const v = inspection.vehicle;
   return {
-    title: `Sertifikat Inspeksi ACV — ${v.brand} ${v.model} (${v.plateNumber}) | Nur Mobil`,
-    description: `Lembar hasil cek fisik resmi, uji ketebalan cat bodi multi-point, dan verifikasi integritas rangka sasis berstandar Astra Car Valuation (ACV).`,
+    title: `Sertifikat Inspeksi — ${v.brand} ${v.model} (${v.plateNumber}) | Nur Mobil`,
+    description: `Lembar hasil cek fisik resmi, uji ketebalan cat bodi multi-point, dan verifikasi integritas rangka sasis profesional Nur Mobil.`,
   };
 }
 

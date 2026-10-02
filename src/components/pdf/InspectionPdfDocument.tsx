@@ -372,7 +372,7 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
         {/* ── GRADE SUMMARY (5 PILAR DENGAN TOTAL GRADE ACV) ── */}
         <View style={styles.gradeSection}>
           <View style={styles.totalGradeBox}>
-            <Text style={[styles.label, { color: "#B45309", fontWeight: "bold" }]}>Total Grade ACV</Text>
+            <Text style={[styles.label, { color: "#B45309", fontWeight: "bold" }]}>Total Grade</Text>
             <Text style={styles.totalGradeLetter}>{totalGrade}</Text>
           </View>
           <View style={styles.gradeBox}>
@@ -421,7 +421,7 @@ export function InspectionPdfDocument({ inspection, vehicle }: InspectionPdfProp
           <View style={styles.paintSummaryCard}>
             <View>
               <Text style={styles.paintSummaryTitle}>
-                Rata-rata Ketebalan Cat Keseluruhan Panel Logam (Standar IBID ACV Astra)
+                Rata-rata Ketebalan Cat Keseluruhan Panel Logam (Multi-Point Gauge)
               </Text>
               <Text style={{ fontSize: 6.5, color: "#6B6560", marginTop: 1 }}>
                 {overallStats.totalPoints} Titik Uji Sensor Digital • Rentang: {overallStats.minMicron}–{overallStats.maxMicron} µm • Bumper plastik non-mikron tidak dihitung.

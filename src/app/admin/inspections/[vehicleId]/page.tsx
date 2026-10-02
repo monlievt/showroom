@@ -161,7 +161,7 @@ export default async function VehicleInspectionsPage({
                       </div>
                       <div>
                         <span className="text-xs uppercase font-bold text-[#6B6560]">
-                          Total Grade Standar Astra Car Valuation (ACV)
+                          Total Grade Keseluruhan Unit
                         </span>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-2xl font-black text-[#1C1917]">
@@ -254,7 +254,7 @@ export default async function VehicleInspectionsPage({
                 {/* 15 Panel Table */}
                 <div className="bg-white border border-[#D9D4CB] rounded-2xl overflow-hidden shadow-sm">
                   <div className="p-4 bg-[#EFECE8] border-b border-[#D9D4CB] font-bold text-sm text-[#1C1917] flex items-center justify-between">
-                    <span>Hasil Pengukuran 15 Titik Panel Bodi & Bumper (Standar ACV)</span>
+                    <span>Hasil Pengukuran 15 Titik Panel Bodi & Bumper (Standar Inspeksi)</span>
                     <span className="text-xs font-normal text-[#6B6560]">
                       Termasuk Rocker Panel & Bumper Plastik Non-Mikron
                     </span>

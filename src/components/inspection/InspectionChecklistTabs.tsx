@@ -135,7 +135,7 @@ export function InspectionChecklistTabs({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-extrabold text-[#1C1917]">
-                  Hasil Valuasi & Grade Keseluruhan (ACV Standar Lelang)
+                  Hasil Valuasi & Grade Keseluruhan (Total Grade)
                 </span>
                 <span className="text-[10px] bg-[#FEF3C7] text-[#92400E] font-bold px-2 py-0.5 rounded-full">
                   {GRADE_LABELS[totalGrade]?.desc || "Prima"}

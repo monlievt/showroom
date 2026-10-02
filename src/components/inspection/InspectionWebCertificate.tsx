@@ -132,7 +132,7 @@ export function InspectionWebCertificate({
     if (typeof window === "undefined") return;
     const url = window.location.href;
     const text = encodeURIComponent(
-      `*Laporan Inspeksi Resmi ACV — Nur Mobil*\n` +
+      `*Laporan Inspeksi Resmi — Nur Mobil*\n` +
       `Unit: ${vehicle.brand} ${vehicle.model} (${vehicle.year})\n` +
       `Plat: ${vehicle.plateNumber} • Odometer: ${vehicle.odometer.toLocaleString("id-ID")} KM\n` +
       `Total Grade: *Grade ${totalGrade}* (${GRADE_LABELS[totalGrade as keyof typeof GRADE_LABELS]?.label || ""})\n` +
@@ -141,7 +141,7 @@ export function InspectionWebCertificate({
     window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
   };
 
-  const certificateNumber = `ACV-${new Date(inspection.inspectedAt).getFullYear()}${(new Date(inspection.inspectedAt).getMonth() + 1).toString().padStart(2, "0")}-${vehicle.plateNumber.replace(/\s+/g, "")}-V${inspection.version}`;
+  const certificateNumber = `INSP-${new Date(inspection.inspectedAt).getFullYear()}${(new Date(inspection.inspectedAt).getMonth() + 1).toString().padStart(2, "0")}-${vehicle.plateNumber.replace(/\s+/g, "")}-V${inspection.version}`;
 
   return (
     <div className="min-h-screen bg-[#F7F5F2] text-[#1C1917] pb-16">
@@ -170,7 +170,7 @@ export function InspectionWebCertificate({
 
             <div className="hidden md:block">
               <span className="text-[10px] uppercase font-bold text-[#D97706] tracking-wider block">
-                Sertifikat Digital ACV
+                Sertifikat Digital Kendaraan
               </span>
               <span className="text-xs font-mono font-bold text-[#6B6560]">
                 {certificateNumber}
@@ -233,7 +233,7 @@ export function InspectionWebCertificate({
                     NUR MOBIL
                   </span>
                   <span className="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-[#1C1917] text-white">
-                    Astra Car Valuation
+                    Certified Inspection
                   </span>
                 </div>
                 <p className="text-xs text-[#6B6560]">
@@ -337,12 +337,12 @@ export function InspectionWebCertificate({
               </div>
             </div>
 
-            {/* Total Grade Banner (Ala 5-Box IBID ACV) */}
+            {/* Total Grade Banner */}
             <div className="mt-5 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <span className="text-xs font-extrabold uppercase tracking-wider text-[#1C1917] flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-[#D97706]" />
-                  <span>Hasil Penilaian Keseluruhan (Total Grade ACV)</span>
+                  <span>Hasil Penilaian Keseluruhan (Total Grade)</span>
                 </span>
                 <span className="text-xs text-[#6B6560]">
                   Berdasarkan gabungan skor Mesin, Interior, Eksterior, dan Rangka
@@ -541,7 +541,7 @@ export function InspectionWebCertificate({
               )}
             >
               <FileText className="w-4 h-4" />
-              <span>11 Foto Standar ACV</span>
+              <span>11 Foto Standar Wajib</span>
             </button>
 
             <button
@@ -672,7 +672,7 @@ export function InspectionWebCertificate({
               <div className="border border-[#D9D4CB] rounded-2xl overflow-hidden shadow-xs">
                 <div className="p-4 bg-[#F7F5F2] border-b border-[#D9D4CB] flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#1C1917]">
-                    Rincian Hasil Uji 15 Titik Panel Bodi & Bumper (Standar ACV)
+                    Rincian Hasil Uji 15 Titik Panel Bodi & Bumper (Standar Inspeksi)
                   </span>
                   <span className="text-[11px] text-[#6B6560] hidden sm:inline">
                     Disparitas belang toleransi maks 30 µm
@@ -851,7 +851,7 @@ export function InspectionWebCertificate({
                           {item.label}
                         </span>
                         <span className="text-[10px] text-[#6B6560] block">
-                          Pilar Struktur Rangka Unibody (Standar ACV)
+                          Pilar Struktur Rangka Unibody (Standar Keselamatan)
                         </span>
                       </div>
                     </div>
@@ -866,13 +866,13 @@ export function InspectionWebCertificate({
             </div>
           )}
 
-          {/* TAB 4: 11 FOTO STANDAR IBID ACV */}
+          {/* TAB 4: 11 FOTO STANDAR WAJIB */}
           {activeTab === "foto" && (
             <div className="p-5 sm:p-7 space-y-6">
               <div className="bg-[#FAF8F5] p-4 rounded-2xl border border-[#D9D4CB]">
                 <h3 className="text-sm font-bold text-[#1C1917] flex items-center gap-1.5">
                   <FileText className="w-4 h-4 text-[#D97706]" />
-                  <span>Dokumentasi 11 Titik Foto Wajib Standar Astra IBID ACV</span>
+                  <span>Dokumentasi 11 Titik Foto Wajib Standar Inspeksi</span>
                 </h3>
                 <p className="text-xs text-[#6B6560] mt-1">
                   Arsip visual transparan: 4 sudut serong eksterior, 2 kompartemen utama, 1 fisik nomor rangka & STNK, serta 4 kelengkapan instrumen kritis.
@@ -956,7 +956,7 @@ export function InspectionWebCertificate({
                 <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
                   <ShieldCheck className="w-5 h-5 text-[#D97706]" />
                   <h3 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
-                    Ketentuan Layanan, Pelepasan Hak & Garansi Hukum Dokumen (Standar Astra IBID)
+                    Ketentuan Layanan, Pelepasan Hak & Garansi Hukum Dokumen
                   </h3>
                 </div>
 
@@ -994,7 +994,7 @@ export function InspectionWebCertificate({
                   {inspection.inspectedBy}
                 </div>
                 <span className="text-[10px] font-bold text-[#1C1917] block">
-                  ACV Certified Inspector
+                  Certified Vehicle Inspector
                 </span>
               </div>
 

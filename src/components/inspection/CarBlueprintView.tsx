@@ -1166,7 +1166,7 @@ export function CarBlueprintView({
                               <span>📐</span>
                               <span>
                                 {isRoof
-                                  ? "Uji 4 Penjuru Atap (Standar IBID ACV)"
+                                  ? "Uji 4 Penjuru Panel Atap"
                                   : "Uji 3 Titik Pengukuran Presisi"}
                               </span>
                             </span>
@@ -1280,7 +1280,7 @@ export function CarBlueprintView({
                   {/* Panduan Kode Kerusakan Balai Lelang (ACV) */}
                   <div className="pt-2 border-t border-[#EBE7E1]">
                     <span className="text-[11px] font-bold text-[#1C1917] block mb-2">
-                      Kamus Notasi Simbol Standar Lelang (ACV):
+                      Kamus Notasi Simbol Kerusakan Panel:
                     </span>
                     <div className="grid grid-cols-2 gap-2 text-[11px] text-[#57534E]">
                       <div className="flex items-center gap-1.5">

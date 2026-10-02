@@ -243,7 +243,7 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <div className="bg-white border border-[#D9D4CB] px-4 py-2 rounded-xl text-center shadow-xs">
             <span className="text-[10px] uppercase font-bold text-[#6B6560] block">
-              Total Grade ACV
+              Total Grade
             </span>
             <span className={cn(
               "text-2xl font-black block",
@@ -651,7 +651,7 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
       <div className="bg-[#F7F5F2] border border-[#D9D4CB] rounded-2xl p-6 shadow-sm space-y-4">
         <div>
           <h2 className="text-base font-bold text-[#1C1917]">
-            Catatan Ringkas Eksekutif Pemeriksa (Standar IBID ACV Header)
+            Catatan Ringkas Eksekutif Pemeriksa
           </h2>
           <p className="text-xs text-[#6B6560]">
             Catatan ini akan dirangkum di lembar muka sertifikat untuk calon pembeli dan investor.

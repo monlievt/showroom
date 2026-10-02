@@ -171,7 +171,7 @@ export function VehicleMediaUploadClient({
 
       setMsg({
         type: "success",
-        text: `Foto ${slot.badge} berhasil disimpan sesuai standar ACV!`,
+        text: `Foto ${slot.badge} berhasil disimpan sesuai standar inspeksi!`,
       });
       router.refresh();
     } catch (err: any) {
@@ -275,7 +275,7 @@ export function VehicleMediaUploadClient({
   const groupedSlots = [
     {
       groupKey: "EXTERIOR",
-      title: "1. Empat Sudut Eksterior Utama (Standar ACV 3/4 Angle)",
+      title: "1. Empat Sudut Eksterior Utama (3/4 Angle)",
       slots: IBID_STANDARD_PHOTO_SLOTS.filter((s) => s.group === "EXTERIOR"),
     },
     {
@@ -313,7 +313,7 @@ export function VehicleMediaUploadClient({
                 Media & Standar Dokumentasi Unit
               </h1>
               <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#D97706]/10 text-[#D97706] border border-[#D97706]/30">
-                Astra / IBID ACV
+                Standar Cek Fisik
               </span>
             </div>
             <p className="text-xs text-[#6B6560]">
@@ -352,12 +352,12 @@ export function VehicleMediaUploadClient({
           </div>
         </div>
 
-        {/* ACV Progress Tracker */}
+        {/* Progress Tracker */}
         <div className="bg-white border border-[#D9D4CB] rounded-xl p-3.5 flex flex-col gap-2 min-w-[280px]">
           <div className="flex items-center justify-between text-xs">
             <span className="font-bold text-[#1C1917] flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
-              <span>Standar 11 Foto ACV:</span>
+              <span>Standar 11 Foto Wajib:</span>
             </span>
             <span
               className={`font-black ${
@@ -429,7 +429,7 @@ export function VehicleMediaUploadClient({
           }`}
         >
           <Camera className="w-4 h-4" />
-          <span>11 Titik Foto Standar Wajib (IBID ACV)</span>
+          <span>11 Titik Foto Standar Wajib</span>
           <span
             className={`text-[10px] px-2 py-0.2 rounded-full font-bold ${
               completionPercentage === 100
@@ -454,7 +454,7 @@ export function VehicleMediaUploadClient({
         </button>
       </div>
 
-      {/* TAB 1: 11 TITIK FOTO STANDAR IBID ACV */}
+      {/* TAB 1: 11 TITIK FOTO STANDAR WAJIB */}
       {activeTab === "STANDARD_SLOTS" && (
         <div className="space-y-8">
           <div className="bg-[#FAF8F5] border border-[#D9D4CB] rounded-2xl p-4 sm:p-5">
@@ -462,10 +462,10 @@ export function VehicleMediaUploadClient({
               <div>
                 <h2 className="text-sm font-bold text-[#1C1917] flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-[#D97706]" />
-                  <span>Panduan Pengambilan 11 Sudut Standar ACV</span>
+                  <span>Panduan Pengambilan 11 Sudut Foto Standar</span>
                 </h2>
                 <p className="text-xs text-[#6B6560] mt-1">
-                  Sesuai format resmi ACV Astra IBID (Halaman 11-13). Setiap slot foto mewakili bukti fisik integritas kendaraan sebelum diterbitkan ke katalog publik maupun sertifikat inspeksi.
+                  Sesuai format dokumentasi visual resmi. Setiap slot foto mewakili bukti fisik integritas kendaraan sebelum diterbitkan ke katalog publik maupun sertifikat inspeksi.
                 </p>
               </div>
               <div className="text-[11px] font-semibold text-[#6B6560] bg-white px-3 py-1.5 rounded-lg border border-[#D9D4CB] shrink-0">

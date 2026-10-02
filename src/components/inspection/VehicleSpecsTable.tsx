@@ -78,7 +78,7 @@ export function VehicleSpecsTable({ vehicle, inspection }: VehicleSpecsProps) {
             </div>
             <div>
               <div className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
-                Standar Penilaian Astra Car Valuation (ACV)
+                Standar Penilaian Cek Fisik Profesional
               </div>
               <h3 className="text-lg font-bold text-[#1C1917]">
                 Hasil Uji Kelayakan & Cek Fisik Menyeluruh
