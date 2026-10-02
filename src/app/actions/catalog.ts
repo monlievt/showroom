@@ -290,6 +290,13 @@ export async function getPublicVehicleDetail(identifier: string) {
         engineNumber: true,
         youtubeVideoId: true,
         notes: true,
+        updatedAt: true,
+        sale: {
+          select: {
+            saleDate: true,
+            sellingPrice: true,
+          },
+        },
         photos: {
           select: {
             id: true,
@@ -362,6 +369,7 @@ export async function getPublicVehicleDetail(identifier: string) {
         taxExpiryDate: vehicle.taxExpiryDate,
         price: vehicle.targetSellingPrice ? Number(vehicle.targetSellingPrice) : null,
         status: vehicle.status,
+        soldDate: vehicle.status === "SOLD_SETTLED" ? (vehicle.sale?.saleDate || vehicle.updatedAt) : null,
         location: vehicle.currentLocation,
         stnkStatus: vehicle.stnkStatus,
         bpkbStatus: vehicle.bpkbStatus,

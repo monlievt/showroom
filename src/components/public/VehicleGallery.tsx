@@ -347,21 +347,21 @@ export function VehicleGallery({
               </div>
             )}
 
-            {/* Status Unit Badge (Top Left) */}
-            <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
-              <span
-                className={cn(
-                  "text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm",
-                  isSold
-                    ? "bg-stone-900 text-amber-400 border border-amber-500/40"
-                    : isBooked
-                    ? "bg-amber-500 text-white"
-                    : "bg-emerald-600 text-white"
-                )}
-              >
-                {isSold ? "TERJUAL" : isBooked ? "BOOKED (Tanda Jadi)" : "READY FOR SALE"}
-              </span>
-            </div>
+            {/* Status Unit Badge (Top Left - Hanya tampil jika unit ready atau booked) */}
+            {!isSold && (
+              <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
+                <span
+                  className={cn(
+                    "text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm",
+                    isBooked
+                      ? "bg-amber-500 text-white"
+                      : "bg-emerald-600 text-white"
+                  )}
+                >
+                  {isBooked ? "BOOKED (Tanda Jadi)" : "READY FOR SALE"}
+                </span>
+              </div>
+            )}
 
             {/* Tombol Zoom Fullscreen (Top Right) */}
             <button

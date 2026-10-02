@@ -54,6 +54,7 @@ interface VehicleDetailProps {
     taxExpiryDate?: string | Date | null;
     price: number | null;
     status: string;
+    soldDate?: string | Date | null;
     location: string;
     stnkStatus: string;
     bpkbStatus: string;
@@ -195,15 +196,22 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
               </div>
             </div>
 
-            {/* Banner Arsip Unit Terjual */}
+            {/* Banner Arsip Transaksi Unit Terjual */}
             {isSold && (
-              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[#1C1917] space-y-1">
-                <div className="flex items-center gap-2 text-xs font-extrabold text-amber-900 uppercase tracking-wider">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Unit Ini Telah Resmi Terjual</span>
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[#1C1917] space-y-1.5">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div className="flex items-center gap-2 text-xs font-extrabold text-amber-900 uppercase tracking-wider">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Resmi Terjual & Diserahterimakan</span>
+                  </div>
+                  {vehicle.soldDate && (
+                    <span className="text-[11px] font-bold text-stone-700 bg-white/80 px-2 py-0.5 rounded border border-amber-200">
+                      Terjual: {formatDate(vehicle.soldDate)}
+                    </span>
+                  )}
                 </div>
                 <p className="text-[11px] text-stone-600 leading-relaxed">
-                  Halaman ini disimpan sebagai arsip rekam jejak kondisi fisik dan sertifikat inspeksi digital terverifikasi.
+                  Unit telah diserahterimakan kepada pembeli (BAST). Halaman ini disimpan sebagai arsip rekam jejak kondisi fisik dan sertifikat inspeksi digital terverifikasi.
                 </p>
               </div>
             )}
@@ -217,27 +225,22 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs text-[#6B6560] font-medium block">
-                  {isSold ? "Status Transaksi & Harga Listing:" : "Harga Tunai (Cash / Tukar Tambah):"}
+                  {isSold ? "Harga Penawaran Terakhir:" : "Harga Tunai (Cash / Tukar Tambah):"}
                 </span>
-                {isSold && (
-                  <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-emerald-700 text-white tracking-wider">
-                    LUNAS TERJUAL
-                  </span>
-                )}
               </div>
 
               {isSold ? (
                 <div className="space-y-1">
-                  <div className="flex flex-wrap items-baseline gap-3">
-                    <span className="text-xl sm:text-2xl font-bold text-stone-400 line-through tracking-tight">
+                  <div className="flex flex-wrap items-baseline gap-2.5">
+                    <span className="text-2xl sm:text-3xl font-bold text-stone-400 line-through tracking-tight">
                       {vehicle.price ? formatRupiah(vehicle.price) : "Hubungi Kami"}
                     </span>
-                    <span className="text-2xl sm:text-3xl font-black text-emerald-700 tracking-tight">
-                      TERJUAL
+                    <span className="text-xs font-medium text-stone-500">
+                      (Harga listing saat aktif)
                     </span>
                   </div>
                   <span className="text-[11px] text-stone-500 block">
-                    *Unit telah diserahterimakan kepada pembeli dengan Berita Acara Serah Terima (BAST).
+                    *Unit telah lunas dan diserahterimakan. Harga di atas adalah harga acuan penawaran sebelum unit laku.
                   </span>
                 </div>
               ) : (
