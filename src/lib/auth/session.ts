@@ -14,9 +14,12 @@ export async function createSession(data: SessionData) {
   const cookieStore = await cookies();
   const token = await createSessionToken(data);
 
+  // Cookie secure hanya diaktifkan jika menggunakan HTTPS (agar bisa login di IP lokal HTTP seperti Proxmox LXC)
+  const isHttps = process.env.COOKIE_SECURE === "true" || (process.env.NEXT_PUBLIC_APP_URL?.startsWith("https://") ?? false);
+
   cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: isHttps,
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 7 hari
