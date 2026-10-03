@@ -189,7 +189,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
         <div className="flex flex-wrap items-center gap-2">
           {/* Action Button: Gudang Bahan Habis Pakai & Servis Mandiri */}
           <Link
-            href="/admin/finance/assets"
+            href="/admin/workshop"
             className="flex items-center justify-center gap-1.5 px-3 py-2 bg-[#FEF3C7] hover:bg-[#FDE68A] border border-[#D97706]/40 text-[#92400E] rounded-lg text-sm font-semibold shadow-xs transition-colors"
             title="Kelola persediaan oli, filter, bohlam, salon & alokasikan servis mandiri"
           >

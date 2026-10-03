@@ -197,11 +197,11 @@ export function AdminSidebar({
           {/* 3. Gudang Bahan & Alat Garasi (Owner & Staff) */}
           {!isSales && (
             <Link
-              href="/admin/finance/assets"
+              href="/admin/workshop"
               title={isCollapsed ? "Gudang Bahan & Alat Garasi" : undefined}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
-                pathname.startsWith("/admin/finance/assets")
+                pathname.startsWith("/admin/workshop")
                   ? "bg-[#D97706] text-white shadow-sm font-semibold"
                   : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
                 isCollapsed && "justify-center px-0"
@@ -210,7 +210,7 @@ export function AdminSidebar({
               <Wrench
                 className={cn(
                   "w-4 h-4 shrink-0",
-                  pathname.startsWith("/admin/finance/assets") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                  pathname.startsWith("/admin/workshop") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
                 )}
               />
               {!isCollapsed && <span className="truncate">Gudang Bahan &amp; Alat</span>}
@@ -246,7 +246,7 @@ export function AdminSidebar({
               <div
                 className={cn(
                   "flex items-center justify-between rounded-xl transition-all",
-                  isFinanceActive && !pathname.startsWith("/admin/finance/assets")
+                  isFinanceActive
                     ? isCollapsed
                       ? "bg-[#D97706] text-white"
                       : "bg-[#D97706]/10 text-[#D97706] font-bold"
@@ -265,7 +265,7 @@ export function AdminSidebar({
                   <Wallet
                     className={cn(
                       "w-4 h-4 shrink-0",
-                      isFinanceActive && !pathname.startsWith("/admin/finance/assets")
+                      isFinanceActive
                         ? isCollapsed
                           ? "text-white"
                           : "text-[#D97706]"

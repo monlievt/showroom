@@ -152,7 +152,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
       )}
 
       {/* Sub-Navigation Pills */}
-      <FinanceSubNav assetsCount={summary.assetsCount} />
+      <FinanceSubNav />
 
       {/* KPI Cards Header */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

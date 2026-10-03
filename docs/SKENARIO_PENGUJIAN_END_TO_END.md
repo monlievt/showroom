@@ -63,7 +63,7 @@ Memastikan sistem siap menampung dana modal investor dan aturan bagi hasil sebel
 Menguji pencatatan stok grosir oli, filter oli, serta inventaris mesin/alat bengkel mandiri di garasi.
 
 ### 📝 Langkah Pengujian:
-1. Buka menu **Sidebar > Gudang Bahan & Alat** (`/admin/finance/assets`).
+1. Buka menu **Sidebar > Gudang Bahan & Alat** (`/admin/workshop`).
 2. Di tab **Stok Bahan Habis Pakai**, klik **+ Tambah Bahan Habis Pakai**:
    - **Nama Bahan:** `Oli Mesin TMO 10W-40 (Galon 4 Liter)`
    - **Kategori:** `Oli & Pelumas Mesin (OIL_AND_FLUIDS)`
@@ -78,9 +78,9 @@ Menguji pencatatan stok grosir oli, filter oli, serta inventaris mesin/alat beng
    - **Satuan:** `Pcs`
    - **Harga Beli Grosir:** `Rp 35.000` per pcs.
    - Klik **Simpan Bahan**.
-4. Pindah ke tab **Aset Tetap & Peralatan**, klik **+ Tambah Aset Peralatan** (`/admin/finance/assets/new`):
+4. Pindah ke tab **Aset Tetap & Peralatan**, klik **+ Tambah Aset Tetap**:
    - **Nama Alat:** `Mesin Cuci Steam High Pressure Laguna 70`
-   - **Kategori:** `WORKSHOP_EQUIPMENT`
+   - **Kategori:** `Peralatan & Mesin Garasi (WORKSHOP_EQUIPMENT)`
    - **Harga Beli:** `Rp 1.250.000`
    - **Kondisi:** `BAIK / BERFUNGSI NORMAL`
    - Klik **Simpan Aset**.
@@ -428,8 +428,8 @@ Menguji pembatasan wewenang antara `OWNER`, `STAFF_ADMIN`, `SALES`, dan `INVESTO
 2. Buka menu navigasi Sidebar:
    - Menu yang muncul: **Dashboard Utama**, **Inventori Unit**, **Cek Fisik & Inspeksi**, **Gudang Bahan & Alat**, **Penjualan & Piutang**, dan **Buka Katalog Web**.
    - Menu yang **DISEMBUNYIKAN**: *Keuangan & Kas (Kas Besar BCA / Prive), Investor & Bagi Hasil, Sistem & Notifikasi*.
-3. Buka menu **Sidebar > Gudang Bahan & Alat** (`/admin/finance/assets`):
-   - Akses diizinkan: Admin garasi dapat mencatat stok oli dan alokasi servis mandiri.
+3. Buka menu **Sidebar > Gudang Bahan & Alat** (`/admin/workshop`):
+   - Akses diizinkan: Admin garasi dapat mencatat stok oli dan alokasi servis mandiri tanpa melihat kas besar bank BCA.
 4. Coba akses rute sensitif via address bar browser:
    - Ketik URL: `http://localhost:3000/admin/finance` (Kas Besar BCA) ➔ Ditolak dan diarahkan ke `/admin/inventory`.
    - Ketik URL: `http://localhost:3000/admin/investors` (Dividen Investor) ➔ Ditolak dan diarahkan ke `/admin/inventory`.

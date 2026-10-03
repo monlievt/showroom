@@ -382,8 +382,7 @@ export function AssetsInventoryPageClient({
         </div>
       )}
 
-      {/* Sub-Navigation Pills */}
-      <FinanceSubNav assetsCount={assets.totalItems} />
+
 
       {/* ── 4 KPI CARDS: LENGKAP DENGAN STOK HABIS PAKAI & MARGIN JASA ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

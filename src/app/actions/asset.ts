@@ -105,6 +105,7 @@ export async function createShowroomAsset(
       return asset;
     });
 
+    revalidatePath("/admin/workshop");
     revalidatePath("/admin/finance");
     return { success: true, data: result };
   } catch (error: any) {
@@ -138,6 +139,7 @@ export async function updateShowroomAsset(
       data,
     });
 
+    revalidatePath("/admin/workshop");
     revalidatePath("/admin/finance");
     return { success: true, data: updated };
   } catch (error: any) {
@@ -151,6 +153,7 @@ export async function updateShowroomAsset(
 export async function deleteShowroomAsset(id: string, actorUserId: string = "system") {
   try {
     await prisma.showroomAsset.delete({ where: { id } });
+    revalidatePath("/admin/workshop");
     revalidatePath("/admin/finance");
     return { success: true };
   } catch (error: any) {

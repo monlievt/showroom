@@ -39,13 +39,12 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    // Role STAFF_ADMIN: Akses operasional garasi & penjualan
+    // Role STAFF_ADMIN: Akses operasional garasi & penjualan (inventori, inspeksi, gudang/workshop, penjualan)
     // DILARANG membuka: kas besar bank (/admin/finance), bagi hasil investor (/admin/investors), pengaturan sistem & backup (/admin/settings)
     if (session.role === "STAFF_ADMIN") {
       const isRestrictedForStaff =
         pathname.startsWith("/admin/investors") ||
-        (pathname.startsWith("/admin/finance") &&
-          !pathname.startsWith("/admin/finance/assets")) ||
+        pathname.startsWith("/admin/finance") ||
         pathname.startsWith("/admin/settings");
 
       if (isRestrictedForStaff) {

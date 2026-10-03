@@ -3,14 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wallet, Split, Wrench } from "lucide-react";
+import { Wallet, Split } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FinanceSubNavProps {
   assetsCount?: number;
 }
 
-export function FinanceSubNav({ assetsCount }: FinanceSubNavProps) {
+export function FinanceSubNav(_props?: FinanceSubNavProps) {
   const pathname = usePathname();
 
   const links = [
@@ -28,14 +28,6 @@ export function FinanceSubNav({ assetsCount }: FinanceSubNavProps) {
       icon: Split,
       badge: "Pemisah Kas",
       badgeColor: "bg-purple-100 text-purple-800",
-    },
-    {
-      label: "Aset & Bahan Habis Pakai (Oli, Filter & Alat)",
-      href: "/admin/finance/assets",
-      exact: false,
-      icon: Wrench,
-      badge: assetsCount !== undefined ? `${assetsCount} Alat & Bahan` : null,
-      badgeColor: "bg-blue-100 text-blue-800",
     },
   ];
 

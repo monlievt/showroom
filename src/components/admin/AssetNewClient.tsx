@@ -87,7 +87,7 @@ export function AssetNewClient() {
 
       setSuccessMsg("Aset inventaris berhasil ditambahkan! Mengalihkan...");
       setTimeout(() => {
-        router.push("/admin/finance/assets");
+        router.push("/admin/workshop");
         router.refresh();
       }, 1000);
     } catch (err: any) {
@@ -102,11 +102,11 @@ export function AssetNewClient() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
         <div className="flex items-center gap-3">
           <Link
-            href="/admin/finance/assets"
+            href="/admin/workshop"
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
           >
             <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
-            <span>Kembali ke Aset Tetap</span>
+            <span>Kembali ke Gudang Bahan & Alat</span>
           </Link>
           <div>
             <h1 className="text-xl font-bold text-[#1C1917]">
@@ -306,7 +306,7 @@ export function AssetNewClient() {
         {/* Bottom Actions Bar */}
         <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4">
           <Link
-            href="/admin/finance/assets"
+            href="/admin/workshop"
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
           >
             Batal & Kembali

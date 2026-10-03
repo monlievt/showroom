@@ -155,7 +155,8 @@ export async function createWorkshopSupplyAction(input: CreateSupplyInput, deduc
       return supply;
     });
 
-    revalidatePath("/admin/finance/assets");
+    revalidatePath("/admin/workshop");
+    revalidatePath("/admin/finance");
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Gagal menambahkan stok bahan:", error);
@@ -249,7 +250,8 @@ export async function recordSupplyUsageAction(input: RecordUsageInput) {
       };
     });
 
-    revalidatePath("/admin/finance/assets");
+    revalidatePath("/admin/workshop");
+    revalidatePath("/admin/finance");
     revalidatePath("/admin/inventory");
     revalidatePath("/admin/dashboard");
 
@@ -269,7 +271,7 @@ export async function deleteWorkshopSupplyAction(id: string) {
     await prisma.workshopSupply.delete({
       where: { id },
     });
-    revalidatePath("/admin/finance/assets");
+    revalidatePath("/admin/workshop");
     return { success: true };
   } catch (error: any) {
     console.error("Gagal menghapus stok bahan:", error);

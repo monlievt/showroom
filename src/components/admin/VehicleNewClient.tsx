@@ -1182,7 +1182,7 @@ export function VehicleNewClient() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* 1. Ganti Oli Mandiri */}
                 <Link
-                  href="/admin/finance/assets"
+                  href="/admin/workshop"
                   className="p-3.5 rounded-2xl border border-[#D9D4CB] bg-[#F7F5F2] hover:bg-[#FEF3C7] hover:border-[#D97706]/50 transition-all group flex flex-col justify-between text-left"
                 >
                   <div className="space-y-1">

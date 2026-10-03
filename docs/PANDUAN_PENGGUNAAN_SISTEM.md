@@ -166,7 +166,7 @@ Fitur pengawasan pajak aktif yang mendeteksi masa berlaku STNK dan kaleng plat n
 
 ### 2. Tombol Aksi di Atas Tabel Inventori:
 - **`+ Intake Unit Baru`** (`/admin/inventory/new`): Membuka form pendaftaran mobil baru dari lelang/pembelian.
-- **`Gudang Bahan & Servis Mandiri`** (`/admin/finance/assets`): Akses cepat ke gudang oli, filter, salon dan pencatatan laba jasa garasi.
+- **`Gudang Bahan & Servis Mandiri`** (`/admin/workshop`): Akses cepat ke gudang oli, filter, salon dan pencatatan laba jasa garasi.
 - **`Import Spreadsheet`** (`/admin/inventory/import`): Import massal data mobil lama dari file Excel/CSV.
 
 ### 3. Sistem 1 Tombol Aksi Utama Kontekstual + Dropdown `[...]`:
@@ -254,7 +254,7 @@ Inspektor mengukur dengan alat *Coating Thickness Gauge*:
 ---
 
 ## BAB 8: GUDANG BAHAN HABIS PAKAI, SERVIS MANDIRI & ASET PERALATAN
-*Lokasi: Sidebar > Menu Operasional > Gudang Bahan & Alat (`/admin/finance/assets`)*
+*Lokasi: Sidebar > Menu Operasional > Gudang Bahan & Alat (`/admin/workshop`)*
 
 ### 1. Tab 1: Stok Bahan Habis Pakai (Supplies)
 Menampung barang-barang yang dibeli grosir:
@@ -441,7 +441,7 @@ Untuk mencegah kebocoran data sensitif serta membatasi wewenang setiap personel 
 | **Dashboard Utama (`/admin`)** | ✅ Ya | ✅ Ya | ❌ Disembunyikan | ❌ Terblokir |
 | **Inventori Unit (`/admin/inventory`)** | ✅ Penuh | ✅ Penuh | ✅ Label: *Katalog Stok Ready* | ❌ Terblokir |
 | **Cek Fisik & Inspeksi (`/admin/inspections`)** | ✅ Penuh | ✅ Penuh | ❌ Disembunyikan | ❌ Terblokir |
-| **Gudang Bahan & Alat (`/admin/finance/assets`)** | ✅ Penuh | ✅ Penuh | ❌ Disembunyikan | ❌ Terblokir |
+| **Gudang Bahan & Alat (`/admin/workshop`)** | ✅ Penuh | ✅ Penuh | ❌ Disembunyikan | ❌ Terblokir |
 | **Penjualan & Piutang (`/admin/sales`)** | ✅ Penuh | ✅ Penuh | ❌ Disembunyikan | ❌ Terblokir |
 | **Keuangan & Kas: Buku Kas & Mutasi (`/admin/finance`)** | ✅ Penuh | ❌ Disembunyikan / Ditolak | ❌ Disembunyikan | ❌ Terblokir |
 | **Keuangan & Kas: Beban & Prive (`/admin/finance/expenses`)** | ✅ Penuh | ❌ Disembunyikan / Ditolak | ❌ Disembunyikan | ❌ Terblokir |
