@@ -9,18 +9,18 @@
 1. [Bab 1: Ikhtisar Arsitektur, Filosofi & Kebijakan Cash Tempo Garasi](#bab-1-ikhtisar-arsitektur-filosofi--kebijakan-cash-tempo-garasi)
 2. [Bab 2: Katalog Publik & Halaman Konsumen (Customer-Facing)](#bab-2-katalog-publik--halaman-konsumen-customer-facing)
 3. [Bab 3: Portal Khusus Investor (Investor Portal)](#bab-3-portal-khusus-investor-investor-portal)
-4. [Bab 4: Dashboard Eksekutif, Asisten AI & Radar Alarm Pajak STNK](#bab-4-dashboard-eksekutif-asisten-ai--radar-alarm-pajak-stnk)
-5. [Bab 5: Manajemen Data Mobil (Inventori) & Alur Status](#bab-5-manajemen-data-mobil-inventori--alur-status)
+4. [Bab 4: Dashboard Utama, Asisten AI & Radar Alarm Pajak STNK](#bab-4-dashboard-utama-asisten-ai--radar-alarm-pajak-stnk)
+5. [Bab 5: Manajemen Data Mobil (Inventori Unit) & Alur Status](#bab-5-manajemen-data-mobil-inventori-unit--alur-status)
 6. [Bab 6: Intake Unit Baru, Balai Lelang & Pencatatan Jatuh Tempo Pajak](#bab-6-intake-unit-baru-balai-lelang--pencatatan-jatuh-tempo-pajak)
 7. [Bab 7: Lembar Kerja Cek Fisik & Inspeksi 11 Panel (Standar ACV IBID)](#bab-7-lembar-kerja-cek-fisik--inspeksi-11-panel-standar-acv-ibid)
 8. [Bab 8: Gudang Bahan Habis Pakai, Servis Mandiri & Aset Peralatan](#bab-8-gudang-bahan-habis-pakai-servis-mandiri--aset-peralatan)
 9. [Bab 9: Penjualan Cash Tempo Garasi (Anti-Leasing), Piutang & Alarm](#bab-9-penjualan-cash-tempo-garasi-anti-leasing-piutang--alarm)
 10. [Bab 10: Pelunasan Pembayaran & Jembatan Bagi Hasil Investor](#bab-10-pelunasan-pembayaran--jembatan-bagi-hasil-investor)
 11. [Bab 11: Modul Keuangan: Buku Kas BCA, Biaya Operasional & Prive](#bab-11-modul-keuangan-buku-kas-bca-biaya-operasional--prive)
-12. [Bab 12: Manajemen Investor, Pool Modal & Aturan Tiering](#bab-12-manajemen-investor-pool-modal--aturan-tiering)
+12. [Bab 12: Investor & Bagi Hasil: Unit Siap Bagi Hasil, Akun & Aturan Tiering](#bab-12-investor--bagi-hasil-unit-siap-bagi-hasil-akun--aturan-tiering)
 13. [Bab 13: Dokumen Legal & Cetak PDF Otomatis (Termasuk SPK Pasal V)](#bab-13-dokumen-legal--cetak-pdf-otomatis-termasuk-spk-pasal-v)
 14. [Bab 14: Keamanan Sistem & Hak Akses Multi-Peran (RBAC 4 Role)](#bab-14-keamanan-sistem--hak-akses-multi-peran-rbac-4-role)
-15. [Bab 15: Pengaturan Sistem & Strategi Multi-Layer Backup VPS Sendiri](#bab-15-pengaturan-sistem--strategi-multi-layer-backup-vps-sendiri)
+15. [Bab 15: Sistem & Notifikasi serta Strategi Multi-Layer Backup VPS Sendiri](#bab-15-sistem--notifikasi-serta-strategi-multi-layer-backup-vps-sendiri)
 
 ---
 
@@ -90,12 +90,8 @@ Halaman depan showroom menyajikan 3 etalase utama yang disusun secara dinamis:
 - **Penanganan Unit Ready Jual:**
   - Galeri lengkap 11 sudut foto standar balai lelang ACV.
   - Skor Grade 4 Pilar (Mesin, Interior, Eksterior, Rangka) dan Total Grade.
-  - Lembar checklist 5 tab interaktif (Eksterior & Mikron Cat, Rangka Sasis, Mesin & Transmisi, Interior & Kelistrikan, Keabsahan Dokumen).
+  - Lembar checklist interaktif (Eksterior & Mikron Cat, Rangka Sasis, Mesin & Transmisi, Interior & Kelistrikan, Keabsahan Dokumen).
   - Tombol unduh Sertifikat Inspeksi Digital Resmi (PDF).
-- **Tombol WhatsApp Click-to-Chat Kontekstual:**
-  - Unit *Upcoming*: *"Halo Admin Nur Mobil, saya tertarik dengan unit yang SEGERA HADIR: [Merek Tipe Tahun] (Plat [Nomor]). Kapan estimasi unit selesai persiapan salon/inspeksi dan bisa dicek di garasi? Apakah bisa di-booking duluan?"*
-  - Unit *Ready*: *"Halo Admin Nur Mobil, saya tertarik unit [Merek Tipe Tahun] (Plat [Nomor]) seharga Rp [Harga]. Apakah unit ini masih READY atau sudah BOOKED?"*
-  - Unit *Sold*: *"Halo Admin Nur Mobil, saya melihat unit [Merek Tipe Tahun] yang sudah TERJUAL di katalog. Apakah ada rekomendasi stok unit serupa yang sedang intake atau segera ready di showroom?"*
 
 ---
 
@@ -110,8 +106,8 @@ Portal khusus dapat diakses melalui rute `/investor` untuk memberikan transparan
 
 ---
 
-## BAB 4: DASHBOARD EKSEKUTIF, ASISTEN AI & RADAR ALARM PAJAK STNK
-*Lokasi: Sidebar > Menu Utama > Dashboard (`/admin`)*
+## BAB 4: DASHBOARD UTAMA, ASISTEN AI & RADAR ALARM PAJAK STNK
+*Lokasi: Sidebar > Menu Operasional > Dashboard Utama (`/admin`)*
 
 Dashboard dirancang sebagai ruang komando harian pemilik showroom.
 
@@ -154,8 +150,8 @@ Fitur pengawasan pajak aktif yang mendeteksi masa berlaku STNK dan kaleng plat n
 
 ---
 
-## BAB 5: MANAJEMEN DATA MOBIL (INVENTORI) & ALUR STATUS
-*Lokasi: Sidebar > Menu Operasional > Data Mobil (`/admin/inventory`)*
+## BAB 5: MANAJEMEN DATA MOBIL (INVENTORI UNIT) & ALUR STATUS
+*Lokasi: Sidebar > Menu Operasional > Inventori Unit (`/admin/inventory`) (atau "Katalog Stok Ready" untuk Sales)*
 
 ### 1. Daftar Tabel Inventori Cerdas
 - Menampilkan foto mini unit, plat nomor, merk, varian tahun, transmisi, HPP modal terkini, target harga jual, dan margin proyeksi.
@@ -165,10 +161,15 @@ Fitur pengawasan pajak aktif yang mendeteksi masa berlaku STNK dan kaleng plat n
 - **Tautan Cepat Pratinjau Publik (*Direct Preview Link*):**
   * Tautan langsung di bawah nama mobil (*"Tampilan Segera Hadir"* / *"Tampilan Katalog"*) yang membuka pratinjau halaman katalog publik unit terkait di tab baru.
 - **Kolom Status Pajak STNK:** Menampilkan tanggal jatuh tempo PKB dan status badge (🟢 Aman, 🟡 H-30, 🔴 Overdue) langsung pada baris tabel unit.
-- **Filter Cepat:** Tab status *Semua*, *Intake*, *Perbaikan*, *Siap Jual*, *Booking*, dan *Terjual Lunas*.
+- **Filter Cepat:** Tab status *Semua Unit*, *Intake Baru*, *Pengerjaan / Bengkel*, *Ready Jual*, *Booked / DP*, dan *Terjual Lunas*.
 - **Pencarian Cepat:** Pencarian instan berdasarkan plat nomor, nama merk, tipe, atau warna mobil.
 
-### 2. Sistem 1 Tombol Aksi Utama Kontekstual + Dropdown `[...]`
+### 2. Tombol Aksi di Atas Tabel Inventori:
+- **`+ Intake Unit Baru`** (`/admin/inventory/new`): Membuka form pendaftaran mobil baru dari lelang/pembelian.
+- **`Gudang Bahan & Servis Mandiri`** (`/admin/finance/assets`): Akses cepat ke gudang oli, filter, salon dan pencatatan laba jasa garasi.
+- **`Import Spreadsheet`** (`/admin/inventory/import`): Import massal data mobil lama dari file Excel/CSV.
+
+### 3. Sistem 1 Tombol Aksi Utama Kontekstual + Dropdown `[...]`:
 Menggantikan ikon kecil yang membingungkan dengan tindakan paling logis berdasarkan siklus unit:
 - Unit **INTAKE** ➔ Tombol Utama: **Cek Fisik** (warna biru)
 - Unit **IN_REPAIR** ➔ Tombol Utama: **Catat Servis** (warna oranye)
@@ -185,37 +186,10 @@ Menggantikan ikon kecil yang membingungkan dengan tindakan paling logis berdasar
   * Ubah Status Kendaraan
   * Share via WhatsApp
 
-### 3. Update Status Manual & Panduan Alur (`/admin/inventory/[id]/status`)
-Digunakan untuk memindahkan status mobil secara manual dengan validasi aturan alur:
-- **Alur Standar:** `INTAKE` ➔ `IN_REPAIR` ➔ `READY_FOR_SALE` ➔ `BOOKED` ➔ `SOLD_SETTLED`.
-- Unit kondisi sangat istimewa dapat langsung dipromosikan dari `INTAKE` ➔ `READY_FOR_SALE`.
-- Mengubah ke `READY_FOR_SALE` otomatis membuka galeri 11 foto dan sertifikat digital inspeksi di web publik.
-
-### 4. Upload Foto 11 Titik Standar & Dokumen Legalitas (`/admin/inventory/[id]/media`)
-- **Slot Wajib 11 Titik ACV IBID:** Memandu pengambilan foto dari 4 sudut eksterior, 2 interior, ruang mesin, pilar/sealer, kolong sasis, kolong dasbor, dan bagasi.
-- **Indikator Khusus Teaser Publik:**
-  * Pada slot **Tampak Depan Serong Kanan (`EXT_FRONT_RIGHT / FRONT_3_4`)**, tertera lencana: **`⭐ Teaser Segera Hadir`**.
-  * Memberi petunjuk kepada tim lapangan bahwa foto sudut inilah yang otomatis dipilih sistem untuk dipajang di katalog publik saat mobil berstatus *Intake* maupun *Dalam Persiapan Salon*.
-- **Kategori Foto Custom (4 Klaster):**
-  * Klaster 1: `CONDITION_INTAKE` (Kondisi saat baru tiba apa adanya)
-  * Klaster 2: `CONDITION_BEFORE_REPAIR` & `CONDITION_AFTER_REPAIR` (Detail cacat bodi & hasil salon)
-  * Klaster 3: `FINAL_LISTING` (Foto siap tayang katalog)
-  * Klaster 4: `DOCUMENT_PROOF` (Kuitansi, nota bengkel, BAST serah terima)
-- **Arsip Scan Dokumen:** STNK, BPKB, Faktur Asli, KTP Pemilik, dan SPK Perjanjian.
-
-### 5. Catat Pengeluaran Unit Mobil (`/admin/inventory/[id]/expenses/new`)
-Setiap kali ada biaya eksternal:
-- Kategori pengeluaran: *Body Paint (Cat Bodi)*, *Mechanical (Kaki-kaki/Mesin)*, *Detailing Salon*, *Sparepart*, *Towing/Pengiriman*, *Pajak/Mutasi*, atau *Lainnya*.
-- Masukkan nama vendor (misal: Bengkel Cat Pak Joko), tanggal, nominal, dan metode pembayaran.
-- Nominal otomatis menambah HPP modal unit tersebut dan tercatat di buku kas.
-
-### 6. Import Data Massal Spreadsheet (`/admin/inventory/import`)
-- Mendukung upload file Excel (`.xlsx`) atau `.csv` untuk onboarding cepat showroom baru.
-
 ---
 
 ## BAB 6: INTAKE UNIT BARU, BALAI LELANG & PENCATATAN JATUH TEMPO PAJAK
-*Lokasi: Sidebar > Menu Operasional > Data Mobil > + Tambah Mobil Baru (`/admin/inventory/new`)*
+*Lokasi: Sidebar > Menu Operasional > Inventori Unit > Tombol + Intake Unit Baru (`/admin/inventory/new`)*
 
 ### A. Panduan Pengisian Form Intake:
 1. **Identitas Kendaraan:**
@@ -235,7 +209,7 @@ Setiap kali ada biaya eksternal:
    - Biaya Administrasi Lelang.
    - Target Harga Jual dan Batas Minimal Harga Jual (*Bottom Price* untuk negosiasi sales).
 5. **Status Dokumen & Masa Tunggu:**
-   - Status BPKB: *READY* (langsung ada) atau *PENDING_ARRIVAL* (menunggu kedatangan).
+   - Status BPKB: *READY* (langsung ada) atau *PROCESS_1_2_WEEKS* (menunggu kedatangan).
    - Estimasi Hari Tunggu (default: 7 hari untuk lelang).
 
 ### B. Next-Step Success Dialog (Interaktif):
@@ -247,8 +221,8 @@ Setelah Anda menekan tombol **Simpan Unit Baru**, sistem memunculkan dialog pop-
 
 ---
 
-## BAB 7: LEMBAR KERJA CEK FISIK & INSPEKSI 11 PANEL
-*Lokasi: Sidebar > Menu Operasional > Cek Fisik Unit (`/admin/inspections`)*
+## BAB 7: LEMBAR KERJA CEK FISIK & INSPEKSI 11 PANEL (STANDAR ACV IBID)
+*Lokasi: Sidebar > Menu Operasional > Cek Fisik & Inspeksi (`/admin/inspections`)*
 
 Fitur ini mengadopsi standar inspeksi profesional balai lelang ACV IBID untuk menjamin kejujuran kondisi unit kepada pembeli.
 
@@ -341,7 +315,7 @@ Di samping baris piutang, klik ikon WhatsApp hijau untuk langsung mengirim pesan
 ---
 
 ## BAB 10: PELUNASAN PEMBAYARAN & JEMBATAN BAGI HASIL INVESTOR
-*Lokasi: Tabel Penjualan > Tombol `+` Catat Pembayaran (`/admin/sales/[id]/payment`)*
+*Lokasi: Sidebar > Penjualan & Piutang > Tombol + Catat Pembayaran Masuk (`/admin/sales/[id]/payment`)*
 
 ### 1. Mencatat Pembayaran Angsuran:
 - Masukkan nominal pembayaran yang masuk.
@@ -358,7 +332,7 @@ Saat pembayaran mencapai 100% (sisa piutang menjadi Rp 0):
   * Menyediakan **Tombol Eksekusi Bagi Hasil Investor Sekarang (1-Klik)**:
     - Admin cukup menekan tombol ini langsung di dalam pop-up.
     - Sistem menjalankan transaksi database deterministik: memotong modal pokok, menghitung dividen laba sesuai aturan tiering, mencatat mutasi di *Capital Ledger*, dan menghasilkan snapshot permanen.
-  * Tautan langsung ke halaman riwayat bagi hasil investor.
+  * Tautan langsung ke halaman riwayat bagi hasil investor (`/admin/investors/history`).
 - **Jika Mobil Modal Sendiri (100% Showroom):**
   * Dialog mengonfirmasi bahwa seluruh laba kotor unit telah masuk kas showroom.
 - **Tombol Dokumen Lunas Langsung:** Tersedia tombol cetak BAST (penyerahan BPKB & STNK asli yang selama ini ditahan) dan Kuitansi Lunas di tempat.
@@ -366,20 +340,22 @@ Saat pembayaran mencapai 100% (sisa piutang menjadi Rp 0):
 ---
 
 ## BAB 11: MODUL KEUANGAN: BUKU KAS BCA, BIAYA OPERASIONAL & PRIVE
-*Lokasi: Sidebar > Menu Keuangan (`/admin/finance`)*
+*Lokasi: Sidebar > Keuangan & Kas > Buku Kas & Mutasi (`/admin/finance`) & Beban & Prive (BCA) (`/admin/finance/expenses`)*
 
 ### 1. Buku Kas & Rekening BCA (`/admin/finance`)
 - Menampilkan Saldo Kas Berjalan riil rekening BCA showroom.
 - **Mutasi Masuk:** Otomatis tercatat saat ada DP penjualan, pelunasan konsumen, atau setoran modal investor/owner.
 - **Mutasi Keluar:** Otomatis tercatat saat kulakan unit lelang, pembayaran bengkel perbaikan, biaya operasional garasi, penarikan dividen investor, atau prive owner.
+- Tombol aksi di halaman: **`+ Setor Ekuitas Pemilik`** (`/admin/finance/equity/new`) dan **`+ Catat Prive (Pribadi)`** (`/admin/finance/prive/new`).
 
-### 2. Biaya Operasional Showroom (`/admin/finance/expenses`)
+### 2. Beban & Prive BCA (`/admin/finance/expenses`)
 Mencatat beban tetap bulanan yang tidak melekat pada satu unit mobil tertentu:
 - Sewa Lahan/Garasi Showroom.
 - Tagihan Listrik PLN & Air PDAM Garasi.
 - Biaya Konsumsi Mekanik & Penjaga Showroom.
 - Gaji Karyawan & Komisi Penjualan Marketing.
 - Kuota Internet, Pembelian Wi-Fi, dan ATK Kantor.
+- Tombol aksi: **`+ Catat Biaya Operasional`** dan **`+ Tarik Prive (Pribadi)`**.
 
 ### 3. Penarikan Dana Pribadi Pemilik / Prive (`/admin/finance/prive/new`)
 Setiap kali pemilik showroom mengambil uang kas untuk keperluan pribadi keluarga:
@@ -391,29 +367,30 @@ Digunakan saat pemilik menyuntikkan dana pribadi baru ke rekening BCA showroom u
 
 ---
 
-## BAB 12: MANAJEMEN INVESTOR, POOL MODAL & ATURAN TIERING
-*Lokasi: Sidebar > Menu Keuangan > Manajemen Investor (`/admin/investors`)*
+## BAB 12: INVESTOR & BAGI HASIL: UNIT SIAP BAGI HASIL, AKUN & ATURAN TIERING
+*Lokasi: Sidebar > Investor & Bagi Hasil (`/admin/investors`)*
+
+Modul ini memiliki 4 sub-menu navigasi di Sidebar maupun sub-nav tab:
 
 ### 1. Unit Siap Bagi Hasil (`/admin/investors`)
-Daftar seluruh mobil yang sudah terjual lunas 100% namun dividen labanya belum dibagikan kepada pemodal. Memuat harga beli, total HPP, harga jual, dan laba kotor riil.
+Daftar seluruh mobil yang sudah terjual lunas 100% namun dividen labanya belum dibagikan kepada pemodal. Memuat harga beli, total HPP, harga jual, dan laba kotor riil, lengkap dengan tombol eksekusi bagi hasil per unit.
 
 ### 2. Daftar Akun Investor (`/admin/investors/accounts`)
 Mencatat profil pemodal rekanan:
-- Nama Lengkap Investor, Nomor WhatsApp, Nomor Rekening Bank BCA/Mandiri untuk transfer dividen, dan Jenis Investor (*Pemodal Tetap / Konsorsium / Pemodal Khusus 1 Unit*).
+- Nama Lengkap Investor, Nomor WhatsApp, Nomor Rekening Bank BCA/Mandiri untuk transfer dividen, dan Jenis Investor (*Mitra Pihak Ketiga / Ibu 4 Saudara / Modal Owner*).
+- Tombol aksi: **`+ Investor Baru`** (`/admin/investors/new`) dan **`+ Setor Modal`** (`/admin/investors/deposit/new`).
 
-### 3. Setoran Modal Investor (`/admin/investors/deposit/new`)
-Mencatat penerimaan transfer dana modal dari investor ke rekening showroom. Dana ini otomatis masuk ke saldo kas BCA dan menambah modal siap dialokasikan (*Active Allocated Capital*).
-
-### 4. Riwayat Eksekusi Bagi Hasil (`/admin/investors/history`)
+### 3. Riwayat Distribusi (`/admin/investors/history`)
 Laporan audit permanen setiap pembagian dividen yang pernah dilakukan:
 - Snapshot tanggal eksekusi.
 - Rincian pembagian: Berapa bagian laba untuk Investor (misal 50%) dan berapa untuk Owner/Garasi (misal 50%).
 - Fitur *Reverse Distribution* (jika terjadi salah input transaksi dengan proteksi rollback mutasi modal).
 
-### 5. Aturan Pembagian Laba Berjenjang (Tier Rules — `/admin/investors/tier-rules`)
+### 4. Aturan Tier 4 Saudara (`/admin/investors/tier-rules`)
 Showroom dapat mengatur aturan pembagian dividen otomatis berdasarkan besaran keuntungan unit:
-- **Tier 1 (Laba Standar, misal Rp 0 s/d Rp 10.000.000):** Pembagian 50% Investor : 50% Showroom.
-- **Tier 2 (Laba Tebal, misal > Rp 10.000.000):** Pembagian 60% Showroom : 40% Investor (atau sebaliknya sesuai kesepakatan tertulis).
+- **Tier 1 (Laba Sangat Tinggi, > Rp 10.000.000):** Rp 1.000.000 per orang untuk 4 saudara.
+- **Tier 2 (Laba Tinggi, Rp 5.000.000 - Rp 10.000.000):** Rp 500.000 per orang untuk 4 saudara.
+- **Tier 3 (Laba Wajar, < Rp 5.000.000):** Rp 250.000 per orang untuk 4 saudara.
 - Aturan dieksekusi secara otomatis oleh sistem tanpa ada perselisihan hitungan manual.
 
 ---
@@ -455,43 +432,43 @@ Sistem dilengkapi generator dokumen PDF berstandar legal industri showroom mobil
 
 Untuk mencegah kebocoran data sensitif serta membatasi wewenang setiap personel tim garasi, sistem menerapkan kontrol akses berbasis peran (**Role-Based Access Control / RBAC**).
 
-### Matriks Hak Akses 4 Peran:
+### Matriks Hak Akses 4 Peran (Sesuai Navigasi Sidebar Riil):
 
-| Fitur / Modul Menu | `OWNER` (Pemilik) | `STAFF_ADMIN` (Admin Garasi) | `SALES` (Marketing) | `INVESTOR` (Pemodal) |
+| Modul / Menu Sidebar | `OWNER` (Pemilik) | `STAFF_ADMIN` (Admin Garasi) | `SALES` (Marketing) | `INVESTOR` (Pemodal) |
 | :--- | :---: | :---: | :---: | :---: |
 | **Katalog Publik (`/katalog`)** | ✅ Ya | ✅ Ya | ✅ Ya | ✅ Ya |
 | **Portal Investor (`/investor`)** | ✅ Ya | ❌ Dibatasi | ❌ Dibatasi | ✅ Akses Penuh |
-| **Dashboard Eksekutif (`/admin`)** | ✅ Ya | ✅ Terbatas (Tanpa Kas Prive) | ✅ Funnel Jual | ❌ Terblokir |
-| **Data Mobil & Cek Fisik (`/admin/inventory`)** | ✅ Penuh | ✅ Penuh | ✅ Lihat & Intake | ❌ Terblokir |
-| **Gudang Bahan & Servis Mandiri** | ✅ Penuh | ✅ Penuh | ❌ Ditolak | ❌ Terblokir |
-| **Penjualan & SPK Cash Tempo** | ✅ Penuh | ✅ Penuh | ✅ Input Jual | ❌ Terblokir |
-| **Buku Kas Besar BCA (`/admin/finance`)** | ✅ Penuh | ❌ Ditolak | ❌ Ditolak | ❌ Terblokir |
-| **Biaya Operasional Showroom** | ✅ Penuh | ✅ Input Beban | ❌ Ditolak | ❌ Terblokir |
-| **Tarik Prive Pribadi Owner** | ✅ Penuh | ❌ Ditolak | ❌ Ditolak | ❌ Terblokir |
-| **Manajemen Investor & Bagi Hasil** | ✅ Penuh | ❌ Ditolak | ❌ Ditolak | ❌ Terblokir |
-| **Pengaturan Sistem & Backup Database** | ✅ Penuh | ❌ Ditolak | ❌ Ditolak | ❌ Terblokir |
+| **Dashboard Utama (`/admin`)** | ✅ Ya | ✅ Ya | ❌ Disembunyikan | ❌ Terblokir |
+| **Inventori Unit (`/admin/inventory`)** | ✅ Penuh | ✅ Penuh | ✅ Label: *Katalog Stok Ready* | ❌ Terblokir |
+| **Cek Fisik & Inspeksi (`/admin/inspections`)** | ✅ Penuh | ✅ Penuh | ❌ Disembunyikan | ❌ Terblokir |
+| **Gudang Bahan & Alat (`/admin/finance/assets`)** | ✅ Penuh | ✅ Penuh | ❌ Disembunyikan | ❌ Terblokir |
+| **Penjualan & Piutang (`/admin/sales`)** | ✅ Penuh | ✅ Penuh | ❌ Disembunyikan | ❌ Terblokir |
+| **Keuangan & Kas: Buku Kas & Mutasi (`/admin/finance`)** | ✅ Penuh | ❌ Disembunyikan / Ditolak | ❌ Disembunyikan | ❌ Terblokir |
+| **Keuangan & Kas: Beban & Prive (`/admin/finance/expenses`)** | ✅ Penuh | ❌ Disembunyikan / Ditolak | ❌ Disembunyikan | ❌ Terblokir |
+| **Investor & Bagi Hasil (`/admin/investors`)** | ✅ Penuh | ❌ Disembunyikan / Ditolak | ❌ Disembunyikan | ❌ Terblokir |
+| **Sistem & Notifikasi (`/admin/settings`)** | ✅ Penuh | ❌ Disembunyikan / Ditolak | ❌ Disembunyikan | ❌ Terblokir |
 
 ### 1. Peran `OWNER` (Hak Akses Penuh)
 - Memegang kendali mutlak seluruh sistem, saldo kas BCA, mutasi prive, pembagian dividen investor, pengaturan API Gemini, dan download backup database.
 
 ### 2. Peran `STAFF_ADMIN` (Operasional Harian Garasi)
-- Mengelola intake lelang, cek fisik, alokasi oli mandiri, pencatatan servis luar, pengeluaran operasional toko, dan transaksi penjualan.
-- **Terproteksi:** Tidak dapat melihat saldo kas besar BCA, tidak dapat mengubah bagi hasil investor, dan tidak dapat menarik prive.
+- Mengelola intake lelang, cek fisik, alokasi oli mandiri, pencatatan servis luar, dan transaksi penjualan unit.
+- **Terproteksi:** Ditolak dari membuka modul Kas Besar Bank BCA (`/admin/finance`), Bagi Hasil Investor (`/admin/investors`), dan Pengaturan Sistem (`/admin/settings`).
 
 ### 3. Peran `SALES` (Pemasaran & Konsumen)
-- Fokus pada penjualan mobil, pembuatan SPK Cash Tempo, pembuatan kuitansi DP, dan melihat spesifikasi unit di katalog/inventori.
-- **Terproteksi:** Ditolak dari semua data finansial garasi, gudang bahan, pengeluaran operasional, kas BCA, dan investor.
+- Fokus pada katalog stok siap jual (`Katalog Stok Ready`) dan spesifikasi mobil.
+- **Terproteksi:** Hanya diizinkan melihat unit siap jual. Rute internal lainnya otomatis diredirect ke `/admin/inventory?status=READY_FOR_SALE`.
 
 ### 4. Peran `INVESTOR` (Pemodal Mitra)
 - Hanya dapat mengakses rute `/investor` untuk melihat kinerja modal miliknya sendiri. Jika mencoba membuka `/admin/*`, middleware akan otomatis mengarahkan ke `/investor`.
 
 ### 5. Mekanisme Login & Pengalihan Cepat
-- Halaman login (`/login`) menyediakan pemilih peran cepat untuk mempermudah pengujian dan pergantian sesi tugas staf di kantor garasi.
+- Halaman login (`/login`) menyediakan pemilih peran cepat (👑 Owner, 🔧 Staff Garasi, 🎯 Tim Sales, 🤝 Mitra Investor) dengan PIN default `123456`.
 
 ---
 
-## BAB 15: PENGATURAN SISTEM & STRATEGI MULTI-LAYER BACKUP VPS SENDIRI
-*Lokasi: Sidebar > Menu Pengaturan (`/admin/settings`)*
+## BAB 15: SISTEM & NOTIFIKASI SERTA STRATEGI MULTI-LAYER BACKUP VPS SENDIRI
+*Lokasi: Sidebar > Sistem & Notifikasi (`/admin/settings`)*
 
 ### 1. Kunci API Google Gemini (AI):
 - Masukkan API Key gratis dari Google AI Studio (`AIzaSy...`) untuk mengaktifkan asisten AI eksekutif.
@@ -533,7 +510,7 @@ graph TD
   `https://github.com/monlievt/showroom.git`
 
 #### E. Pencadangan Instan via Web (1-Klik Tanpa SSH):
-- Di menu **Pengaturan Sistem** (`/admin/settings`), terdapat tombol **Unduh Snapshot Database (JSON)**.
+- Di menu **Sidebar > Sistem & Notifikasi** (`/admin/settings`), terdapat tombol **Unduh Snapshot Database (JSON)**.
 - Setiap saat Owner ingin menyimpan cadangan di laptop pribadi, klik tombol ini untuk langsung mengunduh file JSON lengkap berisi seluruh data mobil, penjualan, kas BCA, dan investor.
 
 ### 4. Jadwal Otomasi Crontab di VPS:

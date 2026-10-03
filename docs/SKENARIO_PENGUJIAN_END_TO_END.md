@@ -31,29 +31,28 @@
 ## SKENARIO 01: SETUP FINANSIAL, INVESTOR & ATURAN TIERING
 
 ### 🎯 Tujuan:
-Memastikan sistem siap menampung dana modal investor dan aturan bagi hasil sebelum membeli unit.
+Memastikan sistem siap menampung dana modal investor dan aturan bagi hasil sebelum membeli unit mobil pertama kali dari 0.
 
 ### 📝 Langkah Pengujian:
-1. Buka menu **Sidebar > Manajemen Investor > Akun Investor** (`/admin/investors/accounts`).
-2. Klik tombol **+ Tambah Investor Baru** (`/admin/investors/new`).
+1. Buka menu **Sidebar > Investor & Bagi Hasil > Daftar Akun Investor** (`/admin/investors/accounts`).
+2. Klik tombol **+ Investor Baru** (`/admin/investors/new`).
 3. Masukkan data uji:
    - **Nama Lengkap:** `Bpk. Hendra Gunawan`
    - **Nomor Telepon/WA:** `081234567890`
-   - **Nomor Rekening Bank:** `BCA - 8830192819 a.n. Hendra Gunawan`
-   - **Jenis Kemitraan:** `Tetap (Pool Fund)`
-4. Klik **Simpan Akun Investor**.
-5. Buka tab **Setoran Modal** (`/admin/investors/deposit/new`), masukkan:
+   - **Kategori Investor:** Pilih `Mitra Pihak Ketiga (THIRD_PARTY)` atau `Ibu / 4 Saudara (MOTHER_SIBLING)`.
+4. Klik **Simpan Investor**.
+5. Di halaman daftar akun investor, klik tombol **+ Setor Modal** (`/admin/investors/deposit/new`), masukkan:
    - **Pilih Investor:** `Bpk. Hendra Gunawan`
    - **Nominal Setoran:** `Rp 150.000.000`
-   - **Metode:** `Transfer BCA Rekening Showroom`
+   - **Catatan:** `Setoran modal awal investasi pool fund kulakan lelang`
    - **Tanggal:** Hari ini.
 6. Klik **Simpan Setoran Modal**.
-7. Buka tab **Aturan Bagi Hasil (Tier Rules)** (`/admin/investors/tier-rules`):
-   - Pastikan aturan aktif: *Tier 1: Laba s/d Rp 10.000.000 (50% Investor : 50% Showroom)*.
+7. Buka menu **Sidebar > Investor & Bagi Hasil > Aturan Tier 4 Saudara** (`/admin/investors/tier-rules`):
+   - Pastikan aturan aktif berjenjang sudah siap: *Tier 1 (> Rp 10.000.000)*, *Tier 2 (Rp 5.000.000 - Rp 10.000.000)*, dan *Tier 3 (< Rp 5.000.000)*.
 
 ### ✅ Hasil yang Diharapkan:
-- Profil Bpk. Hendra Gunawan tersimpan rapi.
-- Saldo Kas BCA bertambah Rp 150.000.000.
+- Profil Bpk. Hendra Gunawan tersimpan rapi di daftar investor.
+- Saldo Kas BCA (`Sidebar > Keuangan & Kas > Buku Kas & Mutasi`) bertambah Rp 150.000.000.
 - Modal siap dialokasikan (*Active Allocated Capital*) bertambah Rp 150.000.000.
 
 ---
@@ -61,26 +60,27 @@ Memastikan sistem siap menampung dana modal investor dan aturan bagi hasil sebel
 ## SKENARIO 02: GUDANG BAHAN HABIS PAKAI & PERALATAN GARASI
 
 ### 🎯 Tujuan:
-Menguji pencatatan stok grosir oli, filter oli, serta inventaris mesin/alat bengkel.
+Menguji pencatatan stok grosir oli, filter oli, serta inventaris mesin/alat bengkel mandiri di garasi.
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Sidebar > Gudang Bahan & Alat** (`/admin/finance/assets`).
 2. Di tab **Stok Bahan Habis Pakai**, klik **+ Tambah Bahan Habis Pakai**:
    - **Nama Bahan:** `Oli Mesin TMO 10W-40 (Galon 4 Liter)`
-   - **Kategori:** `Oli & Pelumas Mesin`
+   - **Kategori:** `Oli & Pelumas Mesin (OIL_AND_FLUIDS)`
    - **Jumlah Stok Awal:** `10`
    - **Satuan:** `Galon`
    - **Harga Beli Grosir:** `Rp 260.000` per galon.
    - Klik **Simpan Bahan**.
 3. Klik **+ Tambah Bahan Habis Pakai** lagi untuk filter:
    - **Nama Bahan:** `Filter Oli Original Avanza/Xenia`
-   - **Kategori:** `Filter Oli & Udara`
+   - **Kategori:** `Filter Oli & Udara (FAST_MOVING_PARTS)`
    - **Jumlah Stok Awal:** `10`
    - **Satuan:** `Pcs`
    - **Harga Beli Grosir:** `Rp 35.000` per pcs.
    - Klik **Simpan Bahan**.
 4. Pindah ke tab **Aset Tetap & Peralatan**, klik **+ Tambah Aset Peralatan** (`/admin/finance/assets/new`):
    - **Nama Alat:** `Mesin Cuci Steam High Pressure Laguna 70`
+   - **Kategori:** `WORKSHOP_EQUIPMENT`
    - **Harga Beli:** `Rp 1.250.000`
    - **Kondisi:** `BAIK / BERFUNGSI NORMAL`
    - Klik **Simpan Aset**.
@@ -98,7 +98,7 @@ Menguji pencatatan stok grosir oli, filter oli, serta inventaris mesin/alat beng
 Menguji form input intake mobil lelang, pencatatan tanggal jatuh tempo pajak STNK, dan dialog aksi lanjutan pasca simpan unit.
 
 ### 📝 Langkah Pengujian:
-1. Buka menu **Sidebar > Data Mobil > + Tambah Mobil Baru** (`/admin/inventory/new`).
+1. Buka menu **Sidebar > Inventori Unit** (`/admin/inventory`), lalu klik tombol **+ Intake Unit Baru** (`/admin/inventory/new`).
 2. Masukkan data uji mobil lelang:
    - **Plat Nomor:** `B 2489 KMR`
    - **Merk & Model:** `Toyota Avanza 1.3 G M/T`
@@ -115,8 +115,8 @@ Menguji form input intake mobil lelang, pencatatan tanggal jatuh tempo pajak STN
    - **Biaya Admin Lelang:** `Rp 3.500.000`
    - **Target Harga Jual:** `Rp 148.000.000`
    - **Batas Minimal Jual:** `Rp 142.000.000`
-   - **Status BPKB:** `PENDING_ARRIVAL` (Estimasi: 7 hari).
-3. Hubungkan ke Investor Bpk. Hendra Gunawan.
+   - **Status BPKB:** `READY` atau `PROCESS_1_2_WEEKS`.
+3. Hubungkan modal unit ke Investor Bpk. Hendra Gunawan.
 4. Klik tombol **Simpan Unit Baru**.
 5. Perhatikan layar pop-up yang muncul: **Next-Step Success Dialog**.
 
@@ -134,7 +134,7 @@ Menguji form input intake mobil lelang, pencatatan tanggal jatuh tempo pajak STN
 Menguji pemotongan stok bahan habis pakai, penambahan HPP mobil, dan pencatatan laba jasa garasi mandiri.
 
 ### 📝 Langkah Pengujian:
-1. Pada pop-up Next-Step Dialog (atau via menu **Gudang Bahan & Alat**), pilih **Ganti Oli Mandiri Sekarang**.
+1. Pada pop-up Next-Step Dialog (atau via menu **Sidebar > Gudang Bahan & Alat**), pilih **Ganti Oli Mandiri Sekarang**.
 2. Di modal alokasi bahan:
    - **Pilih Unit:** `B 2489 KMR — Toyota Avanza 2019`
    - **Bahan 1:** `Oli Mesin TMO 10W-40` (Pakai: 1 Galon).
@@ -159,7 +159,7 @@ Menguji pemotongan stok bahan habis pakai, penambahan HPP mobil, dan pencatatan 
 Menguji pencatatan biaya pengerjaan bengkel luar dan pencetakan surat jalan pengantar sopir.
 
 ### 📝 Langkah Pengujian:
-1. Buka menu **Data Mobil (Inventori)** (`/admin/inventory`), cari `B 2489 KMR`.
+1. Buka menu **Sidebar > Inventori Unit** (`/admin/inventory`), cari `B 2489 KMR`.
 2. Klik tombol menu titik tiga `[...]` pada baris mobil, pilih **Catat Servis / Biaya Unit**.
 3. Masukkan data:
    - **Kategori Biaya:** `BODY_PAINT (Cat & Bodi)`
@@ -184,16 +184,17 @@ Menguji pencatatan biaya pengerjaan bengkel luar dan pencetakan surat jalan peng
 Menguji lembar kerja cek fisik 11 panel ketebalan cat bodi dan pencetakan sertifikat inspeksi PDF.
 
 ### 📝 Langkah Pengujian:
-1. Pada tabel inventori, klik tombol aksi utama biru: **Cek Fisik** (`/admin/inspections/new`).
-2. Masukkan data inspeksi:
-   - **Panel Kap Mesin:** Ketebalan `110 µm` (Status: *ORIGINAL*).
-   - **Panel Bumper/Fender Kiri:** Ketebalan `180 µm` (Status: *REPAINT* rapi).
-   - **Panel Atap (Roof):** Ketebalan `95 µm` (Status: *ORIGINAL*).
+1. Buka menu **Sidebar > Inventori Unit**, klik tombol aksi utama biru: **Cek Fisik** (atau buka menu **Sidebar > Cek Fisik & Inspeksi** `/admin/inspections`, lalu pilih **Detail Cek** pada unit).
+2. Masukkan data inspeksi 11 panel:
+   - **Kap Mesin:** Ketebalan `110 µm` (Status: *ORIGINAL*).
+   - **Bumper/Fender Kiri:** Ketebalan `180 µm` (Status: *REPAINT* rapi).
+   - **Atap (Roof):** Ketebalan `95 µm` (Status: *ORIGINAL*).
    - Panel lainnya diisi standar pabrik (90-120 µm).
 3. Beri penilaian Grade:
    - **Grade Rangka:** `Grade A` (Bebas tabrakan, apron utuh, bebas rendam banjir).
-   - **Grade Mesin:** `Grade B+` (Kering, suara halus, tidak ada rembes).
+   - **Grade Mesin:** `Grade B` (Kering, suara halus, tidak ada rembes).
    - **Grade Interior:** `Grade B` (Bersih, wangi, jok orisinil).
+   - **Grade Eksterior:** `Grade B` (Cat rapi).
 4. Klik **Simpan Hasil Cek Fisik**.
 5. Klik tombol **Cetak Laporan Inspeksi Fisik (PDF)**.
 
@@ -209,8 +210,8 @@ Menguji lembar kerja cek fisik 11 panel ketebalan cat bodi dan pencetakan sertif
 Menguji perpindahan unit ke lantai pamer showroom dan pencetakan label gantung kaca spion.
 
 ### 📝 Langkah Pengujian:
-1. Buka tabel inventori, klik tombol aksi oranye: **Tag Spion** atau pindahkan status ke **READY_FOR_SALE**.
-2. Klik tombol **Cetak Tag Spion (PDF)** (`/api/pdf/spec-tag/[id]`).
+1. Buka menu **Sidebar > Inventori Unit**, klik tombol aksi titik tiga `[...]` ➔ **Ubah Status Kendaraan**, lalu pilih **READY_FOR_SALE (Siap Dipasarkan)**.
+2. Klik tombol aksi oranye: **Tag Spion** (`/api/pdf/spec-tag/[id]`).
 3. Periksa tampilan dokumen PDF di browser.
 
 ### ✅ Hasil yang Diharapkan:
@@ -224,52 +225,16 @@ Menguji perpindahan unit ke lantai pamer showroom dan pencetakan label gantung k
 
 ### 🎯 Tujuan:
 1. Memverifikasi unit baru masuk (`INTAKE`) dan sedang salon (`IN_REPAIR`) otomatis tayang sebagai **Segera Hadir (Upcoming Stock)** di homepage dan katalog publik.
-2. Memverifikasi batasan keamanan privasi: hanya **1 foto teaser tampak depan serong kanan (`FRONT_3_4`)** yang dapat diakses publik, dan foto cacat internal tidak bocor.
+2. Memverifikasi batasan privasi: hanya **1 foto teaser tampak depan serong kanan** yang dapat diakses publik, dan foto internal baret tidak bocor.
 3. Memverifikasi format harga psikologis (contoh: `Estimasi Rp 150 Jutaan`) berjalan otomatis.
-4. Memverifikasi halaman detail unit yang belum diinspeksi **tidak menampilkan nilai grade palsu**, melainkan kartu status `TAHAP CEK` dan pratinjau edukasi 4 pilar.
+4. Memverifikasi halaman detail unit yang belum diinspeksi menampilkan kartu status `TAHAP CEK` dan pratinjau edukasi 4 pilar.
 5. Memverifikasi unit yang beralih status ke `READY_FOR_SALE` otomatis membuka galeri 11 foto lengkap & laporan inspeksi digital.
 
----
-
-### 📝 Langkah Pengujian Bagian A: Unit Segera Hadir (Upcoming Stock)
-1. **Verifikasi Tampilan Homepage (`http://localhost:3000/`):**
-   - Scroll ke seksi **"Segera Hadir di Showroom (Upcoming Stock)"**.
-   - Pastikan unit *Toyota Avanza 1.3 E MT 2022* (`N 1552 CD`) dan *Honda Brio Satya 1.2 E CVT 2021* (`W 1204 PK`) muncul di etalase tersebut.
-   - Periksa kartu:
-     * Label badge: **`SEGERA HADIR`** (warna oranye hangat).
-     * Harga: **`Estimasi Rp 150 Jutaan`** (untuk Avanza 155jt) dan **`Estimasi Rp 140 Jutaan`** (untuk Brio 148jt).
-     * Foto: Tampil 1 foto tampak depan serong kanan.
-2. **Verifikasi Tab Filter di Katalog (`http://localhost:3000/katalog`):**
-   - Klik tab filter **"Segera Hadir"** (tertera indikator counter).
-   - Pastikan hanya unit berstatus `INTAKE` dan `IN_REPAIR` yang disaring.
-   - Klik tab **"Semua Unit"**: Pastikan urutan kelompok unit `Ready` berada paling atas, disusul `Booked`, lalu `Segera Hadir`, dan `Terjual` di paling bawah. Di dalam tiap grup, unit tersusun urut tanggal upload terbaru (`createdAt: "desc"`).
-3. **Verifikasi Halaman Detail Unit Upcoming (`/katalog/[slug]`):**
-   - Buka halaman unit: `http://localhost:3000/katalog/w-1204-pk-honda-brio-satya-1-2-e-cvt-2021`.
-   - **Banner Edukasi:** Pastikan banner oranye tertera: *"Tahap Persiapan & Detailing Salon — Unit ini baru saja tiba di garasi kami..."*.
-   - **Galeri Foto:** Pastikan hanya 1 foto depan yang tampil, tidak ada foto cacat/kondisi baret yang terbuka ke publik.
-   - **Kartu Grade Cek Fisik:** Pastikan **TIDAK ADA** nilai grade buatan (misal B/B/B/A). Kartu harus berstatus: **`TAHAP CEK — Kartu Skor & Grade Belum Diterbitkan`**.
-   - **Lembar Inspeksi Fisik 160 Titik:** Pastikan tertera kotak edukasi transparan 4 pilar yang sedang menunggu giliran uji (Sensor Mikron Cat, Mesin & Kompresi, Struktur Rangka, dan Deteksi Residu Banjir).
-   - **Tombol WhatsApp CTA:** Klik tombol *"Minat Unit Ini? Booking Duluan / Tanya via WA"*.
-     * Pastikan link WhatsApp terisi otomatis:
-       > *"Halo Admin Nur Mobil, saya tertarik dengan unit yang SEGERA HADIR: Honda Brio Satya 1.2 E CVT 2021 (Plat W 1204 PK). Kapan estimasi unit selesai persiapan salon/inspeksi dan bisa dicek di garasi? Apakah bisa di-booking duluan?"*
-
----
-
-### 📝 Langkah Pengujian Bagian B: Transisi Status ke Ready for Sale
-1. Buka dashboard admin inventori: `/admin/inventory`.
-2. Pada baris mobil Honda Brio `W 1204 PK`, periksa sub-badge: **`✨ Katalog: Segera Hadir`**.
-3. Klik tombol aksi titik tiga `[...]` ➔ **Ubah Status Kendaraan**.
-4. Pilih status baru: **Siap Dipasarkan (Ready For Sale)**.
-5. Klik **Simpan Status**.
-6. Refresh halaman publik mobil Brio: `http://localhost:3000/katalog/w-1204-pk-honda-brio-satya-1-2-e-cvt-2021`.
-
----
-
-### ✅ Hasil yang Diharapkan:
-- Unit sukses bertransisi dari etalase *Upcoming* menjadi etalase *Ready Stock*.
-- Di katalog publik, badge berubah menjadi hijau **`TERSEDIA DI SHOWROOM`**.
-- Format harga berubah dari estimasi menjadi harga tunai pasti (contoh: `Rp 148.000.000`).
-- Galeri foto dan laporan inspeksi digital resmi terbuka penuh bagi konsumen.
+### 📝 Langkah Pengujian:
+1. Klik menu **Sidebar > Katalog Publik > Buka Katalog Web** (`/katalog`) atau buka `http://localhost:3000/`.
+2. Scroll ke seksi **"Segera Hadir di Showroom (Upcoming Stock)"**.
+3. Verifikasi badge oranye **`SEGERA HADIR`**, format harga estimasi ramah psikologis, dan teaser 1 foto depan.
+4. Buka halaman detail unit (`/katalog/[slug]`), pastikan unit yang belum diinspeksi menampilkan **`TAHAP CEK — Kartu Skor & Grade Belum Diterbitkan`**.
 
 ---
 
@@ -280,37 +245,30 @@ Menguji penegakan kebijakan anti-leasing showroom: validasi DP minimal 70%, bata
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Sidebar > Penjualan & Piutang** (`/admin/sales`).
-2. Klik tombol **+ Catat Penjualan Baru** (`/admin/sales/new`).
+2. Klik tombol **+ Input Penjualan Unit Baru** (`/admin/sales/new`).
 3. Pilih mobil `Toyota Avanza 2019 (B 2489 KMR)` dan isi identitas pembeli:
    - **Nama Pembeli:** `Bpk. Agus Prasetyo`
    - **Nomor HP / WhatsApp:** `081388990011`
    - **Alamat:** `Jl. Melati No. 45, Jakarta Timur`
    - **Harga Jual Disepakati:** `Rp 146.000.000`
 4. **Uji Validasi Penolakan DP < 70%:**
-   - Coba masukkan DP: `Rp 50.000.000` (hanya ~34% dari harga jual).
-   - Perhatikan pesan validasi yang muncul di bawah input:
-     * *Sistem menampilkan pesan peringatan merah: "Kebijakan Garasi: DP Minimal 70% (Rp 102.200.000)"*.
-     * *Tombol Simpan Transaksi dinonaktifkan (disabled).*
-5. **Uji Validasi Batas Waktu > 30 Hari:**
-   - Coba pilih tanggal jatuh tempo lebih dari 30 hari dari sekarang (misal 60 hari).
-   - Sistem menolak atau membatasi pilihan tanggal maksimal 30 hari.
-6. **Input Transaksi Valid Sesuai SOP:**
+   - Coba masukkan DP: `Rp 50.000.000` (~34% dari harga jual).
+   - Perhatikan validasi merah: *"Kebijakan Garasi: DP Minimal 70% (Rp 102.200.000)"* dan tombol simpan terkunci.
+5. **Input Transaksi Valid Sesuai SOP:**
    - Masukkan DP yang valid: `Rp 106.000.000` (~72.6% dari harga jual).
    - Metode: `Transfer Bank (BCA)`.
-   - Perhatikan sisa piutang otomatis terhitung: `Rp 40.000.000` (sisa ~27.4%).
+   - Sisa piutang terhitung otomatis: `Rp 40.000.000`.
    - Pilih tanggal jatuh tempo: `20 hari dari hari ini` (valid <= 30 hari).
-   - Perhatikan box informasi penahanan dokumen BPKB & STNK asli yang tampil di formulir.
-7. Klik tombol **Simpan Transaksi Penjualan**.
-8. Pada tabel penjualan, klik tombol **Cetak Surat Perjanjian Jual Beli / SPK (PDF)** (`/api/pdf/agreement/[id]`).
-9. Buka file PDF SPK dan periksa bagian **PASAL V**.
+   - Perhatikan kotak informasi penahanan dokumen BPKB & STNK asli yang tampil di formulir.
+6. Klik tombol **Simpan Transaksi Penjualan**.
+7. Pada tabel penjualan, klik tombol **Cetak Surat Perjanjian Jual Beli / SPK (PDF)** (`/api/pdf/agreement/[id]`).
+8. Buka file PDF SPK dan periksa bagian **PASAL V**.
 
 ### ✅ Hasil yang Diharapkan:
 - Transaksi berhasil disimpan dengan DP Rp 106.000.000 dan sisa piutang Rp 40.000.000.
 - Status unit mobil otomatis menjadi **BOOKED / AT_SHOWROOM_PENDING**.
 - Kas BCA showroom otomatis bertambah Rp 106.000.000.
-- Pada dokumen SPK PDF tercetak jelas **PASAL V: KEBIJAKAN CASH TEMPO & PENAHANAN DOKUMEN FISIK**:
-  * Dokumen fisik asli BPKB dan STNK resmi ditahan di brankas Nur Mobil hingga pelunasan penuh.
-  * Kendaraan dilarang digadaikan, dipindahtangankan, atau dibawa keluar pulau sebelum sisa Rp 40.000.000 lunas.
+- Dokumen SPK PDF mencantumkan **PASAL V: KEBIJAKAN CASH TEMPO & PENAHANAN DOKUMEN FISIK**.
 
 ---
 
@@ -320,17 +278,16 @@ Menguji penegakan kebijakan anti-leasing showroom: validasi DP minimal 70%, bata
 Menguji fungsi deteksi dini piutang di Dashboard Utama dan tombol penagihan WhatsApp otomatis.
 
 ### 📝 Langkah Pengujian:
-1. Buka menu **Sidebar > Dashboard** (`/admin`).
+1. Buka menu **Sidebar > Dashboard Utama** (`/admin`).
 2. Perhatikan bagian alarm piutang tempo:
    - Terlihat tagihan atas nama `Bpk. Agus Prasetyo`, unit `Avanza B 2489 KMR`, sisa `Rp 40.000.000`.
-3. Periksa juga widget **Proyeksi Arus Kas 14 Hari**:
+3. Periksa widget **Proyeksi Arus Kas 14 Hari**:
    - Di daftar piutang masuk, transaksi Bpk. Agus terdaftar dengan estimasi kas masuk Rp 40.000.000.
 4. Klik tombol hijau **Kirim WA Tagihan (1-Klik)** pada kartu alarm.
 5. Periksa jendela WhatsApp Web/App yang terbuka.
 
 ### ✅ Hasil yang Diharapkan:
-- WhatsApp Web terbuka dengan format pesan resmi:
-  > *"Halo Pak/Bu Agus Prasetyo, Konfirmasi sisa pelunasan Cash Tempo untuk unit Toyota Avanza (Plat B 2489 KMR) sebesar Rp 40.000.000 yang jatuh tempo pada [Tanggal]. Mengingat BPKB & STNK asli siap diserahkan saat pelunasan, mohon konfirmasi bukti transfer jika sudah melakukan pembayaran ke rekening resmi Nur Mobil. Terima kasih!"*
+- WhatsApp Web terbuka dengan format pesan resmi pengingat jatuh tempo sopan dari Nur Mobil.
 
 ---
 
@@ -340,7 +297,7 @@ Menguji fungsi deteksi dini piutang di Dashboard Utama dan tombol penagihan What
 Menguji pencatatan pelunasan sisa piutang Rp 40.000.000 dan pencetakan dokumen penyerahan fisik kendaraan beserta BPKB & STNK asli.
 
 ### 📝 Langkah Pengujian:
-1. Buka menu **Penjualan & Piutang** (`/admin/sales`), cari transaksi Bpk. Agus Prasetyo.
+1. Buka menu **Sidebar > Penjualan & Piutang** (`/admin/sales`), cari transaksi Bpk. Agus Prasetyo.
 2. Klik tombol `+` **Catat Pembayaran Masuk** (`/admin/sales/[id]/payment`).
 3. Di form pelunasan:
    - **Nominal Pembayaran:** Masukkan `Rp 40.000.000` (Lunas).
@@ -351,11 +308,8 @@ Menguji pencatatan pelunasan sisa piutang Rp 40.000.000 dan pencetakan dokumen p
 
 ### ✅ Hasil yang Diharapkan:
 - Sistem membuka **Settlement Success Dialog Modal**.
-- Sisa piutang menjadi **Rp 0**.
-- Status mobil resmi berubah menjadi **SOLD_SETTLED**.
-- Di dalam dialog tersedia tombol:
-  * **Cetak Kuitansi Lunas (PDF):** Format resmi nota pelunasan bermeterai Rp 10.000.
-  * **Cetak BAST (PDF):** Berita acara serah terima resmi yang memuat checklist penyerahan BPKB asli dan STNK asli yang sebelumnya ditahan.
+- Sisa piutang menjadi **Rp 0** dan status mobil berubah menjadi **SOLD_SETTLED**.
+- Di dalam dialog tersedia tombol **Cetak Kuitansi Lunas (PDF)** dan **Cetak BAST (PDF)**.
 
 ---
 
@@ -369,9 +323,9 @@ Menguji eksekusi pembagian dividen laba ke investor langsung dari dialog pelunas
    - Perhatikan lencana oranye: *"Unit Sah Didanai Investor: Bpk. Hendra Gunawan"*.
    - Perhitungan Laba: Harga Jual Rp 146jt - HPP Total Rp 127.2jt = **Laba Bersih Rp 18.800.000**.
 2. Klik tombol utama: **Eksekusi Bagi Hasil Investor Sekarang (1-Klik)**.
-3. Perhatikan proses loading spinner dan konfirmasi yang muncul:
+3. Perhatikan proses loading spinner dan konfirmasi:
    * *"Bagi Hasil Sukses Dieksekusi! Snapshot aturan deterministik tersimpan, mutasi Capital Ledger tercatat."*
-4. Klik tautan **Buka Riwayat Bagi Hasil Investor** (`/admin/investors/history`).
+4. Buka menu **Sidebar > Investor & Bagi Hasil > Riwayat Distribusi** (`/admin/investors/history`).
 5. Periksa tabel riwayat pembagian dividen.
 
 ### ✅ Hasil yang Diharapkan:
@@ -396,7 +350,7 @@ Memverifikasi bahwa investor dapat melihat pengembalian modal dan dividen secara
 
 ### ✅ Hasil yang Diharapkan:
 - Portal investor menampilkan data akurat tanpa ada selisih angka.
-- Investor merasa tenang dan percaya dengan transparansi pembagian dividen showroom.
+- Investor mendapatkan transparansi penuh atas dana modalnya.
 
 ---
 
@@ -406,22 +360,22 @@ Memverifikasi bahwa investor dapat melihat pengembalian modal dan dividen secara
 Menguji rekonsiliasi akhir saldo kas showroom, pencatatan prive pribadi owner, dan briefing AI.
 
 ### 📝 Langkah Pengujian:
-1. Buka menu **Sidebar > Keuangan > Buku Kas & Mutasi BCA** (`/admin/finance`):
+1. Buka menu **Sidebar > Keuangan & Kas > Buku Kas & Mutasi** (`/admin/finance`):
    - Periksa mutasi masuk: DP Rp 106jt + Pelunasan Rp 40jt = Rp 146.000.000.
    - Periksa mutasi keluar: Beli unit lelang, admin, bengkel cat.
    - Saldo akhir BCA sinkron dengan mutasi fisik.
-2. Buka menu **Biaya & Pengeluaran > Tarik Prive Owner** (`/admin/finance/prive/new`):
-   - Masukkan nominal prive: `Rp 5.000.000` (Keperluan pribadi pemilik showroom).
-   - Simpan prive.
+2. Buka menu **Sidebar > Keuangan & Kas > Beban & Prive (BCA)** (`/admin/finance/expenses`), lalu klik tombol **+ Tarik Prive (Pribadi)** (`/admin/finance/prive/new`):
+   - Masukkan nominal prive: `Rp 5.000.000` (Keperluan pribadi keluarga pemilik).
+   - Klik **Simpan Penarikan Prive**.
    - Pastikan HPP mobil tidak terganggu, saldo kas BCA berkurang wajar.
-3. Buka **Dashboard Utama** (`/admin`):
+3. Buka menu **Sidebar > Dashboard Utama** (`/admin`):
    - Klik **Generate Rangkuman Harian AI**.
    - Ajukan pertanyaan di kotak chat AI: *"Berapa sisa kas BCA saya setelah transaksi Avanza dan bagi hasil Pak Hendra?"*.
 
 ### ✅ Hasil yang Diharapkan:
 - Buku kas mencatat seluruh mutasi secara kronologis.
-- Prive tercatat terpisah dari beban operasional.
-- Asisten AI Gemini merespons dengan data akurat sesuai histori transaksi yang baru saja diselesaikan.
+- Prive tercatat terpisah dari beban operasional showroom.
+- Asisten AI Gemini merespons dengan data akurat sesuai riwayat transaksi.
 
 ---
 
@@ -431,7 +385,7 @@ Menguji rekonsiliasi akhir saldo kas showroom, pencatatan prive pribadi owner, d
 Menguji pendeteksian otomatis unit mobil yang mendekati jatuh tempo pajak STNK (H-30 Hari) maupun yang sudah lewat waktu (*Overdue*), serta verifikasi proyeksi beban kas PKB di Dashboard.
 
 ### 📝 Langkah Pengujian:
-1. Buka menu **Data Mobil (Inventori)** (`/admin/inventory`).
+1. Buka menu **Sidebar > Inventori Unit** (`/admin/inventory`).
 2. Periksa baris mobil `Avanza B 2489 KMR` yang diinput dengan jatuh tempo PKB 15 hari ke depan:
    - Amati kolom status pajak STNK: Tampil badge kuning bertuliskan **Jatuh Tempo (H-15)**.
 3. Buka formulir edit mobil lain atau tambahkan unit uji kedua (`B 9999 DUMMY`):
@@ -440,15 +394,14 @@ Menguji pendeteksian otomatis unit mobil yang mendekati jatuh tempo pajak STNK (
    - Simpan unit.
 4. Periksa kembali tabel inventori:
    - Unit kedua menampilkan badge merah **OVERDUE (Pajak Mati)**.
-5. Buka **Dashboard Utama** (`/admin`):
+5. Buka menu **Sidebar > Dashboard Utama** (`/admin`):
    - Cari widget **Radar Alarm Pajak STNK & Plat Kaleng**.
    - Periksa tab filter: *Semua*, *Jatuh Tempo H-30*, dan *Overdue*.
-   - Periksa total estimasi biaya PKB yang harus disiapkan (misal: Rp 2.450.000 + Rp 3.000.000 = Rp 5.450.000).
+   - Periksa total estimasi biaya PKB yang harus disiapkan.
 
 ### ✅ Hasil yang Diharapkan:
 - Sistem secara otomatis menghitung selisih hari tanggal hari ini vs tanggal jatuh tempo tanpa perlu refresh database manual.
-- Widget Radar Alarm Pajak di Dashboard mendeteksi kedua unit tersebut dengan visual kontras (kuning dan merah).
-- Pemilik showroom dapat langsung mengetahui proyeksi kebutuhan kas untuk biro jasa pajak Samsat.
+- Widget Radar Alarm Pajak di Dashboard mendeteksi unit dengan visual kontras (kuning dan merah).
 
 ---
 
@@ -459,35 +412,37 @@ Menguji pembatasan wewenang antara `OWNER`, `STAFF_ADMIN`, `SALES`, dan `INVESTO
 
 ### 📝 Langkah Pengujian:
 
-#### Bagian A: Pengujian Peran `SALES`
-1. Buka halaman login (`/login`), pilih role **SALES (Marketing & Penjualan)**, klik Masuk.
+#### Bagian A: Pengujian Peran `SALES` (Marketing & Penjualan)
+1. Buka halaman login (`/login`), pilih role **SALES**, masukkan PIN `123456`, klik Masuk.
 2. Buka menu navigasi Sidebar:
-   - Verifikasi menu yang muncul: *Dashboard, Data Mobil, Penjualan, Cek Fisik*.
-   - Verifikasi menu yang **TIDAK MUNCUL**: *Buku Kas BCA, Gudang Bahan & Servis Mandiri, Manajemen Investor, Prive, Pengaturan Sistem*.
+   - Verifikasi menu yang muncul: **Katalog Stok Ready** (`/admin/inventory`) dan **Buka Katalog Web** (`/katalog`).
+   - Verifikasi menu yang **TIDAK MUNCUL / DISEMBUNYIKAN**: *Dashboard Utama, Cek Fisik & Inspeksi, Gudang Bahan & Alat, Penjualan & Piutang, Keuangan & Kas (Kas Bank BCA), Investor & Bagi Hasil, Sistem & Notifikasi*.
 3. Coba akses rute terproteksi secara paksa via address bar browser:
+   - Ketik URL: `http://localhost:3000/admin` ➔ Otomatis diredirect ke `/admin/inventory?status=READY_FOR_SALE`.
    - Ketik URL: `http://localhost:3000/admin/finance` ➔ Ditolak / Diredirect.
    - Ketik URL: `http://localhost:3000/admin/investors` ➔ Ditolak / Diredirect.
    - Ketik URL: `http://localhost:3000/admin/settings` ➔ Ditolak / Diredirect.
 
-#### Bagian B: Pengujian Peran `STAFF_ADMIN`
-1. Logout, lalu login kembali dengan role **STAFF_ADMIN (Operasional Garasi)**.
-2. Buka menu **Gudang Bahan & Alat** (`/admin/finance/assets`):
+#### Bagian B: Pengujian Peran `STAFF_ADMIN` (Operasional Garasi)
+1. Logout, lalu login kembali dengan role **STAFF_ADMIN**, PIN `123456`.
+2. Buka menu navigasi Sidebar:
+   - Menu yang muncul: **Dashboard Utama**, **Inventori Unit**, **Cek Fisik & Inspeksi**, **Gudang Bahan & Alat**, **Penjualan & Piutang**, dan **Buka Katalog Web**.
+   - Menu yang **DISEMBUNYIKAN**: *Keuangan & Kas (Kas Besar BCA / Prive), Investor & Bagi Hasil, Sistem & Notifikasi*.
+3. Buka menu **Sidebar > Gudang Bahan & Alat** (`/admin/finance/assets`):
    - Akses diizinkan: Admin garasi dapat mencatat stok oli dan alokasi servis mandiri.
-3. Buka menu **Data Mobil** dan catat biaya cat bodi:
-   - Akses diizinkan: Admin garasi dapat mencatat pengeluaran unit dan biaya operasional.
 4. Coba akses rute sensitif via address bar browser:
-   - Ketik URL: `http://localhost:3000/admin/finance` (Kas Besar BCA) ➔ Ditolak.
-   - Ketik URL: `http://localhost:3000/admin/finance/prive/new` (Tarik Prive) ➔ Ditolak.
-   - Ketik URL: `http://localhost:3000/admin/investors` (Dividen Investor) ➔ Ditolak.
+   - Ketik URL: `http://localhost:3000/admin/finance` (Kas Besar BCA) ➔ Ditolak dan diarahkan ke `/admin/inventory`.
+   - Ketik URL: `http://localhost:3000/admin/investors` (Dividen Investor) ➔ Ditolak dan diarahkan ke `/admin/inventory`.
+   - Ketik URL: `http://localhost:3000/admin/settings` (Pengaturan Sistem) ➔ Ditolak.
 
-#### Bagian C: Pengujian Peran `INVESTOR`
-1. Logout, lalu login dengan role **INVESTOR (Pemodal Mitra)**.
+#### Bagian C: Pengujian Peran `INVESTOR` (Pemodal Mitra)
+1. Logout, lalu login dengan role **INVESTOR**.
 2. Verifikasi layar: Langsung diarahkan ke portal investor (`/investor`).
 3. Coba ketik URL admin: `http://localhost:3000/admin` ➔ Otomatis ditolak dan dikembalikan ke `/investor`.
 
-#### Bagian D: Pengujian Peran `OWNER`
-1. Logout, lalu login dengan role **OWNER (Pemilik Showroom)**.
-2. Verifikasi: Seluruh menu terbuka 100% tanpa ada batasan (Kas BCA, Prive, Bagi Hasil, Setting, Download Backup).
+#### Bagian D: Pengujian Peran `OWNER` (Pemilik Showroom)
+1. Logout, lalu login dengan role **OWNER**, PIN `123456`.
+2. Verifikasi: Seluruh menu terbuka 100% tanpa ada batasan (Dashboard Utama, Inventori Unit, Cek Fisik & Inspeksi, Gudang Bahan & Alat, Penjualan & Piutang, Keuangan & Kas, Investor & Bagi Hasil, Sistem & Notifikasi).
 
 ### ✅ Hasil yang Diharapkan:
 - Seluruh 4 peran bekerja presisi sesuai wewenangnya.
@@ -504,7 +459,7 @@ Menguji fungsi pencadangan data mandiri (bebas biaya) untuk instalasi VPS sendir
 ### 📝 Langkah Pengujian:
 
 #### Bagian A: Unduh Snapshot Database Instan via Web UI
-1. Login sebagai `OWNER`, buka menu **Pengaturan Sistem** (`/admin/settings`).
+1. Login sebagai `OWNER`, buka menu **Sidebar > Sistem & Notifikasi** (`/admin/settings`).
 2. Gulir ke bagian **Pencadangan Data & Pemulihan (Backup & Disaster Recovery)**.
 3. Klik tombol **Unduh Snapshot Database (JSON)** (`/api/backup/download`).
 4. Periksa folder Downloads di komputer Anda.
