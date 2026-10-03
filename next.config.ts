@@ -56,6 +56,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false, // Sembunyikan header 'X-Powered-By: Next.js' agar hacker tidak mudah mengetahui stack versi teknologi
+  devIndicators: {
+    position: "bottom-right",
+  },
   async headers() {
     return [
       {

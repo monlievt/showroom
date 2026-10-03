@@ -418,7 +418,7 @@ export function AdminSidebar({
                     )}
                   >
                     <Clock className="w-3.5 h-3.5 shrink-0" />
-                    <span className="truncate">Riwayat Distribusi</span>
+                    <span className="truncate">Riwayat Distribusi Laba</span>
                   </Link>
 
                   <Link
