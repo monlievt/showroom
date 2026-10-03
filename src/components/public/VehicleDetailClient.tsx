@@ -22,6 +22,7 @@ import {
   FileText,
   Archive,
   Sparkles,
+  Clock,
 } from "lucide-react";
 import { formatRupiah, formatDate, formatUpcomingPrice, cn } from "@/lib/utils";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
@@ -387,7 +388,7 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
       <VehicleSpecsTable vehicle={vehicle} inspection={vehicle.inspection} />
 
       {/* ── 2. LEMBAR INSPEKSI MENYELURUH & PETA BODI INTERAKTIF (CHECKLIST 5 TAB) ── */}
-      {vehicle.inspection && (
+      {vehicle.inspection ? (
         <div className="bg-white rounded-3xl border border-[#D9D4CB] p-6 sm:p-8 shadow-sm space-y-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -662,6 +663,82 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-white rounded-3xl border border-[#D9D4CB] p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#EBE7E1] pb-6">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-[#FEF3C7] text-[#92400E] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+                <Clock className="w-4 h-4 text-[#D97706]" />
+                <span>Tahap Pengecekan 160 Titik Sedang Berjalan</span>
+              </div>
+              <h2 className="text-2xl font-bold text-[#1C1917] tracking-tight">
+                Lembar Hasil Inspeksi Fisik &amp; Uji 15 Titik Panel Cat
+              </h2>
+              <p className="text-xs text-[#6B6560] mt-1 max-w-2xl">
+                Unit ini baru tiba di garasi showroom kami dan sedang dalam antrean inspeksi menyeluruh oleh teknisi. Hasil uji ketebalan cat bodi (mikron), uji fungsi mesin, indikator MIL/airbag, dan deteksi bebas banjir akan dipublikasikan secara lengkap begitu unit siap tayang (*Ready for Sale*).
+              </p>
+            </div>
+            <div className="px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold shrink-0 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-600" />
+              <span>Sertifikat Digital Dalam Proses</span>
+            </div>
+          </div>
+
+          {/* Preview Tab Checklist Transparan yang Akan Diuji */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-4 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
+                <ShieldCheck className="w-4 h-4 text-[#D97706]" />
+                <span>1. Ketebalan Cat 15 Titik Bodi</span>
+              </div>
+              <p className="text-[11px] text-[#6B6560] leading-relaxed">
+                Sensor mikron digital untuk membedakan cat asli pabrik (ori kaleng), repaint tipis, atau bekas dempul benturan.
+              </p>
+              <span className="inline-block text-[10px] font-bold text-amber-700 bg-amber-100/60 px-2 py-0.5 rounded">
+                Menunggu Uji Alat
+              </span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
+                <Wrench className="w-4 h-4 text-[#D97706]" />
+                <span>2. Ruang Mesin &amp; Kompresi</span>
+              </div>
+              <p className="text-[11px] text-[#6B6560] leading-relaxed">
+                Cek rembesan oli, suara klep/timing chain, getaran engine mounting, dan kepekatan gas buang knalpot.
+              </p>
+              <span className="inline-block text-[10px] font-bold text-amber-700 bg-amber-100/60 px-2 py-0.5 rounded">
+                Menunggu Uji Mesin
+              </span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
+                <CheckCircle2 className="w-4 h-4 text-[#D97706]" />
+                <span>3. Uji Rangka Bebas Laka</span>
+              </div>
+              <p className="text-[11px] text-[#6B6560] leading-relaxed">
+                Inspeksi apron depan, tulang sasis utama, pilar A/B/C, sealer pintu, dan lantai bagasi untuk garansi bebas tabrak.
+              </p>
+              <span className="inline-block text-[10px] font-bold text-amber-700 bg-amber-100/60 px-2 py-0.5 rounded">
+                Menunggu Uji Sasis
+              </span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
+                <FileCheck className="w-4 h-4 text-[#D97706]" />
+                <span>4. Deteksi Rendaman Banjir</span>
+              </div>
+              <p className="text-[11px] text-[#6B6560] leading-relaxed">
+                Pemeriksaan kolong dasbor, rel jok, soket sekring, dan modul ECU untuk menjamin 0% residu lumpur banjir.
+              </p>
+              <span className="inline-block text-[10px] font-bold text-amber-700 bg-amber-100/60 px-2 py-0.5 rounded">
+                Menunggu Uji Banjir
+              </span>
             </div>
           </div>
         </div>

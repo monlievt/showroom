@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PublicNavbar } from "@/components/public/PublicNavbar";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { getShowroomHomepageData } from "@/app/actions/catalog";
-import { formatRupiah, cn } from "@/lib/utils";
+import { formatRupiah, formatUpcomingPrice, cn } from "@/lib/utils";
 import {
   ShieldCheck,
   CheckCircle2,
@@ -33,6 +33,7 @@ export const metadata = {
 export default async function HomePage() {
   const result = await getShowroomHomepageData();
   const readyVehicles = result.success && result.readyVehicles ? result.readyVehicles : [];
+  const upcomingVehicles = result.success && (result as any).upcomingVehicles ? (result as any).upcomingVehicles : [];
   const soldVehicles = result.success && result.soldVehicles ? result.soldVehicles : [];
   const stats = result.success && result.stats ? result.stats : {
     totalSold: 126,
@@ -302,6 +303,98 @@ export default async function HomePage() {
             </div>
           )}
         </section>
+
+        {/* 3B. UNIT SEGERA HADIR (UPCOMING STOCK / DALAM PERSIAPAN) */}
+        {upcomingVehicles.length > 0 && (
+          <section className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 border-b border-[#EBE7E1] pb-4">
+              <div>
+                <div className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-900 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Baru Masuk • Tahap Salon &amp; Detailing</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1C1917] tracking-tight">
+                  Segera Hadir di Showroom (Upcoming Stock)
+                </h2>
+                <p className="text-xs sm:text-sm text-[#6B6560] mt-1">
+                  Unit baru tiba yang sedang menjalani rekondisi minor dan antrean cek fisik 160 titik. Anda bisa booking atau tanya lebih awal.
+                </p>
+              </div>
+              <Link
+                href="/katalog"
+                className="text-xs font-bold text-[#D97706] hover:underline flex items-center gap-1 shrink-0"
+              >
+                <span>Lihat Tab Segera Hadir di Katalog</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {upcomingVehicles.map((v: any) => (
+                <Link
+                  key={v.id}
+                  href={`/katalog/${v.slug}`}
+                  className="bg-white rounded-2xl border border-amber-300 hover:border-amber-500 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between group cursor-pointer text-inherit no-underline"
+                >
+                  <div>
+                    <div className="relative aspect-[16/11] bg-amber-50/50 overflow-hidden">
+                      {v.photos[0] ? (
+                        <img
+                          src={v.photos[0].fileUrl}
+                          alt={`${v.brand} ${v.model}`}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[#6B6560]">
+                          <Car className="w-12 h-12 opacity-40" />
+                        </div>
+                      )}
+                      <div className="absolute top-3 left-3">
+                        <span className="text-[10px] font-black px-2.5 py-1 rounded-full uppercase shadow-sm bg-amber-500 text-stone-950 flex items-center gap-1">
+                          <Sparkles className="w-3 h-3" />
+                          <span>SEGERA HADIR</span>
+                        </span>
+                      </div>
+                      <div className="absolute top-3 right-3">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-black/60 text-white backdrop-blur-sm">
+                          Plat {v.plateNumber}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-4 space-y-2">
+                      <div className="text-[10px] font-bold text-[#D97706] uppercase">
+                        {v.brand} • {v.year} • {v.transmission}
+                      </div>
+                      <h3 className="font-bold text-sm text-[#1C1917] group-hover:text-[#D97706] transition-colors line-clamp-1">
+                        {v.model}
+                      </h3>
+                      <div>
+                        <div className="text-base font-extrabold text-amber-900">
+                          {formatUpcomingPrice(v.price)}
+                        </div>
+                        <span className="text-[10px] text-stone-500 block">
+                          *Tahap rekondisi &amp; salon
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-[#6B6560] pt-2 border-t border-[#EBE7E1]">
+                        <Gauge className="w-3.5 h-3.5 text-[#D97706]" />
+                        <span>{v.odometer.toLocaleString("id-ID")} KM</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 pt-0">
+                    <div className="w-full flex items-center justify-center gap-1.5 bg-amber-50 group-hover:bg-[#D97706] group-hover:text-white border border-amber-300 group-hover:border-[#D97706] text-amber-900 text-xs font-bold py-2 rounded-xl transition-all">
+                      <span>Booking Duluan / Lihat Info</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* 4. SHOWCASE UNIT YANG BARU SAJA TERJUAL (SOLD OUT REEL) */}
         {soldVehicles.length > 0 && (

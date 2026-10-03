@@ -173,6 +173,10 @@ export async function getShowroomHomepageData() {
       ? catalogRes.data.filter((v: any) => v.status === "READY_FOR_SALE" || v.status === "BOOKED").slice(0, 6)
       : [];
 
+    const upcomingVehicles = catalogRes.success && catalogRes.data
+      ? catalogRes.data.filter((v: any) => v.status === "INTAKE" || v.status === "IN_REPAIR").slice(0, 4)
+      : [];
+
     const soldVehicles = await prisma.vehicle.findMany({
       where: { status: "SOLD_SETTLED" },
       select: {
@@ -210,12 +214,14 @@ export async function getShowroomHomepageData() {
     });
 
     const readyCount = await prisma.vehicle.count({ where: { status: "READY_FOR_SALE" } });
+    const upcomingCount = await prisma.vehicle.count({ where: { status: { in: ["INTAKE", "IN_REPAIR"] } } });
     const soldDbCount = await prisma.vehicle.count({ where: { status: "SOLD_SETTLED" } });
     const totalInspections = await prisma.inspection.count();
 
     return {
       success: true,
       readyVehicles,
+      upcomingVehicles,
       soldVehicles: soldVehicles.map((v) => {
         const safeSlug = generateVehicleSlug(v);
 
