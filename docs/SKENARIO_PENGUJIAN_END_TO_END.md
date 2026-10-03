@@ -15,7 +15,7 @@
 | **05** | **Servis Bengkel Cat Luar** | Catat Biaya Bengkel Luar, Cetak Surat Jalan Bengkel (PDF) |
 | **06** | **Inspeksi Fisik 11 Panel** | Cek Ketebalan Mikron Cat, Grading Mesin/Rangka, Cetak Hasil Inspeksi (PDF) |
 | **07** | **Showroom Display & Tag Spion** | Update Status Ready for Sale, Cetak Price Tag Kaca Spion (PDF) |
-| **08** | **Katalog Publik & Calon Pembeli** | Akses Web Publik, Filter Mobil, Detail Galeri, 1-Klik Chat WhatsApp |
+| **08** | **Katalog Publik & Siklus Stok Segera Hadir** | Homepage Showcase, 5 Tab Filter, Teaser 1 Foto Depan, Anti-Grade Palsu, 1-Klik WA |
 | **09** | **Transaksi Penjualan Cash Tempo & SPK Pasal V** | Validasi DP Minimal 70%, Tempo Maks 30 Hari, Penahanan BPKB/STNK, SPK (PDF) |
 | **10** | **Monitoring Arus Kas & Alarm Piutang** | Dashboard AI, Alarm Tempo, 1-Klik Kirim WhatsApp Tagihan |
 | **11** | **Pelunasan & Dokumen Penyerahan** | Catat Pelunasan Sisa Piutang, Cetak Kuitansi Meterai (PDF) & BAST (PDF) |
@@ -220,23 +220,56 @@ Menguji perpindahan unit ke lantai pamer showroom dan pencetakan label gantung k
 
 ---
 
-## SKENARIO 08: KATALOG PUBLIK & CALON KONSUMEN
+## SKENARIO 08: KATALOG PUBLIK & SIKLUS STOK SEGERA HADIR (UPCOMING)
 
 ### 🎯 Tujuan:
-Memverifikasi bahwa mobil otomatis muncul di katalog web dan tombol konsultasi WhatsApp berfungsi.
+1. Memverifikasi unit baru masuk (`INTAKE`) dan sedang salon (`IN_REPAIR`) otomatis tayang sebagai **Segera Hadir (Upcoming Stock)** di homepage dan katalog publik.
+2. Memverifikasi batasan keamanan privasi: hanya **1 foto teaser tampak depan serong kanan (`FRONT_3_4`)** yang dapat diakses publik, dan foto cacat internal tidak bocor.
+3. Memverifikasi format harga psikologis (contoh: `Estimasi Rp 150 Jutaan`) berjalan otomatis.
+4. Memverifikasi halaman detail unit yang belum diinspeksi **tidak menampilkan nilai grade palsu**, melainkan kartu status `TAHAP CEK` dan pratinjau edukasi 4 pilar.
+5. Memverifikasi unit yang beralih status ke `READY_FOR_SALE` otomatis membuka galeri 11 foto lengkap & laporan inspeksi digital.
 
-### 📝 Langkah Pengujian:
-1. Buka browser incognito, navigasikan ke halaman publik: `http://localhost:3000/katalog`.
-2. Gunakan filter: Pilih merk `Toyota`, harga `100 - 150 Juta`.
-3. Klik kartu mobil `Toyota Avanza 2019 (Silver)`.
-4. Di halaman detail (`/katalog/[id]`):
-   - Cek galeri foto dan badge hasil inspeksi *Grade A*.
-   - Ubah slider kalkulator DP (misal DP 70%).
-   - Klik tombol hijau **Tanya Unit via WhatsApp**.
+---
+
+### 📝 Langkah Pengujian Bagian A: Unit Segera Hadir (Upcoming Stock)
+1. **Verifikasi Tampilan Homepage (`http://localhost:3000/`):**
+   - Scroll ke seksi **"Segera Hadir di Showroom (Upcoming Stock)"**.
+   - Pastikan unit *Toyota Avanza 1.3 E MT 2022* (`N 1552 CD`) dan *Honda Brio Satya 1.2 E CVT 2021* (`W 1204 PK`) muncul di etalase tersebut.
+   - Periksa kartu:
+     * Label badge: **`SEGERA HADIR`** (warna oranye hangat).
+     * Harga: **`Estimasi Rp 150 Jutaan`** (untuk Avanza 155jt) dan **`Estimasi Rp 140 Jutaan`** (untuk Brio 148jt).
+     * Foto: Tampil 1 foto tampak depan serong kanan.
+2. **Verifikasi Tab Filter di Katalog (`http://localhost:3000/katalog`):**
+   - Klik tab filter **"Segera Hadir"** (tertera indikator counter).
+   - Pastikan hanya unit berstatus `INTAKE` dan `IN_REPAIR` yang disaring.
+   - Klik tab **"Semua Unit"**: Pastikan urutan kelompok unit `Ready` berada paling atas, disusul `Booked`, lalu `Segera Hadir`, dan `Terjual` di paling bawah. Di dalam tiap grup, unit tersusun urut tanggal upload terbaru (`createdAt: "desc"`).
+3. **Verifikasi Halaman Detail Unit Upcoming (`/katalog/[slug]`):**
+   - Buka halaman unit: `http://localhost:3000/katalog/w-1204-pk-honda-brio-satya-1-2-e-cvt-2021`.
+   - **Banner Edukasi:** Pastikan banner oranye tertera: *"Tahap Persiapan & Detailing Salon — Unit ini baru saja tiba di garasi kami..."*.
+   - **Galeri Foto:** Pastikan hanya 1 foto depan yang tampil, tidak ada foto cacat/kondisi baret yang terbuka ke publik.
+   - **Kartu Grade Cek Fisik:** Pastikan **TIDAK ADA** nilai grade buatan (misal B/B/B/A). Kartu harus berstatus: **`TAHAP CEK — Kartu Skor & Grade Belum Diterbitkan`**.
+   - **Lembar Inspeksi Fisik 160 Titik:** Pastikan tertera kotak edukasi transparan 4 pilar yang sedang menunggu giliran uji (Sensor Mikron Cat, Mesin & Kompresi, Struktur Rangka, dan Deteksi Residu Banjir).
+   - **Tombol WhatsApp CTA:** Klik tombol *"Minat Unit Ini? Booking Duluan / Tanya via WA"*.
+     * Pastikan link WhatsApp terisi otomatis:
+       > *"Halo Admin Nur Mobil, saya tertarik dengan unit yang SEGERA HADIR: Honda Brio Satya 1.2 E CVT 2021 (Plat W 1204 PK). Kapan estimasi unit selesai persiapan salon/inspeksi dan bisa dicek di garasi? Apakah bisa di-booking duluan?"*
+
+---
+
+### 📝 Langkah Pengujian Bagian B: Transisi Status ke Ready for Sale
+1. Buka dashboard admin inventori: `/admin/inventory`.
+2. Pada baris mobil Honda Brio `W 1204 PK`, periksa sub-badge: **`✨ Katalog: Segera Hadir`**.
+3. Klik tombol aksi titik tiga `[...]` ➔ **Ubah Status Kendaraan**.
+4. Pilih status baru: **Siap Dipasarkan (Ready For Sale)**.
+5. Klik **Simpan Status**.
+6. Refresh halaman publik mobil Brio: `http://localhost:3000/katalog/w-1204-pk-honda-brio-satya-1-2-e-cvt-2021`.
+
+---
 
 ### ✅ Hasil yang Diharapkan:
-- Mobil Avanza B 2489 KMR muncul paling atas di katalog publik.
-- Tombol WhatsApp membuka link `https://wa.me/...` dengan teks otomatis yang memuat spesifikasi dan plat nomor mobil.
+- Unit sukses bertransisi dari etalase *Upcoming* menjadi etalase *Ready Stock*.
+- Di katalog publik, badge berubah menjadi hijau **`TERSEDIA DI SHOWROOM`**.
+- Format harga berubah dari estimasi menjadi harga tunai pasti (contoh: `Rp 148.000.000`).
+- Galeri foto dan laporan inspeksi digital resmi terbuka penuh bagi konsumen.
 
 ---
 

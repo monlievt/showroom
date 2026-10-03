@@ -45,23 +45,57 @@ Aplikasi **Nur Mobil Showroom** dirancang khusus untuk memadukan efisiensi opera
 
 ## BAB 2: KATALOG PUBLIK & HALAMAN KONSUMEN (CUSTOMER-FACING)
 
-Website publik dapat diakses langsung oleh calon pembeli tanpa perlu login.
+Website publik dapat diakses langsung oleh calon pembeli tanpa perlu login. Menampilkan stok unit secara transparan, lengkap dengan rekam jejak inspeksi fisik dan status perputaran garasi.
 
 ### 1. Halaman Beranda (Landing Page — `/`)
-- **Hero Showcase:** Menampilkan unit-unit unggulan yang berstatus *READY_FOR_SALE*.
-- **Pencarian Cepat:** Konsumen dapat memfilter mobil berdasarkan merk (Toyota, Honda, Daihatsu, Mitsubishi, Suzuki), rentang harga (di bawah 100jt, 100-150jt, di atas 150jt), transmisi (Manual/Matic), dan tahun perakitan.
-- **Kredibilitas Garasi:** Menampilkan komitmen bebas laka berat, bebas banjir, dokumen BPKB/STNK terjamin keabsahannya, dan garansi mesin/transmisi.
+Halaman depan showroom menyajikan 3 etalase utama yang disusun secara dinamis:
+1. **Unit Pilihan Siap Pakai (Ready Stock):**
+   - Menampilkan maksimal **6 unit mobil** berstatus `READY_FOR_SALE` dan `BOOKED`.
+   - **Kriteria Urutan:** Diurutkan berdasarkan **`createdAt: "desc"`** (unit yang paling baru diinput/diperbarui oleh admin showroom tampil di posisi teratas).
+   - Menampilkan kartu foto HD, badge status, kilometer odo, transmisi, harga tunai, dan tombol *Lihat Detail & Hasil Inspeksi*.
+2. **Segera Hadir di Showroom (Upcoming Stock / Dalam Persiapan):**
+   - Menampilkan maksimal **4 unit mobil** berstatus `INTAKE` (baru tiba) dan `IN_REPAIR` (tahap salon/poles/bengkel).
+   - **Kriteria Urutan:** Diurutkan berdasarkan **`createdAt: "desc"`** (unit terbaru yang masuk garasi).
+   - **Strategi Teaser 1 Foto:** Hanya menampilkan **1 foto tampak depan serong kanan (`FRONT_3_4`)**, menjaga dokumentasi internal cacat/bodi kotor garasi tetap privat.
+   - **Harga Psikologis Indonesia:** Ditampilkan dalam format ramah psikologi pembeli, contoh: **`Estimasi Rp 150 Jutaan`** (dihitung otomatis melalui helper `formatUpcomingPrice`). Mencegah showroom terikat komitmen harga mati sebelum kalkulasi biaya perbaikan dan salon selesai dihitung riil.
+   - Tombol CTA: *"Booking Duluan / Lihat Info"*.
+3. **Unit yang Baru Saja Terjual (Sold Out Reel):**
+   - Menampilkan maksimal **4 unit mobil** berstatus `SOLD_SETTLED`.
+   - **Kriteria Urutan:** Diurutkan berdasarkan **`updatedAt: "desc"`** (unit yang paling baru diserahterimakan ke konsumen).
+   - Disertai nama pembeli, asal domisili, dan harga transaksi riil sebagai bukti rekam jejak transparansi garasi.
 
 ### 2. Katalog Lengkap Mobil (`/katalog`)
-- **Daftar Unit Real-Time:** Mobil yang sudah di-DP (*BOOKED*) otomatis diberi lencana khusus *"Sedang Dibooking"*, dan unit yang lunas (*SOLD_SETTLED*) disembunyikan otomatis dari listing publik.
-- **Kartu Unit Informatif:** Menampilkan foto utama, plat nomor (disamarkan sebagian jika perlu), jarak tempuh (odometer), transmisi, tahun, dan harga jual OTR tunai.
+- **5 Tab Filter Kategori Status:**
+  1. **Semua Unit (`ALL`):** Menampilkan seluruh etalase mobil yang aktif maupun arsip.
+  2. **Tersedia di Showroom (`READY_FOR_SALE`):** Unit siap pakai yang sudah lolos uji inspeksi.
+  3. **Segera Hadir (`UPCOMING`):** Menggabungkan unit `INTAKE` & `IN_REPAIR` (baru masuk / dalam persiapan).
+  4. **Sudah Dibooking (`BOOKED`):** Unit yang telah terikat uang muka (DP) konsumen.
+  5. **Terjual Lunas (`SOLD_SETTLED`):** Arsip transaksi lunas sebagai rekam jejak kondisi fisik.
+- **Aturan Urutan (Sorting & Ranking):**
+  - **Saat di Tab "Semua Unit" (`ALL`):** Sistem menerapkan hierarki prioritas status pembeli:
+    * *Prioritas 1:* `READY_FOR_SALE` (Stok siap transaksi tampil paling atas)
+    * *Prioritas 2:* `BOOKED` (Unit tanda jadi)
+    * *Prioritas 3:* `INTAKE` & `IN_REPAIR` (Segera Hadir / Teaser)
+    * *Prioritas 4:* `SOLD_SETTLED` (Arsip unit laku di urutan terbawah)
+    * *Di dalam masing-masing status diurutkan berdasarkan **`createdAt: "desc"` (tanggal upload terbaru)**.*
+  - **Saat Memilih Tab Tertentu (misal tab "Segera Hadir" atau "Tersedia"):**
+    * Seluruh kartu murni diurutkan berdasarkan **`createdAt: "desc"` (tanggal upload terbaru)**.
+- **Filter Multi-Kriteria:** Filter instan berdasarkan Merk, Transmisi (Manual/Matic), dan Batas Maksimal Harga.
 
-### 3. Detail Mobil & Click-to-WhatsApp (`/katalog/[id]`)
-- **Galeri Foto High-Definition:** Foto eksterior depan, belakang, samping, interior, odometer, dan ruang mesin.
-- **Rincian Spesifikasi & Kondisi:** Hasil inspeksi fisik grade mesin, transmisi, dan rangka.
-- **Kalkulator Simulasi Cash Tempo:** Membantu calon konsumen menghitung estimasi DP minimal 70% dan sisa pelunasan 30% dalam tempo 30 hari.
-- **Tombol WhatsApp Konsultasi (1-Klik):** Menghubungkan langsung konsumen ke nomor WhatsApp resmi showroom dengan pesan otomatis:
-  > *"Halo Admin Nur Mobil, saya tertarik dengan unit Toyota Avanza G 2019 (Plat B 1234 ABC) seharga Rp 145.000.000. Apakah unit ini masih READY?"*
+### 3. Detail Mobil, Lembar Cek Fisik & Click-to-WhatsApp (`/katalog/[slug]`)
+- **Penanganan Khusus Unit Segera Hadir (Upcoming):**
+  - **Banner Edukasi Garasi:** Menjelaskan secara transparan kepada calon pembeli bahwa unit sedang dalam tahap inspeksi fisik, perbaikan minor, dan salon detailing.
+  - **Kartu Skor 4 Pilar Anti-Grade Palsu:** Jika unit belum diinspeksi (`inspection === null`), sistem **tidak akan menampilkan nilai grade palsu**. Sebaliknya, ditampilkan kartu status: **`TAHAP CEK — Kartu Skor & Grade Belum Diterbitkan`**.
+  - **Lembar Inspeksi 160 Titik Transparan:** Bagian lembar inspeksi tetap ditampilkan dengan status *Sertifikat Digital Dalam Proses* dan pratinjau edukatif 4 pilar yang akan diuji (Sensor Mikron Cat 15 Titik, Ruang Mesin & Kompresi, Struktur Rangka Bebas Laka, dan Deteksi Residu Banjir).
+- **Penanganan Unit Ready Jual:**
+  - Galeri lengkap 11 sudut foto standar balai lelang ACV.
+  - Skor Grade 4 Pilar (Mesin, Interior, Eksterior, Rangka) dan Total Grade.
+  - Lembar checklist 5 tab interaktif (Eksterior & Mikron Cat, Rangka Sasis, Mesin & Transmisi, Interior & Kelistrikan, Keabsahan Dokumen).
+  - Tombol unduh Sertifikat Inspeksi Digital Resmi (PDF).
+- **Tombol WhatsApp Click-to-Chat Kontekstual:**
+  - Unit *Upcoming*: *"Halo Admin Nur Mobil, saya tertarik dengan unit yang SEGERA HADIR: [Merek Tipe Tahun] (Plat [Nomor]). Kapan estimasi unit selesai persiapan salon/inspeksi dan bisa dicek di garasi? Apakah bisa di-booking duluan?"*
+  - Unit *Ready*: *"Halo Admin Nur Mobil, saya tertarik unit [Merek Tipe Tahun] (Plat [Nomor]) seharga Rp [Harga]. Apakah unit ini masih READY atau sudah BOOKED?"*
+  - Unit *Sold*: *"Halo Admin Nur Mobil, saya melihat unit [Merek Tipe Tahun] yang sudah TERJUAL di katalog. Apakah ada rekomendasi stok unit serupa yang sedang intake atau segera ready di showroom?"*
 
 ---
 
@@ -125,6 +159,11 @@ Fitur pengawasan pajak aktif yang mendeteksi masa berlaku STNK dan kaleng plat n
 
 ### 1. Daftar Tabel Inventori Cerdas
 - Menampilkan foto mini unit, plat nomor, merk, varian tahun, transmisi, HPP modal terkini, target harga jual, dan margin proyeksi.
+- **Indikator Visibilitas Publik (Sub-Badge Status):**
+  * Unit `INTAKE` & `IN_REPAIR` otomatis berlabel sub-badge: **`✨ Katalog: Segera Hadir`** sehingga staf admin langsung mengetahui bahwa mobil sedang ditayangkan sebagai *teaser* di website publik.
+  * Unit `READY_FOR_SALE` berlabel sub-badge: **`Katalog: Tayang Lengkap`**.
+- **Tautan Cepat Pratinjau Publik (*Direct Preview Link*):**
+  * Tautan langsung di bawah nama mobil (*"Tampilan Segera Hadir"* / *"Tampilan Katalog"*) yang membuka pratinjau halaman katalog publik unit terkait di tab baru.
 - **Kolom Status Pajak STNK:** Menampilkan tanggal jatuh tempo PKB dan status badge (🟢 Aman, 🟡 H-30, 🔴 Overdue) langsung pada baris tabel unit.
 - **Filter Cepat:** Tab status *Semua*, *Intake*, *Perbaikan*, *Siap Jual*, *Booking*, dan *Terjual Lunas*.
 - **Pencarian Cepat:** Pencarian instan berdasarkan plat nomor, nama merk, tipe, atau warna mobil.
@@ -136,14 +175,33 @@ Menggantikan ikon kecil yang membingungkan dengan tindakan paling logis berdasar
 - Unit **READY_FOR_SALE** ➔ Tombol Utama: **Tag Spion** (cetak price tag kaca)
 - Unit **BOOKED** ➔ Tombol Utama: **Update Status**
 - Unit **SOLD_SETTLED** ➔ Tombol Utama: **Terjual Lunas**
-- Menu Titik Tiga `[...]` memuat aksi sekunder: Ubah data, Ganti Oli Mandiri, Cetak Surat Jalan Bengkel, Upload Foto, dan Hapus Unit.
+- Menu Titik Tiga `[...]` memuat aksi sekunder:
+  * **Lihat di Katalog Publik (Segera Hadir / Ready)**
+  * Cek Fisik & Inspeksi
+  * Catat Biaya / Servis
+  * Upload Foto & Dokumen
+  * Surat Jalan Bengkel (SPK)
+  * Cetak Tag Spion (QR)
+  * Ubah Status Kendaraan
+  * Share via WhatsApp
 
-### 3. Update Status Manual (`/admin/inventory/[id]/status`)
-Digunakan untuk memindahkan status mobil secara manual disertai catatan log perubahan.
+### 3. Update Status Manual & Panduan Alur (`/admin/inventory/[id]/status`)
+Digunakan untuk memindahkan status mobil secara manual dengan validasi aturan alur:
+- **Alur Standar:** `INTAKE` ➔ `IN_REPAIR` ➔ `READY_FOR_SALE` ➔ `BOOKED` ➔ `SOLD_SETTLED`.
+- Unit kondisi sangat istimewa dapat langsung dipromosikan dari `INTAKE` ➔ `READY_FOR_SALE`.
+- Mengubah ke `READY_FOR_SALE` otomatis membuka galeri 11 foto dan sertifikat digital inspeksi di web publik.
 
-### 4. Upload Foto & Dokumen Media (`/admin/inventory/[id]/media`)
-- Mendukung multi-upload foto tampilan luar, interior, dan ruang mesin.
-- Fitur drag-and-drop dokumen digital: Foto BPKB, STNK, Lembar Pajak, dan Faktur Pembelian.
+### 4. Upload Foto 11 Titik Standar & Dokumen Legalitas (`/admin/inventory/[id]/media`)
+- **Slot Wajib 11 Titik ACV IBID:** Memandu pengambilan foto dari 4 sudut eksterior, 2 interior, ruang mesin, pilar/sealer, kolong sasis, kolong dasbor, dan bagasi.
+- **Indikator Khusus Teaser Publik:**
+  * Pada slot **Tampak Depan Serong Kanan (`EXT_FRONT_RIGHT / FRONT_3_4`)**, tertera lencana: **`⭐ Teaser Segera Hadir`**.
+  * Memberi petunjuk kepada tim lapangan bahwa foto sudut inilah yang otomatis dipilih sistem untuk dipajang di katalog publik saat mobil berstatus *Intake* maupun *Dalam Persiapan Salon*.
+- **Kategori Foto Custom (4 Klaster):**
+  * Klaster 1: `CONDITION_INTAKE` (Kondisi saat baru tiba apa adanya)
+  * Klaster 2: `CONDITION_BEFORE_REPAIR` & `CONDITION_AFTER_REPAIR` (Detail cacat bodi & hasil salon)
+  * Klaster 3: `FINAL_LISTING` (Foto siap tayang katalog)
+  * Klaster 4: `DOCUMENT_PROOF` (Kuitansi, nota bengkel, BAST serah terima)
+- **Arsip Scan Dokumen:** STNK, BPKB, Faktur Asli, KTP Pemilik, dan SPK Perjanjian.
 
 ### 5. Catat Pengeluaran Unit Mobil (`/admin/inventory/[id]/expenses/new`)
 Setiap kali ada biaya eksternal:
