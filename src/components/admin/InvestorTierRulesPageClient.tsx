@@ -46,27 +46,59 @@ interface TierRulesProps {
 
 const DEFAULT_STANDARD_RULES: ProfitRuleItem[] = [
   {
-    name: "Laba Wajar (< Rp 5.000.000)",
+    name: "Laba Rendah (Rp 0 - Rp 1.000.000)",
     beneficiaryGroup: "MOTHER_SIBLING",
     minProfit: 0,
+    maxProfit: 1000000,
+    amountPerPerson: 100000,
+    numberOfPeople: 4,
+  },
+  {
+    name: "Laba Ringan (Rp 1.000.000 - Rp 2.500.000)",
+    beneficiaryGroup: "MOTHER_SIBLING",
+    minProfit: 1000000,
+    maxProfit: 2500000,
+    amountPerPerson: 175000,
+    numberOfPeople: 4,
+  },
+  {
+    name: "Laba Wajar (Rp 2.500.000 - Rp 5.000.000)",
+    beneficiaryGroup: "MOTHER_SIBLING",
+    minProfit: 2500000,
     maxProfit: 5000000,
     amountPerPerson: 250000,
     numberOfPeople: 4,
   },
   {
-    name: "Laba Tinggi (Rp 5.000.000 - Rp 10.000.000)",
+    name: "Laba Menengah (Rp 5.000.000 - Rp 7.500.000)",
     beneficiaryGroup: "MOTHER_SIBLING",
     minProfit: 5000000,
-    maxProfit: 10000000,
+    maxProfit: 7500000,
     amountPerPerson: 500000,
     numberOfPeople: 4,
   },
   {
-    name: "Laba Sangat Tinggi (> Rp 10.000.000)",
+    name: "Laba Tinggi (Rp 7.500.000 - Rp 10.000.000)",
+    beneficiaryGroup: "MOTHER_SIBLING",
+    minProfit: 7500000,
+    maxProfit: 10000000,
+    amountPerPerson: 750000,
+    numberOfPeople: 4,
+  },
+  {
+    name: "Laba Sangat Tinggi (Rp 10.000.000 - Rp 20.000.000)",
     beneficiaryGroup: "MOTHER_SIBLING",
     minProfit: 10000000,
-    maxProfit: null,
+    maxProfit: 20000000,
     amountPerPerson: 1000000,
+    numberOfPeople: 4,
+  },
+  {
+    name: "Laba Istimewa (> Rp 20.000.000)",
+    beneficiaryGroup: "MOTHER_SIBLING",
+    minProfit: 20000000,
+    maxProfit: null,
+    amountPerPerson: 2000000,
     numberOfPeople: 4,
   },
 ];
@@ -469,10 +501,10 @@ export function InvestorTierRulesPageClient({
                   type="button"
                   onClick={handleResetToStandard}
                   className="flex items-center gap-1 bg-[#F7F5F2] hover:bg-[#EFECE8] border border-[#D9D4CB] text-[#6B6560] hover:text-[#1C1917] px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
-                  title="Kembalikan ke 3 aturan standar (250rb, 500rb, 1jt)"
+                  title="Kembalikan ke 7 aturan standar keluarga"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Reset Standar (3 Tier)</span>
+                  <span>Reset Standar (7 Tier)</span>
                 </button>
 
                 <button
