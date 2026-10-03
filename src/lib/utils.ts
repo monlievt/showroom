@@ -25,3 +25,15 @@ export function formatDate(date: Date | string | null | undefined): string {
     year: "numeric",
   }).format(d);
 }
+
+export function formatUpcomingPrice(price: number | null | undefined): string {
+  if (!price || price <= 0) return "Estimasi: Hubungi Kami";
+  const millions = Math.floor(price / 1_000_000);
+  if (millions >= 100) {
+    const tens = Math.floor(millions / 10) * 10;
+    return `Estimasi Rp ${tens} Jutaan`;
+  }
+  const rounded = Math.floor(millions / 5) * 5;
+  return `Estimasi Rp ${rounded} Jutaan`;
+}
+

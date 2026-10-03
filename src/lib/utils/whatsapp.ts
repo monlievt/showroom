@@ -27,7 +27,9 @@ export function generateCatalogWhatsAppLink(
   const urlText = vehicle.url ? `\n\nLink unit: ${vehicle.url}` : "";
 
   let text = `Halo Admin Nur Mobil, saya tertarik unit *${vehicle.brand} ${vehicle.model} ${vehicle.year}* (Plat *${vehicle.plateNumber}*)${priceText}.\nApakah unit ini masih READY atau sudah BOOKED?${urlText}`;
-  if (vehicle.status === "SOLD_SETTLED") {
+  if (vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR") {
+    text = `Halo Admin Nur Mobil, saya tertarik dengan unit yang SEGERA HADIR: *${vehicle.brand} ${vehicle.model} ${vehicle.year}* (Plat *${vehicle.plateNumber}*).\nKapan estimasi unit selesai persiapan salon/inspeksi dan bisa dicek di garasi? Apakah bisa di-booking duluan?${urlText}`;
+  } else if (vehicle.status === "SOLD_SETTLED") {
     text = `Halo Admin Nur Mobil, saya melihat unit *${vehicle.brand} ${vehicle.model} ${vehicle.year}* (Plat *${vehicle.plateNumber}*) yang sudah TERJUAL di katalog.\nApakah ada rekomendasi stok unit serupa yang sedang intake atau segera ready di showroom?${urlText}`;
   }
 

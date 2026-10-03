@@ -9,8 +9,22 @@ export interface PublicCatalogFilter {
   minPrice?: number;
   maxPrice?: number;
   query?: string;
-  status?: "ALL" | "READY_FOR_SALE" | "BOOKED" | "SOLD_SETTLED";
+  status?: "ALL" | "READY_FOR_SALE" | "UPCOMING" | "BOOKED" | "SOLD_SETTLED";
 }
+
+const TAG_ORDER: Record<string, number> = {
+  FRONT_3_4: 1,
+  REAR_3_4: 2,
+  SIDE_RIGHT: 3,
+  SIDE_LEFT: 4,
+  INTERIOR_DASHBOARD: 5,
+  ENGINE_BAY: 6,
+  DOOR_SEALER: 7,
+  UNDER_DASHBOARD: 8,
+  UNDERBODY_CHASSIS: 9,
+  TRUNK_SPARE_TIRE: 10,
+  DOCUMENT_STNK_BPKB: 11,
+};
 
 /**
  * Server Action: Mengambil katalog publik (PRD.md §3 & ARCHITECTURE.md §3)
@@ -20,10 +34,12 @@ export interface PublicCatalogFilter {
  */
 export async function getPublicCatalog(filters?: PublicCatalogFilter) {
   try {
-    const allowedStatuses = ["READY_FOR_SALE", "BOOKED", "SOLD_SETTLED"];
+    const allowedStatuses = ["READY_FOR_SALE", "BOOKED", "SOLD_SETTLED", "INTAKE", "IN_REPAIR"];
     const where: any = {};
 
-    if (filters?.status && filters.status !== "ALL" && allowedStatuses.includes(filters.status)) {
+    if (filters?.status === "UPCOMING") {
+      where.status = { in: ["INTAKE", "IN_REPAIR"] };
+    } else if (filters?.status && filters.status !== "ALL" && allowedStatuses.includes(filters.status)) {
       where.status = filters.status;
     } else {
       where.status = {
@@ -94,30 +110,21 @@ export async function getPublicCatalog(filters?: PublicCatalogFilter) {
       orderBy: { createdAt: "desc" },
     });
 
-    const tagOrder: Record<string, number> = {
-      FRONT_3_4: 1,
-      REAR_3_4: 2,
-      SIDE_RIGHT: 3,
-      SIDE_LEFT: 4,
-      INTERIOR_DASHBOARD: 5,
-      ENGINE_BAY: 6,
-      DOOR_SEALER: 7,
-      UNDER_DASHBOARD: 8,
-      UNDERBODY_CHASSIS: 9,
-      TRUNK_SPARE_TIRE: 10,
-      DOCUMENT_STNK_BPKB: 11,
-    };
-
     return {
       success: true,
       data: vehicles.map((v) => {
         const safeSlug = generateVehicleSlug(v);
 
+        const isUpcoming = v.status === "INTAKE" || v.status === "IN_REPAIR";
         const sortedPhotos = v.photos.slice().sort((a, b) => {
-          const orderA = a.tag ? (tagOrder[a.tag] ?? 90) : a.category === "FINAL_LISTING" ? 10 : 50;
-          const orderB = b.tag ? (tagOrder[b.tag] ?? 90) : b.category === "FINAL_LISTING" ? 10 : 50;
+          if (a.tag === "FRONT_3_4") return -1;
+          if (b.tag === "FRONT_3_4") return 1;
+          const orderA = a.tag ? (TAG_ORDER[a.tag] ?? 90) : a.category === "FINAL_LISTING" ? 10 : 50;
+          const orderB = b.tag ? (TAG_ORDER[b.tag] ?? 90) : b.category === "FINAL_LISTING" ? 10 : 50;
           return orderA - orderB;
         });
+
+        const displayPhotos = isUpcoming ? sortedPhotos.slice(0, 1) : sortedPhotos;
 
         return {
           id: v.id,
@@ -134,7 +141,7 @@ export async function getPublicCatalog(filters?: PublicCatalogFilter) {
           status: v.status,
           location: v.currentLocation,
           youtubeVideoId: v.youtubeVideoId,
-          photos: sortedPhotos.map((p) => ({
+          photos: displayPhotos.map((p) => ({
             id: p.id,
             fileUrl: p.fileUrl,
             category: p.category,
@@ -266,7 +273,7 @@ export async function getPublicVehicleDetail(identifier: string) {
           { id: raw },
           { plateNumber: { in: plateCandidates } },
         ],
-        status: { in: ["READY_FOR_SALE", "BOOKED", "SOLD_SETTLED"] },
+        status: { in: ["READY_FOR_SALE", "BOOKED", "SOLD_SETTLED", "INTAKE", "IN_REPAIR"] },
       },
       select: {
         id: true,
@@ -320,7 +327,7 @@ export async function getPublicVehicleDetail(identifier: string) {
     // 2. Fallback cerdas: Cari jika plat nomor terselip di dalam slug teks (termasuk unit READY, BOOKED, maupun SOLD_SETTLED)
     if (!vehicle) {
       const allVehicles = await prisma.vehicle.findMany({
-        where: { status: { in: ["READY_FOR_SALE", "BOOKED", "SOLD_SETTLED"] } },
+        where: { status: { in: ["READY_FOR_SALE", "BOOKED", "SOLD_SETTLED", "INTAKE", "IN_REPAIR"] } },
         select: {
           id: true,
           plateNumber: true,
@@ -374,24 +381,17 @@ export async function getPublicVehicleDetail(identifier: string) {
         stnkStatus: vehicle.stnkStatus,
         bpkbStatus: vehicle.bpkbStatus,
         notes: vehicle.notes,
-        photos: vehicle.photos.slice().sort((a, b) => {
-          const tagOrder: Record<string, number> = {
-            FRONT_3_4: 1,
-            REAR_3_4: 2,
-            SIDE_RIGHT: 3,
-            SIDE_LEFT: 4,
-            INTERIOR_DASHBOARD: 5,
-            ENGINE_BAY: 6,
-            DOOR_SEALER: 7,
-            UNDER_DASHBOARD: 8,
-            UNDERBODY_CHASSIS: 9,
-            TRUNK_SPARE_TIRE: 10,
-            DOCUMENT_STNK_BPKB: 11,
-          };
-          const orderA = a.tag ? (tagOrder[a.tag] ?? 90) : a.category === "FINAL_LISTING" ? 10 : 50;
-          const orderB = b.tag ? (tagOrder[b.tag] ?? 90) : b.category === "FINAL_LISTING" ? 10 : 50;
-          return orderA - orderB;
-        }),
+        photos: (() => {
+          const isUpcoming = vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR";
+          const sorted = vehicle.photos.slice().sort((a, b) => {
+            if (a.tag === "FRONT_3_4") return -1;
+            if (b.tag === "FRONT_3_4") return 1;
+            const orderA = a.tag ? (TAG_ORDER[a.tag] ?? 90) : a.category === "FINAL_LISTING" ? 10 : 50;
+            const orderB = b.tag ? (TAG_ORDER[b.tag] ?? 90) : b.category === "FINAL_LISTING" ? 10 : 50;
+            return orderA - orderB;
+          });
+          return isUpcoming ? sorted.slice(0, 1) : sorted;
+        })(),
         inspection: currentInspection
           ? {
               id: currentInspection.id,

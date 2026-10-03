@@ -17,8 +17,9 @@ import {
   X,
   History,
   Archive,
+  Sparkles,
 } from "lucide-react";
-import { formatRupiah, cn } from "@/lib/utils";
+import { formatRupiah, formatUpcomingPrice, cn } from "@/lib/utils";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
 
 interface VehicleItem {
@@ -53,7 +54,7 @@ interface VehicleItem {
 }
 
 export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleItem[] }) {
-  const [selectedStatus, setSelectedStatus] = useState<"ALL" | "READY_FOR_SALE" | "BOOKED" | "SOLD_SETTLED">("ALL");
+  const [selectedStatus, setSelectedStatus] = useState<"ALL" | "READY_FOR_SALE" | "UPCOMING" | "BOOKED" | "SOLD_SETTLED">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("ALL");
   const [selectedTransmission, setSelectedTransmission] = useState("ALL");
@@ -64,6 +65,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
     return {
       ALL: initialVehicles.length,
       READY_FOR_SALE: initialVehicles.filter((v) => v.status === "READY_FOR_SALE").length,
+      UPCOMING: initialVehicles.filter((v) => v.status === "INTAKE" || v.status === "IN_REPAIR").length,
       BOOKED: initialVehicles.filter((v) => v.status === "BOOKED").length,
       SOLD_SETTLED: initialVehicles.filter((v) => v.status === "SOLD_SETTLED").length,
     };
@@ -79,7 +81,9 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
   const filteredVehicles = useMemo(() => {
     const result = initialVehicles.filter((v) => {
       // 0. Kategori Status
-      if (selectedStatus !== "ALL" && v.status !== selectedStatus) {
+      if (selectedStatus === "UPCOMING") {
+        if (v.status !== "INTAKE" && v.status !== "IN_REPAIR") return false;
+      } else if (selectedStatus !== "ALL" && v.status !== selectedStatus) {
         return false;
       }
 
@@ -112,12 +116,14 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
       return true;
     });
 
-    // Urutkan: READY_FOR_SALE & BOOKED di atas, SOLD_SETTLED di bawah jika melihat SEMUA
+    // Urutkan: READY_FOR_SALE di atas, BOOKED, UPCOMING di tengah, SOLD_SETTLED di bawah jika melihat SEMUA
     if (selectedStatus === "ALL") {
       const priority: Record<string, number> = {
         READY_FOR_SALE: 1,
         BOOKED: 2,
-        SOLD_SETTLED: 3,
+        INTAKE: 3,
+        IN_REPAIR: 3,
+        SOLD_SETTLED: 4,
       };
       result.sort((a, b) => (priority[a.status] || 99) - (priority[b.status] || 99));
     }
@@ -163,8 +169,9 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
         {[
           { id: "ALL", label: "Semua Unit", count: statusCounts.ALL, icon: Car },
           { id: "READY_FOR_SALE", label: "Ready Siap Pakai", count: statusCounts.READY_FOR_SALE, icon: ShieldCheck },
+          { id: "UPCOMING", label: "Segera Hadir", count: statusCounts.UPCOMING, icon: Sparkles },
           { id: "BOOKED", label: "Tanda Jadi (Booked)", count: statusCounts.BOOKED, icon: History },
-          { id: "SOLD_SETTLED", label: "Terjual (Sold Out)", count: statusCounts.SOLD_SETTLED, icon: Archive },
+          { id: "SOLD_SETTLED", label: "Terjual", count: statusCounts.SOLD_SETTLED, icon: Archive },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = selectedStatus === tab.id;
@@ -297,6 +304,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
           {filteredVehicles.map((v) => {
             const isBooked = v.status === "BOOKED";
             const isSold = v.status === "SOLD_SETTLED";
+            const isUpcoming = v.status === "INTAKE" || v.status === "IN_REPAIR";
             const thumbnail = v.photos[0]?.fileUrl;
             const waLink = generateCatalogWhatsAppLink("081234567890", {
               brand: v.brand,
@@ -312,7 +320,11 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                 key={v.id}
                 className={cn(
                   "bg-white rounded-2xl border overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between group cursor-pointer relative",
-                  isSold ? "border-stone-300 bg-stone-50/60 hover:border-stone-400" : "border-[#D9D4CB] hover:border-amber-400/80"
+                  isSold
+                    ? "border-stone-300 bg-stone-50/60 hover:border-stone-400"
+                    : isUpcoming
+                    ? "border-amber-200 bg-amber-50/20 hover:border-amber-400"
+                    : "border-[#D9D4CB] hover:border-amber-400/80"
                 )}
               >
                 {/* Area Card Atas (Foto, Judul, Spek, Harga) dapat langsung diklik */}
@@ -353,6 +365,11 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                           <Archive className="w-3 h-3 text-amber-400" />
                           <span>TERJUAL</span>
                         </span>
+                      ) : isUpcoming ? (
+                        <span className="text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm bg-amber-500 text-stone-950 flex items-center gap-1">
+                          <Sparkles className="w-3 h-3" />
+                          <span>SEGERA HADIR</span>
+                        </span>
                       ) : isBooked ? (
                         <span className="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm bg-amber-500 text-white">
                           BOOKED (Tanda Jadi)
@@ -364,7 +381,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                       )}
                     </div>
 
-                    {/* Badge Grade Inspeksi */}
+                    {/* Badge Grade Inspeksi (jika sudah diinspeksi) */}
                     {v.inspection && (
                       <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-lg border border-[#D9D4CB] text-[11px] font-bold text-[#1C1917] shadow-sm flex items-center gap-1.5">
                         <span className="text-[#D97706]">Grade Rangka:</span>
@@ -390,7 +407,11 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                     {/* Price */}
                     <div className="pt-1">
                       <div className="text-xs text-[#6B6560]">
-                        {isSold ? "Status Transaksi:" : "Harga Cash / Kredit:"}
+                        {isSold
+                          ? "Status Transaksi:"
+                          : isUpcoming
+                          ? "Estimasi Kisaran Harga:"
+                          : "Harga Cash / Kredit:"}
                       </div>
                       <div className="text-xl font-extrabold text-[#1C1917] tracking-tight">
                         {isSold ? (
@@ -400,7 +421,16 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                                 {formatRupiah(v.price)}
                               </span>
                             )}
-                            <span className="text-emerald-700 text-base font-extrabold">Terjual Lunas</span>
+                            <span className="text-emerald-700 text-base font-extrabold">Terjual</span>
+                          </div>
+                        ) : isUpcoming ? (
+                          <div className="space-y-0.5">
+                            <div className="text-[#D97706] font-black text-lg">
+                              {formatUpcomingPrice(v.price)}
+                            </div>
+                            <span className="text-[10px] text-[#6B6560] block font-normal">
+                              *Harga pas ditentukan setelah salon & cek fisik
+                            </span>
                           </div>
                         ) : v.price ? (
                           formatRupiah(v.price)
@@ -458,7 +488,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                     href={`/katalog/${v.slug}`}
                     className="flex items-center justify-center gap-1 bg-[#F7F5F2] hover:bg-[#EFECE8] border border-[#D9D4CB] text-[#1C1917] text-xs font-bold py-2.5 rounded-xl transition-colors"
                   >
-                    <span>{isSold ? "Arsip & Cek Fisik" : "Cek Detail"}</span>
+                    <span>{isSold ? "Arsip & Cek Fisik" : isUpcoming ? "Detail Persiapan" : "Cek Detail"}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
 
@@ -474,7 +504,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
                     )}
                   >
                     <Phone className="w-3.5 h-3.5" />
-                    <span>{isSold ? "Tanya Unit Serupa" : "Tanya Unit"}</span>
+                    <span>{isSold ? "Tanya Unit Serupa" : isUpcoming ? "Booking Duluan" : "Tanya Unit"}</span>
                   </a>
                 </div>
               </div>

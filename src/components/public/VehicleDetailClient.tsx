@@ -21,8 +21,9 @@ import {
   Eye,
   FileText,
   Archive,
+  Sparkles,
 } from "lucide-react";
-import { formatRupiah, formatDate, cn } from "@/lib/utils";
+import { formatRupiah, formatDate, formatUpcomingPrice, cn } from "@/lib/utils";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
 import { 
   PANEL_LABELS, 
@@ -95,6 +96,7 @@ interface VehicleDetailProps {
 export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
   const isBooked = vehicle.status === "BOOKED";
   const isSold = vehicle.status === "SOLD_SETTLED";
+  const isUpcoming = vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR";
   const brandCalibration = getBrandPaintStandard(vehicle.brand);
   const overallPaintStats = vehicle.inspection?.panels
     ? calculateOverallVehiclePaint(vehicle.inspection.panels, vehicle.brand)
@@ -176,6 +178,11 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                     <Archive className="w-3.5 h-3.5 text-amber-400" />
                     <span>TERJUAL</span>
                   </span>
+                ) : isUpcoming ? (
+                  <span className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500 text-white shadow-sm flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>SEGERA HADIR</span>
+                  </span>
                 ) : isBooked ? (
                   <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500 text-white shadow-sm">
                     Sudah Dibooking (DP)
@@ -195,6 +202,19 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                 <span>Warna: {vehicle.color}</span>
               </div>
             </div>
+
+            {/* Banner Persiapan Unit Segera Hadir (Upcoming) */}
+            {isUpcoming && (
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[#1C1917] space-y-1.5">
+                <div className="flex items-center gap-2 text-xs font-extrabold text-amber-900 uppercase tracking-wider">
+                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>Tahap Persiapan & Detailing Salon</span>
+                </div>
+                <p className="text-[11px] text-stone-600 leading-relaxed">
+                  Unit ini baru saja tiba di garasi kami dan sedang dalam proses inspeksi fisik menyeluruh, perbaikan minor, dan salon detailing. Foto resmi dan hasil inspeksi lengkap akan ditayangkan setelah unit siap. Anda dapat memesan (booking) lebih awal agar tidak didahului pembeli lain.
+                </p>
+              </div>
+            )}
 
             {/* Banner Arsip Transaksi Unit Terjual */}
             {isSold && (
@@ -220,12 +240,20 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
             <div
               className={cn(
                 "p-4 rounded-xl border space-y-1.5",
-                isSold ? "bg-stone-100/80 border-stone-300" : "bg-[#FAF9F6] border-[#EBE7E1]"
+                isSold
+                  ? "bg-stone-100/80 border-stone-300"
+                  : isUpcoming
+                  ? "bg-amber-50/60 border-amber-200"
+                  : "bg-[#FAF9F6] border-[#EBE7E1]"
               )}
             >
               <div className="flex items-center justify-between">
                 <span className="text-xs text-[#6B6560] font-medium block">
-                  {isSold ? "Harga Penawaran Terakhir:" : "Harga Tunai (Cash / Tukar Tambah):"}
+                  {isSold
+                    ? "Harga Penawaran Terakhir:"
+                    : isUpcoming
+                    ? "Estimasi Kisaran Harga:"
+                    : "Harga Tunai (Cash / Tukar Tambah):"}
                 </span>
               </div>
 
@@ -241,6 +269,15 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                   </div>
                   <span className="text-[11px] text-stone-500 block">
                     *Unit telah lunas dan diserahterimakan. Harga di atas adalah harga acuan penawaran sebelum unit laku.
+                  </span>
+                </div>
+              ) : isUpcoming ? (
+                <div className="space-y-1">
+                  <div className="text-2xl sm:text-3xl font-extrabold text-amber-900 tracking-tight">
+                    {formatUpcomingPrice(vehicle.price)}
+                  </div>
+                  <span className="text-[11px] text-amber-800/80 block">
+                    *Harga final akan ditetapkan setelah proses rekondisi & detailing selesai. Booking prioritas tanpa komitmen tersedia.
                   </span>
                 </div>
               ) : (
@@ -307,11 +344,19 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                 className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow cursor-pointer ${
                   isSold
                     ? "bg-stone-800 hover:bg-stone-900 text-white"
+                    : isUpcoming
+                    ? "bg-amber-600 hover:bg-amber-700 text-white"
                     : "bg-[#D97706] hover:bg-[#B45309] text-white"
                 }`}
               >
                 <Phone className="w-4 h-4" />
-                <span>{isSold ? "Unit Sudah Terjual — Tanya Unit Serupa" : "Tanya Admin / Booking Unit Cepat"}</span>
+                <span>
+                  {isSold
+                    ? "Unit Sudah Terjual — Tanya Unit Serupa"
+                    : isUpcoming
+                    ? "Minat Unit Ini? Booking Duluan / Tanya via WA"
+                    : "Tanya Admin / Booking Unit Cepat"}
+                </span>
               </a>
 
               {vehicle.inspection && (

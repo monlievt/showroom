@@ -347,18 +347,24 @@ export function VehicleGallery({
               </div>
             )}
 
-            {/* Status Unit Badge (Top Left - Hanya tampil jika unit ready atau booked) */}
+            {/* Status Unit Badge (Top Left - Tampil jika belum terjual) */}
             {!isSold && (
               <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
                 <span
                   className={cn(
                     "text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm",
-                    isBooked
+                    status === "INTAKE" || status === "IN_REPAIR"
+                      ? "bg-amber-500 text-stone-950 font-black flex items-center gap-1.5"
+                      : isBooked
                       ? "bg-amber-500 text-white"
                       : "bg-emerald-600 text-white"
                   )}
                 >
-                  {isBooked ? "BOOKED (Tanda Jadi)" : "READY FOR SALE"}
+                  {status === "INTAKE" || status === "IN_REPAIR"
+                    ? "SEGERA HADIR (DALAM PERSIAPAN)"
+                    : isBooked
+                    ? "BOOKED (Tanda Jadi)"
+                    : "READY FOR SALE"}
                 </span>
               </div>
             )}
