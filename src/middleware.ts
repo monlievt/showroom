@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/auth/session-token";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME);
 
   // Verifikasi kriptografis signature HMAC session untuk mencegah Cookie Spoofing / Privilege Escalation
-  let session = sessionCookie?.value ? verifySessionToken(sessionCookie.value) : null;
+  let session = sessionCookie?.value ? await verifySessionToken(sessionCookie.value) : null;
 
   // Jika cookie ada tapi tidak valid (dicoba dipalsukan/spoofed), hapus cookie tersebut
   const isCookieTampered = Boolean(sessionCookie?.value && !session);

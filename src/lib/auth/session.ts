@@ -1,66 +1,18 @@
 import { cookies } from "next/headers";
-import crypto from "crypto";
+import {
+  type SessionData,
+  SESSION_COOKIE_NAME,
+  createSessionToken,
+  verifySessionToken,
+  signData,
+} from "./session-token";
 
-export interface SessionData {
-  userId: string;
-  authUserId: string;
-  role: "OWNER" | "ADMIN" | "STAFF_ADMIN" | "SALES" | "INVESTOR";
-  fullName: string;
-  phone?: string | null;
-  investorId?: string | null;
-}
-
-export const SESSION_COOKIE_NAME = "nur_mobil_session";
-const AUTH_SECRET = process.env.AUTH_SECRET || "dev-secret-key-nur-mobil-32-chars-long-secure";
-
-if (process.env.NODE_ENV === "production" && (!process.env.AUTH_SECRET || process.env.AUTH_SECRET.length < 32)) {
-  console.warn("⚠️ PERINGATAN KEAMANAN: AUTH_SECRET di production harus didefinisikan dengan panjang minimal 32 karakter acak!");
-}
-
-/**
- * Buat signature HMAC-SHA256 untuk mencegah manipulasi cookie di client
- */
-export function signData(payload: string): string {
-  const hmac = crypto.createHmac("sha256", AUTH_SECRET);
-  hmac.update(payload);
-  return hmac.digest("hex");
-}
-
-/**
- * Verifikasi token session dengan constant-time comparison untuk mencegah timing attack
- */
-export function verifySessionToken(token: string): SessionData | null {
-  try {
-    if (!token || typeof token !== "string") return null;
-
-    const decoded = JSON.parse(Buffer.from(token, "base64").toString("utf-8"));
-    const { payload, signature } = decoded;
-
-    if (!payload || !signature || typeof payload !== "string" || typeof signature !== "string") {
-      return null;
-    }
-
-    const expectedSignature = signData(payload);
-
-    const sigBuf = Buffer.from(signature, "hex");
-    const expBuf = Buffer.from(expectedSignature, "hex");
-
-    if (sigBuf.length !== expBuf.length || !crypto.timingSafeEqual(sigBuf, expBuf)) {
-      console.warn("⚠️ DETEKSI KEAMANAN: Signature cookie session tidak valid (percobaan manipulasi/spoofing terdeteksi)!");
-      return null;
-    }
-
-    return JSON.parse(payload) as SessionData;
-  } catch {
-    return null;
-  }
-}
+export type { SessionData };
+export { SESSION_COOKIE_NAME, verifySessionToken, signData };
 
 export async function createSession(data: SessionData) {
   const cookieStore = await cookies();
-  const payload = JSON.stringify(data);
-  const signature = signData(payload);
-  const token = Buffer.from(JSON.stringify({ payload, signature })).toString("base64");
+  const token = await createSessionToken(data);
 
   cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
@@ -77,8 +29,8 @@ export async function getSession(): Promise<SessionData | null> {
     const cookie = cookieStore.get(SESSION_COOKIE_NAME);
 
     if (!cookie?.value) return null;
-    return verifySessionToken(cookie.value);
-  } catch (error) {
+    return await verifySessionToken(cookie.value);
+  } catch {
     return null;
   }
 }
