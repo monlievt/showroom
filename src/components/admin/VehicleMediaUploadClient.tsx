@@ -70,9 +70,24 @@ const DOC_CATEGORIES = [
   { value: "STNK_SCAN", label: "Scan STNK & Lembar Pajak Berjalan" },
   { value: "BPKB_SCAN", label: "Scan BPKB & Faktur Asli" },
   { value: "FAKTUR_SCAN", label: "Faktur Pembelian & Sertifikat NIK" },
+  { value: "KUITANSI", label: "Kuitansi / Bukti Pelunasan Resmi" },
+  { value: "KTP_PEMILIK", label: "Foto KTP Pembeli / Pemilik Asli" },
   { value: "SPK_AGREEMENT", label: "Surat Perjanjian / SPK Jual Beli" },
-  { value: "OTHER", label: "Dokumen Pendukung Lainnya" },
+  { value: "OTHER", label: "BAST & Dokumen Pendukung Lainnya" },
 ];
+
+const DOC_LABEL_MAP: Record<string, string> = {
+  STNK_SCAN: "Scan STNK & Pajak Berjalan",
+  BPKB_SCAN: "Scan BPKB & Faktur Asli",
+  FAKTUR: "Faktur & Sertifikat NIK",
+  FAKTUR_SCAN: "Faktur Pembelian & NIK",
+  KUITANSI: "Kuitansi / Bukti Pelunasan",
+  KTP_PEMILIK: "Foto KTP Pembeli / Pemilik",
+  FORM_A: "Formulir A (CBU)",
+  KEUR: "Buku Uji KIR",
+  SPK_AGREEMENT: "Surat Perjanjian / SPJB",
+  OTHER: "BAST / Berkas Serah Terima",
+};
 
 function renderSlotIcon(iconName: string) {
   switch (iconName) {
@@ -925,7 +940,7 @@ export function VehicleMediaUploadClient({
                   </div>
                   <div className="min-w-0">
                     <span className="block truncate font-bold text-[#1C1917]">
-                      {d.docType || "Dokumen Legalitas"}
+                      {(d.docType && DOC_LABEL_MAP[d.docType]) || d.docType || "Dokumen Legalitas"}
                     </span>
                     <span className="text-[10px] text-[#6B6560] block truncate">
                       Arsip Berkas Digital
