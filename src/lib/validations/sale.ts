@@ -19,6 +19,17 @@ export const createSaleSchema = z.object({
   initialPaymentMethod: z.string().default("TRANSFER"),
   tradeInVehicleId: z.string().uuid().optional().nullable(),
   initialPaymentNotes: z.string().optional().nullable(),
+  // Serah Terima Fisik & Dokumen Legalitas (Opsional / Rekomendasi saat deal)
+  handoverOdometer: z.coerce.number().nonnegative().optional().nullable(),
+  handoverPhotoUrl: z.string().optional().nullable(),
+  bastDocUrl: z.string().optional().nullable(),
+  paymentReceiptUrl: z.string().optional().nullable(),
+  buyerIdCardUrl: z.string().optional().nullable(),
+  handoverChecklist: z.array(z.string()).optional().default([]),
+  handoverNotes: z.string().optional().nullable(),
+  // Komisi Makelar / Mediator (Jika Ada)
+  brokerName: z.string().optional().nullable(),
+  brokerFee: z.coerce.number().nonnegative().optional().nullable(),
 }).refine((data) => {
   // Jika bukan pembayaran lunas 100% (skema Cash Tempo Garasi)
   const isTempo = (data.initialPaymentAmount || 0) < data.sellingPrice;

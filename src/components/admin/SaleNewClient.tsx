@@ -16,9 +16,22 @@ import {
   TrendingUp,
   ShieldAlert,
   ShieldCheck,
+  Camera,
+  FileText,
+  Upload,
+  CheckSquare,
+  Square,
+  Trash2,
+  Eye,
+  FileUp,
+  Users,
+  Gauge,
+  ClipboardCheck,
+  Receipt,
+  FileBadge,
 } from "lucide-react";
 import { createSaleAction } from "@/app/actions/sale";
-import { formatRupiah } from "@/lib/utils";
+import { formatRupiah, cn } from "@/lib/utils";
 
 interface AvailableVehicle {
   id: string;
@@ -31,6 +44,15 @@ interface AvailableVehicle {
   totalHpp: number;
   status: string;
 }
+
+const DEFAULT_CHECKLIST = [
+  { id: "BPKB_ORIGINAL", label: "BPKB Asli & Faktur Pembelian Asli" },
+  { id: "STNK_ORIGINAL", label: "STNK Asli & Bukti Pajak Berjalan" },
+  { id: "SPK_BAST_SIGNED", label: "BAST Bertandatangan & Bermeterai" },
+  { id: "SPARE_KEY", label: "Kunci Cadangan / Serep (2 Pcs Lengkap)" },
+  { id: "MANUAL_BOOK", label: "Buku Manual & Buku Rekam Servis" },
+  { id: "SPARE_TIRE_TOOLKIT", label: "Ban Serep, Dongkrak & Tool Kit Lengkap" },
+];
 
 export function SaleNewClient({
   availableVehicles,
@@ -59,6 +81,31 @@ export function SaleNewClient({
   );
   const [initialPaymentMethod, setInitialPaymentMethod] = useState("TRANSFER");
 
+  // State Serah Terima Fisik & Dokumen Legalitas
+  const [handoverOdometer, setHandoverOdometer] = useState<number | "">("");
+  const [handoverPhotoUrl, setHandoverPhotoUrl] = useState("");
+  const [bastDocUrl, setBastDocUrl] = useState("");
+  const [paymentReceiptUrl, setPaymentReceiptUrl] = useState("");
+  const [buyerIdCardUrl, setBuyerIdCardUrl] = useState("");
+  const [handoverChecklist, setHandoverChecklist] = useState<string[]>([
+    "BPKB_ORIGINAL",
+    "STNK_ORIGINAL",
+    "SPK_BAST_SIGNED",
+    "SPARE_KEY",
+    "SPARE_TIRE_TOOLKIT",
+  ]);
+  const [handoverNotes, setHandoverNotes] = useState("");
+
+  // State Komisi Makelar / Mediator
+  const [brokerName, setBrokerName] = useState("");
+  const [brokerFee, setBrokerFee] = useState<number | "">("");
+
+  // Upload loading states
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [uploadingBast, setUploadingBast] = useState(false);
+  const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const [uploadingKtp, setUploadingKtp] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -67,9 +114,10 @@ export function SaleNewClient({
 
   const priceNum = Number(sellingPrice) || 0;
   const initialNum = Number(initialPaymentAmount) || 0;
+  const brokerFeeNum = Number(brokerFee) || 0;
   const remainingPiutang = Math.max(0, priceNum - initialNum);
   const estimatedGrossProfit = selectedUnit
-    ? priceNum - selectedUnit.totalHpp
+    ? priceNum - selectedUnit.totalHpp - brokerFeeNum
     : 0;
 
   // Kebijakan Cash Tempo Khusus Nur Mobil
@@ -79,6 +127,60 @@ export function SaleNewClient({
   const maxDueDate = new Date(new Date(saleDate).getTime() + 30 * 24 * 60 * 60 * 1000)
     .toISOString()
     .split("T")[0];
+
+  // Helper upload file langsung ke /api/upload
+  const handleFileUpload = async (
+    file: File,
+    uploadType: "PHOTO" | "DOCUMENT" | "RECEIPT",
+    setLoadingState: (val: boolean) => void,
+    setUrlState: (url: string) => void,
+    docType?: string,
+    tag?: string,
+    title?: string
+  ) => {
+    if (!vehicleId) {
+      setErrorMsg("Pilih unit kendaraan terlebih dahulu sebelum mengunggah file.");
+      return;
+    }
+    setLoadingState(true);
+    setErrorMsg("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("vehicleId", vehicleId);
+      formData.append("uploadType", uploadType);
+      if (uploadType === "PHOTO") {
+        formData.append("category", "DOCUMENT_PROOF");
+        if (tag) formData.append("tag", tag);
+        if (title) formData.append("title", title);
+      } else {
+        if (docType) formData.append("docType", docType);
+      }
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || "Gagal mengunggah file");
+      }
+
+      setUrlState(data.fileUrl);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Gagal mengunggah file");
+    } finally {
+      setLoadingState(false);
+    }
+  };
+
+  const toggleChecklistItem = (itemId: string) => {
+    setHandoverChecklist((prev) =>
+      prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId]
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,6 +237,15 @@ export function SaleNewClient({
           ? Number(initialPaymentAmount)
           : 0,
         initialPaymentMethod,
+        handoverOdometer: handoverOdometer ? Number(handoverOdometer) : undefined,
+        handoverPhotoUrl: handoverPhotoUrl || undefined,
+        bastDocUrl: bastDocUrl || undefined,
+        paymentReceiptUrl: paymentReceiptUrl || undefined,
+        buyerIdCardUrl: buyerIdCardUrl || undefined,
+        handoverChecklist,
+        handoverNotes: handoverNotes || undefined,
+        brokerName: brokerName || undefined,
+        brokerFee: brokerFee ? Number(brokerFee) : undefined,
       });
 
       if (!res.success) {
@@ -480,6 +591,465 @@ export function SaleNewClient({
               )}
             </div>
           )}
+        </div>
+
+        {/* SECTION 4: Serah Terima, Berkas Legalitas & Checklist Keluar */}
+        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
+          <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3 flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <ClipboardCheck className="w-5 h-5 text-[#D97706]" />
+              <div>
+                <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+                  4. Berkas Legalitas, Dokumen Tanda Tangan & Serah Terima
+                </h2>
+                <p className="text-[11px] text-[#6B6560]">
+                  Unggah berkas BAST bermeterai, bukti kuitansi pelunasan, foto serah kunci, dan verifikasi checklist berkas asli.
+                </p>
+              </div>
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+              SOP Serah Terima Nur Mobil
+            </span>
+          </div>
+
+          {/* 4A. GRID UPLOAD BERKAS BUKTI & FOTO */}
+          <div>
+            <label className="block text-xs font-bold text-[#1C1917] mb-3 flex items-center gap-1.5">
+              <FileUp className="w-4 h-4 text-[#D97706]" />
+              <span>Arsip Dokumen Fisik & Foto Bukti Transaksi</span>
+            </label>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* 1. Foto Serah Terima */}
+              <div className="border border-[#D9D4CB] rounded-xl p-3.5 bg-[#FAF9F6] flex flex-col justify-between space-y-3">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
+                      <Camera className="w-3.5 h-3.5 text-[#D97706]" />
+                      <span>Foto Serah Terima</span>
+                    </span>
+                    {handoverPhotoUrl && (
+                      <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                        ✓ Terunggah
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-[#6B6560] leading-snug">
+                    Foto konsumen & kunci mobil saat serah terima unit di showroom / rumah.
+                  </p>
+                </div>
+
+                {handoverPhotoUrl ? (
+                  <div className="space-y-2">
+                    <div className="h-24 w-full rounded-lg overflow-hidden border border-emerald-300 relative bg-black/5">
+                      <img
+                        src={handoverPhotoUrl}
+                        alt="Serah Terima"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setHandoverPhotoUrl("")}
+                      className="w-full py-1 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded border border-red-200 flex items-center justify-center gap-1"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>Hapus / Ganti</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                      {uploadingPhoto ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
+                      ) : (
+                        <Upload className="w-4 h-4 text-[#D97706]" />
+                      )}
+                      <span className="text-[11px] font-bold text-[#1C1917]">
+                        {uploadingPhoto ? "Mengunggah..." : "Pilih Foto Unit"}
+                      </span>
+                      <span className="text-[9px] text-[#6B6560]">JPG / PNG / WebP</span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        disabled={uploadingPhoto}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleFileUpload(
+                              file,
+                              "PHOTO",
+                              setUploadingPhoto,
+                              setHandoverPhotoUrl,
+                              undefined,
+                              "HANDOVER_DELIVERY",
+                              "Foto Serah Terima Unit ke Pembeli"
+                            );
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              {/* 2. Scan BAST Bertandatangan */}
+              <div className="border border-[#D9D4CB] rounded-xl p-3.5 bg-[#FAF9F6] flex flex-col justify-between space-y-3">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
+                      <FileBadge className="w-3.5 h-3.5 text-[#D97706]" />
+                      <span>BAST Bertandatangan</span>
+                    </span>
+                    {bastDocUrl && (
+                      <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                        ✓ Terunggah
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-[#6B6560] leading-snug">
+                    Scan Berita Acara Serah Terima (BAST) bermeterai 10.000 yang ditandatangani.
+                  </p>
+                </div>
+
+                {bastDocUrl ? (
+                  <div className="space-y-2">
+                    <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-center">
+                      <span className="text-[11px] font-bold text-emerald-800 block truncate">
+                        BAST Tersimpan
+                      </span>
+                      <a
+                        href={bastDocUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[10px] text-[#D97706] hover:underline inline-flex items-center gap-1 mt-1 font-semibold"
+                      >
+                        <Eye className="w-3 h-3" />
+                        <span>Buka Berkas</span>
+                      </a>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setBastDocUrl("")}
+                      className="w-full py-1 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded border border-red-200 flex items-center justify-center gap-1"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>Hapus / Ganti</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                      {uploadingBast ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
+                      ) : (
+                        <Upload className="w-4 h-4 text-[#D97706]" />
+                      )}
+                      <span className="text-[11px] font-bold text-[#1C1917]">
+                        {uploadingBast ? "Mengunggah..." : "Upload File BAST"}
+                      </span>
+                      <span className="text-[9px] text-[#6B6560]">PDF / JPG / PNG</span>
+                      <input
+                        type="file"
+                        accept="application/pdf,image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        disabled={uploadingBast}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleFileUpload(
+                              file,
+                              "DOCUMENT",
+                              setUploadingBast,
+                              setBastDocUrl,
+                              "OTHER"
+                            );
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              {/* 3. Kuitansi / Bukti Bayar */}
+              <div className="border border-[#D9D4CB] rounded-xl p-3.5 bg-[#FAF9F6] flex flex-col justify-between space-y-3">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
+                      <Receipt className="w-3.5 h-3.5 text-[#D97706]" />
+                      <span>Bukti Pelunasan / Kuitansi</span>
+                    </span>
+                    {paymentReceiptUrl && (
+                      <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                        ✓ Terunggah
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-[#6B6560] leading-snug">
+                    Slip transfer rekening BCA showroom atau kuitansi fisik cap lunas.
+                  </p>
+                </div>
+
+                {paymentReceiptUrl ? (
+                  <div className="space-y-2">
+                    <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-center">
+                      <span className="text-[11px] font-bold text-emerald-800 block truncate">
+                        Bukti Bayar Tersimpan
+                      </span>
+                      <a
+                        href={paymentReceiptUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[10px] text-[#D97706] hover:underline inline-flex items-center gap-1 mt-1 font-semibold"
+                      >
+                        <Eye className="w-3 h-3" />
+                        <span>Buka Berkas</span>
+                      </a>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setPaymentReceiptUrl("")}
+                      className="w-full py-1 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded border border-red-200 flex items-center justify-center gap-1"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>Hapus / Ganti</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                      {uploadingReceipt ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
+                      ) : (
+                        <Upload className="w-4 h-4 text-[#D97706]" />
+                      )}
+                      <span className="text-[11px] font-bold text-[#1C1917]">
+                        {uploadingReceipt ? "Mengunggah..." : "Upload Slip / Kuitansi"}
+                      </span>
+                      <span className="text-[9px] text-[#6B6560]">PDF / JPG / PNG</span>
+                      <input
+                        type="file"
+                        accept="application/pdf,image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        disabled={uploadingReceipt}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleFileUpload(
+                              file,
+                              "DOCUMENT",
+                              setUploadingReceipt,
+                              setPaymentReceiptUrl,
+                              "KUITANSI"
+                            );
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              {/* 4. Foto KTP Pembeli */}
+              <div className="border border-[#D9D4CB] rounded-xl p-3.5 bg-[#FAF9F6] flex flex-col justify-between space-y-3">
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-[#D97706]" />
+                      <span>Foto KTP Pembeli</span>
+                    </span>
+                    {buyerIdCardUrl && (
+                      <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                        ✓ Terunggah
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-[#6B6560] leading-snug">
+                    Arsip identitas resmi pembeli untuk lapor jual Samsat & balik nama.
+                  </p>
+                </div>
+
+                {buyerIdCardUrl ? (
+                  <div className="space-y-2">
+                    <div className="h-24 w-full rounded-lg overflow-hidden border border-emerald-300 relative bg-black/5">
+                      <img
+                        src={buyerIdCardUrl}
+                        alt="KTP Pembeli"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setBuyerIdCardUrl("")}
+                      className="w-full py-1 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded border border-red-200 flex items-center justify-center gap-1"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                      <span>Hapus / Ganti</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                      {uploadingKtp ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
+                      ) : (
+                        <Upload className="w-4 h-4 text-[#D97706]" />
+                      )}
+                      <span className="text-[11px] font-bold text-[#1C1917]">
+                        {uploadingKtp ? "Mengunggah..." : "Upload Foto KTP"}
+                      </span>
+                      <span className="text-[9px] text-[#6B6560]">JPG / PNG / WebP</span>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        disabled={uploadingKtp}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleFileUpload(
+                              file,
+                              "DOCUMENT",
+                              setUploadingKtp,
+                              setBuyerIdCardUrl,
+                              "KTP_PEMILIK"
+                            );
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 4B. ODOMETER TERAKHIR & CATATAN SERAH TERIMA */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#EBE7E1]">
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
+                <Gauge className="w-3.5 h-3.5 text-[#D97706]" />
+                <span>Odometer Terakhir Saat Serah Terima (KM)</span>
+              </label>
+              <input
+                type="number"
+                min={0}
+                placeholder="Contoh: 19850"
+                value={handoverOdometer}
+                onChange={(e) =>
+                  setHandoverOdometer(e.target.value === "" ? "" : Number(e.target.value))
+                }
+                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Patokan pasti batas klaim garansi toko (misal: 1 bulan / 1.000 KM).
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Catatan Kondisi Unit Saat Keluar Garasi
+              </label>
+              <input
+                type="text"
+                placeholder="Contoh: Bensin terisi 1/2 tangki, sudah salon wax, garansi s/d 20.850 KM."
+                value={handoverNotes}
+                onChange={(e) => setHandoverNotes(e.target.value)}
+                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-normal text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Catatan khusus penyerahan unit kepada pembeli.
+              </span>
+            </div>
+          </div>
+
+          {/* 4C. CHECKLIST KELENGKAPAN BERKAS ASLI & DOKUMEN */}
+          <div className="pt-2 border-t border-[#EBE7E1]">
+            <label className="block text-xs font-bold text-[#1C1917] mb-2 flex items-center gap-1.5">
+              <ClipboardCheck className="w-4 h-4 text-[#D97706]" />
+              <span>Checklist Berkas Asli & Kelengkapan yang Diserahkan</span>
+            </label>
+            <p className="text-[11px] text-[#6B6560] mb-3">
+              Centang item kelengkapan yang diserahterimakan langsung ke tangan konsumen.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+              {DEFAULT_CHECKLIST.map((item) => {
+                const isChecked = handoverChecklist.includes(item.id);
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => toggleChecklistItem(item.id)}
+                    className={cn(
+                      "flex items-center gap-2.5 p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer",
+                      isChecked
+                        ? "bg-emerald-50 border-emerald-300 text-emerald-950"
+                        : "bg-[#FAF9F6] border-[#D9D4CB] text-[#6B6560] hover:bg-stone-100"
+                    )}
+                  >
+                    {isChecked ? (
+                      <CheckSquare className="w-4 h-4 text-emerald-700 shrink-0" />
+                    ) : (
+                      <Square className="w-4 h-4 text-[#A8A29E] shrink-0" />
+                    )}
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 4D. KOMISI MAKELAR / MEDIATOR (JIKA ADA) */}
+          <div className="pt-2 border-t border-[#EBE7E1] bg-stone-50/70 p-3.5 rounded-xl border border-stone-200">
+            <div className="flex items-center gap-2 mb-2">
+              <Users className="w-4 h-4 text-[#D97706]" />
+              <span className="text-xs font-bold text-[#1C1917]">
+                Komisi Makelar / Perantara Penjualan (Opsional)
+              </span>
+            </div>
+            <p className="text-[11px] text-[#6B6560] mb-3">
+              Jika penjualan melalui perantara, masukkan nama & komisi. Sistem otomatis memotong laba bersih transaksi.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] font-semibold text-[#1C1917] mb-1">
+                  Nama Makelar / Mediator
+                </label>
+                <input
+                  type="text"
+                  placeholder="Contoh: Pak Bambang (Mediator Malang)"
+                  value={brokerName}
+                  onChange={(e) => setBrokerName(e.target.value)}
+                  className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-xl text-xs font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-[#1C1917] mb-1">
+                  Nominal Komisi Makelar (Rp)
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="Contoh: 1500000"
+                  value={brokerFee}
+                  onChange={(e) =>
+                    setBrokerFee(e.target.value === "" ? "" : Number(e.target.value))
+                  }
+                  className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-xl text-xs font-bold text-[#D97706] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                />
+                {brokerFeeNum > 0 && (
+                  <span className="text-[10px] text-[#D97706] mt-1 block font-semibold">
+                    Komisi: {formatRupiah(brokerFeeNum)} (memotong laba kotor)
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Live Transaction Summary Card */}

@@ -112,7 +112,7 @@ export async function createSaleAction(input: CreateSaleInput) {
         isFullyPaid = validated.initialPaymentAmount >= validated.sellingPrice;
       }
 
-      // 5. Update Status Kendaraan
+      // 5. Update Status & Odometer Kendaraan
       let nextVehicleStatus: "SOLD_SETTLED" | "AT_SHOWROOM_PENDING" | "BOOKED";
       if (isFullyPaid) {
         nextVehicleStatus = "SOLD_SETTLED";
@@ -122,12 +122,100 @@ export async function createSaleAction(input: CreateSaleInput) {
         nextVehicleStatus = "BOOKED";
       }
 
+      const vehicleUpdateData: any = { status: nextVehicleStatus };
+      if (validated.handoverOdometer && validated.handoverOdometer > 0) {
+        vehicleUpdateData.odometer = validated.handoverOdometer;
+      }
+      if (validated.handoverNotes) {
+        vehicleUpdateData.notes = vehicle.plateNumber 
+          ? `Serah terima: ${validated.handoverNotes}` 
+          : validated.handoverNotes;
+      }
+
       await tx.vehicle.update({
         where: { id: validated.vehicleId },
-        data: { status: nextVehicleStatus },
+        data: vehicleUpdateData,
       });
 
-      // 6. AuditLog
+      // 6. Simpan Dokumen Legalitas & Foto Serah Terima (Jika diunggah)
+      if (validated.handoverPhotoUrl) {
+        await tx.vehiclePhoto.create({
+          data: {
+            vehicleId: validated.vehicleId,
+            category: "DOCUMENT_PROOF",
+            tag: "HANDOVER_DELIVERY",
+            title: "Foto Serah Terima Unit & Kunci ke Konsumen",
+            fileUrl: validated.handoverPhotoUrl,
+          },
+        });
+      }
+
+      if (validated.bastDocUrl) {
+        await tx.vehicleDocument.create({
+          data: {
+            vehicleId: validated.vehicleId,
+            type: "OTHER",
+            fileUrl: validated.bastDocUrl,
+            uploadedBy: "Admin (BAST Bertandatangan)",
+          },
+        });
+      }
+
+      if (validated.paymentReceiptUrl) {
+        await tx.vehicleDocument.create({
+          data: {
+            vehicleId: validated.vehicleId,
+            type: "KUITANSI",
+            fileUrl: validated.paymentReceiptUrl,
+            uploadedBy: "Admin (Bukti Pelunasan)",
+          },
+        });
+      }
+
+      if (validated.buyerIdCardUrl) {
+        await tx.vehicleDocument.create({
+          data: {
+            vehicleId: validated.vehicleId,
+            type: "KTP_PEMILIK",
+            fileUrl: validated.buyerIdCardUrl,
+            uploadedBy: "Admin (KTP Pembeli)",
+          },
+        });
+      }
+
+      // 7. Catat Beban Komisi Makelar / Perantara (Jika Ada)
+      if (validated.brokerFee && validated.brokerFee > 0) {
+        await tx.expense.create({
+          data: {
+            vehicleId: validated.vehicleId,
+            category: "BROKER_COMMISSION",
+            vendorName: validated.brokerName || "Makelar / Broker Unit",
+            amount: validated.brokerFee,
+            date: validated.saleDate,
+            notes: `Komisi penjualan unit oleh broker/perantara: ${validated.brokerName || "-"}`,
+            createdBy: "Admin/Owner",
+          },
+        });
+
+        const lastCashTx = await tx.cashTransaction.findFirst({
+          orderBy: { createdAt: "desc" },
+          select: { runningBalance: true },
+        });
+        const currentBal = lastCashTx ? Number(lastCashTx.runningBalance) : 0;
+        await tx.cashTransaction.create({
+          data: {
+            type: "OUT_EXPENSE",
+            amount: validated.brokerFee,
+            relatedVehicleId: vehicle.id,
+            relatedSaleId: sale.id,
+            runningBalance: currentBal - validated.brokerFee,
+            notes: `Biaya Komisi Makelar: ${validated.brokerName || "Mediator"} (${vehicle.brand} ${vehicle.model} - ${vehicle.plateNumber})`,
+            createdBy: "Admin/Owner",
+          },
+        });
+      }
+
+      // 8. AuditLog
       await tx.auditLog.create({
         data: {
           actorUserId: "admin-owner-001",
@@ -139,6 +227,9 @@ export async function createSaleAction(input: CreateSaleInput) {
             sellingPrice: validated.sellingPrice,
             initialPayment: validated.initialPaymentAmount,
             vehicleStatus: nextVehicleStatus,
+            handoverOdometer: validated.handoverOdometer || null,
+            handoverChecklist: validated.handoverChecklist || [],
+            brokerFee: validated.brokerFee || null,
           } as any,
         },
       });
