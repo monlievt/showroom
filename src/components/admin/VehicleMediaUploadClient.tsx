@@ -532,16 +532,28 @@ export function VehicleMediaUploadClient({
                           </div>
                         </div>
 
-                        {existingPhoto ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                            <span>Terisi</span>
-                          </span>
-                        ) : (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
-                            Wajib
-                          </span>
-                        )}
+                        <div className="flex flex-col items-end gap-1 shrink-0">
+                          {existingPhoto ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                              <span>Terisi</span>
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                              Wajib
+                            </span>
+                          )}
+
+                          {slot.id === "EXT_FRONT_RIGHT" && (
+                            <span
+                              className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-500 text-stone-950 shadow-xs"
+                              title="Foto sudut ini otomatis dijadikan foto teaser sampul di katalog publik saat unit berstatus Intake / Salon"
+                            >
+                              <Sparkles className="w-2.5 h-2.5" />
+                              <span>Teaser Segera Hadir</span>
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       {/* Image Preview / Empty Slot Upload State */}

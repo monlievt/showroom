@@ -24,10 +24,12 @@ import {
   Wrench,
   Tag,
   Droplet,
-  MoreVertical
+  MoreVertical,
+  ExternalLink,
 } from "lucide-react";
 import { ImportSpreadsheetPanel } from "./ImportSpreadsheetPanel";
 import { formatRupiah, formatDate, cn } from "@/lib/utils";
+import { generateVehicleSlug } from "@/lib/utils/slug";
 import { createVehicleAction, updateVehicleStatusAction } from "@/app/actions/vehicle";
 import { createExpenseAction } from "@/app/actions/expense";
 import { canTransition, type VehicleStatus } from "@/lib/calculations/vehicle-state";
@@ -285,6 +287,23 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           Sumber: <span className="font-semibold text-[#1C1917]">{vehicle.sourceType}</span>
                           {vehicle.auctionHouse && ` (${vehicle.auctionHouse})`}
                         </div>
+                        <div className="mt-2">
+                          <Link
+                            href={`/katalog/${generateVehicleSlug(vehicle)}`}
+                            target="_blank"
+                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D97706] hover:text-[#92400E] hover:underline"
+                            title="Buka tampilan publik unit ini di tab baru"
+                          >
+                            <ExternalLink className="w-3 h-3 shrink-0" />
+                            <span>
+                              {vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR"
+                                ? "Tampilan Segera Hadir"
+                                : vehicle.status === "SOLD_SETTLED"
+                                ? "Tampilan Arsip Terjual"
+                                : "Tampilan Katalog"}
+                            </span>
+                          </Link>
+                        </div>
                       </td>
 
                       {/* Spesifikasi */}
@@ -516,6 +535,19 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
 
                                 <div className="py-1">
                                   <Link
+                                    href={`/katalog/${generateVehicleSlug(vehicle)}`}
+                                    target="_blank"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#D97706] hover:bg-[#F7F5F2] font-semibold transition-colors"
+                                  >
+                                    <ExternalLink className="w-4 h-4 text-[#D97706]" />
+                                    <span>
+                                      {vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR"
+                                        ? "Lihat Tampilan Segera Hadir"
+                                        : "Lihat di Katalog Publik"}
+                                    </span>
+                                  </Link>
+
+                                  <Link
                                     href={`/admin/inventory/${vehicle.id}/status`}
                                     className="flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors"
                                   >
@@ -645,21 +677,38 @@ function StatusBadge({ status }: { status: string }) {
   switch (status) {
     case "INTAKE":
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#EFECE8] text-[#6B6560] border border-[#D9D4CB]">
-          Intake Baru
-        </span>
+        <div className="flex flex-col gap-1 items-start">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#EFECE8] text-[#6B6560] border border-[#D9D4CB]">
+            Intake Baru
+          </span>
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+            <Sparkles className="w-2.5 h-2.5 text-amber-600" />
+            <span>Katalog: Segera Hadir</span>
+          </span>
+        </div>
       );
     case "IN_REPAIR":
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEF3C7] text-[#92400E] border border-[#D97706]/30">
-          Bengkel / Salon
-        </span>
+        <div className="flex flex-col gap-1 items-start">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEF3C7] text-[#92400E] border border-[#D97706]/30">
+            Bengkel / Salon
+          </span>
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+            <Sparkles className="w-2.5 h-2.5 text-amber-600" />
+            <span>Katalog: Segera Hadir</span>
+          </span>
+        </div>
       );
     case "READY_FOR_SALE":
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#DCFCE7] text-[#16A34A] border border-[#16A34A]/30">
-          Ready Jual
-        </span>
+        <div className="flex flex-col gap-1 items-start">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#DCFCE7] text-[#16A34A] border border-[#16A34A]/30">
+            Ready Jual
+          </span>
+          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+            <span>Katalog: Tayang Lengkap</span>
+          </span>
+        </div>
       );
     case "BOOKED":
       return (
@@ -830,16 +879,16 @@ function AddVehicleModal({
 
         {/* FLOW GUIDE */}
         <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
-          <strong className="block mb-1.5 text-amber-800">📋 Alur Status Kendaraan:</strong>
+          <strong className="block mb-1.5 text-amber-800">📋 Alur Siklus & Tampilan Publik:</strong>
           <div className="flex flex-wrap items-center gap-1.5 font-medium">
             <span className="bg-[#EFECE8] text-[#6B6560] px-2 py-0.5 rounded-full border border-[#D9D4CB]">INTAKE (baru masuk)</span>
             <span className="text-amber-600">→</span>
-            <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-300">IN_REPAIR (perlu salon/cat)</span>
+            <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-300">IN_REPAIR (salon/bengkel)</span>
             <span className="text-amber-600">→</span>
-            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-300">READY JUAL ✅ (tampil di website)</span>
+            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-300">READY JUAL ✅ (siap tayang 100%)</span>
           </div>
-          <p className="mt-1.5 text-amber-700">
-            💡 Unit kondisi baik? <strong>Langsung ubah INTAKE → Ready Jual</strong> tanpa perlu lewat bengkel.
+          <p className="mt-1.5 text-amber-800 leading-relaxed">
+            💡 <strong>Stok Segera Hadir (Upcoming):</strong> Unit berstatus <em>INTAKE</em> & <em>IN_REPAIR</em> otomatis tayang di katalog publik dengan 1 foto depan & estimasi harga psikologis. Setelah salon & inspeksi selesai, ubah status ke <strong>Ready Jual</strong> untuk membuka galeri 11 foto lengkap & sertifikat inspeksi digital.
           </p>
         </div>
 
@@ -1430,14 +1479,25 @@ function UpdateStatusModal({
               >
                 {validTransitions.map((s) => (
                   <option key={s} value={s}>
-                    {s === "IN_REPAIR" && "Masuk Pengerjaan (Bengkel/Salon)"}
-                    {s === "READY_FOR_SALE" && "Siap Dipasarkan (Ready For Sale)"}
+                    {s === "IN_REPAIR" && "Masuk Pengerjaan (Bengkel/Salon) — Tayang Segera Hadir"}
+                    {s === "READY_FOR_SALE" && "Siap Dipasarkan (Ready For Sale) — Tayang Lengkap"}
                     {s === "BOOKED" && "Terima Uang Tanda Jadi (Booked / DP)"}
                     {s === "AT_SHOWROOM_PENDING" && "Titip Jual Showroom (Pending Pelunasan)"}
                     {s === "SOLD_SETTLED" && "Terjual Lunas (Selesai)"}
                   </option>
                 ))}
               </select>
+            )}
+
+            {targetStatus === "READY_FOR_SALE" && (
+              <p className="text-[11px] text-emerald-700 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200 mt-2 leading-relaxed">
+                ✅ <strong>Ready Jual:</strong> Membuka 11 foto lengkap, skor inspeksi, dan dokumen resmi di katalog publik untuk calon pembeli.
+              </p>
+            )}
+            {(targetStatus === "INTAKE" || targetStatus === "IN_REPAIR") && (
+              <p className="text-[11px] text-amber-800 bg-amber-50 p-2.5 rounded-lg border border-amber-200 mt-2 leading-relaxed">
+                ✨ <strong>Segera Hadir:</strong> Unit akan tampil di katalog publik dengan 1 foto depan dan perkiraan harga estimasi.
+              </p>
             )}
           </div>
 

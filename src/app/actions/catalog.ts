@@ -14,17 +14,24 @@ export interface PublicCatalogFilter {
 
 const TAG_ORDER: Record<string, number> = {
   FRONT_3_4: 1,
+  EXTERIOR_FRONT_RIGHT: 1,
   REAR_3_4: 2,
-  SIDE_RIGHT: 3,
-  SIDE_LEFT: 4,
-  INTERIOR_DASHBOARD: 5,
-  ENGINE_BAY: 6,
-  DOOR_SEALER: 7,
-  UNDER_DASHBOARD: 8,
-  UNDERBODY_CHASSIS: 9,
-  TRUNK_SPARE_TIRE: 10,
-  DOCUMENT_STNK_BPKB: 11,
+  EXTERIOR_REAR_RIGHT: 2,
+  EXTERIOR_REAR_LEFT: 3,
+  EXTERIOR_FRONT_LEFT: 4,
+  SIDE_RIGHT: 5,
+  SIDE_LEFT: 6,
+  INTERIOR_DASHBOARD: 7,
+  INTERIOR_CABIN: 8,
+  ENGINE_BAY: 9,
+  DOOR_SEALER: 10,
+  UNDER_DASHBOARD: 11,
+  UNDERBODY_CHASSIS: 12,
+  TRUNK_SPARE_TIRE: 13,
+  DOCUMENT_STNK_BPKB: 14,
 };
+
+const isFrontTeaser = (tag?: string | null) => tag === "FRONT_3_4" || tag === "EXTERIOR_FRONT_RIGHT";
 
 /**
  * Server Action: Mengambil katalog publik (PRD.md §3 & ARCHITECTURE.md §3)
@@ -117,8 +124,8 @@ export async function getPublicCatalog(filters?: PublicCatalogFilter) {
 
         const isUpcoming = v.status === "INTAKE" || v.status === "IN_REPAIR";
         const sortedPhotos = v.photos.slice().sort((a, b) => {
-          if (a.tag === "FRONT_3_4") return -1;
-          if (b.tag === "FRONT_3_4") return 1;
+          if (isFrontTeaser(a.tag)) return -1;
+          if (isFrontTeaser(b.tag)) return 1;
           const orderA = a.tag ? (TAG_ORDER[a.tag] ?? 90) : a.category === "FINAL_LISTING" ? 10 : 50;
           const orderB = b.tag ? (TAG_ORDER[b.tag] ?? 90) : b.category === "FINAL_LISTING" ? 10 : 50;
           return orderA - orderB;
@@ -384,8 +391,8 @@ export async function getPublicVehicleDetail(identifier: string) {
         photos: (() => {
           const isUpcoming = vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR";
           const sorted = vehicle.photos.slice().sort((a, b) => {
-            if (a.tag === "FRONT_3_4") return -1;
-            if (b.tag === "FRONT_3_4") return 1;
+            if (isFrontTeaser(a.tag)) return -1;
+            if (isFrontTeaser(b.tag)) return 1;
             const orderA = a.tag ? (TAG_ORDER[a.tag] ?? 90) : a.category === "FINAL_LISTING" ? 10 : 50;
             const orderB = b.tag ? (TAG_ORDER[b.tag] ?? 90) : b.category === "FINAL_LISTING" ? 10 : 50;
             return orderA - orderB;

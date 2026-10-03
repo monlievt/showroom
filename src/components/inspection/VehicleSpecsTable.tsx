@@ -12,7 +12,9 @@ import {
   Fuel, 
   Key, 
   FileText,
-  AlertTriangle
+  AlertTriangle,
+  Clock,
+  Sparkles
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
@@ -46,14 +48,17 @@ export interface VehicleSpecsProps {
 }
 
 export function VehicleSpecsTable({ vehicle, inspection }: VehicleSpecsProps) {
-  // Hitung Total Grade berdasarkan 4 pilar
-  const grades = [
-    inspection?.engineGrade || "B",
-    inspection?.interiorGrade || "B",
-    inspection?.exteriorGrade || "B",
-    inspection?.frameGrade || "A",
-  ];
-  // Jika ada C, grade C; jika ada B, grade B; jika semua A, grade A
+  // Hitung Total Grade berdasarkan 4 pilar hanya jika data inspeksi ada
+  const hasInspection = !!inspection;
+  const grades = hasInspection
+    ? [
+        inspection.engineGrade,
+        inspection.interiorGrade,
+        inspection.exteriorGrade,
+        inspection.frameGrade,
+      ]
+    : [];
+
   const overallGrade = grades.includes("D")
     ? "D"
     : grades.includes("C")
@@ -68,48 +73,73 @@ export function VehicleSpecsTable({ vehicle, inspection }: VehicleSpecsProps) {
   return (
     <div className="space-y-6">
       {/* ── BARIS ATAS: SCORECARD 4 PILAR & TOTAL GRADE ALA IBID ── */}
-      <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 shadow-sm">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Total Grade Badge */}
-          <div className="flex items-center gap-4 w-full md:w-auto">
-            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-emerald-600 text-white shadow-md">
-              <span className="text-[10px] uppercase font-bold tracking-wider opacity-90">Total Grade</span>
-              <span className="text-3xl font-black">{overallGrade}</span>
-            </div>
-            <div>
-              <div className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
-                Standar Penilaian Cek Fisik Profesional
+      {hasInspection ? (
+        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 shadow-sm">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            {/* Total Grade Badge */}
+            <div className="flex items-center gap-4 w-full md:w-auto">
+              <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-emerald-600 text-white shadow-md">
+                <span className="text-[10px] uppercase font-bold tracking-wider opacity-90">Total Grade</span>
+                <span className="text-3xl font-black">{overallGrade}</span>
               </div>
-              <h3 className="text-lg font-bold text-[#1C1917]">
-                Hasil Uji Kelayakan & Cek Fisik Menyeluruh
-              </h3>
-              <p className="text-xs text-[#6B6560]">
-                A: Sangat Baik • B: Baik • C: Cukup • D: Perlu Perbaikan
-              </p>
+              <div>
+                <div className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
+                  Standar Penilaian Cek Fisik Profesional
+                </div>
+                <h3 className="text-lg font-bold text-[#1C1917]">
+                  Hasil Uji Kelayakan &amp; Cek Fisik Menyeluruh
+                </h3>
+                <p className="text-xs text-[#6B6560]">
+                  A: Sangat Baik • B: Baik • C: Cukup • D: Perlu Perbaikan
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* 4 Pilar Skor */}
-          <div className="grid grid-cols-4 gap-2.5 sm:gap-3 w-full md:w-auto text-center">
-            <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
-              <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Mesin</span>
-              <span className="text-xl font-black text-[#D97706]">{inspection?.engineGrade || "B"}</span>
-            </div>
-            <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
-              <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Interior</span>
-              <span className="text-xl font-black text-[#D97706]">{inspection?.interiorGrade || "B"}</span>
-            </div>
-            <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
-              <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Eksterior</span>
-              <span className="text-xl font-black text-[#D97706]">{inspection?.exteriorGrade || "B"}</span>
-            </div>
-            <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
-              <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Rangka</span>
-              <span className="text-xl font-black text-[#D97706]">{inspection?.frameGrade || "A"}</span>
+            {/* 4 Pilar Skor */}
+            <div className="grid grid-cols-4 gap-2.5 sm:gap-3 w-full md:w-auto text-center">
+              <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
+                <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Mesin</span>
+                <span className="text-xl font-black text-[#D97706]">{inspection!.engineGrade}</span>
+              </div>
+              <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
+                <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Interior</span>
+                <span className="text-xl font-black text-[#D97706]">{inspection!.interiorGrade}</span>
+              </div>
+              <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
+                <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Eksterior</span>
+                <span className="text-xl font-black text-[#D97706]">{inspection!.exteriorGrade}</span>
+              </div>
+              <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
+                <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Rangka</span>
+                <span className="text-xl font-black text-[#D97706]">{inspection!.frameGrade}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-[#FAF9F6] border border-amber-300 rounded-2xl p-5 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-amber-500 text-white shadow-sm shrink-0">
+              <Clock className="w-6 h-6 mb-1 opacity-90" />
+              <span className="text-[9px] uppercase font-black tracking-wider text-center leading-tight">
+                TAHAP CEK
+              </span>
+            </div>
+            <div className="space-y-1 text-center sm:text-left">
+              <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-800 uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>Inspeksi Fisik Belum Dilakukan / Dalam Antrean</span>
+              </div>
+              <h3 className="text-base font-bold text-[#1C1917]">
+                Kartu Skor &amp; Grade Belum Diterbitkan
+              </h3>
+              <p className="text-xs text-[#6B6560] leading-relaxed">
+                Unit ini baru tiba di showroom kami dan sedang dalam antrean uji kelayakan teknis 160 titik. Skor 4 pilar (Mesin, Interior, Eksterior, Rangka) beserta sertifikat digital akan diterbitkan otomatis setelah teknisi kami menyelesaikan cek fisik dan test drive.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── BARIS TENGAH: DUA TABEL LENGKAP ALA IBID (INFO & DOKUMEN) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
