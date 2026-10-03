@@ -207,14 +207,24 @@ export async function executeProfitDistribution(
       active: r.active,
     }));
 
-    // 3. Siapkan data investasi
-    const investmentData: InvestmentData[] = sale.vehicle.investments.map((inv) => ({
-      investorId: inv.investorId,
-      investorName: inv.investor.name,
-      investorType: inv.investor.type,
-      capitalShare: inv.capitalShare,
-      profitSharePercent: inv.profitSharePercent,
-    }));
+    // 3. Siapkan data investasi (dengan fallback ke defaultProfitSharePercent milik investor jika per-unit belum diset)
+    const investmentData: InvestmentData[] = sale.vehicle.investments.map((inv) => {
+      const explicitPercent = Number(inv.profitSharePercent);
+      const effectivePercent =
+        explicitPercent > 0
+          ? inv.profitSharePercent
+          : inv.investor.defaultProfitSharePercent
+          ? inv.investor.defaultProfitSharePercent
+          : inv.profitSharePercent;
+
+      return {
+        investorId: inv.investorId,
+        investorName: inv.investor.name,
+        investorType: inv.investor.type,
+        capitalShare: inv.capitalShare,
+        profitSharePercent: effectivePercent,
+      };
+    });
 
     const totalPaid = sale.payments.reduce(
       (sum, p) => sum.plus(new Decimal(p.amount.toString())),

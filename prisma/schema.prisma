@@ -421,11 +421,15 @@ model SalePayment {
 }
 
 model Investor {
-  id        String       @id @default(uuid())
-  name      String
-  phone     String?
-  type      InvestorType @default(THIRD_PARTY)
-  createdAt DateTime     @default(now())
+  id                        String       @id @default(uuid())
+  name                      String
+  phone                     String?
+  type                      InvestorType @default(THIRD_PARTY)
+  bankName                  String?
+  bankAccountNumber         String?
+  bankAccountName           String?
+  defaultProfitSharePercent Decimal?     @db.Decimal(5, 2)
+  createdAt                 DateTime     @default(now())
 
   investments   VehicleInvestment[]
   ledgerEntries CapitalLedger[]

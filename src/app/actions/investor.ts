@@ -52,6 +52,12 @@ export async function getInvestors() {
           name: inv.name,
           phone: inv.phone,
           type: inv.type,
+          bankName: inv.bankName,
+          bankAccountNumber: inv.bankAccountNumber,
+          bankAccountName: inv.bankAccountName,
+          defaultProfitSharePercent: inv.defaultProfitSharePercent
+            ? Number(inv.defaultProfitSharePercent)
+            : null,
           createdAt: inv.createdAt,
           userProfile: inv.userProfile,
           currentBalance,
@@ -82,8 +88,16 @@ export async function createInvestor(input: InvestorInput, actorUserId: string =
       const newInvestor = await tx.investor.create({
         data: {
           name: validated.name,
-          phone: validated.phone,
+          phone: validated.phone || null,
           type: validated.type,
+          bankName: validated.bankName || null,
+          bankAccountNumber: validated.bankAccountNumber || null,
+          bankAccountName: validated.bankAccountName || null,
+          defaultProfitSharePercent:
+            validated.defaultProfitSharePercent !== undefined &&
+            validated.defaultProfitSharePercent !== null
+              ? new Decimal(validated.defaultProfitSharePercent)
+              : null,
         },
       });
 
@@ -113,6 +127,8 @@ export async function createInvestor(input: InvestorInput, actorUserId: string =
       return newInvestor;
     });
 
+    revalidatePath("/admin/investors");
+    revalidatePath("/admin/investors/accounts");
     revalidatePath("/admin/finance");
     return { success: true, data: investor };
   } catch (error: any) {
@@ -130,13 +146,23 @@ export async function updateInvestor(
     if (!existing) throw new Error("Investor tidak ditemukan");
 
     const updated = await prisma.$transaction(async (tx) => {
+      const dataToUpdate: any = {};
+      if (input.name !== undefined) dataToUpdate.name = input.name;
+      if (input.phone !== undefined) dataToUpdate.phone = input.phone || null;
+      if (input.type !== undefined) dataToUpdate.type = input.type;
+      if (input.bankName !== undefined) dataToUpdate.bankName = input.bankName || null;
+      if (input.bankAccountNumber !== undefined) dataToUpdate.bankAccountNumber = input.bankAccountNumber || null;
+      if (input.bankAccountName !== undefined) dataToUpdate.bankAccountName = input.bankAccountName || null;
+      if (input.defaultProfitSharePercent !== undefined) {
+        dataToUpdate.defaultProfitSharePercent =
+          input.defaultProfitSharePercent !== null && input.defaultProfitSharePercent !== undefined
+            ? new Decimal(input.defaultProfitSharePercent)
+            : null;
+      }
+
       const inv = await tx.investor.update({
         where: { id },
-        data: {
-          name: input.name ?? existing.name,
-          phone: input.phone ?? existing.phone,
-          type: input.type ?? existing.type,
-        },
+        data: dataToUpdate,
       });
 
       await tx.auditLog.create({
@@ -153,6 +179,8 @@ export async function updateInvestor(
       return inv;
     });
 
+    revalidatePath("/admin/investors");
+    revalidatePath("/admin/investors/accounts");
     revalidatePath("/admin/finance");
     return { success: true, data: updated };
   } catch (error: any) {

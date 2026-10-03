@@ -23,13 +23,19 @@ export async function addVehicleInvestment(
       const investor = await tx.investor.findUnique({ where: { id: validated.investorId } });
       if (!investor) throw new Error("Investor tidak ditemukan");
 
+      // Jika profitSharePercent adalah 0, fallback ke defaultProfitSharePercent milik investor
+      let finalProfitPercent = profitPercent;
+      if (finalProfitPercent.isZero() && investor.defaultProfitSharePercent) {
+        finalProfitPercent = new Decimal(investor.defaultProfitSharePercent);
+      }
+
       // 2. Buat VehicleInvestment record
       const investment = await tx.vehicleInvestment.create({
         data: {
           vehicleId: validated.vehicleId,
           investorId: validated.investorId,
           capitalShare: capitalAmt,
-          profitSharePercent: profitPercent,
+          profitSharePercent: finalProfitPercent,
         },
       });
 
