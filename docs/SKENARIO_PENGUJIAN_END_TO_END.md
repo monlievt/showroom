@@ -28,10 +28,10 @@
 
 ---
 
-## SKENARIO 01: SETUP FINANSIAL, INVESTOR & ATURAN TIERING
+## SKENARIO 01: SETUP FINANSIAL, INVESTOR & ATURAN TIERING 7 TINGKAT
 
 ### 🎯 Tujuan:
-Memastikan sistem siap menampung dana modal investor dan aturan bagi hasil sebelum membeli unit mobil pertama kali dari 0.
+Memastikan sistem siap menampung data profil pemodal (termasuk nomor rekening bank), upload multi-lampiran bukti setoran modal ke kas BCA, serta konfigurasi 7 tingkatan aturan bagi hasil deterministik 4 saudara (skema modal Ibu) lengkap dengan proteksi saat unit merugi.
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Sidebar > Investor & Bagi Hasil > Daftar Akun Investor** (`/admin/investors/accounts`).
@@ -40,20 +40,36 @@ Memastikan sistem siap menampung dana modal investor dan aturan bagi hasil sebel
    - **Nama Lengkap:** `Bpk. Hendra Gunawan`
    - **Nomor Telepon/WA:** `081234567890`
    - **Kategori Investor:** Pilih `Mitra Pihak Ketiga (THIRD_PARTY)` atau `Ibu / 4 Saudara (MOTHER_SIBLING)`.
+   - **Nama Bank & Nomor Rekening:** Masukkan `BCA - 8735019281 a.n. Hendra Gunawan`.
 4. Klik **Simpan Investor**.
-5. Di halaman daftar akun investor, klik tombol **+ Setor Modal** (`/admin/investors/deposit/new`), masukkan:
+5. Uji fitur **Edit Profil Investor**:
+   - Di daftar akun investor, klik tombol **Edit** pada baris investor `Bpk. Hendra Gunawan`.
+   - Perbarui catatan atau nomor rekening, lalu simpan. Verifikasi data tersinkronisasi instan.
+6. Di halaman daftar akun investor, klik tombol **+ Setor Modal** (`/admin/investors/deposit/new`), masukkan:
    - **Pilih Investor:** `Bpk. Hendra Gunawan`
    - **Nominal Setoran:** `Rp 150.000.000`
    - **Catatan:** `Setoran modal awal investasi pool fund kulakan lelang`
    - **Tanggal:** Hari ini.
-6. Klik **Simpan Setoran Modal**.
-7. Buka menu **Sidebar > Investor & Bagi Hasil > Aturan Tier 4 Saudara** (`/admin/investors/tier-rules`):
-   - Pastikan aturan aktif berjenjang sudah siap: *Tier 1 (> Rp 10.000.000)*, *Tier 2 (Rp 5.000.000 - Rp 10.000.000)*, dan *Tier 3 (< Rp 5.000.000)*.
+   - **Multi-Lampiran Bukti Transfer:** Upload 1 atau lebih file bukti mutasi bank (format JPG, PNG, WEBP, atau PDF hingga 10MB per file). Verifikasi kartu pratinjau thumbnail muncul secara rapi dan link dokumen dapat dibuka penuh.
+7. Klik **Simpan Setoran Modal**.
+8. Buka menu **Sidebar > Investor & Bagi Hasil > Aturan Tier 4 Saudara** (`/admin/investors/tier-rules`):
+   - Verifikasi tersedianya **7 tingkatan jenjang laba otomatis**:
+     * **Tier 1 (Laba Rp 0 s/d Rp 1.000.000):** Nominal Rp 50.000 per saudara (Total Rp 200.000 / 4 saudara).
+     * **Tier 2 (Laba Rp 1.000.001 s/d Rp 3.000.000):** Nominal Rp 100.000 per saudara (Total Rp 400.000).
+     * **Tier 3 (Laba Rp 3.000.001 s/d Rp 5.000.000):** Nominal Rp 200.000 per saudara (Total Rp 800.000).
+     * **Tier 4 (Laba Rp 5.000.001 s/d Rp 10.000.000):** Nominal Rp 300.000 per saudara (Total Rp 1.200.000).
+     * **Tier 5 (Laba Rp 10.000.001 s/d Rp 15.000.000):** Nominal Rp 500.000 per saudara (Total Rp 2.000.000).
+     * **Tier 6 (Laba Rp 15.000.001 s/d Rp 20.000.000):** Nominal Rp 750.000 per saudara (Total Rp 3.000.000).
+     * **Tier 7 (Laba > Rp 20.000.000):** Nominal Rp 1.000.000 per saudara (Total Rp 4.000.000).
+   - Uji tombol interaktif **+ Tambah Baris Tier** dan **Hapus Baris** untuk kustomisasi batas rentang laba.
+   - Periksa kartu **Penanganan Jika Unit Rugi / Laba Rp 0**: Sistem menampilkan visualisasi tegas bahwa jika laba <= Rp 0, bagi hasil otomatis Rp 0 (tidak ada pembagian dividen minus) dan modal pokok investor tetap utuh terlindungi.
 
 ### ✅ Hasil yang Diharapkan:
-- Profil Bpk. Hendra Gunawan tersimpan rapi di daftar investor.
-- Saldo Kas BCA (`Sidebar > Keuangan & Kas > Buku Kas & Mutasi`) bertambah Rp 150.000.000.
+- Profil Bpk. Hendra Gunawan beserta nomor rekening pencairan tersimpan di database.
+- Multi-lampiran bukti mutasi setoran modal tersimpan aman dan dapat ditinjau kembali kapan saja.
+- Saldo Kas BCA (`Sidebar > Keuangan & Kas > Buku Kas & Mutasi`) bertambah Rp 150.000.000 dengan keterangan setoran modal investor.
 - Modal siap dialokasikan (*Active Allocated Capital*) bertambah Rp 150.000.000.
+- Skema 7 tiering aturan 4 saudara siap mengunci pembagian dividen deterministik saat unit terjual lunas.
 
 ---
 
@@ -153,27 +169,32 @@ Menguji pemotongan stok bahan habis pakai, penambahan HPP mobil, dan pencatatan 
 
 ---
 
-## SKENARIO 05: SERVIS BENGKEL CAT LUAR & SURAT JALAN (PDF)
+## SKENARIO 05: SERVIS BENGKEL CAT LUAR, MULTI-LAMPIRAN BUKTI & SURAT JALAN (PDF)
 
 ### 🎯 Tujuan:
-Menguji pencatatan biaya pengerjaan bengkel luar dan pencetakan surat jalan pengantar sopir.
+Menguji pencatatan biaya pengerjaan bengkel luar/servis unit dengan multi-lampiran nota/kuitansi digital, pengarsipan otomatis foto pengerjaan ke galeri kendaraan, dan pencetakan surat jalan pengantar sopir.
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Sidebar > Inventori Unit** (`/admin/inventory`), cari `B 2489 KMR`.
 2. Klik tombol menu titik tiga `[...]` pada baris mobil, pilih **Catat Servis / Biaya Unit**.
-3. Masukkan data:
-   - **Kategori Biaya:** `BODY_PAINT (Cat & Bodi)`
+3. Masukkan data pengeluaran:
+   - **Kategori Biaya:** Pilih `BODY_PAINT (Cat & Bodi)`. *(Tersedia juga kategori baru seperti `TIRES_AND_WHEELS (Ban & Velg)` dan `ELECTRICAL (Kelistrikan & Aki)`).*
    - **Nama Vendor / Bengkel:** `Bengkel Cat Berkah Jaya`
    - **Deskripsi:** `Cat ulang bumper depan lecet lelang + poles kap mesin`
    - **Nominal Biaya:** `Rp 1.200.000`
    - **Metode Pembayaran:** `Transfer BCA`
+   - **Multi-Lampiran Bukti Pengeluaran (ProofUploadField):** Upload 2 file sekaligus (1 foto nota kuitansi stempel bengkel format JPG/PDF dan 1 foto progres pengerjaan bumper bodi).
+   - Verifikasi thumbnail kedua file muncul dengan opsi hapus satuan atau klik untuk melihat ukuran penuh.
 4. Klik **Simpan Biaya**.
-5. Buka kembali menu titik tiga `[...]`, pilih **Cetak Surat Jalan Bengkel (PDF)**.
-6. Periksa file PDF yang terbuka di tab baru.
+5. Buka tab galeri foto kendaraan di halaman detail unit:
+   - Verifikasi foto dokumentasi perbaikan yang diupload otomatis terarsip ke galeri kendaraan (`VehiclePhoto`).
+6. Buka kembali menu titik tiga `[...]` pada baris mobil, pilih **Cetak Surat Jalan Bengkel (PDF)**.
+7. Periksa file PDF yang terbuka di tab baru.
 
 ### ✅ Hasil yang Diharapkan:
 - HPP Avanza bertambah menjadi **Rp 127.200.000** (Rp 126.0jt + Rp 1.2jt).
-- Kas BCA showroom otomatis terpotong Rp 1.200.000 dengan keterangan pembayaran bengkel.
+- Kas BCA showroom otomatis terpotong Rp 1.200.000 dengan keterangan pembayaran bengkel dan path `admin/finance` otomatis ter-revalidate seketika.
+- Multi-lampiran nota kuitansi tersimpan permanen dan foto fisik mobil langsung terarsip di galeri kendaraan.
 - PDF Surat Jalan tercetak rapi memuat nama sopir, plat nomor B 2489 KMR, rincian pekerjaan cat bumper, dan kolom tanda tangan serah terima.
 
 ---
@@ -302,6 +323,7 @@ Menguji pencatatan pelunasan sisa piutang Rp 40.000.000 dan pencetakan dokumen p
 3. Di form pelunasan:
    - **Nominal Pembayaran:** Masukkan `Rp 40.000.000` (Lunas).
    - **Metode Pembayaran:** `Transfer Bank (BCA Rekening Showroom)`
+   - **Bukti Pembayaran Pelunasan:** Upload file bukti transfer m-BCA (format JPG, PNG, atau PDF).
    - **Catatan:** `Pelunasan Cash Tempo transfer m-BCA Bpk. Agus Prasetyo`.
 4. Perhatikan live badge di bawah: Status berubah menjadi `LUNAS 100% (Settled)`.
 5. Klik tombol **Simpan Pembayaran Masuk**.
@@ -309,6 +331,7 @@ Menguji pencatatan pelunasan sisa piutang Rp 40.000.000 dan pencetakan dokumen p
 ### ✅ Hasil yang Diharapkan:
 - Sistem membuka **Settlement Success Dialog Modal**.
 - Sisa piutang menjadi **Rp 0** dan status mobil berubah menjadi **SOLD_SETTLED**.
+- Lampiran bukti pelunasan tersimpan aman dan kas BCA otomatis ter-revalidate seketika di `/admin/finance`.
 - Di dalam dialog tersedia tombol **Cetak Kuitansi Lunas (PDF)** dan **Cetak BAST (PDF)**.
 
 ---
@@ -354,27 +377,34 @@ Memverifikasi bahwa investor dapat melihat pengembalian modal dan dividen secara
 
 ---
 
-## SKENARIO 14: REKONSILIASI KAS BCA, PRIVE & ASISTEN AI GEMINI
+## SKENARIO 14: REKONSILIASI KAS BCA, MULTI-LAMPIRAN TRANSAKSI, PRIVE & ASISTEN AI GEMINI
 
 ### 🎯 Tujuan:
-Menguji rekonsiliasi akhir saldo kas showroom, pencatatan prive pribadi owner, dan briefing AI.
+Menguji rekonsiliasi akhir saldo kas showroom, pencatatan transaksi kas masuk/keluar umum (`IN_OTHER`/`OUT_OTHER`), beban operasional (OpEx), ekuitas/prive pemilik dengan multi-lampiran bukti kwitansi digital, dan briefing AI.
 
 ### 📝 Langkah Pengujian:
 1. Buka menu **Sidebar > Keuangan & Kas > Buku Kas & Mutasi** (`/admin/finance`):
    - Periksa mutasi masuk: DP Rp 106jt + Pelunasan Rp 40jt = Rp 146.000.000.
    - Periksa mutasi keluar: Beli unit lelang, admin, bengkel cat.
    - Saldo akhir BCA sinkron dengan mutasi fisik.
-2. Buka menu **Sidebar > Keuangan & Kas > Beban & Prive (BCA)** (`/admin/finance/expenses`), lalu klik tombol **+ Tarik Prive (Pribadi)** (`/admin/finance/prive/new`):
-   - Masukkan nominal prive: `Rp 5.000.000` (Keperluan pribadi keluarga pemilik).
-   - Klik **Simpan Penarikan Prive**.
-   - Pastikan HPP mobil tidak terganggu, saldo kas BCA berkurang wajar.
-3. Buka menu **Sidebar > Dashboard Utama** (`/admin`):
+2. Uji fitur **+ Catat Kas Masuk/Keluar Manual** (`/admin/finance/transactions/new`):
+   - Pilih jenis transaksi: `Penerimaan Kas Lainnya (IN_OTHER)` atau `Pengeluaran Kas Lainnya (OUT_OTHER)`.
+   - Masukkan nominal: `Rp 250.000` (misal: Penjualan scrap/besi tua atau Biaya kurir dokumen BPKB).
+   - Lampirkan multi-file bukti foto struk/nota via `ProofUploadField`.
+   - Simpan transaksi dan verifikasi saldo kas BCA langsung terupdate seketika.
+3. Buka menu **Sidebar > Keuangan & Kas > Beban & Prive (BCA)** (`/admin/finance/expenses`):
+   - Uji tombol **+ Catat Biaya Operasional** (`/admin/finance/expenses/new`): Catat beban listrik PLN showroom Rp 750.000 lengkap dengan upload multi-lampiran struk pembayaran PLN.
+   - Uji tombol **+ Tarik Prive (Pribadi)** (`/admin/finance/prive/new`): Masukkan nominal prive `Rp 5.000.000` lengkap dengan upload bukti transfer m-BCA ke rekening pribadi owner.
+   - Uji tombol **+ Setor Modal Pemilik (Ekuitas)** (`/admin/finance/equity/new`): Masukkan setoran tambahan modal owner dengan lampiran bukti mutasi.
+   - Pastikan HPP mobil tidak terganggu, saldo kas BCA berkurang wajar, dan revalidate otomatis bekerja.
+4. Buka menu **Sidebar > Dashboard Utama** (`/admin`):
    - Klik **Generate Rangkuman Harian AI**.
-   - Ajukan pertanyaan di kotak chat AI: *"Berapa sisa kas BCA saya setelah transaksi Avanza dan bagi hasil Pak Hendra?"*.
+   - Ajukan pertanyaan di kotak chat AI: *"Berapa sisa kas BCA saya setelah transaksi Avanza, operasional, dan bagi hasil Pak Hendra?"*.
 
 ### ✅ Hasil yang Diharapkan:
-- Buku kas mencatat seluruh mutasi secara kronologis.
-- Prive tercatat terpisah dari beban operasional showroom.
+- Buku kas mencatat seluruh mutasi secara kronologis dengan dukungan kategori umum `IN_OTHER` dan `OUT_OTHER`.
+- Setiap transaksi kas (OpEx, Prive, Ekuitas, Manual Kas) memiliki riwayat multi-lampiran file bukti transaksi yang tersimpan aman.
+- Prive tercatat terpisah dari beban operasional showroom tanpa mengotori HPP mobil.
 - Asisten AI Gemini merespons dengan data akurat sesuai riwayat transaksi.
 
 ---

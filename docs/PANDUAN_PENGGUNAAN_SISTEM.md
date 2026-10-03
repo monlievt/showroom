@@ -357,13 +357,19 @@ Mencatat beban tetap bulanan yang tidak melekat pada satu unit mobil tertentu:
 - Kuota Internet, Pembelian Wi-Fi, dan ATK Kantor.
 - Tombol aksi: **`+ Catat Biaya Operasional`** dan **`+ Tarik Prive (Pribadi)`**.
 
-### 3. Penarikan Dana Pribadi Pemilik / Prive (`/admin/finance/prive/new`)
+### 3. Multi-Lampiran Bukti Transaksi Keuangan Digital (ProofUploadField)
+Seluruh modul transaksi keuangan (Kas Masuk/Keluar Manual, Biaya Operasional OpEx, Setoran Ekuitas Owner, Penarikan Prive, Pembelian Aset Inventaris, Biaya Servis Unit, hingga Pembayaran Penjualan) dilengkapi komponen **Multi-Lampiran Bukti**:
+- Mendukung multi-select file sekaligus (JPG, PNG, WEBP, PDF hingga 10MB per file).
+- Dilengkapi pratinjau thumbnail inline, status ukuran file, tombol hapus per file, serta link untuk membuka dokumen penuh di tab baru.
+- Foto bukti servis pada unit mobil secara otomatis diarsipkan ke galeri foto kendaraan (`VehiclePhoto`).
+
+### 4. Penarikan Dana Pribadi Pemilik / Prive (`/admin/finance/prive/new`)
 Setiap kali pemilik showroom mengambil uang kas untuk keperluan pribadi keluarga:
-- Dicatat sebagai transaksi **PRIVE**.
+- Dicatat sebagai transaksi **PRIVE**, lengkap dengan lampiran bukti transfer ke rekening pribadi.
 - Mengurangi saldo kas BCA showroom tanpa merusak perhitungan laba-rugi bersih unit mobil yang dijual.
 
-### 4. Setoran Modal Tambahan Pemilik / Ekuitas (`/admin/finance/equity/new`)
-Digunakan saat pemilik menyuntikkan dana pribadi baru ke rekening BCA showroom untuk memperbesar modal kerja kulakan.
+### 5. Setoran Modal Tambahan Pemilik / Ekuitas (`/admin/finance/equity/new`)
+Digunakan saat pemilik menyuntikkan dana pribadi baru ke rekening BCA showroom untuk memperbesar modal kerja kulakan lelang, disertai unggahan bukti mutasi rekening.
 
 ---
 
@@ -376,22 +382,28 @@ Modul ini memiliki 4 sub-menu navigasi di Sidebar maupun sub-nav tab:
 Daftar seluruh mobil yang sudah terjual lunas 100% namun dividen labanya belum dibagikan kepada pemodal. Memuat harga beli, total HPP, harga jual, dan laba kotor riil, lengkap dengan tombol eksekusi bagi hasil per unit.
 
 ### 2. Daftar Akun Investor (`/admin/investors/accounts`)
-Mencatat profil pemodal rekanan:
-- Nama Lengkap Investor, Nomor WhatsApp, Nomor Rekening Bank BCA/Mandiri untuk transfer dividen, dan Jenis Investor (*Mitra Pihak Ketiga / Ibu 4 Saudara / Modal Owner*).
-- Tombol aksi: **`+ Investor Baru`** (`/admin/investors/new`) dan **`+ Setor Modal`** (`/admin/investors/deposit/new`).
+Mencatat profil pemodal rekanan secara transparan:
+- Nama Lengkap Investor, Nomor WhatsApp, Nomor Rekening Bank (BCA/Mandiri/BRI) untuk pencairan dividen, dan Kategori Investor (*Mitra Pihak Ketiga / Ibu 4 Saudara / Modal Owner*).
+- **Edit Profil Investor:** Tersedia tombol edit langsung untuk memperbarui nomor kontak, catatan, maupun nomor rekening bank.
+- Tombol aksi: **`+ Investor Baru`** (`/admin/investors/new`) dan **`+ Setor Modal`** (`/admin/investors/deposit/new` — dilengkapi upload multi-lampiran bukti mutasi transfer).
 
 ### 3. Riwayat Distribusi (`/admin/investors/history`)
 Laporan audit permanen setiap pembagian dividen yang pernah dilakukan:
 - Snapshot tanggal eksekusi.
-- Rincian pembagian: Berapa bagian laba untuk Investor (misal 50%) dan berapa untuk Owner/Garasi (misal 50%).
+- Rincian pembagian: Berapa bagian laba untuk Investor dan berapa untuk Owner/Garasi.
 - Fitur *Reverse Distribution* (jika terjadi salah input transaksi dengan proteksi rollback mutasi modal).
 
-### 4. Aturan Tier 4 Saudara (`/admin/investors/tier-rules`)
-Showroom dapat mengatur aturan pembagian dividen otomatis berdasarkan besaran keuntungan unit:
-- **Tier 1 (Laba Sangat Tinggi, > Rp 10.000.000):** Rp 1.000.000 per orang untuk 4 saudara.
-- **Tier 2 (Laba Tinggi, Rp 5.000.000 - Rp 10.000.000):** Rp 500.000 per orang untuk 4 saudara.
-- **Tier 3 (Laba Wajar, < Rp 5.000.000):** Rp 250.000 per orang untuk 4 saudara.
-- Aturan dieksekusi secara otomatis oleh sistem tanpa ada perselisihan hitungan manual.
+### 4. Aturan Tier 4 Saudara (Skema Modal Ibu) (`/admin/investors/tier-rules`)
+Showroom mengimplementasikan aturan pembagian dividen berjenjang otomatis untuk skema modal Ibu (4 saudara):
+- **Tier 1 (Laba Rp 0 s/d Rp 1.000.000):** Rp 50.000 / saudara (Total Rp 200.000 untuk 4 orang).
+- **Tier 2 (Laba Rp 1.000.001 s/d Rp 3.000.000):** Rp 100.000 / saudara (Total Rp 400.000).
+- **Tier 3 (Laba Rp 3.000.001 s/d Rp 5.000.000):** Rp 200.000 / saudara (Total Rp 800.000).
+- **Tier 4 (Laba Rp 5.000.001 s/d Rp 10.000.000):** Rp 300.000 / saudara (Total Rp 1.200.000).
+- **Tier 5 (Laba Rp 10.000.001 s/d Rp 15.000.000):** Rp 500.000 / saudara (Total Rp 2.000.000).
+- **Tier 6 (Laba Rp 15.000.001 s/d Rp 20.000.000):** Rp 750.000 / saudara (Total Rp 3.000.000).
+- **Tier 7 (Laba > Rp 20.000.000):** Rp 1.000.000 / saudara (Total Rp 4.000.000).
+- **Fleksibilitas Baris Tier:** Tabel dapat diedit langsung secara dinamis dengan tombol **+ Tambah Baris Tier** dan **Hapus Baris**.
+- **Proteksi Saat Merugi (Laba <= Rp 0):** Jika unit dijual rugi atau impas, sistem secara deterministik menetapkan bagi hasil Rp 0 sehingga dividen tidak minus dan modal pokok investor tetap utuh.
 
 ---
 
