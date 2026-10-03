@@ -17,7 +17,14 @@ import {
   Edit3,
   Phone,
   Building2,
-  X
+  X,
+  Calendar,
+  Paperclip,
+  UploadCloud,
+  ExternalLink,
+  Trash2,
+  FileText,
+  Loader2,
 } from "lucide-react";
 import { formatRupiah, formatDate, cn } from "@/lib/utils";
 import { depositInvestorCapital } from "@/app/actions/capital-ledger";
@@ -65,7 +72,11 @@ export function InvestorAccountsPageClient({
   // Form State: Setor Modal
   const [selectedInvestorId, setSelectedInvestorId] = useState("");
   const [depositAmount, setDepositAmount] = useState("");
+  const [depositDate, setDepositDate] = useState(() => new Date().toISOString().split("T")[0]);
   const [depositNotes, setDepositNotes] = useState("");
+  const [depositProofs, setDepositProofs] = useState<Array<{ id: string; url: string; name: string }>>([]);
+  const [uploadingDepositProof, setUploadingDepositProof] = useState(false);
+  const [uploadDepositError, setUploadDepositError] = useState("");
 
   // Form State: Tambah Investor
   const [newInvestorName, setNewInvestorName] = useState("");
@@ -121,16 +132,75 @@ export function InvestorAccountsPageClient({
     );
   };
 
+  const handleDepositFileUpload = async (files: FileList | File[]) => {
+    if (!selectedInvestorId) {
+      setUploadDepositError("Pilih akun investor terlebih dahulu.");
+      return;
+    }
+
+    const fileArray = Array.from(files);
+    const validFiles = fileArray.filter((f) => {
+      if (f.size > 10 * 1024 * 1024) {
+        setUploadDepositError(`File ${f.name} melebihi batas 10MB.`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length === 0) return;
+
+    setUploadingDepositProof(true);
+    setUploadDepositError("");
+
+    try {
+      const uploaded: Array<{ id: string; url: string; name: string }> = [];
+
+      for (const file of validFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("investorId", selectedInvestorId);
+        formData.append("uploadType", "TRANSFER_PROOF");
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || `Gagal upload ${file.name}`);
+        }
+
+        uploaded.push({
+          id: `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+          url: data.fileUrl,
+          name: file.name,
+        });
+      }
+
+      setDepositProofs((prev) => [...prev, ...uploaded]);
+    } catch (err: any) {
+      setUploadDepositError(err.message || "Gagal upload bukti");
+    } finally {
+      setUploadingDepositProof(false);
+    }
+  };
+
   const handleDepositSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedInvestorId || !depositAmount) return;
 
     setLoading(true);
+    const proofUrls = depositProofs.map((p) => p.url);
+
     const res = await depositInvestorCapital({
       investorId: selectedInvestorId,
       type: "DEPOSIT",
       amount: Number(depositAmount),
-      notes: depositNotes,
+      notes: depositNotes || undefined,
+      proofUrls: proofUrls.length > 0 ? proofUrls : undefined,
+      proofUrl: proofUrls[0] || undefined,
+      depositDate: depositDate || undefined,
     });
     setLoading(false);
 
@@ -139,6 +209,7 @@ export function InvestorAccountsPageClient({
       setShowDepositModal(false);
       setDepositAmount("");
       setDepositNotes("");
+      setDepositProofs([]);
     } else {
       showNotification(res.error || "Gagal mencatat setoran modal", "error");
     }
@@ -493,7 +564,20 @@ export function InvestorAccountsPageClient({
 
               <div>
                 <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
-                  Nominal Setoran (Rp)
+                  Tanggal Setoran *
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={depositDate}
+                  onChange={(e) => setDepositDate(e.target.value)}
+                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
+                  Nominal Setoran (Rp) *
                 </label>
                 <input
                   type="number"
@@ -506,6 +590,92 @@ export function InvestorAccountsPageClient({
                 />
               </div>
 
+              {/* Upload Bukti Transfer */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block">
+                    Lampiran Bukti Transfer (Bisa Beberapa Foto / PDF)
+                  </label>
+                  {depositProofs.length > 0 && (
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      {depositProofs.length} File
+                    </span>
+                  )}
+                </div>
+
+                {uploadDepositError && (
+                  <p className="text-[11px] text-red-600 mb-1.5">{uploadDepositError}</p>
+                )}
+
+                {depositProofs.length > 0 && (
+                  <div className="space-y-1.5 mb-2 max-h-36 overflow-y-auto pr-1">
+                    {depositProofs.map((p, idx) => (
+                      <div
+                        key={p.id}
+                        className="flex items-center justify-between p-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-xs"
+                      >
+                        <div className="flex items-center gap-2 truncate">
+                          <FileText className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <span className="truncate max-w-[180px] font-medium text-[#1C1917]">
+                            #{idx + 1} {p.name || "Bukti Transfer"}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 shrink-0">
+                          <a
+                            href={p.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-2 py-0.5 bg-white border border-[#D9D4CB] rounded-lg text-[10px] font-semibold text-[#1C1917] hover:bg-[#EFECE8]"
+                          >
+                            Lihat
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setDepositProofs((prev) => prev.filter((item) => item.id !== p.id))
+                            }
+                            className="p-1 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <label className="border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl p-2.5 flex flex-col items-center justify-center cursor-pointer bg-[#FAF9F6] hover:bg-[#F7F5F2] transition-colors">
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/jpeg,image/png,image/webp,application/pdf"
+                    className="hidden"
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files && files.length > 0) {
+                        handleDepositFileUpload(files);
+                        e.target.value = "";
+                      }
+                    }}
+                  />
+                  {uploadingDepositProof ? (
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[#D97706]">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Mengunggah file...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5 text-xs text-[#6B6560]">
+                      <UploadCloud className="w-4 h-4 text-[#D97706]" />
+                      <span>
+                        {depositProofs.length > 0
+                          ? "+ Tambah foto / screenshot bukti lagi"
+                          : "Upload satu atau beberapa bukti transfer"}
+                      </span>
+                    </div>
+                  )}
+                </label>
+              </div>
+
               <div>
                 <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
                   Catatan / Keterangan Transfer
@@ -515,7 +685,7 @@ export function InvestorAccountsPageClient({
                   placeholder="Keterangan setoran modal..."
                   value={depositNotes}
                   onChange={(e) => setDepositNotes(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
                 />
               </div>
 
@@ -529,7 +699,7 @@ export function InvestorAccountsPageClient({
                 </button>
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || uploadingDepositProof}
                   className="px-5 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Menyimpan..." : "Simpan Setoran Modal"}

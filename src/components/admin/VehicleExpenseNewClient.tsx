@@ -7,7 +7,6 @@ import {
   ArrowLeft,
   Wrench,
   Receipt,
-  Upload,
   AlertTriangle,
   CheckCircle,
   Loader2,
@@ -19,6 +18,7 @@ import {
 } from "lucide-react";
 import { createExpenseAction } from "@/app/actions/expense";
 import { formatRupiah } from "@/lib/utils";
+import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
 interface VehicleSummary {
   id: string;
@@ -34,10 +34,10 @@ interface VehicleSummary {
 
 const EXPENSE_CATEGORIES = [
   { value: "OIL_AND_SERVICE", label: "Oli, Tune Up & Servis Rutin" },
-  { value: "BODY_REPAIR", label: "Body Repair, Ketok & Cat" },
-  { value: "SALON_DETAILING", label: "Salon Interior, Eksterior & Detailing" },
+  { value: "BODY_PAINT", label: "Body Repair, Ketok & Cat" },
+  { value: "DETAILING_SALON", label: "Salon Interior, Eksterior & Detailing" },
   { value: "TIRES_AND_WHEELS", label: "Ganti Ban, Spooring & Balancing" },
-  { value: "REGISTRATION_TAX", label: "Pajak Tahunan, Kaleng, Balik Nama & STNK" },
+  { value: "DOCUMENT_TAX_MUTATION", label: "Pajak Tahunan, Kaleng, Balik Nama & STNK" },
   { value: "ELECTRICAL", label: "Kelistrikan, Audio & AC Mobil" },
   { value: "SPAREPARTS", label: "Penggantian Sparepart & Kaki-kaki" },
   { value: "OTHER", label: "Biaya Operasional / Lainnya" },
@@ -51,41 +51,11 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
   const [amount, setAmount] = useState<number | "">("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [notes, setNotes] = useState("");
-  const [receiptUrl, setReceiptUrl] = useState<string>("");
-  const [receiptFileName, setReceiptFileName] = useState<string>("");
-  const [uploadingReceipt, setUploadingReceipt] = useState(false);
+  const [proofUrls, setProofUrls] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setReceiptFileName(file.name);
-    setUploadingReceipt(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("vehicleId", vehicle.id);
-      formData.append("uploadType", "RECEIPT");
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.success && data.fileUrl) {
-        setReceiptUrl(data.fileUrl);
-      } else {
-        throw new Error(data.error || "Gagal upload nota");
-      }
-    } catch (err: any) {
-      console.error("Error uploading receipt:", err);
-      setErrorMsg("Gagal mengunggah foto nota: " + (err.message || ""));
-    } finally {
-      setUploadingReceipt(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,13 +75,12 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
         amount: Number(amount),
         date: new Date(date),
         notes,
-        receiptUrl: receiptUrl || undefined,
+        receiptUrl: proofUrls.length > 0 ? JSON.stringify(proofUrls) : undefined,
       });
 
       if (!res.success) {
         throw new Error(res.error || "Gagal mencatat biaya");
       }
-
       setSuccessMsg("Biaya berhasil dicatat dan HPP unit berhasil diperbarui! Mengalihkan...");
       setTimeout(() => {
         router.push("/admin/inventory");
@@ -293,34 +262,15 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
             />
           </div>
 
-          {/* Upload Nota Fisik */}
+          {/* Upload Nota Fisik - menggunakan ProofUploadField */}
           <div className="border-t border-[#EBE7E1] pt-4">
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-              <Upload className="w-3.5 h-3.5 text-[#6B6560]" />
-              <span>Lampirkan Foto Nota / Struk Fisik (Opsional)</span>
-            </label>
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              <input
-                type="file"
-                accept="image/*,.pdf"
-                onChange={handleFileChange}
-                disabled={uploadingReceipt}
-                className="w-full sm:flex-1 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#1C1917] file:text-white hover:file:bg-[#D97706] file:cursor-pointer"
-              />
-              {uploadingReceipt && (
-                <span className="text-xs text-[#D97706] flex items-center gap-1">
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" /> Mengunggah nota...
-                </span>
-              )}
-              {receiptUrl && !uploadingReceipt && (
-                <span className="text-xs text-[#16A34A] font-semibold flex items-center gap-1">
-                  <CheckCircle className="w-3.5 h-3.5" /> Nota Terunggah
-                </span>
-              )}
-            </div>
-            {receiptFileName && (
-              <p className="text-[11px] text-[#6B6560] mt-1">File: {receiptFileName}</p>
-            )}
+            <ProofUploadField
+              label="Lampiran Foto Nota / Struk / Screenshot Pembayaran (Bisa Beberapa)"
+              value={proofUrls}
+              onChange={setProofUrls}
+              uploadType="RECEIPT"
+              vehicleId={vehicle.id}
+            />
           </div>
         </div>
 
@@ -352,7 +302,7 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
 
           <button
             type="submit"
-            disabled={loading || uploadingReceipt}
+            disabled={loading}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (

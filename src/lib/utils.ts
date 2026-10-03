@@ -37,3 +37,14 @@ export function formatUpcomingPrice(price: number | null | undefined): string {
   return `Estimasi Rp ${rounded} Jutaan`;
 }
 
+export function parseProofUrls(proofUrl?: string | null): string[] {
+  if (!proofUrl) return [];
+  try {
+    const parsed = JSON.parse(proofUrl);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((item): item is string => typeof item === "string" && Boolean(item));
+    }
+  } catch {}
+  return [proofUrl];
+}
+

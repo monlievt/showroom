@@ -90,27 +90,31 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     const vehicleId = formData.get("vehicleId") as string | null;
-    const uploadType = formData.get("uploadType") as "PHOTO" | "DOCUMENT" | "RECEIPT" | null;
+    const investorId = formData.get("investorId") as string | null;
+    const saleId = formData.get("saleId") as string | null;
+    const referenceId = (formData.get("referenceId") as string | null) || "general";
+    const uploadType = formData.get("uploadType") as "PHOTO" | "DOCUMENT" | "RECEIPT" | "TRANSFER_PROOF" | null;
     const category = (formData.get("category") as string) || "CONDITION_INTAKE";
     const docType = (formData.get("docType") as string) || "STNK_SCAN";
 
-    if (!file || !vehicleId || !uploadType) {
+    if (!file || !uploadType) {
       return NextResponse.json(
-        { error: "Parameter tidak lengkap (file, vehicleId, uploadType wajib diisi)." },
+        { error: "Parameter tidak lengkap (file dan uploadType wajib diisi)." },
         { status: 400 }
       );
     }
 
     // ── 3. SANITASI INPUT & CEGAH PATH TRAVERSAL ──
     const safeIdPattern = /^[a-zA-Z0-9_-]+$/;
-    if (!safeIdPattern.test(vehicleId)) {
+    const targetId = vehicleId || investorId || saleId || referenceId;
+    if (targetId && !safeIdPattern.test(targetId)) {
       return NextResponse.json(
-        { error: "Format vehicleId tidak valid." },
+        { error: "Format ID referensi tidak valid." },
         { status: 400 }
       );
     }
 
-    const validUploadTypes = ["PHOTO", "DOCUMENT", "RECEIPT"];
+    const validUploadTypes = ["PHOTO", "DOCUMENT", "RECEIPT", "TRANSFER_PROOF"];
     if (!validUploadTypes.includes(uploadType)) {
       return NextResponse.json(
         { error: "Jenis uploadType tidak diizinkan." },
@@ -155,7 +159,16 @@ export async function POST(req: NextRequest) {
     }
 
     // ── 6. PENYIMPANAN AMAN DENGAN FILENAME TERISOLASI ──
-    const relativeDir = `/uploads/vehicles/${vehicleId}/${uploadType.toLowerCase()}`;
+    let relativeDir = `/uploads/general/${uploadType.toLowerCase()}`;
+    if (vehicleId) {
+      relativeDir = `/uploads/vehicles/${vehicleId}/${uploadType.toLowerCase()}`;
+    } else if (investorId) {
+      relativeDir = `/uploads/investors/${investorId}/transfer_proofs`;
+    } else if (saleId) {
+      relativeDir = `/uploads/sales/${saleId}/receipts`;
+    } else if (referenceId && referenceId !== "general") {
+      relativeDir = `/uploads/finance/${referenceId}/${uploadType.toLowerCase()}`;
+    }
     const baseUploadRoot = path.join(process.cwd(), "public", "uploads");
     const uploadDir = path.resolve(process.cwd(), "public", relativeDir.replace(/^\//, ""));
 
@@ -182,11 +195,15 @@ export async function POST(req: NextRequest) {
     await writeFile(fullPath, buffer);
     const fileUrl = `${relativeDir}/${filename}`;
 
-    if (uploadType === "RECEIPT") {
+    if (uploadType === "RECEIPT" || uploadType === "TRANSFER_PROOF") {
       return NextResponse.json({ success: true, fileUrl });
     }
 
     if (uploadType === "PHOTO") {
+      if (!vehicleId) {
+        return NextResponse.json({ error: "vehicleId wajib untuk tipe PHOTO." }, { status: 400 });
+      }
+
       const tag = (formData.get("tag") as string) || null;
       const title = (formData.get("title") as string) || null;
 
@@ -213,6 +230,10 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({ success: true, data: photo, fileUrl });
     } else {
+      if (!vehicleId) {
+        return NextResponse.json({ error: "vehicleId wajib untuk tipe DOCUMENT." }, { status: 400 });
+      }
+
       const doc = await prisma.vehicleDocument.create({
         data: {
           vehicleId,

@@ -25,6 +25,8 @@ export const showroomAssetSchema = z.object({
   condition: AssetConditionEnum.default("GOOD"),
   location: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  receiptUrl: z.string().optional().nullable(),
+  proofUrls: z.array(z.string()).optional().nullable(),
 });
 
 export type ShowroomAssetInput = z.infer<typeof showroomAssetSchema>;

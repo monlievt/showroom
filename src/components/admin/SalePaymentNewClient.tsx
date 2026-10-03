@@ -27,6 +27,7 @@ import {
 import { addSalePaymentAction } from "@/app/actions/sale";
 import { executeProfitDistribution } from "@/app/actions/finance";
 import { formatRupiah, formatDate } from "@/lib/utils";
+import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
 interface AvailableVehicle {
   id: string;
@@ -101,6 +102,7 @@ export function SalePaymentNewClient({
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [proofUrls, setProofUrls] = useState<string[]>([]);
 
   // Settlement Dialog Modal State
   const [settlementModalOpen, setSettlementModalOpen] = useState(false);
@@ -153,6 +155,7 @@ export function SalePaymentNewClient({
         method,
         tradeInVehicleId: method === "TRADE_IN" ? tradeInVehicleId : undefined,
         notes: notes || undefined,
+        proofUrl: proofUrls.length > 0 ? JSON.stringify(proofUrls) : undefined,
       });
 
       if (!res.success) {
@@ -361,6 +364,15 @@ export function SalePaymentNewClient({
               className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
             />
           </div>
+
+          {/* Proof Upload */}
+          <ProofUploadField
+            label="Lampiran Bukti Pembayaran / Transfer / Screenshot (Bisa Beberapa)"
+            value={proofUrls}
+            onChange={setProofUrls}
+            uploadType="TRANSFER_PROOF"
+            saleId={sale.id}
+          />
         </div>
 
         {/* Live Calculation */}

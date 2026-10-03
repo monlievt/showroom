@@ -117,7 +117,9 @@ export async function recordOperationalExpense(
           amount: amt,
           date: validated.date,
           notes: validated.notes || null,
-          receiptUrl: validated.receiptUrl || null,
+          receiptUrl: validated.proofUrls && validated.proofUrls.length > 0
+            ? JSON.stringify(validated.proofUrls)
+            : (validated.receiptUrl || null),
           createdBy: actorUserId,
           cashTransactionId: cashEntry.id,
         },
@@ -167,6 +169,9 @@ export async function recordOwnerDraw(
           amount: amt,
           runningBalance: newBal,
           notes: `Prive Pribadi Owner: ${validated.notes}`,
+          proofUrl: validated.proofUrls && validated.proofUrls.length > 0
+            ? JSON.stringify(validated.proofUrls)
+            : null,
           createdBy: actorUserId,
         },
       });
@@ -215,6 +220,9 @@ export async function recordOwnerEquity(
           amount: amt,
           runningBalance: newBal,
           notes: `Setoran Modal Tambahan Pribadi Owner: ${validated.notes || "Setoran kas"}`,
+          proofUrl: validated.proofUrls && validated.proofUrls.length > 0
+            ? JSON.stringify(validated.proofUrls)
+            : null,
           createdBy: actorUserId,
         },
       });

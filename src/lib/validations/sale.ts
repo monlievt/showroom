@@ -72,6 +72,7 @@ export const createSalePaymentSchema = z.object({
   method: z.string().default("TRANSFER"), // "CASH", "TRANSFER", "TRADE_IN"
   tradeInVehicleId: z.string().uuid().optional().nullable(),
   notes: z.string().optional().nullable(),
+  proofUrl: z.string().optional().nullable(),
 });
 
 export type CreateSalePaymentInput = z.input<typeof createSalePaymentSchema>;

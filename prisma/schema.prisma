@@ -52,6 +52,8 @@ enum ExpenseCategory {
   OIL_AND_SERVICE
   BODY_PAINT
   DETAILING_SALON
+  TIRES_AND_WHEELS
+  ELECTRICAL
   SPAREPARTS
   DOCUMENT_TAX_MUTATION
   OTHER
@@ -140,6 +142,7 @@ enum CashTransactionType {
   IN_SALE_PAYMENT
   IN_CAPITAL_DEPOSIT
   IN_OWNER_EQUITY
+  IN_OTHER
   OUT_VEHICLE_PURCHASE
   OUT_EXPENSE
   OUT_OPERATIONAL
@@ -147,6 +150,7 @@ enum CashTransactionType {
   OUT_ASSET_PURCHASE
   OUT_PROFIT_DISTRIBUTION
   OUT_CAPITAL_RETURN
+  OUT_OTHER
   CORRECTION
 }
 
@@ -414,6 +418,7 @@ model SalePayment {
   tradeInVehicleId String? // Referensi ID mobil lama jika pembayaran via tukar tambah
   tradeInVehicle   Vehicle? @relation("TradeInPayment", fields: [tradeInVehicleId], references: [id])
   notes            String?  @db.Text
+  proofUrl         String?  @db.Text
   recordedBy       String
 
   @@index([saleId])
@@ -460,6 +465,7 @@ model CapitalLedger {
   vehicle        Vehicle?          @relation(fields: [vehicleId], references: [id])
   runningBalance Decimal           @db.Decimal(15, 2)
   notes          String?           @db.Text
+  proofUrl       String?           @db.Text
   createdAt      DateTime          @default(now())
   createdBy      String
 
@@ -480,6 +486,7 @@ model CashTransaction {
   operationalExpense OperationalExpense?
   runningBalance   Decimal             @db.Decimal(15, 2)
   notes            String?             @db.Text
+  proofUrl         String?             @db.Text
   createdAt        DateTime            @default(now())
   createdBy        String
 
@@ -515,6 +522,7 @@ model ShowroomAsset {
   condition    AssetCondition @default(GOOD)
   location     String?
   notes        String?        @db.Text
+  receiptUrl   String?        @db.Text
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
 

@@ -14,8 +14,9 @@ import {
   Layers,
   ArrowUpRight,
   ArrowDownLeft,
+  Paperclip,
 } from "lucide-react";
-import { formatRupiah, formatDate, cn } from "@/lib/utils";
+import { formatRupiah, formatDate, cn, parseProofUrls } from "@/lib/utils";
 import { recordManualCashTransaction } from "@/app/actions/cash-transaction";
 import { createShowroomAsset, deleteShowroomAsset } from "@/app/actions/asset";
 import {
@@ -51,6 +52,7 @@ interface FinanceProps {
     vehiclePlate?: string;
     vehicleName?: string;
     expenseCategory?: string;
+    proofUrl?: string | null;
   }>;
   assets?: {
     items: Array<{
@@ -615,7 +617,45 @@ export function FinanceClient({
                         </span>
                       </td>
                       <td className="py-3 px-4 text-xs text-[#1C1917]">
-                        {tx.notes || (tx.vehiclePlate ? `Unit ${tx.vehiclePlate} (${tx.vehicleName})` : "-")}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span>
+                            {tx.notes || (tx.vehiclePlate ? `Unit ${tx.vehiclePlate} (${tx.vehicleName})` : "-")}
+                          </span>
+                          {tx.proofUrl && (() => {
+                            const urls = parseProofUrls(tx.proofUrl);
+                            if (urls.length === 0) return null;
+                            if (urls.length === 1) {
+                              return (
+                                <a
+                                  href={urls[0]}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200 text-[10px] font-bold transition-colors shrink-0"
+                                >
+                                  <Paperclip className="w-3 h-3 text-amber-700" />
+                                  <span>Bukti Transfer</span>
+                                </a>
+                              );
+                            }
+                            return (
+                              <div className="inline-flex items-center gap-1 flex-wrap">
+                                {urls.map((url, i) => (
+                                  <a
+                                    key={i}
+                                    href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 hover:bg-amber-200 text-[10px] font-bold transition-colors shrink-0"
+                                    title={`Buka Bukti Transfer #${i + 1}`}
+                                  >
+                                    <Paperclip className="w-2.5 h-2.5 text-amber-700" />
+                                    <span>Bukti #{i + 1}</span>
+                                  </a>
+                                ))}
+                              </div>
+                            );
+                          })()}
+                        </div>
                       </td>
                       <td className="py-3 px-4 text-right font-bold text-xs whitespace-nowrap">
                         <span className={isIncoming ? "text-emerald-600" : "text-red-600"}>

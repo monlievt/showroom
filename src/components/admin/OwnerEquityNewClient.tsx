@@ -15,6 +15,7 @@ import {
   Info,
 } from "lucide-react";
 import { recordOwnerEquity } from "@/app/actions/operational-expense";
+import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
 export function OwnerEquityNewClient() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export function OwnerEquityNewClient() {
   const [amount, setAmount] = useState<number | "">("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [notes, setNotes] = useState("");
+  const [proofUrls, setProofUrls] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -42,6 +44,7 @@ export function OwnerEquityNewClient() {
         amount: Number(amount),
         date: new Date(date),
         notes: notes || undefined,
+        proofUrls: proofUrls.length > 0 ? proofUrls : undefined,
       });
 
       if (!res.success) {
@@ -69,7 +72,7 @@ export function OwnerEquityNewClient() {
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
           >
             <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
-            <span>Kembali ke Beban & Prive</span>
+            <span>Kembali ke Beban &amp; Prive</span>
           </Link>
           <div>
             <h1 className="text-xl font-bold text-[#1C1917]">
@@ -165,6 +168,15 @@ export function OwnerEquityNewClient() {
               className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-emerald-500/20 resize-none"
             />
           </div>
+
+          {/* Proof Upload */}
+          <ProofUploadField
+            label="Lampiran Bukti Transfer / Screenshot Mutasi BCA (Bisa Beberapa)"
+            value={proofUrls}
+            onChange={setProofUrls}
+            uploadType="TRANSFER_PROOF"
+            referenceId="owner-equity"
+          />
         </div>
 
         {/* Bottom Actions Bar */}
@@ -173,7 +185,7 @@ export function OwnerEquityNewClient() {
             href="/admin/finance/expenses"
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
           >
-            Batal & Kembali
+            Batal &amp; Kembali
           </Link>
 
           <button

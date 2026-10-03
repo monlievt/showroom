@@ -16,6 +16,7 @@ import {
   Layers,
 } from "lucide-react";
 import { createShowroomAsset } from "@/app/actions/asset";
+import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
 const ASSET_CATEGORIES = [
   { value: "INSPECTION_TOOLS", label: "Peralatan Cek Fisik & Inspeksi (OBD Scanner, Paint Gauge)" },
@@ -47,6 +48,7 @@ export function AssetNewClient() {
   const [location, setLocation] = useState("Garasi Utama Nur Mobil");
   const [notes, setNotes] = useState("");
   const [recordCashOut, setRecordCashOut] = useState(false);
+  const [proofUrls, setProofUrls] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -77,6 +79,7 @@ export function AssetNewClient() {
           purchaseDate: new Date(purchaseDate),
           location: location.trim(),
           notes: notes.trim() || undefined,
+          proofUrls: proofUrls.length > 0 ? proofUrls : undefined,
         },
         recordCashOut
       );
@@ -106,11 +109,11 @@ export function AssetNewClient() {
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
           >
             <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
-            <span>Kembali ke Gudang Bahan & Alat</span>
+            <span>Kembali ke Gudang Bahan &amp; Alat</span>
           </Link>
           <div>
             <h1 className="text-xl font-bold text-[#1C1917]">
-              Tambah Aset Tetap & Inventaris Showroom
+              Tambah Aset Tetap &amp; Inventaris Showroom
             </h1>
             <p className="text-xs text-[#6B6560]">
               Pencatatan peralatan bengkel, alat cek fisik, laptop, neon box, dan fasilitas garasi.
@@ -214,7 +217,7 @@ export function AssetNewClient() {
           <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
             <DollarSign className="w-4 h-4 text-[#D97706]" />
             <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
-              2. Nilai Pembelian & Tanggal Pengadaan
+              2. Nilai Pembelian &amp; Tanggal Pengadaan
             </h2>
           </div>
 
@@ -301,6 +304,15 @@ export function AssetNewClient() {
               className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40 resize-none"
             />
           </div>
+
+          {/* Proof Upload */}
+          <ProofUploadField
+            label="Lampiran Bukti Pembelian / Nota / Foto Aset (Bisa Beberapa)"
+            value={proofUrls}
+            onChange={setProofUrls}
+            uploadType="RECEIPT"
+            referenceId="asset"
+          />
         </div>
 
         {/* Bottom Actions Bar */}
@@ -309,7 +321,7 @@ export function AssetNewClient() {
             href="/admin/workshop"
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
           >
-            Batal & Kembali
+            Batal &amp; Kembali
           </Link>
 
           <button

@@ -239,6 +239,8 @@ export async function createSaleAction(input: CreateSaleInput) {
 
     revalidatePath("/admin/sales");
     revalidatePath("/admin/inventory");
+    revalidatePath("/admin/finance");
+    revalidatePath("/admin/dashboard");
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Error creating sale:", error);
@@ -280,6 +282,7 @@ export async function addSalePaymentAction(input: CreateSalePaymentInput) {
           method: validated.method,
           tradeInVehicleId: validated.tradeInVehicleId,
           notes: validated.notes,
+          proofUrl: validated.proofUrl || null,
           recordedBy: "Owner/Admin",
         },
       });
@@ -350,6 +353,8 @@ export async function addSalePaymentAction(input: CreateSalePaymentInput) {
 
     revalidatePath("/admin/sales");
     revalidatePath("/admin/inventory");
+    revalidatePath("/admin/finance");
+    revalidatePath("/admin/dashboard");
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Error adding sale payment:", error);

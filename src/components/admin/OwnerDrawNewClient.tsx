@@ -15,6 +15,7 @@ import {
   Info,
 } from "lucide-react";
 import { recordOwnerDraw } from "@/app/actions/operational-expense";
+import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
 export function OwnerDrawNewClient() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export function OwnerDrawNewClient() {
   const [amount, setAmount] = useState<number | "">("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [notes, setNotes] = useState("");
+  const [proofUrls, setProofUrls] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -46,6 +48,7 @@ export function OwnerDrawNewClient() {
         amount: Number(amount),
         date: new Date(date),
         notes: notes.trim(),
+        proofUrls: proofUrls.length > 0 ? proofUrls : undefined,
       });
 
       if (!res.success) {
@@ -73,7 +76,7 @@ export function OwnerDrawNewClient() {
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
           >
             <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
-            <span>Kembali ke Beban & Prive</span>
+            <span>Kembali ke Beban &amp; Prive</span>
           </Link>
           <div>
             <h1 className="text-xl font-bold text-[#1C1917]">
@@ -170,6 +173,15 @@ export function OwnerDrawNewClient() {
               className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-purple-500/20 resize-none"
             />
           </div>
+
+          {/* Proof Upload */}
+          <ProofUploadField
+            label="Lampiran Bukti Transfer / Screenshot Penarikan (Opsional)"
+            value={proofUrls}
+            onChange={setProofUrls}
+            uploadType="TRANSFER_PROOF"
+            referenceId="owner-draw"
+          />
         </div>
 
         {/* Bottom Actions Bar */}
@@ -178,7 +190,7 @@ export function OwnerDrawNewClient() {
             href="/admin/finance/expenses"
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
           >
-            Batal & Kembali
+            Batal &amp; Kembali
           </Link>
 
           <button

@@ -26,21 +26,9 @@ export async function getCashBalanceSummary() {
 
     for (const tx of allTransactions) {
       const amt = new Decimal(tx.amount.toString());
-      if (
-        tx.type === "IN_SALE_PAYMENT" ||
-        tx.type === "IN_CAPITAL_DEPOSIT" ||
-        tx.type === "IN_OWNER_EQUITY"
-      ) {
+      if (tx.type.startsWith("IN_")) {
         totalIn = totalIn.plus(amt);
-      } else if (
-        tx.type === "OUT_VEHICLE_PURCHASE" ||
-        tx.type === "OUT_EXPENSE" ||
-        tx.type === "OUT_OPERATIONAL" ||
-        tx.type === "OUT_OWNER_DRAW" ||
-        tx.type === "OUT_ASSET_PURCHASE" ||
-        tx.type === "OUT_CAPITAL_RETURN" ||
-        tx.type === "OUT_PROFIT_DISTRIBUTION"
-      ) {
+      } else if (tx.type.startsWith("OUT_")) {
         totalOut = totalOut.plus(amt);
       }
     }
@@ -126,6 +114,7 @@ export async function getCashTransactions(params?: {
             ? `${tx.relatedVehicle.brand} ${tx.relatedVehicle.model}`
             : undefined,
           expenseCategory: tx.relatedExpense?.category,
+          proofUrl: tx.proofUrl,
         })),
         nextCursor,
       },
@@ -152,10 +141,7 @@ export async function recordManualCashTransaction(
         ? new Decimal(latestTx.runningBalance.toString())
         : new Decimal(0);
 
-      const isIncoming =
-        validated.type === "IN_SALE_PAYMENT" ||
-        validated.type === "IN_CAPITAL_DEPOSIT" ||
-        validated.type === "IN_OWNER_EQUITY";
+      const isIncoming = validated.type.startsWith("IN_");
 
       const newBalance = isIncoming ? prevBalance.plus(amt) : prevBalance.minus(amt);
 
@@ -169,6 +155,9 @@ export async function recordManualCashTransaction(
           relatedLedgerId: validated.relatedLedgerId || null,
           runningBalance: newBalance,
           notes: validated.notes || null,
+          proofUrl: validated.proofUrls && validated.proofUrls.length > 0
+            ? JSON.stringify(validated.proofUrls)
+            : (validated.proofUrl || null),
           createdBy: actorUserId,
         },
       });

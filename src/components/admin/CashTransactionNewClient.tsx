@@ -15,6 +15,7 @@ import {
   TrendingDown,
 } from "lucide-react";
 import { recordManualCashTransaction } from "@/app/actions/cash-transaction";
+import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
 export function CashTransactionNewClient() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export function CashTransactionNewClient() {
   const [cashType, setCashType] = useState("IN_CAPITAL_DEPOSIT");
   const [amount, setAmount] = useState<number | "">("");
   const [notes, setNotes] = useState("");
+  const [proofUrls, setProofUrls] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -44,6 +46,7 @@ export function CashTransactionNewClient() {
         type: cashType as any,
         amount: Number(amount),
         notes: notes.trim() || undefined,
+        proofUrls: proofUrls.length > 0 ? proofUrls : undefined,
       });
 
       if (!res.success) {
@@ -78,7 +81,7 @@ export function CashTransactionNewClient() {
               Pencatatan Transaksi Kas Manual
             </h1>
             <p className="text-xs text-[#6B6560]">
-              Penyesuaian saldo rekening kas masuk atau keluar di luar modul mobil & penjualan.
+              Penyesuaian saldo rekening kas masuk atau keluar di luar modul mobil &amp; penjualan.
             </p>
           </div>
         </div>
@@ -123,7 +126,7 @@ export function CashTransactionNewClient() {
                 <option value="IN_OTHER">Pemasukan Kas Lainnya</option>
               </optgroup>
               <optgroup label="🔴 Kas Keluar (Mengurangi Saldo BCA)">
-                <option value="OUT_CAPITAL_WITHDRAWAL">Penarikan / Pengembalian Modal</option>
+                <option value="OUT_CAPITAL_RETURN">Penarikan / Pengembalian Modal</option>
                 <option value="OUT_OTHER">Pengeluaran Kas Lainnya</option>
               </optgroup>
             </select>
@@ -164,6 +167,14 @@ export function CashTransactionNewClient() {
               className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40 resize-none"
             />
           </div>
+
+          {/* Proof Upload */}
+          <ProofUploadField
+            value={proofUrls}
+            onChange={setProofUrls}
+            uploadType="TRANSFER_PROOF"
+            referenceId="cash-transaction"
+          />
         </div>
 
         {/* Live Card Preview */}
@@ -192,7 +203,7 @@ export function CashTransactionNewClient() {
             href="/admin/finance"
             className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
           >
-            Batal & Kembali
+            Batal &amp; Kembali
           </Link>
 
           <button

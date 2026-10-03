@@ -70,6 +70,9 @@ export async function createShowroomAsset(
           condition: validated.condition,
           location: validated.location || null,
           notes: validated.notes || null,
+          receiptUrl: validated.proofUrls && validated.proofUrls.length > 0
+            ? JSON.stringify(validated.proofUrls)
+            : (validated.receiptUrl || null),
         },
       });
 

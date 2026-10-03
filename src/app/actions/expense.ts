@@ -33,16 +33,31 @@ export async function createExpenseAction(input: CreateExpenseInput) {
       });
 
       // 2b. Jika ada lampiran bukti nota fisik, arsipkan otomatis ke VehiclePhoto (DOCUMENT_PROOF)
+      // receiptUrl bisa berupa URL tunggal atau JSON array ["url1","url2"]
       if (validated.receiptUrl) {
-        await tx.vehiclePhoto.create({
-          data: {
-            vehicleId: validated.vehicleId,
-            category: "DOCUMENT_PROOF",
-            fileUrl: validated.receiptUrl,
-            tag: "RECEIPT_EXPENSE",
-            title: `Bukti Nota ${validated.category}: ${validated.vendorName || "Vendor"} (Rp ${validated.amount.toLocaleString("id-ID")})`,
-          },
-        });
+        let receiptUrls: string[] = [];
+        try {
+          const parsed = JSON.parse(validated.receiptUrl);
+          if (Array.isArray(parsed)) {
+            receiptUrls = parsed.filter((u) => typeof u === "string" && u.startsWith("http"));
+          } else {
+            receiptUrls = [validated.receiptUrl];
+          }
+        } catch {
+          receiptUrls = [validated.receiptUrl];
+        }
+
+        for (let i = 0; i < receiptUrls.length; i++) {
+          await tx.vehiclePhoto.create({
+            data: {
+              vehicleId: validated.vehicleId,
+              category: "DOCUMENT_PROOF",
+              fileUrl: receiptUrls[i],
+              tag: "RECEIPT_EXPENSE",
+              title: `Bukti Nota ${validated.category}: ${validated.vendorName || "Vendor"} (Rp ${validated.amount.toLocaleString("id-ID")})${receiptUrls.length > 1 ? ` — Foto ${i + 1}/${receiptUrls.length}` : ""}`,
+            },
+          });
+        }
       }
 
       // 3. Ambil saldo kas terakhir
@@ -81,6 +96,7 @@ export async function createExpenseAction(input: CreateExpenseInput) {
     });
 
     revalidatePath("/admin/inventory");
+    revalidatePath("/admin/finance");
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Error creating expense:", error);

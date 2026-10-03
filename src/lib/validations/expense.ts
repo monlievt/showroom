@@ -7,6 +7,8 @@ export const ExpenseCategoryEnum = z.enum([
   "OIL_AND_SERVICE",
   "BODY_PAINT",
   "DETAILING_SALON",
+  "TIRES_AND_WHEELS",
+  "ELECTRICAL",
   "SPAREPARTS",
   "DOCUMENT_TAX_MUTATION",
   "OTHER",

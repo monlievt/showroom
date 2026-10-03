@@ -14,6 +14,9 @@ export const capitalLedgerSchema = z.object({
   amount: z.number().positive("Nominal mutasi modal harus positif"),
   vehicleId: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  proofUrl: z.string().optional().nullable(),
+  proofUrls: z.array(z.string()).optional().nullable(),
+  depositDate: z.string().optional().nullable(),
 });
 
 export type CapitalLedgerInput = z.input<typeof capitalLedgerSchema>;

@@ -17,6 +17,8 @@ export async function recordCapitalLedgerEntry(
     amount: Decimal | number | string;
     vehicleId?: string | null;
     notes?: string | null;
+    proofUrl?: string | null;
+    createdAt?: Date;
     createdBy?: string;
   }
 ) {
@@ -67,6 +69,8 @@ export async function recordCapitalLedgerEntry(
       vehicleId: params.vehicleId || null,
       runningBalance: newRunningBalance,
       notes: params.notes || null,
+      proofUrl: params.proofUrl || null,
+      createdAt: params.createdAt || new Date(),
       createdBy,
     },
   });
@@ -85,6 +89,15 @@ export async function depositInvestorCapital(
   try {
     const validated = capitalLedgerSchema.parse(input);
     const amt = new Decimal(validated.amount);
+    const txDate = validated.depositDate ? new Date(validated.depositDate) : new Date();
+
+    // Resolve proofUrl: bisa satu atau beberapa URL yang di-serialize sebagai JSON string
+    let resolvedProofUrl: string | null = null;
+    if (validated.proofUrls && validated.proofUrls.length > 0) {
+      resolvedProofUrl = JSON.stringify(validated.proofUrls);
+    } else if (validated.proofUrl) {
+      resolvedProofUrl = validated.proofUrl;
+    }
 
     const result = await prisma.$transaction(async (tx) => {
       // 1. Tulis CapitalLedger DEPOSIT
@@ -94,6 +107,8 @@ export async function depositInvestorCapital(
         amount: amt,
         vehicleId: validated.vehicleId,
         notes: validated.notes || "Setoran modal baru investor",
+        proofUrl: resolvedProofUrl,
+        createdAt: txDate,
         createdBy: actorUserId,
       });
 
@@ -115,6 +130,8 @@ export async function depositInvestorCapital(
           relatedLedgerId: ledgerEntry.id,
           runningBalance: newCashBalance,
           notes: `Setoran modal dari investor (Ref Ledger: ${ledgerEntry.id})`,
+          proofUrl: resolvedProofUrl,
+          createdAt: txDate,
           createdBy: actorUserId,
         },
       });
@@ -136,6 +153,8 @@ export async function depositInvestorCapital(
       return { ledgerEntry, cashEntry };
     });
 
+    revalidatePath("/admin/investors");
+    revalidatePath("/admin/investors/accounts");
     revalidatePath("/admin/finance");
     return { success: true, data: result };
   } catch (error: any) {
