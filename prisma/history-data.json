@@ -49,35 +49,35 @@
       "engineCapacity": 1000,
       "sourceType": "AUCTION",
       "auctionHouse": "LEGOAS",
-      "purchasePrice": 66500000.0,
+      "purchasePrice": 66500000,
       "purchaseDate": "2025-12-02",
       "targetSellingPrice": null,
-      "totalHpp": 75011000.0,
+      "totalHpp": 75011000,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2500000.0,
+          "amount": 2500000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 4500000.0,
+          "amount": 4500000,
           "notes": "Cat Body"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1311000.0,
+          "amount": 1311000,
           "notes": "Belanja Spareparts"
         }
       ],
@@ -95,40 +95,40 @@
       "engineCapacity": 150,
       "sourceType": "AUCTION",
       "auctionHouse": "SMARTBID",
-      "purchasePrice": 11466600.0,
+      "purchasePrice": 11466600,
       "purchaseDate": "2025-08-22",
       "targetSellingPrice": null,
-      "totalHpp": 14301600.0,
+      "totalHpp": 14301600,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 750000.0,
+          "amount": 750000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 116600.0,
+          "amount": 116600,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 90000.0,
+          "amount": 90000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 745000.0,
+          "amount": 745000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 750000.0,
+          "amount": 750000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
@@ -146,30 +146,30 @@
       "engineCapacity": 160,
       "sourceType": "AUCTION",
       "auctionHouse": "SMARTBID",
-      "purchasePrice": 21879900.0,
+      "purchasePrice": 21879900,
       "purchaseDate": "2024-09-25",
       "targetSellingPrice": null,
-      "totalHpp": 22184900.0,
+      "totalHpp": 22184900,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 750000.0,
+          "amount": 750000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 229900.0,
+          "amount": 229900,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 105000.0,
+          "amount": 105000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "Belanja Spareparts"
         }
       ],
@@ -187,30 +187,30 @@
       "engineCapacity": 160,
       "sourceType": "AUCTION",
       "auctionHouse": "SMARTBID",
-      "purchasePrice": 21475500.0,
+      "purchasePrice": 21475500,
       "purchaseDate": "2024-09-25",
       "targetSellingPrice": null,
-      "totalHpp": 21780500.0,
+      "totalHpp": 21780500,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 750000.0,
+          "amount": 750000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 225500.0,
+          "amount": 225500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 105000.0,
+          "amount": 105000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "Belanja Spareparts"
         }
       ],
@@ -228,30 +228,30 @@
       "engineCapacity": 155,
       "sourceType": "AUCTION",
       "auctionHouse": "CAREADY",
-      "purchasePrice": 18192500.0,
+      "purchasePrice": 18192500,
       "purchaseDate": "2025-08-06",
       "targetSellingPrice": null,
-      "totalHpp": 19176500.0,
+      "totalHpp": 19176500,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 192500.0,
+          "amount": 192500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 105000.0,
+          "amount": 105000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 779000.0,
+          "amount": 779000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
@@ -269,40 +269,40 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "CAREADY",
-      "purchasePrice": 79000000.0,
+      "purchasePrice": 79000000,
       "purchaseDate": "2026-08-14",
-      "targetSellingPrice": 89000000.0,
-      "totalHpp": 83750000.0,
+      "targetSellingPrice": 89000000,
+      "totalHpp": 83750000,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 850000.0,
+          "amount": 850000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 2300000.0,
+          "amount": 2300000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
@@ -320,35 +320,35 @@
       "engineCapacity": 1300,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 70000000.0,
+      "purchasePrice": 70000000,
       "purchaseDate": "2026-07-24",
       "targetSellingPrice": null,
-      "totalHpp": 84710000.0,
+      "totalHpp": 84710000,
       "status": "IN_REPAIR",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 1100000.0,
+          "amount": 1100000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 13385000.0,
+          "amount": 13385000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 125000.0,
+          "amount": 125000,
           "notes": "Belanja Spareparts"
         }
       ],
@@ -366,45 +366,45 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 74500000.0,
+      "purchasePrice": 74500000,
       "purchaseDate": "2026-08-10",
       "targetSellingPrice": null,
-      "totalHpp": 81687000.0,
+      "totalHpp": 81687000,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 5000000.0,
+          "amount": 5000000,
           "notes": "Cat Body"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 387000.0,
+          "amount": 387000,
           "notes": "Belanja Spareparts"
         }
       ],
@@ -422,50 +422,50 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 153000000.0,
+      "purchasePrice": 153000000,
       "purchaseDate": "2026-08-10",
       "targetSellingPrice": null,
-      "totalHpp": 159470000.0,
+      "totalHpp": 159470000,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 1000000.0,
+          "amount": 1000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2500000.0,
+          "amount": 2500000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 750000.0,
+          "amount": 750000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1120000.0,
+          "amount": 1120000,
           "notes": "Belanja Spareparts"
         }
       ],
@@ -483,45 +483,45 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "HYBID",
-      "purchasePrice": 60621500.0,
+      "purchasePrice": 60621500,
       "purchaseDate": "2026-08-21",
-      "targetSellingPrice": 115000000.0,
-      "totalHpp": 93321500.0,
+      "targetSellingPrice": 115000000,
+      "totalHpp": 93321500,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3500000.0,
+          "amount": 3500000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 621500.0,
+          "amount": 621500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 600000.0,
+          "amount": 600000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 750000.0,
+          "amount": 750000,
           "notes": "Poles & Salon"
         },
         {
           "category": "OTHER",
-          "amount": 26628500.0,
+          "amount": 26628500,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
@@ -539,55 +539,55 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "LEGOAS",
-      "purchasePrice": 134000000.0,
+      "purchasePrice": 134000000,
       "purchaseDate": "2026-08-10",
-      "targetSellingPrice": 155000000.0,
-      "totalHpp": 142450000.0,
+      "targetSellingPrice": 155000000,
+      "totalHpp": 142450000,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1200000.0,
+          "amount": 1200000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "OTHER",
-          "amount": 250000.0,
+          "amount": 250000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
@@ -605,30 +605,30 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 122000000.0,
+      "purchasePrice": 122000000,
       "purchaseDate": "2026-09-18",
-      "targetSellingPrice": 143000000.0,
-      "totalHpp": 123715000.0,
+      "targetSellingPrice": 143000000,
+      "totalHpp": 123715000,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 38000.0,
+          "amount": 38000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Poles & Salon"
         }
       ],
@@ -646,30 +646,30 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 125000000.0,
+      "purchasePrice": 125000000,
       "purchaseDate": "2026-09-25",
-      "targetSellingPrice": 143000000.0,
-      "totalHpp": 127474000.0,
+      "targetSellingPrice": 143000000,
+      "totalHpp": 127474000,
       "status": "READY_FOR_SALE",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 180000.0,
+          "amount": 180000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Poles & Salon"
         }
       ],
@@ -689,46 +689,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 72500000.0,
+      "purchasePrice": 72500000,
       "purchaseDate": "2026-01-23",
       "targetSellingPrice": null,
-      "totalHpp": 81755000.0,
+      "totalHpp": 81755000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1900000.0,
+          "amount": 1900000,
           "notes": "Cat Body"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 4105000.0,
+          "amount": 4105000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-01-30",
-        "sellingPrice": 87000000.0,
+        "sellingPrice": 87000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -744,46 +744,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "ALTO",
-      "purchasePrice": 87413000.0,
+      "purchasePrice": 87413000,
       "purchaseDate": "2025-04-10",
       "targetSellingPrice": null,
-      "totalHpp": 99588000.0,
+      "totalHpp": 99588000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3500000.0,
+          "amount": 3500000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 913000.0,
+          "amount": 913000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 227000.0,
+          "amount": 227000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 400000.0,
+          "amount": 400000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 7927000.0,
+          "amount": 7927000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-08-03",
-        "sellingPrice": 103000000.0,
+        "sellingPrice": 103000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -799,41 +799,41 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "HYBID",
-      "purchasePrice": 101000000.0,
+      "purchasePrice": 101000000,
       "purchaseDate": "2025-01-21",
       "targetSellingPrice": null,
-      "totalHpp": 109645000.0,
+      "totalHpp": 109645000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 2500000.0,
+          "amount": 2500000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 1900000.0,
+          "amount": 1900000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 4000000.0,
+          "amount": 4000000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 750000.0,
+          "amount": 750000,
           "notes": "Poles & Salon"
         }
       ],
       "sale": {
         "saleDate": "2025-03-09",
-        "sellingPrice": 118000000.0,
+        "sellingPrice": 118000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -849,36 +849,36 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "HYBID",
-      "purchasePrice": 143023500.0,
+      "purchasePrice": 143023500,
       "purchaseDate": "2024-12-19",
       "targetSellingPrice": null,
-      "totalHpp": 149571000.0,
+      "totalHpp": 149571000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1523500.0,
+          "amount": 1523500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 737500.0,
+          "amount": 737500,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 3250000.0,
+          "amount": 3250000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2024-12-31",
-        "sellingPrice": 165000000.0,
+        "sellingPrice": 165000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -894,41 +894,41 @@
       "engineCapacity": 1800,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 90000000.0,
+      "purchasePrice": 90000000,
       "purchaseDate": "2025-01-25",
       "targetSellingPrice": null,
-      "totalHpp": 98395000.0,
+      "totalHpp": 98395000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 15000.0,
+          "amount": 15000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 1225000.0,
+          "amount": 1225000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 400000.0,
+          "amount": 400000,
           "notes": "Cat Body"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 3235000.0,
+          "amount": 3235000,
           "notes": "Pajak / Mutasi STNK"
         },
         {
           "category": "OTHER",
-          "amount": 3520000.0,
+          "amount": 3520000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-02-20",
-        "sellingPrice": 101000000.0,
+        "sellingPrice": 101000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -944,66 +944,66 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "UCAUCTION",
-      "purchasePrice": 70737000.0,
+      "purchasePrice": 70737000,
       "purchaseDate": "2024-09-02",
       "targetSellingPrice": null,
-      "totalHpp": 93956500.0,
+      "totalHpp": 93956500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 737000.0,
+          "amount": 737000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 773500.0,
+          "amount": 773500,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 230000.0,
+          "amount": 230000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 400000.0,
+          "amount": 400000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 600000.0,
+          "amount": 600000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 7357500.0,
+          "amount": 7357500,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 1600000.0,
+          "amount": 1600000,
           "notes": "Pajak / Mutasi STNK"
         },
         {
           "category": "OTHER",
-          "amount": 8321500.0,
+          "amount": 8321500,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-01-04",
-        "sellingPrice": 118000000.0,
+        "sellingPrice": 118000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1019,66 +1019,66 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "GROSIRMOBIL",
-      "purchasePrice": 82880000.0,
+      "purchasePrice": 82880000,
       "purchaseDate": "2024-06-24",
       "targetSellingPrice": null,
-      "totalHpp": 96549000.0,
+      "totalHpp": 96549000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 880000.0,
+          "amount": 880000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 400000.0,
+          "amount": 400000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 3415000.0,
+          "amount": 3415000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2300000.0,
+          "amount": 2300000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 2310000.0,
+          "amount": 2310000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 2494000.0,
+          "amount": 2494000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-03-14",
-        "sellingPrice": 88000000.0,
+        "sellingPrice": 88000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1094,31 +1094,31 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 80000000.0,
+      "purchasePrice": 80000000,
       "purchaseDate": "2025-01-11",
       "targetSellingPrice": null,
-      "totalHpp": 85581500.0,
+      "totalHpp": 85581500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 739000.0,
+          "amount": 739000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 2750000.0,
+          "amount": 2750000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "OTHER",
-          "amount": 2092500.0,
+          "amount": 2092500,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-03-14",
-        "sellingPrice": 89000000.0,
+        "sellingPrice": 89000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1134,56 +1134,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "CAREADY",
-      "purchasePrice": 88429500.0,
+      "purchasePrice": 88429500,
       "purchaseDate": "2024-06-22",
       "targetSellingPrice": null,
-      "totalHpp": 100004500.0,
+      "totalHpp": 100004500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 929500.0,
+          "amount": 929500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 600000.0,
+          "amount": 600000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 600000.0,
+          "amount": 600000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 450000.0,
+          "amount": 450000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1300000.0,
+          "amount": 1300000,
           "notes": "Cat Body"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 8175000.0,
+          "amount": 8175000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-01-11",
-        "sellingPrice": 97000000.0,
+        "sellingPrice": 97000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1199,36 +1199,36 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "GROSIRMOBIL",
-      "purchasePrice": 112188000.0,
+      "purchasePrice": 112188000,
       "purchaseDate": "2025-03-17",
       "targetSellingPrice": null,
-      "totalHpp": 115513000.0,
+      "totalHpp": 115513000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1188000.0,
+          "amount": 1188000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 355000.0,
+          "amount": 355000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 2090000.0,
+          "amount": 2090000,
           "notes": "Servis & Ganti Oli"
         }
       ],
       "sale": {
         "saleDate": "2025-03-29",
-        "sellingPrice": 120000000.0,
+        "sellingPrice": 120000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1244,36 +1244,36 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 135200000.0,
+      "purchasePrice": 135200000,
       "purchaseDate": "2025-03-04",
       "targetSellingPrice": null,
-      "totalHpp": 139500000.0,
+      "totalHpp": 139500000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 275000.0,
+          "amount": 275000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 50000.0,
+          "amount": 50000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2550000.0,
+          "amount": 2550000,
           "notes": "Cat Body"
         },
         {
           "category": "OTHER",
-          "amount": 1425000.0,
+          "amount": 1425000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-04-19",
-        "sellingPrice": 141000000.0,
+        "sellingPrice": 141000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1289,36 +1289,36 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "TRIBIK",
-      "purchasePrice": 81858000.0,
+      "purchasePrice": 81858000,
       "purchaseDate": "2024-12-19",
       "targetSellingPrice": null,
-      "totalHpp": 91168000.0,
+      "totalHpp": 91168000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 858000.0,
+          "amount": 858000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 260000.0,
+          "amount": 260000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 7160000.0,
+          "amount": 7160000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-01-25",
-        "sellingPrice": 98000000.0,
+        "sellingPrice": 98000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1334,41 +1334,41 @@
       "engineCapacity": 1200,
       "sourceType": "AUCTION",
       "auctionHouse": "SMARTBID",
-      "purchasePrice": 75000000.0,
+      "purchasePrice": 75000000,
       "purchaseDate": "2025-01-24",
       "targetSellingPrice": null,
-      "totalHpp": 78638000.0,
+      "totalHpp": 78638000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 245500.0,
+          "amount": 245500,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 150000.0,
+          "amount": 150000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Cat Body"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 2150000.0,
+          "amount": 2150000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-04-16",
-        "sellingPrice": 90000000.0,
+        "sellingPrice": 90000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1384,51 +1384,51 @@
       "engineCapacity": 1200,
       "sourceType": "AUCTION",
       "auctionHouse": "HYBID",
-      "purchasePrice": 62649000.0,
+      "purchasePrice": 62649000,
       "purchaseDate": "2024-08-28",
       "targetSellingPrice": null,
-      "totalHpp": 72500000.0,
+      "totalHpp": 72500000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 649000.0,
+          "amount": 649000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 361000.0,
+          "amount": 361000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 407000.0,
+          "amount": 407000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 6413000.0,
+          "amount": 6413000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-04-18",
-        "sellingPrice": 72000000.0,
+        "sellingPrice": 72000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1444,56 +1444,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "TRIBIK",
-      "purchasePrice": 60627000.0,
+      "purchasePrice": 60627000,
       "purchaseDate": "2025-01-31",
       "targetSellingPrice": null,
-      "totalHpp": 70246000.0,
+      "totalHpp": 70246000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 627000.0,
+          "amount": 627000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 230000.0,
+          "amount": 230000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 150000.0,
+          "amount": 150000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 1648000.0,
+          "amount": 1648000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 950000.0,
+          "amount": 950000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 3570000.0,
+          "amount": 3570000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-03-14",
-        "sellingPrice": 89000000.0,
+        "sellingPrice": 89000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1509,41 +1509,41 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "HYBID",
-      "purchasePrice": 127000000.0,
+      "purchasePrice": 127000000,
       "purchaseDate": "2025-04-17",
       "targetSellingPrice": null,
-      "totalHpp": 131732500.0,
+      "totalHpp": 131732500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 320000.0,
+          "amount": 320000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1750000.0,
+          "amount": 1750000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         }
       ],
       "sale": {
         "saleDate": "2025-05-01",
-        "sellingPrice": 146000000.0,
+        "sellingPrice": 146000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1559,51 +1559,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "CAREADY",
-      "purchasePrice": 63660000.0,
+      "purchasePrice": 63660000,
       "purchaseDate": "2025-03-04",
       "targetSellingPrice": null,
-      "totalHpp": 78304000.0,
+      "totalHpp": 78304000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 660000.0,
+          "amount": 660000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 1650000.0,
+          "amount": 1650000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1750000.0,
+          "amount": 1750000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 9330000.0,
+          "amount": 9330000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-06-22",
-        "sellingPrice": 85000000.0,
+        "sellingPrice": 85000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1619,46 +1619,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "HYBID",
-      "purchasePrice": 115500000.0,
+      "purchasePrice": 115500000,
       "purchaseDate": "2025-04-17",
       "targetSellingPrice": null,
-      "totalHpp": 121970000.0,
+      "totalHpp": 121970000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 470000.0,
+          "amount": 470000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2850000.0,
+          "amount": 2850000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         }
       ],
       "sale": {
         "saleDate": "2025-06-17",
-        "sellingPrice": 137000000.0,
+        "sellingPrice": 137000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1674,41 +1674,41 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "TRIBIK",
-      "purchasePrice": 77308500.0,
+      "purchasePrice": 77308500,
       "purchaseDate": "2025-04-24",
       "targetSellingPrice": null,
-      "totalHpp": 84964000.0,
+      "totalHpp": 84964000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 808500.0,
+          "amount": 808500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 2419500.0,
+          "amount": 2419500,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 3036000.0,
+          "amount": 3036000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-06-22",
-        "sellingPrice": 90000000.0,
+        "sellingPrice": 90000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1724,51 +1724,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "UCAUCTION",
-      "purchasePrice": 66693000.0,
+      "purchasePrice": 66693000,
       "purchaseDate": "2025-04-21",
       "targetSellingPrice": null,
-      "totalHpp": 77544000.0,
+      "totalHpp": 77544000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 693000.0,
+          "amount": 693000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 650000.0,
+          "amount": 650000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 2450000.0,
+          "amount": 2450000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1350000.0,
+          "amount": 1350000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 3670000.0,
+          "amount": 3670000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-07-17",
-        "sellingPrice": 82500000.0,
+        "sellingPrice": 82500000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1784,51 +1784,51 @@
       "engineCapacity": 1200,
       "sourceType": "AUCTION",
       "auctionHouse": "SMARTBID",
-      "purchasePrice": 67704000.0,
+      "purchasePrice": 67704000,
       "purchaseDate": "2025-05-07",
       "targetSellingPrice": null,
-      "totalHpp": 76594000.0,
+      "totalHpp": 76594000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 704000.0,
+          "amount": 704000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 1900000.0,
+          "amount": 1900000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1950000.0,
+          "amount": 1950000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 2290000.0,
+          "amount": 2290000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-07-19",
-        "sellingPrice": 89000000.0,
+        "sellingPrice": 89000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1844,56 +1844,56 @@
       "engineCapacity": 1300,
       "sourceType": "AUCTION",
       "auctionHouse": "ALTO",
-      "purchasePrice": 136952000.0,
+      "purchasePrice": 136952000,
       "purchaseDate": "2025-06-30",
       "targetSellingPrice": null,
-      "totalHpp": 144300000.0,
+      "totalHpp": 144300000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3500000.0,
+          "amount": 3500000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1452000.0,
+          "amount": 1452000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 98000.0,
+          "amount": 98000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 400000.0,
+          "amount": 400000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 1000000.0,
+          "amount": 1000000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 3150000.0,
+          "amount": 3150000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-07-19",
-        "sellingPrice": 159000000.0,
+        "sellingPrice": 159000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1909,61 +1909,61 @@
       "engineCapacity": 1800,
       "sourceType": "AUCTION",
       "auctionHouse": "ALTO",
-      "purchasePrice": 94490000.0,
+      "purchasePrice": 94490000,
       "purchaseDate": "2025-04-10",
       "targetSellingPrice": null,
-      "totalHpp": 102339500.0,
+      "totalHpp": 102339500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3500000.0,
+          "amount": 3500000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 990000.0,
+          "amount": 990000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 201000.0,
+          "amount": 201000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1680500.0,
+          "amount": 1680500,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 2750000.0,
+          "amount": 2750000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-05-21",
-        "sellingPrice": 112000000.0,
+        "sellingPrice": 112000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -1979,56 +1979,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "SMARTBID",
-      "purchasePrice": 64165500.0,
+      "purchasePrice": 64165500,
       "purchaseDate": "2025-07-23",
       "targetSellingPrice": null,
-      "totalHpp": 70190500.0,
+      "totalHpp": 70190500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 665500.0,
+          "amount": 665500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2500000.0,
+          "amount": 2500000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 250000.0,
+          "amount": 250000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 775000.0,
+          "amount": 775000,
           "notes": "Belanja Spareparts"
         }
       ],
       "sale": {
         "saleDate": "2025-08-17",
-        "sellingPrice": 81000000.0,
+        "sellingPrice": 81000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2044,56 +2044,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "TRIBIK",
-      "purchasePrice": 121792500.0,
+      "purchasePrice": 121792500,
       "purchaseDate": "2025-04-30",
       "targetSellingPrice": null,
-      "totalHpp": 147844000.0,
+      "totalHpp": 147844000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1292500.0,
+          "amount": 1292500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 5500000.0,
+          "amount": 5500000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 600000.0,
+          "amount": 600000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 5240000.0,
+          "amount": 5240000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1000000.0,
+          "amount": 1000000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 1000000.0,
+          "amount": 1000000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 10644000.0,
+          "amount": 10644000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-09-03",
-        "sellingPrice": 183000000.0,
+        "sellingPrice": 183000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2109,51 +2109,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 129000000.0,
+      "purchasePrice": 129000000,
       "purchaseDate": "2025-08-08",
       "targetSellingPrice": null,
-      "totalHpp": 134445500.0,
+      "totalHpp": 134445500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 5000.0,
+          "amount": 5000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 400000.0,
+          "amount": 400000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2400000.0,
+          "amount": 2400000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 770000.0,
+          "amount": 770000,
           "notes": "Belanja Spareparts"
         }
       ],
       "sale": {
         "saleDate": "2025-08-31",
-        "sellingPrice": 150000000.0,
+        "sellingPrice": 150000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2169,56 +2169,56 @@
       "engineCapacity": 1200,
       "sourceType": "AUCTION",
       "auctionHouse": "SMARTBID",
-      "purchasePrice": 57188500.0,
+      "purchasePrice": 57188500,
       "purchaseDate": "2025-05-07",
       "targetSellingPrice": null,
-      "totalHpp": 63988500.0,
+      "totalHpp": 63988500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3100000.0,
+          "amount": 3100000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 588500.0,
+          "amount": 588500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 1100000.0,
+          "amount": 1100000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 400000.0,
+          "amount": 400000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 2350000.0,
+          "amount": 2350000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-07-08",
-        "sellingPrice": 89000000.0,
+        "sellingPrice": 89000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2234,66 +2234,66 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "TRIBIK",
-      "purchasePrice": 135946500.0,
+      "purchasePrice": 135946500,
       "purchaseDate": "2025-07-21",
       "targetSellingPrice": null,
-      "totalHpp": 150920000.0,
+      "totalHpp": 150920000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1446500.0,
+          "amount": 1446500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 32000.0,
+          "amount": 32000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 400000.0,
+          "amount": 400000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2700000.0,
+          "amount": 2700000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1645000.0,
+          "amount": 1645000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 1200000.0,
+          "amount": 1200000,
           "notes": "Pajak / Mutasi STNK"
         },
         {
           "category": "OTHER",
-          "amount": 3550000.0,
+          "amount": 3550000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-08-01",
-        "sellingPrice": 162000000.0,
+        "sellingPrice": 162000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2309,56 +2309,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "TRIBIK",
-      "purchasePrice": 135946500.0,
+      "purchasePrice": 135946500,
       "purchaseDate": "2025-07-24",
       "targetSellingPrice": null,
-      "totalHpp": 147471500.0,
+      "totalHpp": 147471500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1446500.0,
+          "amount": 1446500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 600000.0,
+          "amount": 600000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2400000.0,
+          "amount": 2400000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 690000.0,
+          "amount": 690000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 1360000.0,
+          "amount": 1360000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-09-07",
-        "sellingPrice": 161500000.0,
+        "sellingPrice": 161500000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2374,51 +2374,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "GROSIRMOBIL",
-      "purchasePrice": 51528000.0,
+      "purchasePrice": 51528000,
       "purchaseDate": "2025-08-06",
       "targetSellingPrice": null,
-      "totalHpp": 65328000.0,
+      "totalHpp": 65328000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 528000.0,
+          "amount": 528000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2100000.0,
+          "amount": 2100000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 415000.0,
+          "amount": 415000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2400000.0,
+          "amount": 2400000,
           "notes": "Cat Body"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 685000.0,
+          "amount": 685000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 7500000.0,
+          "amount": 7500000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-10-03",
-        "sellingPrice": 63500000.0,
+        "sellingPrice": 63500000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2434,51 +2434,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "ALTO",
-      "purchasePrice": 149084000.0,
+      "purchasePrice": 149084000,
       "purchaseDate": "2025-08-21",
       "targetSellingPrice": null,
-      "totalHpp": 161744000.0,
+      "totalHpp": 161744000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3500000.0,
+          "amount": 3500000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1584000.0,
+          "amount": 1584000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 1050000.0,
+          "amount": 1050000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Pajak / Mutasi STNK"
         },
         {
           "category": "OTHER",
-          "amount": 5776000.0,
+          "amount": 5776000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-10-09",
-        "sellingPrice": 160000000.0,
+        "sellingPrice": 160000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2494,61 +2494,61 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "ALTO",
-      "purchasePrice": 140996000.0,
+      "purchasePrice": 140996000,
       "purchaseDate": "2025-08-21",
       "targetSellingPrice": null,
-      "totalHpp": 152520000.0,
+      "totalHpp": 152520000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3500000.0,
+          "amount": 3500000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1496000.0,
+          "amount": 1496000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 1000000.0,
+          "amount": 1000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 600000.0,
+          "amount": 600000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1500000.0,
+          "amount": 1500000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 1000000.0,
+          "amount": 1000000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1189000.0,
+          "amount": 1189000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-10-29",
-        "sellingPrice": 168000000.0,
+        "sellingPrice": 168000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2564,51 +2564,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 147500000.0,
+      "purchasePrice": 147500000,
       "purchaseDate": "2025-09-08",
       "targetSellingPrice": null,
-      "totalHpp": 155500000.0,
+      "totalHpp": 155500000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1600000.0,
+          "amount": 1600000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 2550000.0,
+          "amount": 2550000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "OTHER",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-11-03",
-        "sellingPrice": 165000000.0,
+        "sellingPrice": 165000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2624,61 +2624,61 @@
       "engineCapacity": 1800,
       "sourceType": "AUCTION",
       "auctionHouse": "ALTO",
-      "purchasePrice": 64160000.0,
+      "purchasePrice": 64160000,
       "purchaseDate": "2025-09-11",
       "targetSellingPrice": null,
-      "totalHpp": 95915000.0,
+      "totalHpp": 95915000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3500000.0,
+          "amount": 3500000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 660000.0,
+          "amount": 660000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2250000.0,
+          "amount": 2250000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 1600000.0,
+          "amount": 1600000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 3600000.0,
+          "amount": 3600000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 1150000.0,
+          "amount": 1150000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1205000.0,
+          "amount": 1205000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 21050000.0,
+          "amount": 21050000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-11-24",
-        "sellingPrice": 104000000.0,
+        "sellingPrice": 104000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2694,61 +2694,61 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "CAREADY",
-      "purchasePrice": 137330000.0,
+      "purchasePrice": 137330000,
       "purchaseDate": "2025-10-11",
       "targetSellingPrice": null,
-      "totalHpp": 145736000.0,
+      "totalHpp": 145736000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 330000.0,
+          "amount": 330000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 50000.0,
+          "amount": 50000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 3806000.0,
+          "amount": 3806000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2025-11-03",
-        "sellingPrice": 160000000.0,
+        "sellingPrice": 160000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2764,46 +2764,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 147500000.0,
+      "purchasePrice": 147500000,
       "purchaseDate": "2025-10-03",
       "targetSellingPrice": null,
-      "totalHpp": 151685000.0,
+      "totalHpp": 151685000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 335000.0,
+          "amount": 335000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "OTHER",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-10-15",
-        "sellingPrice": 165000000.0,
+        "sellingPrice": 165000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2819,66 +2819,66 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "SMARTBID",
-      "purchasePrice": 43440000.0,
+      "purchasePrice": 43440000,
       "purchaseDate": "2025-07-23",
       "targetSellingPrice": null,
-      "totalHpp": 69912500.0,
+      "totalHpp": 69912500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 440000.0,
+          "amount": 440000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 3414000.0,
+          "amount": 3414000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 600000.0,
+          "amount": 600000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 1650000.0,
+          "amount": 1650000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1650000.0,
+          "amount": 1650000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 4073000.0,
+          "amount": 4073000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 5995000.0,
+          "amount": 5995000,
           "notes": "Pajak / Mutasi STNK"
         },
         {
           "category": "OTHER",
-          "amount": 5150500.0,
+          "amount": 5150500,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-12-28",
-        "sellingPrice": 75000000.0,
+        "sellingPrice": 75000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2894,66 +2894,66 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "TRIBIK",
-      "purchasePrice": 43440000.0,
+      "purchasePrice": 43440000,
       "purchaseDate": "2025-08-18",
       "targetSellingPrice": null,
-      "totalHpp": 72765000.0,
+      "totalHpp": 72765000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 440000.0,
+          "amount": 440000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 3414000.0,
+          "amount": 3414000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 1150000.0,
+          "amount": 1150000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 5370000.0,
+          "amount": 5370000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 5875000.0,
+          "amount": 5875000,
           "notes": "Pajak / Mutasi STNK"
         },
         {
           "category": "OTHER",
-          "amount": 6876000.0,
+          "amount": 6876000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2026-01-03",
-        "sellingPrice": 79000000.0,
+        "sellingPrice": 79000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -2969,41 +2969,41 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "CAREADY",
-      "purchasePrice": 220500000.0,
+      "purchasePrice": 220500000,
       "purchaseDate": "2025-12-06",
       "targetSellingPrice": null,
-      "totalHpp": 224989587.0,
+      "totalHpp": 224989587,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 375000.0,
+          "amount": 375000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 1400000.0,
+          "amount": 1400000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 1000000.0,
+          "amount": 1000000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-01-24",
-        "sellingPrice": 225000000.0,
+        "sellingPrice": 225000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3019,46 +3019,46 @@
       "engineCapacity": 1000,
       "sourceType": "AUCTION",
       "auctionHouse": "LEGOAS",
-      "purchasePrice": 62000000.0,
+      "purchasePrice": 62000000,
       "purchaseDate": "2025-12-02",
       "targetSellingPrice": null,
-      "totalHpp": 70424000.0,
+      "totalHpp": 70424000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 3700000.0,
+          "amount": 3700000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1374000.0,
+          "amount": 1374000,
           "notes": "Belanja Spareparts"
         }
       ],
       "sale": {
         "saleDate": "2026-01-25",
-        "sellingPrice": 80000000.0,
+        "sellingPrice": 80000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3074,46 +3074,46 @@
       "engineCapacity": 1000,
       "sourceType": "AUCTION",
       "auctionHouse": "LEGOAS",
-      "purchasePrice": 66500000.0,
+      "purchasePrice": 66500000,
       "purchaseDate": "2025-12-02",
       "targetSellingPrice": null,
-      "totalHpp": 74670000.0,
+      "totalHpp": 74670000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 4000000.0,
+          "amount": 4000000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 920000.0,
+          "amount": 920000,
           "notes": "Belanja Spareparts"
         }
       ],
       "sale": {
         "saleDate": "2026-01-28",
-        "sellingPrice": 80000000.0,
+        "sellingPrice": 80000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3129,46 +3129,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 68500000.0,
+      "purchasePrice": 68500000,
       "purchaseDate": "2026-01-15",
       "targetSellingPrice": null,
-      "totalHpp": 79405000.0,
+      "totalHpp": 79405000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 3550000.0,
+          "amount": 3550000,
           "notes": "Cat Body"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 4105000.0,
+          "amount": 4105000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-01-31",
-        "sellingPrice": 87000000.0,
+        "sellingPrice": 87000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3184,51 +3184,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 73500000.0,
+      "purchasePrice": 73500000,
       "purchaseDate": "2026-01-23",
       "targetSellingPrice": null,
-      "totalHpp": 82465000.0,
+      "totalHpp": 82465000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1400000.0,
+          "amount": 1400000,
           "notes": "Cat Body"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 110000.0,
+          "amount": 110000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 4105000.0,
+          "amount": 4105000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-02-28",
-        "sellingPrice": 87000000.0,
+        "sellingPrice": 87000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3244,36 +3244,36 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 160000000.0,
+      "purchasePrice": 160000000,
       "purchaseDate": "2026-02-17",
       "targetSellingPrice": null,
-      "totalHpp": 163350000.0,
+      "totalHpp": 163350000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2300000.0,
+          "amount": 2300000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "OTHER",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2026-02-24",
-        "sellingPrice": 170000000.0,
+        "sellingPrice": 170000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3289,61 +3289,61 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "ACCBID",
-      "purchasePrice": 134430000.0,
+      "purchasePrice": 134430000,
       "purchaseDate": "2025-09-08",
       "targetSellingPrice": null,
-      "totalHpp": 194724000.0,
+      "totalHpp": 194724000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1430000.0,
+          "amount": 1430000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 3300000.0,
+          "amount": 3300000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 9310000.0,
+          "amount": 9310000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 24284000.0,
+          "amount": 24284000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 1300000.0,
+          "amount": 1300000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 10500000.0,
+          "amount": 10500000,
           "notes": "Pajak / Mutasi STNK"
         },
         {
           "category": "OTHER",
-          "amount": 6670000.0,
+          "amount": 6670000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2025-11-03",
-        "sellingPrice": 172000000.0,
+        "sellingPrice": 172000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3359,56 +3359,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "IBID",
-      "purchasePrice": 168220000.0,
+      "purchasePrice": 168220000,
       "purchaseDate": "2025-09-04",
       "targetSellingPrice": null,
-      "totalHpp": 199888000.0,
+      "totalHpp": 199888000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 220000.0,
+          "amount": 220000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 5700000.0,
+          "amount": 5700000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 7981000.0,
+          "amount": 7981000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 4000000.0,
+          "amount": 4000000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 1000000.0,
+          "amount": 1000000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 9087000.0,
+          "amount": 9087000,
           "notes": "Pajak / Mutasi STNK"
         },
         {
           "category": "OTHER",
-          "amount": 1680000.0,
+          "amount": 1680000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2026-05-28",
-        "sellingPrice": 177450000.0,
+        "sellingPrice": 177450000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3424,46 +3424,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "CAREADY",
-      "purchasePrice": 236541000.0,
+      "purchasePrice": 236541000,
       "purchaseDate": "2025-09-29",
       "targetSellingPrice": null,
-      "totalHpp": 259476000.0,
+      "totalHpp": 259476000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 2541000.0,
+          "amount": 2541000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 5700000.0,
+          "amount": 5700000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 2350000.0,
+          "amount": 2350000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 12185000.0,
+          "amount": 12185000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-05-12",
-        "sellingPrice": 231744800.0,
+        "sellingPrice": 231744800,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3479,46 +3479,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "CAREADY",
-      "purchasePrice": 92979000.0,
+      "purchasePrice": 92979000,
       "purchaseDate": "2026-02-25",
       "targetSellingPrice": null,
-      "totalHpp": 99849000.0,
+      "totalHpp": 99849000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 979000.0,
+          "amount": 979000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 3470000.0,
+          "amount": 3470000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-05-19",
-        "sellingPrice": 101867000.0,
+        "sellingPrice": 101867000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3534,41 +3534,41 @@
       "engineCapacity": 1200,
       "sourceType": "AUCTION",
       "auctionHouse": "TRIBIK",
-      "purchasePrice": 86407500.0,
+      "purchasePrice": 86407500,
       "purchaseDate": "2026-03-13",
       "targetSellingPrice": null,
-      "totalHpp": 93674500.0,
+      "totalHpp": 93674500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 907500.0,
+          "amount": 907500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 4767000.0,
+          "amount": 4767000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-05-26",
-        "sellingPrice": 86537500.0,
+        "sellingPrice": 86537500,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3584,46 +3584,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 151000000.0,
+      "purchasePrice": 151000000,
       "purchaseDate": "2026-03-15",
       "targetSellingPrice": null,
-      "totalHpp": 158246000.0,
+      "totalHpp": 158246000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 2046000.0,
+          "amount": 2046000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 1700000.0,
+          "amount": 1700000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-05-19",
-        "sellingPrice": 159000000.0,
+        "sellingPrice": 159000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3639,36 +3639,36 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 78000000.0,
+      "purchasePrice": 78000000,
       "purchaseDate": "2026-05-16",
       "targetSellingPrice": null,
-      "totalHpp": 82900000.0,
+      "totalHpp": 82900000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1800000.0,
+          "amount": 1800000,
           "notes": "Cat Body"
         }
       ],
       "sale": {
         "saleDate": "2026-05-31",
-        "sellingPrice": 87000000.0,
+        "sellingPrice": 87000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3684,46 +3684,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 73000000.0,
+      "purchasePrice": 73000000,
       "purchaseDate": "2026-05-16",
       "targetSellingPrice": null,
-      "totalHpp": 78250000.0,
+      "totalHpp": 78250000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1400000.0,
+          "amount": 1400000,
           "notes": "Cat Body"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 50000.0,
+          "amount": 50000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "OTHER",
-          "amount": 800000.0,
+          "amount": 800000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2026-06-19",
-        "sellingPrice": 86000000.0,
+        "sellingPrice": 86000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3739,46 +3739,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 73000000.0,
+      "purchasePrice": 73000000,
       "purchaseDate": "2026-05-16",
       "targetSellingPrice": null,
-      "totalHpp": 78150000.0,
+      "totalHpp": 78150000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1600000.0,
+          "amount": 1600000,
           "notes": "Cat Body"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 50000.0,
+          "amount": 50000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "OTHER",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2026-06-19",
-        "sellingPrice": 86000000.0,
+        "sellingPrice": 86000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3794,46 +3794,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 180430500.0,
+      "purchasePrice": 180430500,
       "purchaseDate": "2026-05-16",
       "targetSellingPrice": null,
-      "totalHpp": 188180500.0,
+      "totalHpp": 188180500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 1930500.0,
+          "amount": 1930500,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2500000.0,
+          "amount": 2500000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 250000.0,
+          "amount": 250000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 1000000.0,
+          "amount": 1000000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-05-19",
-        "sellingPrice": 247225000.0,
+        "sellingPrice": 247225000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3849,51 +3849,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 144500000.0,
+      "purchasePrice": 144500000,
       "purchaseDate": "2026-06-13",
       "targetSellingPrice": null,
-      "totalHpp": 147700000.0,
+      "totalHpp": 147700000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 900000.0,
+          "amount": 900000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 250000.0,
+          "amount": 250000,
           "notes": "Poles & Salon"
         }
       ],
       "sale": {
         "saleDate": "2026-06-27",
-        "sellingPrice": 151000000.0,
+        "sellingPrice": 151000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3909,56 +3909,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 145000000.0,
+      "purchasePrice": 145000000,
       "purchaseDate": "2026-06-13",
       "targetSellingPrice": null,
-      "totalHpp": 149450000.0,
+      "totalHpp": 149450000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 250000.0,
+          "amount": 250000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1750000.0,
+          "amount": 1750000,
           "notes": "Belanja Spareparts"
         }
       ],
       "sale": {
         "saleDate": "2026-06-27",
-        "sellingPrice": 153000000.0,
+        "sellingPrice": 153000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -3974,46 +3974,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 160000000.0,
+      "purchasePrice": 160000000,
       "purchaseDate": "2026-06-11",
       "targetSellingPrice": null,
-      "totalHpp": 164773000.0,
+      "totalHpp": 164773000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 900000.0,
+          "amount": 900000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1500000.0,
+          "amount": 1500000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         }
       ],
       "sale": {
         "saleDate": "2026-07-16",
-        "sellingPrice": 170000000.0,
+        "sellingPrice": 170000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4029,51 +4029,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 150500000.0,
+      "purchasePrice": 150500000,
       "purchaseDate": "2026-03-15",
       "targetSellingPrice": null,
-      "totalHpp": 159910000.0,
+      "totalHpp": 159910000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 5500000.0,
+          "amount": 5500000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 250000.0,
+          "amount": 250000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 160000.0,
+          "amount": 160000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "OTHER",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2026-05-19",
-        "sellingPrice": 155000000.0,
+        "sellingPrice": 155000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4089,46 +4089,46 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 151000000.0,
+      "purchasePrice": 151000000,
       "purchaseDate": "2026-03-15",
       "targetSellingPrice": null,
-      "totalHpp": 160525000.0,
+      "totalHpp": 160525000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 5500000.0,
+          "amount": 5500000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 250000.0,
+          "amount": 250000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 445000.0,
+          "amount": 445000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "OTHER",
-          "amount": 830000.0,
+          "amount": 830000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2026-05-19",
-        "sellingPrice": 154500000.0,
+        "sellingPrice": 154500000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4144,56 +4144,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 143500000.0,
+      "purchasePrice": 143500000,
       "purchaseDate": "2026-06-09",
       "targetSellingPrice": null,
-      "totalHpp": 151040000.0,
+      "totalHpp": 151040000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 250000.0,
+          "amount": 250000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 2240000.0,
+          "amount": 2240000,
           "notes": "Belanja Spareparts"
         }
       ],
       "sale": {
         "saleDate": "2026-08-17",
-        "sellingPrice": 158000000.0,
+        "sellingPrice": 158000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4209,51 +4209,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 73000000.0,
+      "purchasePrice": 73000000,
       "purchaseDate": "2026-05-16",
       "targetSellingPrice": null,
-      "totalHpp": 78350000.0,
+      "totalHpp": 78350000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 2200000.0,
+          "amount": 2200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1200000.0,
+          "amount": 1200000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Poles & Salon"
         },
         {
           "category": "OTHER",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2026-05-19",
-        "sellingPrice": 85000000.0,
+        "sellingPrice": 85000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4269,51 +4269,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "BELI SENDIRI",
-      "purchasePrice": 72000000.0,
+      "purchasePrice": 72000000,
       "purchaseDate": "2026-08-14",
       "targetSellingPrice": null,
-      "totalHpp": 76961000.0,
+      "totalHpp": 76961000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 50000.0,
+          "amount": 50000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Cat Body"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 871000.0,
+          "amount": 871000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "OTHER",
-          "amount": 2840000.0,
+          "amount": 2840000,
           "notes": "Biaya Rekondisi & Operasional Unit"
         }
       ],
       "sale": {
         "saleDate": "2026-09-09",
-        "sellingPrice": 80000000.0,
+        "sellingPrice": 80000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4329,41 +4329,41 @@
       "engineCapacity": 2000,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 263500000.0,
+      "purchasePrice": 263500000,
       "purchaseDate": "2026-07-24",
       "targetSellingPrice": null,
-      "totalHpp": 268192000.0,
+      "totalHpp": 268192000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 840000.0,
+          "amount": 840000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 690000.0,
+          "amount": 690000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 900000.0,
+          "amount": 900000,
           "notes": "Cat Body"
         }
       ],
       "sale": {
         "saleDate": "2026-08-01",
-        "sellingPrice": 275000000.0,
+        "sellingPrice": 275000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4379,56 +4379,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "GROSIRMOBIL",
-      "purchasePrice": 72759000.0,
+      "purchasePrice": 72759000,
       "purchaseDate": "2026-07-23",
       "targetSellingPrice": null,
-      "totalHpp": 81859000.0,
+      "totalHpp": 81859000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "OTHER",
-          "amount": 759000.0,
+          "amount": 759000,
           "notes": "PPN Lelang 1.1%"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 1305000.0,
+          "amount": 1305000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 2000000.0,
+          "amount": 2000000,
           "notes": "Cat Body"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 1060000.0,
+          "amount": 1060000,
           "notes": "Belanja Spareparts"
         },
         {
           "category": "DOCUMENT_TAX_MUTATION",
-          "amount": 1425000.0,
+          "amount": 1425000,
           "notes": "Pajak / Mutasi STNK"
         }
       ],
       "sale": {
         "saleDate": "2026-08-31",
-        "sellingPrice": 85000000.0,
+        "sellingPrice": 85000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4444,51 +4444,51 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 126000000.0,
+      "purchasePrice": 126000000,
       "purchaseDate": "2026-08-28",
       "targetSellingPrice": null,
-      "totalHpp": 129182000.0,
+      "totalHpp": 129182000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 55000.0,
+          "amount": 55000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Poles & Salon"
         }
       ],
       "sale": {
         "saleDate": "2026-09-15",
-        "sellingPrice": 143000000.0,
+        "sellingPrice": 143000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4504,56 +4504,56 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 138500000.0,
+      "purchasePrice": 138500000,
       "purchaseDate": "2026-08-10",
       "targetSellingPrice": null,
-      "totalHpp": 147106500.0,
+      "totalHpp": 147106500,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 750000.0,
+          "amount": 750000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 200000.0,
+          "amount": 200000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "OIL_AND_SERVICE",
-          "amount": 500000.0,
+          "amount": 500000,
           "notes": "Servis & Ganti Oli"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 3150000.0,
+          "amount": 3150000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 350000.0,
+          "amount": 350000,
           "notes": "Poles & Salon"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 3356500.0,
+          "amount": 3356500,
           "notes": "Belanja Spareparts"
         }
       ],
       "sale": {
         "saleDate": "2026-08-17",
-        "sellingPrice": 157500000.0,
+        "sellingPrice": 157500000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4569,41 +4569,41 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 166500000.0,
+      "purchasePrice": 166500000,
       "purchaseDate": "2026-08-10",
       "targetSellingPrice": null,
-      "totalHpp": 169010000.0,
+      "totalHpp": 169010000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 100000.0,
+          "amount": 100000,
           "notes": "BBM Ambil Unit"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 1300000.0,
+          "amount": 1300000,
           "notes": "Cat Body"
         },
         {
           "category": "SPAREPARTS",
-          "amount": 410000.0,
+          "amount": 410000,
           "notes": "Belanja Spareparts"
         }
       ],
       "sale": {
         "saleDate": "2026-09-26",
-        "sellingPrice": 163000000.0,
+        "sellingPrice": 163000000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4619,41 +4619,41 @@
       "engineCapacity": 1500,
       "sourceType": "AUCTION",
       "auctionHouse": "AUKSI",
-      "purchasePrice": 128000000.0,
+      "purchasePrice": 128000000,
       "purchaseDate": "2026-09-04",
       "targetSellingPrice": null,
-      "totalHpp": 130693000.0,
+      "totalHpp": 130693000,
       "status": "SOLD_SETTLED",
       "expenses": [
         {
           "category": "AUCTION_ADMIN_FEE",
-          "amount": 3000000.0,
+          "amount": 3000000,
           "notes": "Admin Lelang"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 116000.0,
+          "amount": 116000,
           "notes": "Biaya Ambil / Sopir"
         },
         {
           "category": "TRANSPORT_PICKUP",
-          "amount": 300000.0,
+          "amount": 300000,
           "notes": "Tol Ambil Unit"
         },
         {
           "category": "BODY_PAINT",
-          "amount": 950000.0,
+          "amount": 950000,
           "notes": "Cat Body"
         },
         {
           "category": "DETAILING_SALON",
-          "amount": 700000.0,
+          "amount": 700000,
           "notes": "Poles & Salon"
         }
       ],
       "sale": {
         "saleDate": "2026-09-24",
-        "sellingPrice": 141500000.0,
+        "sellingPrice": 141500000,
         "buyerName": "Pelanggan Showroom (Umum)"
       }
     },
@@ -4669,15 +4669,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 74000000.0,
+      "purchasePrice": 74000000,
       "purchaseDate": "2019-05-01",
-      "targetSellingPrice": 75000000.0,
-      "totalHpp": 74000000.0,
+      "targetSellingPrice": 75000000,
+      "totalHpp": 74000000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2019-06-15",
-        "sellingPrice": 75000000.0,
+        "sellingPrice": 75000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4693,15 +4693,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 139500000.0,
+      "purchasePrice": 139500000,
       "purchaseDate": "2019-05-01",
-      "targetSellingPrice": 138000000.0,
-      "totalHpp": 139500000.0,
+      "targetSellingPrice": 138000000,
+      "totalHpp": 139500000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2019-06-15",
-        "sellingPrice": 138000000.0,
+        "sellingPrice": 138000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4717,15 +4717,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 116250000.0,
+      "purchasePrice": 116250000,
       "purchaseDate": "2019-05-01",
-      "targetSellingPrice": 122500000.0,
-      "totalHpp": 116250000.0,
+      "targetSellingPrice": 122500000,
+      "totalHpp": 116250000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2019-06-15",
-        "sellingPrice": 122500000.0,
+        "sellingPrice": 122500000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4741,15 +4741,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 78813000.0,
+      "purchasePrice": 78813000,
       "purchaseDate": "2020-05-01",
-      "targetSellingPrice": 81000000.0,
-      "totalHpp": 78813000.0,
+      "targetSellingPrice": 81000000,
+      "totalHpp": 78813000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2020-06-15",
-        "sellingPrice": 81000000.0,
+        "sellingPrice": 81000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4765,15 +4765,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 81673000.0,
+      "purchasePrice": 81673000,
       "purchaseDate": "2020-05-01",
-      "targetSellingPrice": 84800000.0,
-      "totalHpp": 81673000.0,
+      "targetSellingPrice": 84800000,
+      "totalHpp": 81673000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2020-06-15",
-        "sellingPrice": 84800000.0,
+        "sellingPrice": 84800000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4789,15 +4789,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 116176000.0,
+      "purchasePrice": 116176000,
       "purchaseDate": "2020-05-01",
-      "targetSellingPrice": 118750000.0,
-      "totalHpp": 116176000.0,
+      "targetSellingPrice": 118750000,
+      "totalHpp": 116176000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2020-06-15",
-        "sellingPrice": 118750000.0,
+        "sellingPrice": 118750000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4813,15 +4813,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 96170000.0,
+      "purchasePrice": 96170000,
       "purchaseDate": "2020-05-01",
-      "targetSellingPrice": 99000000.0,
-      "totalHpp": 96170000.0,
+      "targetSellingPrice": 99000000,
+      "totalHpp": 96170000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2020-06-15",
-        "sellingPrice": 99000000.0,
+        "sellingPrice": 99000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4837,15 +4837,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 69295000.0,
+      "purchasePrice": 69295000,
       "purchaseDate": "2020-05-01",
-      "targetSellingPrice": 70000000.0,
-      "totalHpp": 69295000.0,
+      "targetSellingPrice": 70000000,
+      "totalHpp": 69295000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2020-06-15",
-        "sellingPrice": 70000000.0,
+        "sellingPrice": 70000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4861,15 +4861,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 87494000.0,
+      "purchasePrice": 87494000,
       "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 91000000.0,
-      "totalHpp": 87494000.0,
+      "targetSellingPrice": 91000000,
+      "totalHpp": 87494000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2021-06-15",
-        "sellingPrice": 91000000.0,
+        "sellingPrice": 91000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4885,15 +4885,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 87238000.0,
+      "purchasePrice": 87238000,
       "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 86500000.0,
-      "totalHpp": 87238000.0,
+      "targetSellingPrice": 86500000,
+      "totalHpp": 87238000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2021-06-15",
-        "sellingPrice": 86500000.0,
+        "sellingPrice": 86500000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4909,15 +4909,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 80000000.0,
+      "purchasePrice": 80000000,
       "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 94000000.0,
-      "totalHpp": 80000000.0,
+      "targetSellingPrice": 94000000,
+      "totalHpp": 80000000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2021-06-15",
-        "sellingPrice": 94000000.0,
+        "sellingPrice": 94000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4933,15 +4933,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 82224000.0,
+      "purchasePrice": 82224000,
       "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 86000000.0,
-      "totalHpp": 82224000.0,
+      "targetSellingPrice": 86000000,
+      "totalHpp": 82224000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2021-06-15",
-        "sellingPrice": 86000000.0,
+        "sellingPrice": 86000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4957,15 +4957,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 90550000.0,
+      "purchasePrice": 90550000,
       "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 90200000.0,
-      "totalHpp": 90550000.0,
+      "targetSellingPrice": 90200000,
+      "totalHpp": 90550000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2021-06-15",
-        "sellingPrice": 90200000.0,
+        "sellingPrice": 90200000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -4981,15 +4981,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 81000000.0,
+      "purchasePrice": 81000000,
       "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 92000000.0,
-      "totalHpp": 81000000.0,
+      "targetSellingPrice": 92000000,
+      "totalHpp": 81000000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2021-06-15",
-        "sellingPrice": 92000000.0,
+        "sellingPrice": 92000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5005,15 +5005,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 85825000.0,
+      "purchasePrice": 85825000,
       "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 99500000.0,
-      "totalHpp": 85825000.0,
+      "targetSellingPrice": 99500000,
+      "totalHpp": 85825000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2021-06-15",
-        "sellingPrice": 99500000.0,
+        "sellingPrice": 99500000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5029,15 +5029,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 82852000.0,
+      "purchasePrice": 82852000,
       "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 88300000.0,
-      "totalHpp": 82852000.0,
+      "targetSellingPrice": 88300000,
+      "totalHpp": 82852000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2021-06-15",
-        "sellingPrice": 88300000.0,
+        "sellingPrice": 88300000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5053,15 +5053,15 @@
       "engineCapacity": 2000,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 113100000.0,
+      "purchasePrice": 113100000,
       "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 110500000.0,
-      "totalHpp": 113100000.0,
+      "targetSellingPrice": 110500000,
+      "totalHpp": 113100000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2021-06-15",
-        "sellingPrice": 110500000.0,
+        "sellingPrice": 110500000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5077,15 +5077,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 126947000.0,
+      "purchasePrice": 126947000,
       "purchaseDate": "2022-05-01",
-      "targetSellingPrice": 132000000.0,
-      "totalHpp": 126947000.0,
+      "targetSellingPrice": 132000000,
+      "totalHpp": 126947000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2022-06-15",
-        "sellingPrice": 132000000.0,
+        "sellingPrice": 132000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5101,15 +5101,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 124832500.0,
+      "purchasePrice": 124832500,
       "purchaseDate": "2022-05-01",
-      "targetSellingPrice": 124000000.0,
-      "totalHpp": 124832500.0,
+      "targetSellingPrice": 124000000,
+      "totalHpp": 124832500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2022-06-15",
-        "sellingPrice": 124000000.0,
+        "sellingPrice": 124000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5125,15 +5125,15 @@
       "engineCapacity": 1800,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 132772000.0,
+      "purchasePrice": 132772000,
       "purchaseDate": "2022-05-01",
-      "targetSellingPrice": 131000000.0,
-      "totalHpp": 132772000.0,
+      "targetSellingPrice": 131000000,
+      "totalHpp": 132772000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2022-06-15",
-        "sellingPrice": 131000000.0,
+        "sellingPrice": 131000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5149,15 +5149,15 @@
       "engineCapacity": 1800,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 101100000.0,
+      "purchasePrice": 101100000,
       "purchaseDate": "2022-05-01",
-      "targetSellingPrice": 99000000.0,
-      "totalHpp": 101100000.0,
+      "targetSellingPrice": 99000000,
+      "totalHpp": 101100000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2022-06-15",
-        "sellingPrice": 99000000.0,
+        "sellingPrice": 99000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5173,15 +5173,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 62939000.0,
+      "purchasePrice": 62939000,
       "purchaseDate": "2022-05-01",
-      "targetSellingPrice": 62800000.0,
-      "totalHpp": 62939000.0,
+      "targetSellingPrice": 62800000,
+      "totalHpp": 62939000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2022-06-15",
-        "sellingPrice": 62800000.0,
+        "sellingPrice": 62800000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5197,15 +5197,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 145052500.0,
+      "purchasePrice": 145052500,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 150000000.0,
-      "totalHpp": 145052500.0,
+      "targetSellingPrice": 150000000,
+      "totalHpp": 145052500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 150000000.0,
+        "sellingPrice": 150000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5221,15 +5221,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 82565500.0,
+      "purchasePrice": 82565500,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 84500000.0,
-      "totalHpp": 82565500.0,
+      "targetSellingPrice": 84500000,
+      "totalHpp": 82565500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 84500000.0,
+        "sellingPrice": 84500000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5245,15 +5245,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 116640000.0,
+      "purchasePrice": 116640000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 116000000.0,
-      "totalHpp": 116640000.0,
+      "targetSellingPrice": 116000000,
+      "totalHpp": 116640000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 116000000.0,
+        "sellingPrice": 116000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5269,15 +5269,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 77625000.0,
+      "purchasePrice": 77625000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 86700000.0,
-      "totalHpp": 77625000.0,
+      "targetSellingPrice": 86700000,
+      "totalHpp": 77625000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 86700000.0,
+        "sellingPrice": 86700000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5293,15 +5293,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 151940000.0,
+      "purchasePrice": 151940000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 154000000.0,
-      "totalHpp": 151940000.0,
+      "targetSellingPrice": 154000000,
+      "totalHpp": 151940000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 154000000.0,
+        "sellingPrice": 154000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5317,15 +5317,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 115517500.0,
+      "purchasePrice": 115517500,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 120000000.0,
-      "totalHpp": 115517500.0,
+      "targetSellingPrice": 120000000,
+      "totalHpp": 115517500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 120000000.0,
+        "sellingPrice": 120000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5341,15 +5341,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 81998500.0,
+      "purchasePrice": 81998500,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 85000000.0,
-      "totalHpp": 81998500.0,
+      "targetSellingPrice": 85000000,
+      "totalHpp": 81998500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 85000000.0,
+        "sellingPrice": 85000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5365,15 +5365,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 138752000.0,
+      "purchasePrice": 138752000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 149000000.0,
-      "totalHpp": 138752000.0,
+      "targetSellingPrice": 149000000,
+      "totalHpp": 138752000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 149000000.0,
+        "sellingPrice": 149000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5389,15 +5389,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 119237500.0,
+      "purchasePrice": 119237500,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 122000000.0,
-      "totalHpp": 119237500.0,
+      "targetSellingPrice": 122000000,
+      "totalHpp": 119237500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 122000000.0,
+        "sellingPrice": 122000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5413,15 +5413,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 110295100.0,
+      "purchasePrice": 110295100,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 114000000.0,
-      "totalHpp": 110295100.0,
+      "targetSellingPrice": 114000000,
+      "totalHpp": 110295100,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 114000000.0,
+        "sellingPrice": 114000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5437,15 +5437,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 123150000.0,
+      "purchasePrice": 123150000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 127000000.0,
-      "totalHpp": 123150000.0,
+      "targetSellingPrice": 127000000,
+      "totalHpp": 123150000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 127000000.0,
+        "sellingPrice": 127000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5461,15 +5461,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 122500000.0,
+      "purchasePrice": 122500000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 131500000.0,
-      "totalHpp": 122500000.0,
+      "targetSellingPrice": 131500000,
+      "totalHpp": 122500000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 131500000.0,
+        "sellingPrice": 131500000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5485,15 +5485,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 69494000.0,
+      "purchasePrice": 69494000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 76000000.0,
-      "totalHpp": 69494000.0,
+      "targetSellingPrice": 76000000,
+      "totalHpp": 69494000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 76000000.0,
+        "sellingPrice": 76000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5509,15 +5509,15 @@
       "engineCapacity": 1000,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 80748000.0,
+      "purchasePrice": 80748000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 83500000.0,
-      "totalHpp": 80748000.0,
+      "targetSellingPrice": 83500000,
+      "totalHpp": 80748000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 83500000.0,
+        "sellingPrice": 83500000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5533,15 +5533,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 103589500.0,
+      "purchasePrice": 103589500,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 109000000.0,
-      "totalHpp": 103589500.0,
+      "targetSellingPrice": 109000000,
+      "totalHpp": 103589500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 109000000.0,
+        "sellingPrice": 109000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5557,15 +5557,15 @@
       "engineCapacity": 1000,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 87575000.0,
+      "purchasePrice": 87575000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 91000000.0,
-      "totalHpp": 87575000.0,
+      "targetSellingPrice": 91000000,
+      "totalHpp": 87575000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 91000000.0,
+        "sellingPrice": 91000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5581,15 +5581,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 129632500.0,
+      "purchasePrice": 129632500,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 133000000.0,
-      "totalHpp": 129632500.0,
+      "targetSellingPrice": 133000000,
+      "totalHpp": 129632500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 133000000.0,
+        "sellingPrice": 133000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5605,15 +5605,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 103035000.0,
+      "purchasePrice": 103035000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 106250000.0,
-      "totalHpp": 103035000.0,
+      "targetSellingPrice": 106250000,
+      "totalHpp": 103035000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 106250000.0,
+        "sellingPrice": 106250000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5629,15 +5629,15 @@
       "engineCapacity": 1000,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 82613200.0,
+      "purchasePrice": 82613200,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 84000000.0,
-      "totalHpp": 82613200.0,
+      "targetSellingPrice": 84000000,
+      "totalHpp": 82613200,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 84000000.0,
+        "sellingPrice": 84000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5653,15 +5653,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 143663000.0,
+      "purchasePrice": 143663000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 155000000.0,
-      "totalHpp": 143663000.0,
+      "targetSellingPrice": 155000000,
+      "totalHpp": 143663000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 155000000.0,
+        "sellingPrice": 155000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5677,15 +5677,15 @@
       "engineCapacity": 1800,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 122765000.0,
+      "purchasePrice": 122765000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 124000000.0,
-      "totalHpp": 122765000.0,
+      "targetSellingPrice": 124000000,
+      "totalHpp": 122765000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 124000000.0,
+        "sellingPrice": 124000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5701,15 +5701,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 99520000.0,
+      "purchasePrice": 99520000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 99520000.0,
-      "totalHpp": 99520000.0,
+      "targetSellingPrice": 99520000,
+      "totalHpp": 99520000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 99520000.0,
+        "sellingPrice": 99520000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5725,15 +5725,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 127371000.0,
+      "purchasePrice": 127371000,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 125000000.0,
-      "totalHpp": 127371000.0,
+      "targetSellingPrice": 125000000,
+      "totalHpp": 127371000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 125000000.0,
+        "sellingPrice": 125000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5749,15 +5749,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 160306500.0,
+      "purchasePrice": 160306500,
       "purchaseDate": "2023-05-01",
-      "targetSellingPrice": 160306500.0,
-      "totalHpp": 160306500.0,
+      "targetSellingPrice": 160306500,
+      "totalHpp": 160306500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2023-06-15",
-        "sellingPrice": 160306500.0,
+        "sellingPrice": 160306500,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5773,15 +5773,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 98199200.0,
+      "purchasePrice": 98199200,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 119000000.0,
-      "totalHpp": 98199200.0,
+      "targetSellingPrice": 119000000,
+      "totalHpp": 98199200,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 119000000.0,
+        "sellingPrice": 119000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5797,15 +5797,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 86433000.0,
+      "purchasePrice": 86433000,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 101000000.0,
-      "totalHpp": 86433000.0,
+      "targetSellingPrice": 101000000,
+      "totalHpp": 86433000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 101000000.0,
+        "sellingPrice": 101000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5821,15 +5821,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 90960000.0,
+      "purchasePrice": 90960000,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 80500000.0,
-      "totalHpp": 90960000.0,
+      "targetSellingPrice": 80500000,
+      "totalHpp": 90960000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 80500000.0,
+        "sellingPrice": 80500000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5845,15 +5845,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 122831500.0,
+      "purchasePrice": 122831500,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 126770500.0,
-      "totalHpp": 122831500.0,
+      "targetSellingPrice": 126770500,
+      "totalHpp": 122831500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 126770500.0,
+        "sellingPrice": 126770500,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5869,15 +5869,15 @@
       "engineCapacity": 1200,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 91216000.0,
+      "purchasePrice": 91216000,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 91500000.0,
-      "totalHpp": 91216000.0,
+      "targetSellingPrice": 91500000,
+      "totalHpp": 91216000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 91500000.0,
+        "sellingPrice": 91500000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5893,15 +5893,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 88844000.0,
+      "purchasePrice": 88844000,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 102000000.0,
-      "totalHpp": 88844000.0,
+      "targetSellingPrice": 102000000,
+      "totalHpp": 88844000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 102000000.0,
+        "sellingPrice": 102000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5917,15 +5917,15 @@
       "engineCapacity": 155,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 21481900.0,
+      "purchasePrice": 21481900,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 23800000.0,
-      "totalHpp": 21481900.0,
+      "targetSellingPrice": 23800000,
+      "totalHpp": 21481900,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 23800000.0,
+        "sellingPrice": 23800000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5941,15 +5941,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 113821500.0,
+      "purchasePrice": 113821500,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 115000000.0,
-      "totalHpp": 113821500.0,
+      "targetSellingPrice": 115000000,
+      "totalHpp": 113821500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 115000000.0,
+        "sellingPrice": 115000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5965,15 +5965,15 @@
       "engineCapacity": 1800,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 111467000.0,
+      "purchasePrice": 111467000,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 119000000.0,
-      "totalHpp": 111467000.0,
+      "targetSellingPrice": 119000000,
+      "totalHpp": 111467000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 119000000.0,
+        "sellingPrice": 119000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -5989,15 +5989,15 @@
       "engineCapacity": 1800,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 109617000.0,
+      "purchasePrice": 109617000,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 110200000.0,
-      "totalHpp": 109617000.0,
+      "targetSellingPrice": 110200000,
+      "totalHpp": 109617000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 110200000.0,
+        "sellingPrice": 110200000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -6013,15 +6013,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 120714000.0,
+      "purchasePrice": 120714000,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 128000000.0,
-      "totalHpp": 120714000.0,
+      "targetSellingPrice": 128000000,
+      "totalHpp": 120714000,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 128000000.0,
+        "sellingPrice": 128000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     },
@@ -6037,39 +6037,15 @@
       "engineCapacity": 1500,
       "sourceType": "DIRECT_BUY",
       "auctionHouse": null,
-      "purchasePrice": 170433500.0,
+      "purchasePrice": 170433500,
       "purchaseDate": "2024-05-01",
-      "targetSellingPrice": 189000000.0,
-      "totalHpp": 170433500.0,
+      "targetSellingPrice": 189000000,
+      "totalHpp": 170433500,
       "status": "SOLD_SETTLED",
       "expenses": [],
       "sale": {
         "saleDate": "2024-06-15",
-        "sellingPrice": 189000000.0,
-        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
-      }
-    },
-    {
-      "sheet": "File1-Row66",
-      "plateNumber": "TOTALKEUNTUNGAN-CAR-66",
-      "brand": "LAINNYA",
-      "model": "",
-      "year": 2021,
-      "color": "HITAM",
-      "odometer": 60000,
-      "transmission": "MANUAL",
-      "engineCapacity": 1500,
-      "sourceType": "DIRECT_BUY",
-      "auctionHouse": null,
-      "purchasePrice": 0.0,
-      "purchaseDate": "2021-05-01",
-      "targetSellingPrice": 0.0,
-      "totalHpp": 0.0,
-      "status": "SOLD_SETTLED",
-      "expenses": [],
-      "sale": {
-        "saleDate": "2021-06-15",
-        "sellingPrice": 0.0,
+        "sellingPrice": 189000000,
         "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
       }
     }

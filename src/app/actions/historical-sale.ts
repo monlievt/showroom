@@ -150,3 +150,25 @@ export async function updateHistoricalSaleAction(
     return { success: false, error: error.message || "Gagal memperbarui data arsip" };
   }
 }
+
+export async function deleteHistoricalSaleAction(id: string) {
+  try {
+    const existing = await prisma.historicalSale.findUnique({
+      where: { id },
+    });
+    if (!existing) {
+      return { success: false, error: "Data arsip tidak ditemukan" };
+    }
+
+    await prisma.historicalSale.delete({
+      where: { id },
+    });
+
+    revalidatePath("/admin/archive");
+    return { success: true, message: `Data unit ${existing.plateNumber} berhasil dihapus dari arsip.` };
+  } catch (error: any) {
+    console.error("Error deleting historical sale:", error);
+    return { success: false, error: error.message || "Gagal menghapus data arsip" };
+  }
+}
+

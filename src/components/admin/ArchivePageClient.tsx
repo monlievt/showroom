@@ -17,10 +17,12 @@ import {
   Wrench,
   CheckCircle2,
   X,
-  Edit2
+  Edit2,
+  Trash2,
+  Loader2
 } from "lucide-react";
 import { formatRupiah, formatDate, cn } from "@/lib/utils";
-import { updateHistoricalSaleAction } from "@/app/actions/historical-sale";
+import { updateHistoricalSaleAction, deleteHistoricalSaleAction } from "@/app/actions/historical-sale";
 
 interface HistoricalSaleItem {
   id: string;
@@ -76,6 +78,39 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
   const [editTotalHpp, setEditTotalHpp] = useState<number>(0);
   const [editNotes, setEditNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Delete State
+  const [deletingItem, setDeletingItem] = useState<HistoricalSaleItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+
+  // Ringkasan Dinamis (otomatis terupdate jika ada data yang dihapus/diedit)
+  const currentSummary = useMemo(() => {
+    let totalOmzet = 0;
+    let totalProfit = 0;
+    let totalHpp = 0;
+    for (const it of items) {
+      totalOmzet += it.sellingPrice;
+      totalProfit += it.grossProfit;
+      totalHpp += it.totalHpp;
+    }
+    const totalCount = items.length;
+    const avgProfitPerUnit = totalCount > 0 ? Math.round(totalProfit / totalCount) : 0;
+    const avgMarginPercent = totalOmzet > 0 ? Math.round((totalProfit / totalOmzet) * 1000) / 10 : 0;
+    return {
+      totalCount,
+      totalOmzet,
+      totalProfit,
+      totalHpp,
+      avgProfitPerUnit,
+      avgMarginPercent,
+    };
+  }, [items]);
 
   // Daftar Merk Unik untuk filter
   const brands = useMemo(() => {
@@ -172,21 +207,59 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
     }
   };
 
+  const handleDeleteItem = async () => {
+    if (!deletingItem) return;
+    setIsDeleting(true);
+    try {
+      const res = await deleteHistoricalSaleAction(deletingItem.id);
+      if (res.success) {
+        showToast(res.message || "Data unit berhasil dihapus dari arsip.");
+        setItems((prev) => prev.filter((i) => i.id !== deletingItem.id));
+        if (selectedItem?.id === deletingItem.id) {
+          setSelectedItem(null);
+        }
+        setDeletingItem(null);
+      } else {
+        alert(res.error || "Gagal menghapus data arsip.");
+      }
+    } catch (err: any) {
+      alert(err.message || "Terjadi kesalahan saat menghapus data.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">
+      {/* Toast Feedback */}
+      {toastMessage && (
+        <div className="p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm bg-emerald-50 border-emerald-200 text-emerald-800 animate-in fade-in duration-200">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <span>{toastMessage}</span>
+          </div>
+          <button
+            onClick={() => setToastMessage(null)}
+            className="text-xs underline hover:opacity-80 cursor-pointer font-semibold"
+          >
+            Tutup
+          </button>
+        </div>
+      )}
+
       {/* 1. Header Banner & Info */}
       <div className="bg-gradient-to-r from-[#1C1917] via-[#292524] to-[#1C1917] text-white p-6 sm:p-8 rounded-2xl shadow-xl relative overflow-hidden border border-[#D97706]/30">
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[#D97706]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-4xl space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D97706]/20 border border-[#D97706]/40 text-[#F59E0B] text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
-            Buku Besar Toko Lama & Benchmark Harga
+            Buku Besar Toko Lama &amp; Benchmark Harga
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-            Arsip Penjualan & Referensi Pasaran
+            Arsip Penjualan &amp; Referensi Pasaran
           </h1>
           <p className="text-sm sm:text-base text-[#D9D4CB] leading-relaxed">
-            Data rekam jejak riil seluruh mobil & motor yang telah laku sejak 2021 hingga unit terkini.
+            Data rekam jejak riil seluruh mobil &amp; motor yang telah laku sejak 2021 hingga unit terkini.
             Didesain khusus sebagai mesin referensi harga kulakan vs harga jual pasar, tanpa mengotori arus kas aktif showroom saat ini.
           </p>
         </div>
@@ -200,7 +273,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <Car className="w-4 h-4 text-[#D97706]" />
           </div>
           <div className="text-2xl font-black text-[#1C1917]">
-            {initialSummary.totalCount} <span className="text-sm font-medium text-[#6B6560]">Unit</span>
+            {currentSummary.totalCount} <span className="text-sm font-medium text-[#6B6560]">Unit</span>
           </div>
           <div className="text-[11px] text-[#6B6560] mt-1">
             Riwayat 2021 s/d sekarang
@@ -213,7 +286,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <DollarSign className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-emerald-600">
-            {formatRupiah(initialSummary.totalOmzet)}
+            {formatRupiah(currentSummary.totalOmzet)}
           </div>
           <div className="text-[11px] text-[#6B6560] mt-1">
             Akumulasi transaksi bruto
@@ -226,7 +299,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <TrendingUp className="w-4 h-4 text-amber-600" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-amber-600">
-            {formatRupiah(initialSummary.totalProfit)}
+            {formatRupiah(currentSummary.totalProfit)}
           </div>
           <div className="text-[11px] text-[#6B6560] mt-1">
             Laba sebelum bagi hasil
@@ -239,10 +312,10 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <Receipt className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-blue-600">
-            {formatRupiah(initialSummary.avgProfitPerUnit)}
+            {formatRupiah(currentSummary.avgProfitPerUnit)}
           </div>
           <div className="text-[11px] text-[#6B6560] mt-1">
-            Rata-rata margin: {initialSummary.avgMarginPercent}% per unit
+            Rata-rata margin: {currentSummary.avgMarginPercent}% per unit
           </div>
         </div>
       </div>
@@ -395,13 +468,22 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                       {item.saleDate ? formatDate(item.saleDate) : "-"}
                     </td>
                     <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
-                      <button
-                        onClick={() => openDetail(item)}
-                        className="px-2.5 py-1 text-xs font-semibold text-[#D97706] hover:bg-[#D97706]/10 rounded-lg transition-colors inline-flex items-center gap-1"
-                      >
-                        <span>Detail</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </button>
+                      <div className="flex items-center justify-center gap-1">
+                        <button
+                          onClick={() => openDetail(item)}
+                          className="px-2.5 py-1 text-xs font-semibold text-[#D97706] hover:bg-[#D97706]/10 rounded-lg transition-colors inline-flex items-center gap-1"
+                        >
+                          <span>Detail</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => setDeletingItem(item)}
+                          title="Hapus data arsip ini"
+                          className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors inline-flex items-center"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -562,13 +644,22 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <div className="p-4 bg-[#F5F2EB] border-t border-[#D9D4CB] flex items-center justify-between">
               {!isEditing ? (
                 <>
-                  <button
-                    onClick={() => setIsEditing(true)}
-                    className="px-3.5 py-1.5 rounded-lg border border-[#D9D4CB] text-xs font-semibold text-[#1C1917] hover:bg-white transition-colors flex items-center gap-1.5"
-                  >
-                    <Edit2 className="w-3.5 h-3.5 text-[#6B6560]" />
-                    Edit Data Ini
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="px-3.5 py-1.5 rounded-lg border border-[#D9D4CB] text-xs font-semibold text-[#1C1917] hover:bg-white transition-colors flex items-center gap-1.5"
+                    >
+                      <Edit2 className="w-3.5 h-3.5 text-[#6B6560]" />
+                      Edit Data
+                    </button>
+                    <button
+                      onClick={() => setDeletingItem(selectedItem)}
+                      className="px-3 py-1.5 rounded-lg border border-red-200 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors flex items-center gap-1.5"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Hapus
+                    </button>
+                  </div>
                   <button
                     onClick={() => setSelectedItem(null)}
                     className="px-4 py-1.5 rounded-lg bg-[#D97706] text-white text-xs font-bold hover:bg-[#B45309] transition-colors"
@@ -593,6 +684,60 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                   </button>
                 </>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. Modal Konfirmasi Hapus Data Arsip */}
+      {deletingItem && (
+        <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full border border-red-200 shadow-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <div className="text-center space-y-2">
+              <h3 className="font-bold text-lg text-stone-900">
+                Hapus Data Historis?
+              </h3>
+              <p className="text-sm text-stone-600">
+                Apakah Anda yakin ingin menghapus data unit{" "}
+                <span className="font-semibold text-stone-900 font-mono">
+                  {deletingItem.plateNumber}
+                </span>{" "}
+                ({deletingItem.model}) dari arsip penjualan?
+              </p>
+              <p className="text-xs text-stone-400">
+                Tindakan ini permanen dan akan menghapus unit ini dari riwayat arsip.
+              </p>
+            </div>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeletingItem(null)}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-xl text-stone-600 text-sm font-semibold hover:bg-stone-100 transition-colors"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteItem}
+                disabled={isDeleting}
+                className="px-5 py-2 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors flex items-center gap-2 shadow-sm shadow-red-200"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Menghapus...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Ya, Hapus Data</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
