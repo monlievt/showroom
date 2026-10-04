@@ -459,7 +459,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
               placeholder="Cari plat nomor atau tipe mobil..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-[#D9D4CB] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706] focus:border-transparent bg-[#FAFAF9]"
+              className="w-full h-10 pl-9 pr-4 py-2 border border-[#D9D4CB] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706] focus:border-transparent bg-[#FAFAF9]"
             />
           </div>
 
@@ -468,7 +468,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <select
               value={selectedBrand}
               onChange={(e) => setSelectedBrand(e.target.value)}
-              className="w-full px-3 py-2 border border-[#D9D4CB] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+              className="w-full h-10 px-3 py-2 border border-[#D9D4CB] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
             >
               <option value="ALL">Semua Merk Mobil/Motor</option>
               {brands.filter((b) => b !== "ALL").map((b) => (
@@ -482,7 +482,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="w-full px-3 py-2 border border-[#D9D4CB] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+              className="w-full h-10 px-3 py-2 border border-[#D9D4CB] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
             >
               <option value="ALL">Semua Tahun Perakitan</option>
               {years.filter((y) => y !== "ALL").map((y) => (
@@ -496,7 +496,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full px-3 py-2 border border-[#D9D4CB] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+              className="w-full h-10 px-3 py-2 border border-[#D9D4CB] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
             >
               <option value="NEWEST">Terbaru Terjual</option>
               <option value="PROFIT_DESC">Keuntungan Tertinggi</option>

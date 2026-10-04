@@ -214,7 +214,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
               placeholder="Cari merk, model, atau plat..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-3 py-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm placeholder:text-[#6B6560] focus:outline-none focus:border-[#D97706]"
+              className="w-full h-10 pl-10 pr-3 py-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm placeholder:text-[#6B6560] focus:outline-none focus:border-[#D97706]"
             />
           </div>
 
@@ -223,7 +223,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
             <select
               value={selectedBrand}
               onChange={(e) => setSelectedBrand(e.target.value)}
-              className="w-full py-2 px-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:border-[#D97706]"
+              className="w-full h-10 py-2 px-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:border-[#D97706]"
             >
               <option value="ALL">Semua Merk Kendaraan</option>
               {availableBrands.map((brand) => (
@@ -239,7 +239,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
             <select
               value={selectedTransmission}
               onChange={(e) => setSelectedTransmission(e.target.value)}
-              className="w-full py-2 px-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:border-[#D97706]"
+              className="w-full h-10 py-2 px-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:border-[#D97706]"
             >
               <option value="ALL">Semua Transmisi</option>
               <option value="AUTOMATIC">Matic (Automatic)</option>
@@ -256,7 +256,7 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
               onChange={(e) =>
                 setMaxPriceFilter(e.target.value === "ALL" ? "ALL" : Number(e.target.value))
               }
-              className="w-full py-2 px-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:border-[#D97706]"
+              className="w-full h-10 py-2 px-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:border-[#D97706]"
             >
               <option value="ALL">Semua Rentang Harga</option>
               <option value="100000000">Di bawah Rp 100 Juta</option>

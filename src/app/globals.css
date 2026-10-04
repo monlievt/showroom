@@ -34,3 +34,24 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+/* Normalisasi tinggi elemen form: samakan tinggi dropdown <select> dengan <input> di semua browser (terutama Safari macOS) */
+@layer base {
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="date"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  select {
+    min-height: 2.5rem; /* 40px */
+    box-sizing: border-box;
+  }
+
+  select {
+    height: 2.5rem;
+    line-height: 1.5;
+  }
+}
