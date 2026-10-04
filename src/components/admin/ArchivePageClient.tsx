@@ -83,6 +83,8 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
   const [isEditing, setIsEditing] = useState(false);
   const [editSellingPrice, setEditSellingPrice] = useState<number>(0);
   const [editTotalHpp, setEditTotalHpp] = useState<number>(0);
+  const [editPurchaseDate, setEditPurchaseDate] = useState("");
+  const [editSaleDate, setEditSaleDate] = useState("");
   const [editNotes, setEditNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -184,6 +186,8 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
     setEditSellingPrice(item.sellingPrice);
     setEditTotalHpp(item.totalHpp);
     setEditNotes(item.notes || "");
+    setEditPurchaseDate(item.purchaseDate ? item.purchaseDate.substring(0, 10) : "");
+    setEditSaleDate(item.saleDate ? item.saleDate.substring(0, 10) : "");
     setIsEditing(false);
   };
 
@@ -195,11 +199,15 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
         sellingPrice: editSellingPrice,
         totalHpp: editTotalHpp,
         notes: editNotes,
+        purchaseDate: editPurchaseDate ? editPurchaseDate : null,
+        saleDate: editSaleDate ? editSaleDate : null,
       });
 
       if (res.success && res.data) {
         const newGrossProfit = editSellingPrice - editTotalHpp;
         const newMarginPct = editSellingPrice > 0 ? (newGrossProfit / editSellingPrice) * 100 : 0;
+        const newPurchaseDate = editPurchaseDate ? new Date(editPurchaseDate).toISOString() : null;
+        const newSaleDate = editSaleDate ? new Date(editSaleDate).toISOString() : null;
 
         const updatedList = items.map((i) =>
           i.id === selectedItem.id
@@ -210,6 +218,8 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                 grossProfit: newGrossProfit,
                 marginPercent: Math.round(newMarginPct * 10) / 10,
                 notes: editNotes,
+                purchaseDate: newPurchaseDate,
+                saleDate: newSaleDate,
               }
             : i
         );
@@ -223,13 +233,19 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                 grossProfit: newGrossProfit,
                 marginPercent: Math.round(newMarginPct * 10) / 10,
                 notes: editNotes,
+                purchaseDate: newPurchaseDate,
+                saleDate: newSaleDate,
               }
             : null
         );
+        showToast("Perubahan data unit historis berhasil disimpan.");
         setIsEditing(false);
+      } else {
+        alert(res.error || "Gagal menyimpan perubahan.");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Gagal menyimpan perubahan:", err);
+      alert(err.message || "Terjadi kesalahan saat menyimpan perubahan.");
     } finally {
       setIsSubmitting(false);
     }
@@ -669,11 +685,13 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                   </div>
                 </div>
               ) : (
-                <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 space-y-3">
+                <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 space-y-3.5">
                   <h4 className="font-bold text-amber-900 text-xs uppercase tracking-wider flex items-center gap-1.5">
                     <Edit2 className="w-3.5 h-3.5" />
-                    Edit Angka Transaksi Historis
+                    Edit Data Transaksi Historis
                   </h4>
+                  
+                  {/* Angka Keuangan */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-xs font-semibold text-amber-900 block mb-1">
@@ -698,6 +716,36 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                       />
                     </div>
                   </div>
+
+                  {/* Tanggal Beli & Tanggal Laku */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-semibold text-amber-900 block mb-1 flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5 text-amber-700" />
+                        Tanggal Beli
+                      </label>
+                      <input
+                        type="date"
+                        value={editPurchaseDate}
+                        onChange={(e) => setEditPurchaseDate(e.target.value)}
+                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-amber-900 block mb-1 flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5 text-amber-700" />
+                        Tanggal Laku (Terjual)
+                      </label>
+                      <input
+                        type="date"
+                        value={editSaleDate}
+                        onChange={(e) => setEditSaleDate(e.target.value)}
+                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Catatan Tambahan */}
                   <div>
                     <label className="text-xs font-semibold text-amber-900 block mb-1">
                       Catatan Tambahan
@@ -705,7 +753,8 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                     <textarea
                       value={editNotes}
                       onChange={(e) => setEditNotes(e.target.value)}
-                      rows={2}
+                      rows={3}
+                      placeholder="Masukkan catatan khusus untuk unit ini..."
                       className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]"
                     />
                   </div>

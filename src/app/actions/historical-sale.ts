@@ -133,6 +133,8 @@ export async function updateHistoricalSaleAction(
     notes?: string;
     buyerName?: string;
     plateNumber?: string;
+    purchaseDate?: string | null;
+    saleDate?: string | null;
   }
 ) {
   try {
@@ -153,6 +155,12 @@ export async function updateHistoricalSaleAction(
         ...(data.plateNumber && { plateNumber: data.plateNumber.toUpperCase().trim() }),
         ...(data.notes !== undefined && { notes: data.notes }),
         ...(data.buyerName !== undefined && { buyerName: data.buyerName }),
+        ...(data.purchaseDate !== undefined && {
+          purchaseDate: data.purchaseDate ? new Date(data.purchaseDate) : null,
+        }),
+        ...(data.saleDate !== undefined && {
+          saleDate: data.saleDate ? new Date(data.saleDate) : null,
+        }),
         sellingPrice,
         totalHpp,
         grossProfit,
