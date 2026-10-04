@@ -5,6 +5,7 @@ import {
   Search, 
   Car, 
   TrendingUp, 
+  TrendingDown,
   DollarSign, 
   Receipt, 
   Filter, 
@@ -16,6 +17,7 @@ import {
   Layers,
   Wrench,
   CheckCircle2,
+  AlertTriangle,
   X,
   Edit2,
   Trash2,
@@ -55,6 +57,10 @@ interface SummaryStats {
   totalHpp: number;
   avgProfitPerUnit: number;
   avgMarginPercent: number;
+  totalGain?: number;
+  totalLoss?: number;
+  profitCount?: number;
+  lossCount?: number;
 }
 
 interface ArchivePageClientProps {
@@ -67,7 +73,8 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
   const [search, setSearch] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("ALL");
   const [selectedYear, setSelectedYear] = useState<string>("ALL");
-  const [sortBy, setSortBy] = useState<"NEWEST" | "PROFIT_DESC" | "PRICE_DESC" | "MARGIN_DESC">("NEWEST");
+  const [profitStatusFilter, setProfitStatusFilter] = useState<"ALL" | "PROFIT" | "LOSS">("ALL");
+  const [sortBy, setSortBy] = useState<"NEWEST" | "PROFIT_DESC" | "LOSS_DESC" | "PRICE_DESC" | "MARGIN_DESC">("NEWEST");
 
   // Detail Modal
   const [selectedItem, setSelectedItem] = useState<HistoricalSaleItem | null>(null);
@@ -94,10 +101,22 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
     let totalOmzet = 0;
     let totalProfit = 0;
     let totalHpp = 0;
+    let totalLoss = 0;
+    let totalGain = 0;
+    let lossCount = 0;
+    let profitCount = 0;
+
     for (const it of items) {
       totalOmzet += it.sellingPrice;
       totalProfit += it.grossProfit;
       totalHpp += it.totalHpp;
+      if (it.grossProfit < 0) {
+        totalLoss += Math.abs(it.grossProfit);
+        lossCount++;
+      } else if (it.grossProfit > 0) {
+        totalGain += it.grossProfit;
+        profitCount++;
+      }
     }
     const totalCount = items.length;
     const avgProfitPerUnit = totalCount > 0 ? Math.round(totalProfit / totalCount) : 0;
@@ -106,6 +125,10 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
       totalCount,
       totalOmzet,
       totalProfit,
+      totalGain,
+      totalLoss,
+      lossCount,
+      profitCount,
       totalHpp,
       avgProfitPerUnit,
       avgMarginPercent,
@@ -137,11 +160,16 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
 
         const matchBrand = selectedBrand === "ALL" || item.brand === selectedBrand;
         const matchYear = selectedYear === "ALL" || String(item.year) === selectedYear;
+        const matchProfitStatus =
+          profitStatusFilter === "ALL" ||
+          (profitStatusFilter === "PROFIT" && item.grossProfit > 0) ||
+          (profitStatusFilter === "LOSS" && item.grossProfit < 0);
 
-        return matchSearch && matchBrand && matchYear;
+        return matchSearch && matchBrand && matchYear && matchProfitStatus;
       })
       .sort((a, b) => {
         if (sortBy === "PROFIT_DESC") return b.grossProfit - a.grossProfit;
+        if (sortBy === "LOSS_DESC") return a.grossProfit - b.grossProfit;
         if (sortBy === "PRICE_DESC") return b.sellingPrice - a.sellingPrice;
         if (sortBy === "MARGIN_DESC") return b.marginPercent - a.marginPercent;
         // Default NEWEST
@@ -149,7 +177,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
         const dateB = b.saleDate ? new Date(b.saleDate).getTime() : 0;
         return dateB - dateA;
       });
-  }, [items, search, selectedBrand, selectedYear, sortBy]);
+  }, [items, search, selectedBrand, selectedYear, sortBy, profitStatusFilter]);
 
   const openDetail = (item: HistoricalSaleItem) => {
     setSelectedItem(item);
@@ -265,9 +293,9 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
         </div>
       </div>
 
-      {/* 2. Statistik Akumulasi Historis */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
+      {/* 2. Statistik Akumulasi Historis (5 KPI Termasuk Total Rugi) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
           <div className="flex items-center justify-between text-[#6B6560] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Total Unit Terjual</span>
             <Car className="w-4 h-4 text-[#D97706]" />
@@ -276,11 +304,11 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             {currentSummary.totalCount} <span className="text-sm font-medium text-[#6B6560]">Unit</span>
           </div>
           <div className="text-[11px] text-[#6B6560] mt-1">
-            Riwayat 2021 s/d sekarang
+            {currentSummary.profitCount || 0} untung • {currentSummary.lossCount || 0} rugi
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
           <div className="flex items-center justify-between text-[#6B6560] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Total Omzet Historis</span>
             <DollarSign className="w-4 h-4 text-emerald-600" />
@@ -293,20 +321,53 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
           <div className="flex items-center justify-between text-[#6B6560] text-xs font-semibold uppercase tracking-wider mb-2">
-            <span>Total Laba Kotor</span>
+            <span>Total Laba Bersih</span>
             <TrendingUp className="w-4 h-4 text-amber-600" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-amber-600">
             {formatRupiah(currentSummary.totalProfit)}
           </div>
           <div className="text-[11px] text-[#6B6560] mt-1">
-            Laba sebelum bagi hasil
+            Untung kotor: {formatRupiah(currentSummary.totalGain || 0)}
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
+        {/* KARTU KHUSUS: TOTAL KERUGIAN YANG PERNAH DIALAMI */}
+        <div 
+          onClick={() => {
+            if (profitStatusFilter === "LOSS") {
+              setProfitStatusFilter("ALL");
+            } else {
+              setProfitStatusFilter("LOSS");
+              setSortBy("LOSS_DESC");
+            }
+          }}
+          className={cn(
+            "bg-white p-4 sm:p-5 rounded-xl border shadow-sm cursor-pointer transition-all hover:shadow-md select-none",
+            profitStatusFilter === "LOSS" 
+              ? "border-rose-400 ring-2 ring-rose-200 bg-rose-50/40" 
+              : "border-[#D9D4CB] hover:border-rose-300"
+          )}
+          title="Klik untuk menyaring hanya unit yang mengalami rugi"
+        >
+          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider mb-2">
+            <span className="text-rose-700 font-bold">Total Rugi Dialami</span>
+            <TrendingDown className="w-4 h-4 text-rose-600" />
+          </div>
+          <div className="text-xl sm:text-2xl font-black text-rose-600">
+            {formatRupiah(currentSummary.totalLoss || 0)}
+          </div>
+          <div className="text-[11px] text-rose-700/90 mt-1 flex items-center justify-between">
+            <span>{currentSummary.lossCount || 0} unit minus</span>
+            <span className="underline font-bold text-[10px]">
+              {profitStatusFilter === "LOSS" ? "Tampilkan Semua" : "Klik Lihat Unit"}
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
           <div className="flex items-center justify-between text-[#6B6560] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Rata-Rata Margin / Unit</span>
             <Receipt className="w-4 h-4 text-blue-600" />
@@ -315,13 +376,64 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             {formatRupiah(currentSummary.avgProfitPerUnit)}
           </div>
           <div className="text-[11px] text-[#6B6560] mt-1">
-            Rata-rata margin: {currentSummary.avgMarginPercent}% per unit
+            Rata-rata: {currentSummary.avgMarginPercent}% per unit
           </div>
         </div>
       </div>
 
       {/* 3. Bar Pencarian & Filter */}
       <div className="bg-white p-4 rounded-xl border border-[#D9D4CB] shadow-sm space-y-3">
+        {/* Quick Filter Tabs: Semua / Untung / Rugi */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-[#E7E2DA]">
+          <div className="flex items-center gap-1.5 p-1 bg-[#F5F2EB] rounded-xl border border-[#D9D4CB] text-xs font-bold">
+            <button
+              onClick={() => setProfitStatusFilter("ALL")}
+              className={cn(
+                "px-3 py-1.5 rounded-lg transition-all",
+                profitStatusFilter === "ALL"
+                  ? "bg-white text-[#1C1917] shadow-sm font-black"
+                  : "text-[#6B6560] hover:text-[#1C1917]"
+              )}
+            >
+              Semua ({items.length})
+            </button>
+            <button
+              onClick={() => setProfitStatusFilter("PROFIT")}
+              className={cn(
+                "px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5",
+                profitStatusFilter === "PROFIT"
+                  ? "bg-emerald-600 text-white shadow-sm font-black"
+                  : "text-emerald-700 hover:bg-emerald-50"
+              )}
+            >
+              <TrendingUp className="w-3.5 h-3.5" />
+              <span>Untung ({currentSummary.profitCount || 0})</span>
+            </button>
+            <button
+              onClick={() => {
+                setProfitStatusFilter("LOSS");
+                setSortBy("LOSS_DESC");
+              }}
+              className={cn(
+                "px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5",
+                profitStatusFilter === "LOSS"
+                  ? "bg-rose-600 text-white shadow-sm font-black"
+                  : "text-rose-700 hover:bg-rose-50"
+              )}
+            >
+              <TrendingDown className="w-3.5 h-3.5" />
+              <span>Rugi Dialami ({currentSummary.lossCount || 0})</span>
+            </button>
+          </div>
+
+          {profitStatusFilter === "LOSS" && (
+            <div className="text-xs text-rose-700 font-bold bg-rose-50 px-3 py-1 rounded-lg border border-rose-200 flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5" />
+              <span>Menampilkan {filteredItems.length} unit yang merugi (Total: {formatRupiah(currentSummary.totalLoss || 0)})</span>
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Input Search */}
           <div className="relative">
@@ -372,6 +484,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             >
               <option value="NEWEST">Terbaru Terjual</option>
               <option value="PROFIT_DESC">Keuntungan Tertinggi</option>
+              <option value="LOSS_DESC">Rugi Terbesar (Loss Terparah)</option>
               <option value="PRICE_DESC">Harga Jual Tertinggi</option>
               <option value="MARGIN_DESC">Persentase Margin Tertinggi</option>
             </select>
@@ -380,12 +493,14 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
 
         <div className="flex items-center justify-between text-xs text-[#6B6560] pt-1">
           <span>Menampilkan <strong>{filteredItems.length}</strong> dari total {items.length} unit historis</span>
-          {(search || selectedBrand !== "ALL" || selectedYear !== "ALL") && (
+          {(search || selectedBrand !== "ALL" || selectedYear !== "ALL" || profitStatusFilter !== "ALL") && (
             <button
               onClick={() => {
                 setSearch("");
                 setSelectedBrand("ALL");
                 setSelectedYear("ALL");
+                setProfitStatusFilter("ALL");
+                setSortBy("NEWEST");
               }}
               className="text-[#D97706] hover:underline font-semibold"
             >

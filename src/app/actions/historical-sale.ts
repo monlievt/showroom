@@ -44,6 +44,10 @@ export async function getHistoricalSalesAction(filters?: HistoricalSaleFilter) {
     let totalOmzet = new Decimal(0);
     let totalProfit = new Decimal(0);
     let totalHpp = new Decimal(0);
+    let totalLoss = new Decimal(0);
+    let totalGain = new Decimal(0);
+    let lossCount = 0;
+    let profitCount = 0;
 
     const serialized = items.map((item) => {
       const hppNum = Number(item.totalHpp);
@@ -54,6 +58,14 @@ export async function getHistoricalSalesAction(filters?: HistoricalSaleFilter) {
       totalOmzet = totalOmzet.plus(item.sellingPrice);
       totalProfit = totalProfit.plus(item.grossProfit);
       totalHpp = totalHpp.plus(item.totalHpp);
+
+      if (profitNum < 0) {
+        totalLoss = totalLoss.plus(Math.abs(profitNum));
+        lossCount++;
+      } else if (profitNum > 0) {
+        totalGain = totalGain.plus(profitNum);
+        profitCount++;
+      }
 
       return {
         id: item.id,
@@ -94,6 +106,10 @@ export async function getHistoricalSalesAction(filters?: HistoricalSaleFilter) {
           totalCount,
           totalOmzet: totalOmzet.toNumber(),
           totalProfit: totalProfit.toNumber(),
+          totalGain: totalGain.toNumber(),
+          totalLoss: totalLoss.toNumber(),
+          profitCount,
+          lossCount,
           totalHpp: totalHpp.toNumber(),
           avgProfitPerUnit,
           avgMarginPercent: Math.round(avgMarginPercent * 10) / 10,
