@@ -405,11 +405,16 @@ export async function deleteVehicleDocumentAction(documentId: string, vehicleId:
 export async function updateVehicleAction(
   vehicleId: string,
   data: {
+    plateNumber?: string;
     brand?: string;
     model?: string;
     year?: number;
     color?: string;
     odometer?: number;
+    transmission?: any;
+    engineCapacity?: number;
+    purchasePrice?: number;
+    purchaseDate?: Date | string;
     targetSellingPrice?: number | null;
     minSellingPrice?: number | null;
     notes?: string | null;
@@ -417,31 +422,56 @@ export async function updateVehicleAction(
   }
 ) {
   try {
+    const updateData: any = {};
+    if (data.plateNumber) {
+      updateData.plateNumber = data.plateNumber.trim().toUpperCase().replace(/\s+/g, "");
+    }
+    if (data.brand !== undefined) updateData.brand = data.brand.trim();
+    if (data.model !== undefined) updateData.model = data.model.trim();
+    if (data.year !== undefined) updateData.year = Number(data.year);
+    if (data.color !== undefined) updateData.color = data.color.trim();
+    if (data.odometer !== undefined) updateData.odometer = Number(data.odometer);
+    if (data.transmission) updateData.transmission = data.transmission;
+    if (data.engineCapacity !== undefined) updateData.engineCapacity = Number(data.engineCapacity);
+    if (data.purchasePrice !== undefined) {
+      updateData.purchasePrice = new Decimal(data.purchasePrice);
+    }
+    if (data.purchaseDate) {
+      updateData.purchaseDate = new Date(data.purchaseDate);
+    }
+    if (data.targetSellingPrice !== undefined) {
+      updateData.targetSellingPrice = data.targetSellingPrice ? new Decimal(data.targetSellingPrice) : null;
+    }
+    if (data.minSellingPrice !== undefined) {
+      updateData.minSellingPrice = data.minSellingPrice ? new Decimal(data.minSellingPrice) : null;
+    }
+    if (data.notes !== undefined) updateData.notes = data.notes;
+    if (data.currentLocation !== undefined) updateData.currentLocation = data.currentLocation.trim();
+
     const updated = await prisma.vehicle.update({
       where: { id: vehicleId },
-      data: {
-        ...(data.brand && { brand: data.brand }),
-        ...(data.model && { model: data.model }),
-        ...(data.year && { year: data.year }),
-        ...(data.color && { color: data.color }),
-        ...(data.odometer !== undefined && { odometer: data.odometer }),
-        ...(data.targetSellingPrice !== undefined && {
-          targetSellingPrice: data.targetSellingPrice ? new Decimal(data.targetSellingPrice) : null,
-        }),
-        ...(data.minSellingPrice !== undefined && {
-          minSellingPrice: data.minSellingPrice ? new Decimal(data.minSellingPrice) : null,
-        }),
-        ...(data.notes !== undefined && { notes: data.notes }),
-        ...(data.currentLocation && { currentLocation: data.currentLocation }),
-      },
+      data: updateData,
     });
 
     revalidatePath("/admin/inventory");
     revalidatePath(`/admin/inventory/${vehicleId}`);
     revalidatePath("/katalog");
-    return { success: true, data: updated };
+    revalidatePath("/", "layout");
+
+    return {
+      success: true,
+      data: {
+        ...updated,
+        purchasePrice: Number(updated.purchasePrice),
+        targetSellingPrice: updated.targetSellingPrice ? Number(updated.targetSellingPrice) : null,
+        minSellingPrice: updated.minSellingPrice ? Number(updated.minSellingPrice) : null,
+      },
+    };
   } catch (error: any) {
     console.error("Error updating vehicle details:", error);
+    if (error.code === "P2002") {
+      return { success: false, error: "Nomor plat sudah terdaftar pada kendaraan lain." };
+    }
     return { success: false, error: error.message || "Gagal memperbarui data unit kendaraan" };
   }
 }
