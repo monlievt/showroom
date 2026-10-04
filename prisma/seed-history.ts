@@ -15,7 +15,8 @@ async function main() {
   await prisma.expense.deleteMany({});
   await prisma.vehicle.deleteMany({});
   await prisma.buyer.deleteMany({});
-  console.log("✓ Seluruh data transaksi aktif dibersihkan (tanpa modal gaib 500jt & tanpa mutasi semu).");
+  await prisma.investor.deleteMany({});
+  console.log("✓ Seluruh data transaksi & investor dibersihkan.");
 
   const dataFilePath = path.join(__dirname, "history-data.json");
   if (!fs.existsSync(dataFilePath)) {
@@ -23,27 +24,9 @@ async function main() {
   }
 
   const rawData = JSON.parse(fs.readFileSync(dataFilePath, "utf-8"));
-  const { investors, activeVehicles, soldVehicles } = rawData;
+  const { activeVehicles, soldVehicles } = rawData;
 
-  // 1. Buat / Upsert Investor
-  console.log(`\n👥 1. Memproses ${investors.length} Investor...`);
-  for (const inv of investors) {
-    const existing = await prisma.investor.findFirst({
-      where: { name: inv.name },
-    });
-    if (!existing) {
-      await prisma.investor.create({
-        data: {
-          name: inv.name,
-          phone: inv.phone,
-          type: inv.type as InvestorType,
-        },
-      });
-    }
-  }
-  console.log(`✓ 7 Investor siap`);
-
-  // 2. Masukkan 13 Unit STOK AKTIF ke tabel `Vehicle`
+  // 1. Masukkan 13 Unit STOK AKTIF ke tabel `Vehicle`
   console.log(`\n🚗 2. Memasukkan ${activeVehicles.length} Unit STOK AKTIF Garasi ke Inventori...`);
   let activeCount = 0;
   for (const v of activeVehicles) {
