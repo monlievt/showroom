@@ -299,6 +299,9 @@ export async function getVehicleByIdAction(id: string) {
         documents: {
           orderBy: { uploadedAt: "desc" },
         },
+        inspections: {
+          orderBy: { version: "asc" },
+        },
         sale: {
           include: {
             buyer: true,
@@ -329,6 +332,7 @@ export async function getVehicleByIdAction(id: string) {
         purchasePrice: Number(vehicle.purchasePrice),
         targetSellingPrice: vehicle.targetSellingPrice ? Number(vehicle.targetSellingPrice) : null,
         minSellingPrice: vehicle.minSellingPrice ? Number(vehicle.minSellingPrice) : null,
+        taxNominal: vehicle.taxNominal ? Number(vehicle.taxNominal) : null,
         totalExpenses: expensesList.reduce((acc: number, e: any) => acc + e.amount, 0),
         totalHpp: totalHpp.toNumber(),
         daysInInventory: days,
@@ -339,6 +343,7 @@ export async function getVehicleByIdAction(id: string) {
         })),
         photos: vehicle.photos,
         documents: vehicle.documents,
+        inspections: vehicle.inspections,
       },
     };
   } catch (error: any) {
@@ -413,12 +418,23 @@ export async function updateVehicleAction(
     odometer?: number;
     transmission?: any;
     engineCapacity?: number;
+    sourceType?: any;
+    auctionHouse?: string | null;
+    auctionLotType?: any;
+    bpkbStatus?: any;
+    bpkbLeadDays?: number;
+    taxExpiryDate?: Date | string | null;
+    platExpiryDate?: Date | string | null;
+    taxNominal?: number | null;
+    stnkStatus?: any;
     purchasePrice?: number;
     purchaseDate?: Date | string;
     targetSellingPrice?: number | null;
     minSellingPrice?: number | null;
-    notes?: string | null;
     currentLocation?: string;
+    youtubeVideoId?: string | null;
+    notes?: string | null;
+    physicalChecklist?: any;
   }
 ) {
   try {
@@ -433,6 +449,21 @@ export async function updateVehicleAction(
     if (data.odometer !== undefined) updateData.odometer = Number(data.odometer);
     if (data.transmission) updateData.transmission = data.transmission;
     if (data.engineCapacity !== undefined) updateData.engineCapacity = Number(data.engineCapacity);
+    if (data.sourceType) updateData.sourceType = data.sourceType;
+    if (data.auctionHouse !== undefined) updateData.auctionHouse = data.auctionHouse;
+    if (data.auctionLotType !== undefined) updateData.auctionLotType = data.auctionLotType;
+    if (data.bpkbStatus) updateData.bpkbStatus = data.bpkbStatus;
+    if (data.bpkbLeadDays !== undefined) updateData.bpkbLeadDays = Number(data.bpkbLeadDays);
+    if (data.taxExpiryDate !== undefined) {
+      updateData.taxExpiryDate = data.taxExpiryDate ? new Date(data.taxExpiryDate) : null;
+    }
+    if (data.platExpiryDate !== undefined) {
+      updateData.platExpiryDate = data.platExpiryDate ? new Date(data.platExpiryDate) : null;
+    }
+    if (data.taxNominal !== undefined) {
+      updateData.taxNominal = data.taxNominal ? new Decimal(data.taxNominal) : null;
+    }
+    if (data.stnkStatus) updateData.stnkStatus = data.stnkStatus;
     if (data.purchasePrice !== undefined) {
       updateData.purchasePrice = new Decimal(data.purchasePrice);
     }
@@ -447,14 +478,47 @@ export async function updateVehicleAction(
     }
     if (data.notes !== undefined) updateData.notes = data.notes;
     if (data.currentLocation !== undefined) updateData.currentLocation = data.currentLocation.trim();
+    if (data.youtubeVideoId !== undefined) updateData.youtubeVideoId = data.youtubeVideoId;
 
     const updated = await prisma.vehicle.update({
       where: { id: vehicleId },
       data: updateData,
     });
 
+    // Update atau create initial inspection record jika ada checklist fisik
+    if (data.physicalChecklist) {
+      const existingInspection = await prisma.inspection.findFirst({
+        where: { vehicleId },
+        orderBy: { version: "asc" },
+      });
+      if (existingInspection) {
+        await prisma.inspection.update({
+          where: { id: existingInspection.id },
+          data: {
+            checklistData: data.physicalChecklist,
+          },
+        });
+      } else {
+        await prisma.inspection.create({
+          data: {
+            vehicleId,
+            version: 1,
+            isCurrent: true,
+            stage: "INTAKE",
+            engineGrade: "B",
+            interiorGrade: "B",
+            exteriorGrade: "B",
+            frameGrade: "A",
+            checklistData: data.physicalChecklist,
+            inspectedBy: "Checker Turun Towing",
+          },
+        });
+      }
+    }
+
     revalidatePath("/admin/inventory");
     revalidatePath(`/admin/inventory/${vehicleId}`);
+    revalidatePath(`/admin/inventory/${vehicleId}/edit`);
     revalidatePath("/katalog");
     revalidatePath("/", "layout");
 
@@ -465,6 +529,7 @@ export async function updateVehicleAction(
         purchasePrice: Number(updated.purchasePrice),
         targetSellingPrice: updated.targetSellingPrice ? Number(updated.targetSellingPrice) : null,
         minSellingPrice: updated.minSellingPrice ? Number(updated.minSellingPrice) : null,
+        taxNominal: updated.taxNominal ? Number(updated.taxNominal) : null,
       },
     };
   } catch (error: any) {

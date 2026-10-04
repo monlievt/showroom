@@ -1,0 +1,1134 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  ArrowLeft,
+  Car,
+  Gavel,
+  ShieldCheck,
+  AlertTriangle,
+  Banknote,
+  FileText,
+  Clock,
+  CheckCircle,
+  Loader2,
+  Wrench,
+  Key,
+  BookOpen,
+  Disc,
+  Volume2,
+  ShieldAlert,
+  CalendarClock,
+  Video,
+  ExternalLink,
+} from "lucide-react";
+import { updateVehicleAction } from "@/app/actions/vehicle";
+import { generateVehicleSlug } from "@/lib/utils/slug";
+import { cn } from "@/lib/utils";
+
+// AUCTION PRESETS
+const AUCTION_HOUSE_PRESETS: Record<
+  string,
+  { label: string; bpkbLeadDays: number; notes: string }
+> = {
+  JBA: {
+    label: "JBA (Japan Best Auto)",
+    bpkbLeadDays: 14,
+    notes: "BPKB rata-rata 14 hari kerja",
+  },
+  AUKSI: {
+    label: "AUKSI (Mobil88/Garansindo)",
+    bpkbLeadDays: 7,
+    notes: "BPKB cepat ~7 hari kerja",
+  },
+  IBID: {
+    label: "IBID (Graha Buana/Astra)",
+    bpkbLeadDays: 10,
+    notes: "BPKB teratur ~10 hari kerja",
+  },
+  SMARTBID: {
+    label: "SmartBid",
+    bpkbLeadDays: 30,
+    notes: "BPKB agak lama ~30 hari kerja",
+  },
+  ADIRA: {
+    label: "Adira Auction",
+    bpkbLeadDays: 21,
+    notes: "BPKB berkisar ~21 hari kerja",
+  },
+  "BCA FINANCE": {
+    label: "BCA Finance Auction",
+    bpkbLeadDays: 14,
+    notes: "BPKB ~14 hari kerja",
+  },
+  "STAR AUCTION": {
+    label: "Star Auction",
+    bpkbLeadDays: 14,
+    notes: "BPKB ~14 hari kerja",
+  },
+  LAINNYA: {
+    label: "Balai Lelang Lainnya",
+    bpkbLeadDays: 14,
+    notes: "Tentukan estimasi secara manual",
+  },
+};
+
+interface VehicleEditClientProps {
+  vehicle: any;
+}
+
+export function VehicleEditClient({ vehicle }: VehicleEditClientProps) {
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    plateNumber: vehicle.plateNumber || "",
+    brand: vehicle.brand || "",
+    model: vehicle.model || "",
+    year: vehicle.year || new Date().getFullYear(),
+    color: vehicle.color || "",
+    odometer: vehicle.odometer ?? 0,
+    transmission: vehicle.transmission || "AUTOMATIC",
+    engineCapacity: vehicle.engineCapacity ?? 1500,
+    sourceType: vehicle.sourceType || "AUCTION",
+    auctionHouse: vehicle.auctionHouse || "JBA",
+    auctionLotType: vehicle.auctionLotType || "EKS_PERUSAHAAN",
+    purchasePrice: vehicle.purchasePrice ?? 0,
+    purchaseDate: vehicle.purchaseDate
+      ? new Date(vehicle.purchaseDate).toISOString().split("T")[0]
+      : new Date().toISOString().split("T")[0],
+    targetSellingPrice: vehicle.targetSellingPrice ?? "",
+    minSellingPrice: vehicle.minSellingPrice ?? "",
+    currentLocation: vehicle.currentLocation || "Garasi Utama",
+    bpkbStatus: vehicle.bpkbStatus || "PROCESS_1_2_WEEKS",
+    bpkbLeadDays: vehicle.bpkbLeadDays ?? 14,
+    taxExpiryDate: vehicle.taxExpiryDate
+      ? new Date(vehicle.taxExpiryDate).toISOString().split("T")[0]
+      : "",
+    platExpiryDate: vehicle.platExpiryDate
+      ? new Date(vehicle.platExpiryDate).toISOString().split("T")[0]
+      : "",
+    taxNominal: vehicle.taxNominal ?? 0,
+    stnkStatus: vehicle.stnkStatus || "READY",
+    youtubeVideoId: vehicle.youtubeVideoId || "",
+    notes: vehicle.notes || "",
+  });
+
+  const initialChecklist = (vehicle.inspections?.[0]?.checklistData as any) || {};
+
+  const [physicalChecklist, setPhysicalChecklist] = useState({
+    spareTire: (initialChecklist.spareTire as "ADA_BAGUS" | "ADA_AUS" | "TIDAK_ADA") || "ADA_BAGUS",
+    jack: initialChecklist.jack !== undefined ? Boolean(initialChecklist.jack) : true,
+    wheelWrench: initialChecklist.wheelWrench !== undefined ? Boolean(initialChecklist.wheelWrench) : true,
+    keysCount: (initialChecklist.keysCount as "2_KEYS" | "1_KEY") || "2_KEYS",
+    serviceBook: initialChecklist.serviceBook !== undefined ? Boolean(initialChecklist.serviceBook) : true,
+    cabinMats: initialChecklist.cabinMats !== undefined ? Boolean(initialChecklist.cabinMats) : true,
+    audioUnit: (initialChecklist.audioUnit as "ORIGINAL" | "MODIFIED" | "BROKEN_OR_NONE") || "ORIGINAL",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+
+  const isAuction = formData.sourceType === "AUCTION";
+  const currentPreset = AUCTION_HOUSE_PRESETS[formData.auctionHouse];
+
+  const handleAuctionHouseChange = (house: string) => {
+    const preset = AUCTION_HOUSE_PRESETS[house];
+    setFormData((prev) => ({
+      ...prev,
+      auctionHouse: house,
+      bpkbLeadDays: preset?.bpkbLeadDays ?? 14,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    try {
+      const res = await updateVehicleAction(vehicle.id, {
+        plateNumber: formData.plateNumber,
+        brand: formData.brand,
+        model: formData.model,
+        year: Number(formData.year),
+        color: formData.color,
+        odometer: Number(formData.odometer),
+        transmission: formData.transmission as any,
+        engineCapacity: Number(formData.engineCapacity),
+        sourceType: formData.sourceType as any,
+        auctionHouse: isAuction ? formData.auctionHouse : null,
+        auctionLotType: isAuction ? (formData.auctionLotType as any) : null,
+        purchasePrice: Number(formData.purchasePrice),
+        purchaseDate: new Date(formData.purchaseDate),
+        targetSellingPrice:
+          formData.targetSellingPrice !== "" ? Number(formData.targetSellingPrice) : null,
+        minSellingPrice:
+          formData.minSellingPrice !== "" ? Number(formData.minSellingPrice) : null,
+        currentLocation: formData.currentLocation,
+        bpkbStatus: formData.bpkbStatus as any,
+        bpkbLeadDays: Number(formData.bpkbLeadDays),
+        taxExpiryDate: formData.taxExpiryDate ? new Date(formData.taxExpiryDate) : null,
+        platExpiryDate: formData.platExpiryDate ? new Date(formData.platExpiryDate) : null,
+        taxNominal: formData.taxNominal ? Number(formData.taxNominal) : null,
+        stnkStatus: formData.stnkStatus as any,
+        youtubeVideoId: formData.youtubeVideoId.trim() || null,
+        notes: formData.notes,
+        physicalChecklist,
+      });
+
+      if (!res.success) {
+        throw new Error(res.error || "Gagal memperbarui unit");
+      }
+
+      setSuccessMsg("Semua data unit kendaraan dan informasi katalog berhasil diperbarui!");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err: any) {
+      setErrorMsg(err.message || "Gagal memperbarui unit");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
+      {/* Top Navigation */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/admin/inventory"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+          >
+            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <span>Kembali ke Inventori</span>
+          </Link>
+          <div>
+            <h1 className="text-xl font-bold text-[#1C1917]">
+              Edit Lengkap Data Unit &amp; Katalog
+            </h1>
+            <p className="text-xs text-[#6B6560]">
+              Perbarui seluruh parameter data intake, lelang, legalitas, spesifikasi, dan ceklist fisik.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/katalog/${generateVehicleSlug(vehicle)}`}
+            target="_blank"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 hover:bg-amber-100 font-bold text-xs transition-colors shadow-xs"
+          >
+            <ExternalLink className="w-4 h-4 text-[#D97706]" />
+            <span>Buka di Katalog Publik</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Notifications */}
+      {errorMsg && (
+        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+          <AlertTriangle className="w-4 h-4 shrink-0 text-red-600" />
+          <span>{errorMsg}</span>
+        </div>
+      )}
+
+      {successMsg && (
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between gap-3 animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+            <span>{successMsg}</span>
+          </div>
+          <Link
+            href="/admin/inventory"
+            className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[11px] whitespace-nowrap"
+          >
+            Lihat di Tabel Inventori →
+          </Link>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* SECTION 1: Identitas & Sumber */}
+        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
+            <Car className="w-4 h-4 text-[#D97706]" />
+            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              1. Identitas Unit &amp; Sumber Masuk
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Nomor Plat Polisi *
+              </label>
+              <input
+                required
+                type="text"
+                placeholder="Contoh: B 1234 CD"
+                value={formData.plateNumber}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    plateNumber: e.target.value.toUpperCase(),
+                  })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm uppercase font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Plat unik identifikasi inventori
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Sumber Pembelian *
+              </label>
+              <select
+                value={formData.sourceType}
+                onChange={(e) =>
+                  setFormData({ ...formData, sourceType: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              >
+                <option value="AUCTION">Balai Lelang</option>
+                <option value="BROKER">Makelar / Rekanan</option>
+                <option value="DIRECT_BUY">Beli Langsung Pemakai</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Tanggal Pembelian / Menang Lelang *
+              </label>
+              <input
+                required
+                type="date"
+                value={formData.purchaseDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, purchaseDate: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 2: Jika Sumber Balai Lelang */}
+        {isAuction && (
+          <div className="bg-amber-50/50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+            <div className="flex items-center gap-2 border-b border-amber-200 pb-3">
+              <Gavel className="w-4 h-4 text-amber-700" />
+              <h2 className="text-sm font-bold text-amber-950 uppercase tracking-wider">
+                2. Balai Lelang &amp; BPKB Tracker Lead Time
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                  Pilihan Balai Lelang
+                </label>
+                <select
+                  value={formData.auctionHouse}
+                  onChange={(e) => handleAuctionHouseChange(e.target.value)}
+                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                >
+                  {Object.entries(AUCTION_HOUSE_PRESETS).map(([key, val]) => (
+                    <option key={key} value={key}>
+                      {val.label}
+                    </option>
+                  ))}
+                </select>
+                {currentPreset && (
+                  <p className="text-[11px] text-amber-800 mt-1.5 font-medium">
+                    📌 {currentPreset.notes}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                  Tipe Lot Lelang
+                </label>
+                <select
+                  value={formData.auctionLotType}
+                  onChange={(e) =>
+                    setFormData({ ...formData, auctionLotType: e.target.value })
+                  }
+                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                >
+                  <option value="EKS_PERUSAHAAN">
+                    Eks Perusahaan ✅ (BPKB bersih, 7-14 hari)
+                  </option>
+                  <option value="EKS_TARIKAN_LEASING">
+                    Eks Tarikan Leasing ⚠️ (BPKB 14-30 hari)
+                  </option>
+                  <option value="UNKNOWN">Belum Konfirmasi / Lainnya</option>
+                </select>
+                {formData.auctionLotType === "EKS_TARIKAN_LEASING" && (
+                  <p className="text-[11px] text-orange-800 mt-1.5 font-semibold">
+                    ⚠️ Eks Leasing: Pastikan STNK &amp; surat pelepasan hak lengkap.
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                  Status BPKB Saat Ini
+                </label>
+                <select
+                  value={formData.bpkbStatus}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bpkbStatus: e.target.value })
+                  }
+                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                >
+                  <option value="PROCESS_1_2_WEEKS">
+                    Masih Diproses Balai Lelang
+                  </option>
+                  <option value="READY">BPKB Sudah di Tangan</option>
+                  <option value="MUTATION_REQUIRED">
+                    Perlu Mutasi / Balik Nama
+                  </option>
+                  <option value="LOST_NEED_REPLACEMENT">
+                    Hilang / Butuh Duplikat
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                  Estimasi BPKB Tiba (Hari Kerja)
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={1}
+                    max={90}
+                    value={formData.bpkbLeadDays}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        bpkbLeadDays: Number(e.target.value),
+                      })
+                    }
+                    className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-bold text-amber-900 focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                  />
+                  <span className="text-xs text-amber-900 font-semibold whitespace-nowrap">
+                    Hari Kerja
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SECTION 2B: Legalitas STNK & Alarm Pajak Tahunan PKB */}
+        <div className="bg-[#FAF9F5] border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
+            <div className="flex items-center gap-2">
+              <CalendarClock className="w-4 h-4 text-[#D97706]" />
+              <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+                Dokumen STNK &amp; Radar Pajak Kendaraan (PKB)
+              </h2>
+            </div>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+              Alarm H-30 Hari Showroom
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Jatuh Tempo Pajak Tahunan (PKB)
+              </label>
+              <input
+                type="date"
+                value={formData.taxExpiryDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, taxExpiryDate: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Sesuai lembar notice pajak STNK
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Jatuh Tempo Plat / Kaleng (5 Thn)
+              </label>
+              <input
+                type="date"
+                value={formData.platExpiryDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, platExpiryDate: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Bulan &amp; Tahun plat kaleng mobil
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Estimasi Pajak Tahunan (Rp)
+              </label>
+              <input
+                type="number"
+                min={0}
+                placeholder="Contoh: 2800000"
+                value={formData.taxNominal || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    taxNominal: Number(e.target.value),
+                  })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Acuan negosiasi / perpanjangan
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Status Fisik STNK
+              </label>
+              <select
+                value={formData.stnkStatus}
+                onChange={(e) =>
+                  setFormData({ ...formData, stnkStatus: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              >
+                <option value="READY">STNK Asli Ready di Showroom</option>
+                <option value="PROCESS_1_2_WEEKS">Masih Diproses Balai Lelang</option>
+                <option value="MUTATION_REQUIRED">Perlu Mutasi / Balik Nama</option>
+                <option value="LOST_NEED_REPLACEMENT">STNK Hilang (Butuh Duplikat)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Banner Analisis Status Pajak STNK Otomatis */}
+          {formData.taxExpiryDate && (() => {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const target = new Date(formData.taxExpiryDate);
+            target.setHours(0, 0, 0, 0);
+            const diffDays = Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+              return (
+                <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-start gap-2.5">
+                  <ShieldAlert className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="font-bold block">
+                      Pajak Kendaraan MATI / Lewat Jatuh Tempo ({Math.abs(diffDays)} Hari Lalu)!
+                    </strong>
+                    <p className="mt-0.5 text-[11px] leading-relaxed">
+                      Unit ini berstatus pajak mati. Disarankan untuk segera diproses perpanjangan Samsat sebelum unit dibawa test drive atau diserahterimakan ke konsumen.
+                    </p>
+                  </div>
+                </div>
+              );
+            } else if (diffDays <= 30) {
+              return (
+                <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-start gap-2.5">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="font-bold text-[#78350F] block">
+                      Pajak Akan Jatuh Tempo Dalam {diffDays} Hari!
+                    </strong>
+                    <p className="mt-0.5 text-[11px] text-[#92400E] leading-relaxed">
+                      Unit masuk dalam Radar Alarm H-30 Dashboard. Siapkan alokasi dana perpanjangan atau informasikan pada kesepakatan jual-beli.
+                    </p>
+                  </div>
+                </div>
+              );
+            } else {
+              return (
+                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="font-bold text-emerald-950 block">
+                      Pajak Hidup &amp; Aman (Sisa {diffDays} Hari)
+                    </strong>
+                    <p className="mt-0.5 text-[11px] text-emerald-800 leading-relaxed">
+                      Masa berlaku pajak STNK masih panjang dan siap untuk dipajang serta uji jalan tanpa kendala razia.
+                    </p>
+                  </div>
+                </div>
+              );
+            }
+          })()}
+        </div>
+
+        {/* SECTION 3: Spesifikasi Unit */}
+        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
+            <Car className="w-4 h-4 text-[#D97706]" />
+            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              3. Detail Spesifikasi Kendaraan
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Merk Kendaraan *
+              </label>
+              <input
+                required
+                type="text"
+                placeholder="Toyota, Honda, Daihatsu, dll"
+                value={formData.brand}
+                onChange={(e) =>
+                  setFormData({ ...formData, brand: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Tipe / Model *
+              </label>
+              <input
+                required
+                type="text"
+                placeholder="Avanza 1.3 G, Brio Satya E, dll"
+                value={formData.model}
+                onChange={(e) =>
+                  setFormData({ ...formData, model: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Tahun Pembuatan *
+              </label>
+              <input
+                required
+                type="number"
+                min={1990}
+                max={new Date().getFullYear() + 1}
+                value={formData.year}
+                onChange={(e) =>
+                  setFormData({ ...formData, year: Number(e.target.value) })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Transmisi *
+              </label>
+              <select
+                value={formData.transmission}
+                onChange={(e) =>
+                  setFormData({ ...formData, transmission: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              >
+                <option value="AUTOMATIC">Automatic (AT)</option>
+                <option value="MANUAL">Manual (MT)</option>
+                <option value="CVT">CVT</option>
+                <option value="DCT">DCT</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Warna Kendaraan *
+              </label>
+              <input
+                required
+                type="text"
+                placeholder="Putih Metalik, Hitam, Abu-abu"
+                value={formData.color}
+                onChange={(e) =>
+                  setFormData({ ...formData, color: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Kapasitas Mesin (CC) *
+              </label>
+              <input
+                required
+                type="number"
+                min={500}
+                placeholder="1500"
+                value={formData.engineCapacity}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    engineCapacity: Number(e.target.value),
+                  })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Odometer (KM)
+              </label>
+              <input
+                type="number"
+                min={0}
+                placeholder="45000"
+                value={formData.odometer}
+                onChange={(e) =>
+                  setFormData({ ...formData, odometer: Number(e.target.value) })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              YouTube Video Walkaround (Opsional)
+            </label>
+            <div className="flex items-center gap-2">
+              <div className="h-11 px-3 rounded-xl bg-red-100 flex items-center justify-center border border-red-200">
+                <Video className="w-5 h-5 text-red-600" />
+              </div>
+              <input
+                type="text"
+                placeholder="Masukkan ID Video YouTube (contoh: dQw4w9WgXcQ) atau link lengkap"
+                value={formData.youtubeVideoId}
+                onChange={(e) => {
+                  let val = e.target.value.trim();
+                  // Extract ID if full URL is pasted
+                  if (val.includes("youtube.com/watch?v=")) {
+                    val = val.split("watch?v=")[1]?.split("&")[0] || val;
+                  } else if (val.includes("youtu.be/")) {
+                    val = val.split("youtu.be/")[1]?.split("?")[0] || val;
+                  }
+                  setFormData({ ...formData, youtubeVideoId: val });
+                }}
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+            </div>
+            <span className="text-[10px] text-[#6B6560] mt-1 block">
+              Video walkaround unit akan langsung tampil tertanam (embedded) pada halaman katalog pembeli.
+            </span>
+          </div>
+        </div>
+
+        {/* SECTION 4: Keuangan & Harga */}
+        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
+            <Banknote className="w-4 h-4 text-[#D97706]" />
+            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              4. Finansial &amp; Rencana Harga Jual
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Harga Beli / Menang Lelang (Rp) *
+              </label>
+              <input
+                required
+                type="number"
+                placeholder="150000000"
+                value={formData.purchasePrice || ""}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    purchasePrice: Number(e.target.value),
+                  })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Otomatis dicatat sebagai HPP awal unit
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Target Banderol Jual (Rp)
+              </label>
+              <input
+                type="number"
+                placeholder="170000000"
+                value={formData.targetSellingPrice}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    targetSellingPrice: e.target.value,
+                  })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-emerald-300 rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Harga publish yang tertera di katalog publik
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Batas Bawah Nego / Net (Rp)
+              </label>
+              <input
+                type="number"
+                placeholder="162000000"
+                value={formData.minSellingPrice}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    minSellingPrice: e.target.value,
+                  })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-amber-300 rounded-xl text-sm font-medium text-[#92400E] focus:outline-none focus:ring-2 focus:ring-[#92400E]/40"
+              />
+              <span className="text-[10px] text-[#6B6560] mt-1 block">
+                Pedoman batas tawar untuk tim sales internal
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 5: Ceklist Bawaan Fisik Turun Towing */}
+        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EBE7E1] pb-3">
+            <div className="flex items-center gap-2">
+              <ShieldAlert className="w-4 h-4 text-[#D97706]" />
+              <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+                5. Ceklist Bawaan Fisik Turun Towing (Anti-Kehilangan)
+              </h2>
+            </div>
+            <span className="text-[11px] font-semibold text-[#92400E] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full border border-[#D97706]/30">
+              SOP Balai Lelang &amp; Ekspedisi
+            </span>
+          </div>
+
+          <p className="text-xs text-[#6B6560]">
+            Periksa kelengkapan fisik saat unit dibongkar dari truk towing. Data ini otomatis masuk ke laporan inspeksi, surat jalan bengkel, dan mencegah kebocoran HPP.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
+            {/* 1. Ban Serep */}
+            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
+                <Disc className="w-3.5 h-3.5 text-[#D97706]" />
+                <span>Ban Cadangan / Serep</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, spareTire: "ADA_BAGUS" })}
+                  className={cn(
+                    "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                    physicalChecklist.spareTire === "ADA_BAGUS"
+                      ? "bg-[#16A34A] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✓ Ada (Bagus)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, spareTire: "ADA_AUS" })}
+                  className={cn(
+                    "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                    physicalChecklist.spareTire === "ADA_AUS"
+                      ? "bg-[#D97706] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ⚠️ Ada (Aus)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, spareTire: "TIDAK_ADA" })}
+                  className={cn(
+                    "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                    physicalChecklist.spareTire === "TIDAK_ADA"
+                      ? "bg-[#DC2626] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✕ Tidak Ada
+                </button>
+              </div>
+            </div>
+
+            {/* 2. Dongkrak & Stang */}
+            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
+                <Wrench className="w-3.5 h-3.5 text-[#D97706]" />
+                <span>Dongkrak &amp; Tuas Stang</span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, jack: true })}
+                  className={cn(
+                    "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
+                    physicalChecklist.jack
+                      ? "bg-[#16A34A] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✓ Ada &amp; Fungsi
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, jack: false })}
+                  className={cn(
+                    "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
+                    !physicalChecklist.jack
+                      ? "bg-[#DC2626] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✕ Tidak Ada
+                </button>
+              </div>
+            </div>
+
+            {/* 3. Kunci Roda & Toolkit */}
+            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
+                <Wrench className="w-3.5 h-3.5 text-[#D97706]" />
+                <span>Kunci Roda &amp; Toolkit</span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, wheelWrench: true })}
+                  className={cn(
+                    "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
+                    physicalChecklist.wheelWrench
+                      ? "bg-[#16A34A] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✓ Ada Lengkap
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, wheelWrench: false })}
+                  className={cn(
+                    "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
+                    !physicalChecklist.wheelWrench
+                      ? "bg-[#DC2626] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✕ Tidak Ada
+                </button>
+              </div>
+            </div>
+
+            {/* 4. Kunci Kontak & Remote Cadangan */}
+            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
+                <Key className="w-3.5 h-3.5 text-[#D97706]" />
+                <span>Kunci Kontak &amp; Remote</span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, keysCount: "2_KEYS" })}
+                  className={cn(
+                    "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
+                    physicalChecklist.keysCount === "2_KEYS"
+                      ? "bg-[#16A34A] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✓ Lengkap 2 Kunci
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, keysCount: "1_KEY" })}
+                  className={cn(
+                    "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
+                    physicalChecklist.keysCount === "1_KEY"
+                      ? "bg-[#D97706] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ⚠️ Hanya 1 Kunci
+                </button>
+              </div>
+            </div>
+
+            {/* 5. Buku Manual & Servis */}
+            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
+                <BookOpen className="w-3.5 h-3.5 text-[#D97706]" />
+                <span>Buku Manual &amp; Servis</span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, serviceBook: true })}
+                  className={cn(
+                    "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
+                    physicalChecklist.serviceBook
+                      ? "bg-[#16A34A] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✓ Ada
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, serviceBook: false })}
+                  className={cn(
+                    "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
+                    !physicalChecklist.serviceBook
+                      ? "bg-[#78716C] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✕ Tidak Ada
+                </button>
+              </div>
+            </div>
+
+            {/* 6. Head Unit / Audio */}
+            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
+                <Volume2 className="w-3.5 h-3.5 text-[#D97706]" />
+                <span>Head Unit / Audio</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, audioUnit: "ORIGINAL" })}
+                  className={cn(
+                    "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                    physicalChecklist.audioUnit === "ORIGINAL"
+                      ? "bg-[#16A34A] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✓ Original
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, audioUnit: "MODIFIED" })}
+                  className={cn(
+                    "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                    physicalChecklist.audioUnit === "MODIFIED"
+                      ? "bg-[#2563EB] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ⚡ Android/Layar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPhysicalChecklist({ ...physicalChecklist, audioUnit: "BROKEN_OR_NONE" })}
+                  className={cn(
+                    "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                    physicalChecklist.audioUnit === "BROKEN_OR_NONE"
+                      ? "bg-[#DC2626] text-white shadow-xs"
+                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                  )}
+                >
+                  ✕ Rusak/Hilang
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 6: Catatan & Lokasi Garasi */}
+        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-3">
+          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
+            <FileText className="w-4 h-4 text-[#D97706]" />
+            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              6. Catatan Kondisi &amp; Lokasi Garasi
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Lokasi Parkir Unit Saat Ini
+              </label>
+              <input
+                type="text"
+                value={formData.currentLocation}
+                onChange={(e) =>
+                  setFormData({ ...formData, currentLocation: e.target.value })
+                }
+                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                Catatan Kondisi Khusus / Kelengkapan
+              </label>
+              <textarea
+                rows={2}
+                placeholder="Contoh: Kunci serep ada, buku servis lengkap, baret tipis di bemper depan..."
+                value={formData.notes}
+                onChange={(e) =>
+                  setFormData({ ...formData, notes: e.target.value })
+                }
+                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] resize-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Actions Bar */}
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4 sticky bottom-4 shadow-lg z-20">
+          <Link
+            href="/admin/inventory"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+          >
+            Batal &amp; Kembali
+          </Link>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Menyimpan Perubahan Unit...</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-4 h-4" />
+                <span>Simpan Semua Perubahan Data Unit</span>
+              </>
+            )}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}

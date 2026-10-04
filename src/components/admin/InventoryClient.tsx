@@ -88,7 +88,6 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
   // Modals state
   const [showAddModal, setShowAddModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [selectedVehicleForEdit, setSelectedVehicleForEdit] = useState<VehicleItem | null>(null);
   const [selectedVehicleForExpense, setSelectedVehicleForExpense] = useState<VehicleItem | null>(null);
   const [selectedVehicleForStatus, setSelectedVehicleForStatus] = useState<VehicleItem | null>(null);
   const [selectedVehicleForMedia, setSelectedVehicleForMedia] = useState<VehicleItem | null>(null);
@@ -463,14 +462,13 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           )}
 
                           {/* Quick Edit Unit & Katalog Button */}
-                          <button
-                            type="button"
-                            onClick={() => setSelectedVehicleForEdit(vehicle)}
+                          <Link
+                            href={`/admin/inventory/${vehicle.id}/edit`}
                             className="p-1.5 rounded-lg border border-[#D9D4CB] bg-[#EFECE8] hover:bg-[#D9D4CB] text-[#1C1917] transition-colors cursor-pointer shrink-0"
-                            title="Edit Data Unit & Informasi Katalog"
+                            title="Edit Semua Data Unit (Form Lengkap Intake)"
                           >
                             <Pencil className="w-4 h-4 text-[#D97706]" />
-                          </button>
+                          </Link>
 
                           {/* 2. Menu Dropdown [Titik Tiga ...] */}
                           <div className="relative">
@@ -498,17 +496,13 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                                 className="absolute right-0 top-full mt-1.5 w-56 bg-white border border-[#D9D4CB] rounded-xl shadow-xl z-30 py-1.5 text-left text-xs divide-y divide-[#EFECE8]"
                               >
                                 <div className="py-1">
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setSelectedVehicleForEdit(vehicle);
-                                      setOpenDropdownId(null);
-                                    }}
-                                    className="w-full text-left flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors cursor-pointer"
+                                  <Link
+                                    href={`/admin/inventory/${vehicle.id}/edit`}
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors"
                                   >
                                     <Pencil className="w-4 h-4 text-[#D97706]" />
-                                    <span>Edit Data Unit (Katalog)</span>
-                                  </button>
+                                    <span>Edit Semua Data Unit</span>
+                                  </Link>
 
                                   <Link
                                     href={`/admin/inspections/${vehicle.id}`}
@@ -690,34 +684,6 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
         <MediaUploadModal
           vehicle={selectedVehicleForMedia}
           onClose={() => setSelectedVehicleForMedia(null)}
-        />
-      )}
-
-      {/* 5. Modal Edit Data Unit / Katalog */}
-      {selectedVehicleForEdit && (
-        <EditVehicleModal
-          vehicle={selectedVehicleForEdit}
-          onClose={() => setSelectedVehicleForEdit(null)}
-          onSuccess={(updatedFields) => {
-            setVehicles((prev) =>
-              prev.map((v) => {
-                if (v.id === selectedVehicleForEdit.id) {
-                  const newPurchasePrice =
-                    updatedFields.purchasePrice !== undefined
-                      ? (updatedFields.purchasePrice as number)
-                      : v.purchasePrice;
-                  const newTotalHpp = newPurchasePrice + v.totalExpenses;
-                  return {
-                    ...v,
-                    ...updatedFields,
-                    totalHpp: newTotalHpp,
-                  };
-                }
-                return v;
-              })
-            );
-            setSelectedVehicleForEdit(null);
-          }}
         />
       )}
     </div>
@@ -1735,381 +1701,6 @@ function MediaUploadModal({
             >
               <UploadCloud className="w-4 h-4" />
               <span>{uploading ? "Mengunggah..." : "Upload Sekarang"}</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-// ── MODAL EDIT DATA UNIT (KATALOG) ──────────────────────────────
-function EditVehicleModal({
-  vehicle,
-  onClose,
-  onSuccess,
-}: {
-  vehicle: VehicleItem;
-  onClose: () => void;
-  onSuccess: (updated: Partial<VehicleItem>) => void;
-}) {
-  const [formData, setFormData] = useState({
-    plateNumber: vehicle.plateNumber || "",
-    brand: vehicle.brand || "",
-    model: vehicle.model || "",
-    year: vehicle.year || new Date().getFullYear(),
-    color: vehicle.color || "",
-    transmission: vehicle.transmission || "AUTOMATIC",
-    engineCapacity: vehicle.engineCapacity || 1500,
-    odometer: vehicle.odometer || 0,
-    purchasePrice: vehicle.purchasePrice || 0,
-    purchaseDate: vehicle.purchaseDate
-      ? new Date(vehicle.purchaseDate).toISOString().split("T")[0]
-      : new Date().toISOString().split("T")[0],
-    targetSellingPrice: vehicle.targetSellingPrice ?? "",
-    minSellingPrice: vehicle.minSellingPrice ?? "",
-    currentLocation: vehicle.currentLocation || "Garasi Utama",
-    notes: vehicle.notes || "",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMsg("");
-
-    try {
-      const res = await updateVehicleAction(vehicle.id, {
-        plateNumber: formData.plateNumber,
-        brand: formData.brand,
-        model: formData.model,
-        year: Number(formData.year),
-        color: formData.color,
-        transmission: formData.transmission as any,
-        engineCapacity: Number(formData.engineCapacity),
-        odometer: Number(formData.odometer),
-        purchasePrice: Number(formData.purchasePrice),
-        purchaseDate: new Date(formData.purchaseDate),
-        targetSellingPrice:
-          formData.targetSellingPrice !== "" ? Number(formData.targetSellingPrice) : null,
-        minSellingPrice:
-          formData.minSellingPrice !== "" ? Number(formData.minSellingPrice) : null,
-        currentLocation: formData.currentLocation,
-        notes: formData.notes,
-      });
-
-      if (!res.success) {
-        throw new Error(res.error || "Gagal memperbarui data kendaraan");
-      }
-
-      onSuccess({
-        plateNumber: formData.plateNumber.toUpperCase().trim(),
-        brand: formData.brand.trim(),
-        model: formData.model.trim(),
-        year: Number(formData.year),
-        color: formData.color.trim(),
-        transmission: formData.transmission,
-        engineCapacity: Number(formData.engineCapacity),
-        odometer: Number(formData.odometer),
-        purchasePrice: Number(formData.purchasePrice),
-        purchaseDate: formData.purchaseDate,
-        targetSellingPrice:
-          formData.targetSellingPrice !== "" ? Number(formData.targetSellingPrice) : null,
-        minSellingPrice:
-          formData.minSellingPrice !== "" ? Number(formData.minSellingPrice) : null,
-        currentLocation: formData.currentLocation.trim(),
-        notes: formData.notes,
-      });
-    } catch (err: any) {
-      setErrorMsg(err.message || "Gagal memperbarui data unit");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-[#F7F5F2] border border-[#D9D4CB] rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-2xl p-6 animate-in fade-in zoom-in-95 duration-150">
-        <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-4 mb-5">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center border border-amber-300">
-              <Pencil className="w-5 h-5 text-[#D97706]" />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold text-[#1C1917]">Edit Data Unit &amp; Informasi Katalog</h2>
-              <p className="text-xs text-[#6B6560]">
-                {vehicle.plateNumber} • {vehicle.brand} {vehicle.model} ({vehicle.year})
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-[#6B6560] hover:text-[#1C1917] font-bold text-xl cursor-pointer p-1"
-          >
-            ✕
-          </button>
-        </div>
-
-        {errorMsg && (
-          <div className="mb-4 p-3 rounded-lg bg-[#FEE2E2] border border-[#DC2626]/30 text-[#DC2626] text-xs font-semibold flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 shrink-0" />
-            <span>{errorMsg}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Bagian 1: Identitas Pokok */}
-          <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 space-y-3">
-            <div className="text-xs font-bold text-[#1C1917] border-b border-[#EBE7E1] pb-2 flex items-center gap-2">
-              <CarFront className="w-4 h-4 text-[#D97706]" />
-              <span>Identitas &amp; Dokumen Pokok Unit</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">
-                  Nomor Plat Kendaraan *
-                </label>
-                <input
-                  required
-                  type="text"
-                  value={formData.plateNumber}
-                  onChange={(e) =>
-                    setFormData({ ...formData, plateNumber: e.target.value.toUpperCase() })
-                  }
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm font-bold uppercase"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">
-                  Tanggal Beli / Intake *
-                </label>
-                <input
-                  required
-                  type="date"
-                  value={formData.purchaseDate}
-                  onChange={(e) =>
-                    setFormData({ ...formData, purchaseDate: e.target.value })
-                  }
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">Merk *</label>
-                <input
-                  required
-                  type="text"
-                  placeholder="Toyota, Honda, dll"
-                  value={formData.brand}
-                  onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">
-                  Tipe / Model *
-                </label>
-                <input
-                  required
-                  type="text"
-                  placeholder="Innova Reborn, Brio RS, dll"
-                  value={formData.model}
-                  onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">Tahun *</label>
-                <input
-                  required
-                  type="number"
-                  value={formData.year}
-                  onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Bagian 2: Spesifikasi & Posisi */}
-          <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 space-y-3">
-            <div className="text-xs font-bold text-[#1C1917] border-b border-[#EBE7E1] pb-2 flex items-center gap-2">
-              <Layers className="w-4 h-4 text-[#2563EB]" />
-              <span>Spesifikasi Mesin, Transmisi &amp; Lokasi</span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">Transmisi</label>
-                <select
-                  value={formData.transmission}
-                  onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
-                >
-                  <option value="AUTOMATIC">Automatic (AT)</option>
-                  <option value="MANUAL">Manual (MT)</option>
-                  <option value="CVT">CVT</option>
-                  <option value="DCT">DCT</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">Warna *</label>
-                <input
-                  required
-                  type="text"
-                  value={formData.color}
-                  onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">
-                  Odometer (km)
-                </label>
-                <input
-                  type="number"
-                  min={0}
-                  value={formData.odometer}
-                  onChange={(e) => setFormData({ ...formData, odometer: Number(e.target.value) })}
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">CC Mesin</label>
-                <input
-                  type="number"
-                  min={500}
-                  value={formData.engineCapacity}
-                  onChange={(e) =>
-                    setFormData({ ...formData, engineCapacity: Number(e.target.value) })
-                  }
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">
-                Lokasi Parkir / Garasi
-              </label>
-              <input
-                type="text"
-                placeholder="Garasi Utama, Salon AutoClean, dll"
-                value={formData.currentLocation}
-                onChange={(e) => setFormData({ ...formData, currentLocation: e.target.value })}
-                className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Bagian 3: Harga Beli & Listing Katalog */}
-          <div className="bg-white border border-amber-200 rounded-xl p-4 space-y-3">
-            <div className="text-xs font-bold text-[#1C1917] border-b border-[#EBE7E1] pb-2 flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <DollarSign className="w-4 h-4 text-[#16A34A]" />
-                <span>Modal Beli &amp; Harga Jual Katalog</span>
-              </span>
-              <span className="text-[11px] font-normal text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                Otomatis update tampilan website publik
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">
-                  Harga Beli / Modal (Rp) *
-                </label>
-                <input
-                  required
-                  type="number"
-                  value={formData.purchasePrice || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, purchasePrice: Number(e.target.value) })
-                  }
-                  className="w-full h-10 px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm font-bold text-[#1C1917]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">
-                  Target Listing Katalog (Rp)
-                </label>
-                <input
-                  type="number"
-                  placeholder="Harga pasang di website"
-                  value={formData.targetSellingPrice}
-                  onChange={(e) =>
-                    setFormData({ ...formData, targetSellingPrice: e.target.value })
-                  }
-                  className="w-full h-10 px-3 py-2 bg-white border border-emerald-300 rounded-lg text-sm font-bold text-[#16A34A]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1">
-                  Batas Bawah Nego (Rp)
-                </label>
-                <input
-                  type="number"
-                  placeholder="Acuan negosiasi sales"
-                  value={formData.minSellingPrice}
-                  onChange={(e) =>
-                    setFormData({ ...formData, minSellingPrice: e.target.value })
-                  }
-                  className="w-full h-10 px-3 py-2 bg-white border border-amber-300 rounded-lg text-sm font-medium text-[#92400E]"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Bagian 4: Catatan Unit */}
-          <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1">
-              Catatan Unit / Kondisi Tambahan
-            </label>
-            <textarea
-              rows={3}
-              placeholder="Catatan kondisi, kelengkapan, riwayat servis, atau instruksi khusus..."
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm resize-none focus:outline-none focus:border-[#D97706]"
-            />
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#D9D4CB]">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm text-[#6B6560] hover:text-[#1C1917] font-semibold cursor-pointer"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-5 py-2.5 bg-[#D97706] hover:bg-[#B45309] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Menyimpan...</span>
-                </>
-              ) : (
-                <>
-                  <Pencil className="w-4 h-4" />
-                  <span>Simpan Perubahan Unit &amp; Katalog</span>
-                </>
-              )}
             </button>
           </div>
         </form>
