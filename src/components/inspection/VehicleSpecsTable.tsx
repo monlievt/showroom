@@ -14,7 +14,8 @@ import {
   FileText,
   AlertTriangle,
   Clock,
-  Sparkles
+  Sparkles,
+  Info
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
@@ -117,24 +118,24 @@ export function VehicleSpecsTable({ vehicle, inspection }: VehicleSpecsProps) {
           </div>
         </div>
       ) : (
-        <div className="bg-[#FAF9F6] border border-amber-300 rounded-2xl p-5 shadow-sm">
+        <div className="bg-[#FAF9F6] border border-[#D9D4CB] rounded-2xl p-5 shadow-sm">
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-amber-500 text-white shadow-sm shrink-0">
-              <Clock className="w-6 h-6 mb-1 opacity-90" />
-              <span className="text-[9px] uppercase font-black tracking-wider text-center leading-tight">
-                TAHAP CEK
+            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-[#EFECE8] border border-[#D9D4CB] text-[#6B6560] shadow-2xs shrink-0">
+              <Info className="w-6 h-6 mb-1 text-[#8C827A]" />
+              <span className="text-[9px] uppercase font-bold tracking-wider text-center leading-tight">
+                INFORMASI
               </span>
             </div>
             <div className="space-y-1 text-center sm:text-left">
-              <div className="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-800 uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                <span>Inspeksi Fisik Belum Dilakukan / Dalam Antrean</span>
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#6B6560] uppercase tracking-wider">
+                <Info className="w-3.5 h-3.5 text-[#8C827A]" />
+                <span>Inspeksi Digital Belum Tersedia</span>
               </div>
               <h3 className="text-base font-bold text-[#1C1917]">
                 Kartu Skor &amp; Grade Belum Diterbitkan
               </h3>
               <p className="text-xs text-[#6B6560] leading-relaxed">
-                Unit ini baru tiba di showroom kami dan sedang dalam antrean uji kelayakan teknis 160 titik. Skor 4 pilar (Mesin, Interior, Eksterior, Rangka) beserta sertifikat digital akan diterbitkan otomatis setelah teknisi kami menyelesaikan cek fisik dan test drive.
+                Unit ini belum memiliki skor inspeksi digital 4 pilar (Mesin, Interior, Eksterior, Rangka) dan dijual siap pakai sesuai spesifikasi fisik yang tertera. Calon pembeli dipersilakan melakukan cek fisik langsung, test drive, atau membawa mekanik rekanan ke showroom kami.
               </p>
             </div>
           </div>

@@ -403,10 +403,10 @@ export function VehicleGallery({
               <Camera className="w-6 h-6" />
             </div>
             <h4 className="font-bold text-base text-[#1C1917] mb-1">
-              Foto Kategori Ini Belum Diunggah
+              Foto Kategori Ini Belum Tersedia
             </h4>
             <p className="text-xs text-[#6B6560] max-w-sm mb-4 leading-relaxed">
-              Arsip foto untuk bagian ini sedang dalam proses pemotretan & verifikasi tim inspeksi.
+              Belum ada arsip foto khusus untuk kategori ini. Silakan pilih kategori lain atau lihat semua foto unit.
             </p>
             <button
               type="button"

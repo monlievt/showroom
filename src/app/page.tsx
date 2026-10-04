@@ -317,7 +317,7 @@ export default async function HomePage() {
                   Segera Hadir di Showroom (Upcoming Stock)
                 </h2>
                 <p className="text-xs sm:text-sm text-[#6B6560] mt-1">
-                  Unit baru tiba yang sedang menjalani rekondisi minor dan antrean cek fisik 160 titik. Anda bisa booking atau tanya lebih awal.
+                  Unit baru tiba yang sedang menjalani rekondisi minor dan persiapan siap jual. Anda bisa booking atau tanya lebih awal.
                 </p>
               </div>
               <Link
