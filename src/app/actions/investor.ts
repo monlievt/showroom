@@ -238,3 +238,80 @@ export async function getInvestorDetails(investorId: string) {
     return { success: false, error: error.message || "Gagal mengambil rincian investor" };
   }
 }
+
+export async function deleteInvestor(id: string, actorUserId: string = "system") {
+  try {
+    const existing = await prisma.investor.findUnique({
+      where: { id },
+      include: {
+        investments: true,
+        distributions: true,
+        ledgerEntries: true,
+        userProfile: true,
+      },
+    });
+
+    if (!existing) {
+      return { success: false, error: "Akun investor tidak ditemukan" };
+    }
+
+    // Cek jika investor masih mendanai unit mobil aktif
+    if (existing.investments.length > 0) {
+      return {
+        success: false,
+        error: `Investor masih memiliki ${existing.investments.length} alokasi pendanaan unit mobil aktif. Hapus atau alihkan pendanaan terlebih dahulu.`,
+      };
+    }
+
+    // Cek jika investor sudah pernah menerima pembagian laba yang tercatat
+    if (existing.distributions.length > 0) {
+      return {
+        success: false,
+        error: `Investor memiliki riwayat pembagian hasil (${existing.distributions.length} transaksi). Akun tidak dapat dihapus demi audit keuangan.`,
+      };
+    }
+
+    await prisma.$transaction(async (tx) => {
+      // 1. Bersihkan buku modal jika ada
+      if (existing.ledgerEntries.length > 0) {
+        await tx.capitalLedger.deleteMany({
+          where: { investorId: id },
+        });
+      }
+
+      // 2. Putuskan hubungan ke UserProfile jika ada
+      if (existing.userProfile) {
+        await tx.userProfile.update({
+          where: { id: existing.userProfile.id },
+          data: { investorId: null },
+        });
+      }
+
+      // 3. Hapus akun investor
+      await tx.investor.delete({
+        where: { id },
+      });
+
+      // 4. Audit Log
+      await tx.auditLog.create({
+        data: {
+          actorUserId,
+          action: "DELETE",
+          entityType: "Investor",
+          entityId: id,
+          beforeData: existing as any,
+        },
+      });
+    });
+
+    revalidatePath("/admin/investors");
+    revalidatePath("/admin/investors/accounts");
+    revalidatePath("/admin/finance");
+
+    return { success: true, message: `Akun investor ${existing.name} berhasil dihapus.` };
+  } catch (error: any) {
+    console.error("Error deleting investor:", error);
+    return { success: false, error: error.message || "Gagal menghapus akun investor" };
+  }
+}
+

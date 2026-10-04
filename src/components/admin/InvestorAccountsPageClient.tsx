@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { formatRupiah, formatDate, cn } from "@/lib/utils";
 import { depositInvestorCapital } from "@/app/actions/capital-ledger";
-import { createInvestor, updateInvestor } from "@/app/actions/investor";
+import { createInvestor, updateInvestor, deleteInvestor } from "@/app/actions/investor";
 import { InvestorSubNav } from "./InvestorSubNav";
 
 export interface InvestorItem {
@@ -65,9 +65,16 @@ export function InvestorAccountsPageClient({
   pendingCount,
   totalHistoryCount,
 }: InvestorAccountsProps) {
+  const [investorList, setInvestorList] = useState<InvestorItem[]>(investors);
   const [showDepositModal, setShowDepositModal] = useState(false);
   const [showInvestorModal, setShowInvestorModal] = useState(false);
   const [editingInvestor, setEditingInvestor] = useState<InvestorItem | null>(null);
+  const [deletingInvestor, setDeletingInvestor] = useState<InvestorItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  React.useEffect(() => {
+    setInvestorList(investors);
+  }, [investors]);
 
   // Form State: Setor Modal
   const [selectedInvestorId, setSelectedInvestorId] = useState("");
@@ -236,8 +243,28 @@ export function InvestorAccountsPageClient({
     });
     setLoading(false);
 
-    if (res.success) {
+    if (res.success && res.data) {
       showNotification("Investor baru berhasil ditambahkan!", "success");
+      setInvestorList((prev) => [
+        {
+          id: res.data!.id,
+          name: res.data!.name,
+          phone: res.data!.phone,
+          type: res.data!.type,
+          bankName: res.data!.bankName,
+          bankAccountNumber: res.data!.bankAccountNumber,
+          bankAccountName: res.data!.bankAccountName,
+          defaultProfitSharePercent: res.data!.defaultProfitSharePercent
+            ? Number(res.data!.defaultProfitSharePercent)
+            : null,
+          createdAt: res.data!.createdAt,
+          currentBalance: 0,
+          investmentsCount: 0,
+          totalProfitDistributed: 0,
+          investments: [],
+        },
+        ...prev,
+      ]);
       setShowInvestorModal(false);
       setNewInvestorName("");
       setNewInvestorPhone("");
@@ -269,15 +296,52 @@ export function InvestorAccountsPageClient({
     });
     setLoading(false);
 
-    if (res.success) {
+    if (res.success && res.data) {
       showNotification("Data investor dan rekening berhasil diperbarui!", "success");
+      setInvestorList((prev) =>
+        prev.map((i) =>
+          i.id === editingInvestor.id
+            ? {
+                ...i,
+                name: res.data!.name,
+                phone: res.data!.phone,
+                type: res.data!.type,
+                bankName: res.data!.bankName,
+                bankAccountNumber: res.data!.bankAccountNumber,
+                bankAccountName: res.data!.bankAccountName,
+                defaultProfitSharePercent: res.data!.defaultProfitSharePercent
+                  ? Number(res.data!.defaultProfitSharePercent)
+                  : null,
+              }
+            : i
+        )
+      );
       setEditingInvestor(null);
     } else {
       showNotification(res.error || "Gagal memperbarui data investor", "error");
     }
   };
 
-  const filteredInvestors = investors.filter((inv) => {
+  const handleDeleteInvestor = async () => {
+    if (!deletingInvestor) return;
+    setIsDeleting(true);
+    try {
+      const res = await deleteInvestor(deletingInvestor.id);
+      if (res.success) {
+        showNotification(res.message || "Akun investor berhasil dihapus.", "success");
+        setInvestorList((prev) => prev.filter((i) => i.id !== deletingInvestor.id));
+        setDeletingInvestor(null);
+      } else {
+        showNotification(res.error || "Gagal menghapus investor.", "error");
+      }
+    } catch (err: any) {
+      showNotification(err.message || "Terjadi kesalahan saat menghapus investor.", "error");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const filteredInvestors = investorList.filter((inv) => {
     const matchType = typeFilter === "ALL" || inv.type === typeFilter;
     const matchSearch =
       inv.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -287,8 +351,8 @@ export function InvestorAccountsPageClient({
     return matchType && matchSearch;
   });
 
-  const totalCapitalInPool = investors.reduce((sum, inv) => sum + Number(inv.currentBalance), 0);
-  const totalProfitGiven = investors.reduce((sum, inv) => sum + Number(inv.totalProfitDistributed), 0);
+  const totalCapitalInPool = investorList.reduce((sum, inv) => sum + Number(inv.currentBalance), 0);
+  const totalProfitGiven = investorList.reduce((sum, inv) => sum + Number(inv.totalProfitDistributed), 0);
 
   return (
     <div className="space-y-6">
@@ -443,6 +507,14 @@ export function InvestorAccountsPageClient({
                     title="Edit Profil & Rekening Investor"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    onClick={() => setDeletingInvestor(inv)}
+                    className="p-1 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer"
+                    title="Hapus Akun Investor"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -876,6 +948,62 @@ export function InvestorAccountsPageClient({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingInvestor && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full border border-red-200 shadow-xl overflow-hidden p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center gap-3 text-red-600">
+              <div className="p-3 bg-red-100 rounded-xl">
+                <Trash2 className="w-6 h-6 text-red-600" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-[#1C1917]">Hapus Akun Investor?</h3>
+                <p className="text-xs text-[#6B6560]">Tindakan ini permanen dan menghapus akun mitra ini.</p>
+              </div>
+            </div>
+
+            <div className="p-3.5 bg-red-50/60 rounded-xl border border-red-100 text-xs text-[#44403C] space-y-1">
+              <p>
+                <strong>Nama:</strong> {deletingInvestor.name}
+              </p>
+              <p>
+                <strong>Kategori:</strong>{" "}
+                {deletingInvestor.type === "MOTHER_SIBLING"
+                  ? "Ibu / 4 Saudara"
+                  : deletingInvestor.type === "OWNER_EQUITY"
+                  ? "Owner Equity"
+                  : "Pihak Ketiga"}
+              </p>
+              {deletingInvestor.bankName && (
+                <p>
+                  <strong>Rekening:</strong> {deletingInvestor.bankName} - {deletingInvestor.bankAccountNumber}
+                </p>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#EBE7E1]">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setDeletingInvestor(null)}
+                className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={handleDeleteInvestor}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5 shadow-xs disabled:opacity-50"
+              >
+                {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                <span>{isDeleting ? "Menghapus..." : "Ya, Hapus Akun"}</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
