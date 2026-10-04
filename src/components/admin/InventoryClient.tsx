@@ -29,7 +29,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { ImportSpreadsheetPanel } from "./ImportSpreadsheetPanel";
-import { formatRupiah, formatDate, cn } from "@/lib/utils";
+import { formatRupiah, formatDate, cn, formatThousands, parseThousands } from "@/lib/utils";
 import { generateVehicleSlug } from "@/lib/utils/slug";
 import { createVehicleAction, updateVehicleStatusAction, updateVehicleAction } from "@/app/actions/vehicle";
 import { createExpenseAction } from "@/app/actions/expense";
@@ -1104,20 +1104,20 @@ function AddVehicleModal({
             <div>
               <label className="block text-xs font-semibold text-[#1C1917] mb-1">Odometer (km)</label>
               <input
-                type="number"
-                min={0}
-                value={formData.odometer}
-                onChange={(e) => setFormData({ ...formData, odometer: Number(e.target.value) })}
+                type="text"
+                inputMode="numeric"
+                value={formatThousands(formData.odometer)}
+                onChange={(e) => setFormData({ ...formData, odometer: parseThousands(e.target.value) })}
                 className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
               />
             </div>
             <div>
               <label className="block text-xs font-semibold text-[#1C1917] mb-1">CC Mesin</label>
               <input
-                type="number"
-                min={500}
-                value={formData.engineCapacity}
-                onChange={(e) => setFormData({ ...formData, engineCapacity: Number(e.target.value) })}
+                type="text"
+                inputMode="numeric"
+                value={formatThousands(formData.engineCapacity)}
+                onChange={(e) => setFormData({ ...formData, engineCapacity: parseThousands(e.target.value) })}
                 className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
               />
             </div>
@@ -1129,30 +1129,33 @@ function AddVehicleModal({
               <label className="block text-xs font-semibold text-[#1C1917] mb-1">Harga Beli (Rp) *</label>
               <input
                 required
-                type="number"
-                placeholder="150000000"
-                value={formData.purchasePrice || ""}
-                onChange={(e) => setFormData({ ...formData, purchasePrice: Number(e.target.value) })}
+                type="text"
+                inputMode="numeric"
+                placeholder="150.000.000"
+                value={formData.purchasePrice ? formatThousands(formData.purchasePrice) : ""}
+                onChange={(e) => setFormData({ ...formData, purchasePrice: parseThousands(e.target.value) })}
                 className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm font-bold text-[#1C1917]"
               />
             </div>
             <div>
               <label className="block text-xs font-semibold text-[#1C1917] mb-1">Target Banderol Jual</label>
               <input
-                type="number"
-                placeholder="165000000"
-                value={formData.targetSellingPrice || ""}
-                onChange={(e) => setFormData({ ...formData, targetSellingPrice: Number(e.target.value) })}
+                type="text"
+                inputMode="numeric"
+                placeholder="165.000.000"
+                value={formData.targetSellingPrice ? formatThousands(formData.targetSellingPrice) : ""}
+                onChange={(e) => setFormData({ ...formData, targetSellingPrice: parseThousands(e.target.value) })}
                 className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm text-[#16A34A] font-bold"
               />
             </div>
             <div>
               <label className="block text-xs font-semibold text-[#1C1917] mb-1">Batas Bawah Nego (Net)</label>
               <input
-                type="number"
-                placeholder="158000000"
-                value={formData.minSellingPrice || ""}
-                onChange={(e) => setFormData({ ...formData, minSellingPrice: Number(e.target.value) })}
+                type="text"
+                inputMode="numeric"
+                placeholder="158.000.000"
+                value={formData.minSellingPrice ? formatThousands(formData.minSellingPrice) : ""}
+                onChange={(e) => setFormData({ ...formData, minSellingPrice: parseThousands(e.target.value) })}
                 className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm text-[#92400E] font-medium"
               />
             </div>
@@ -1310,10 +1313,11 @@ function AddExpenseModal({
             <label className="block text-xs font-semibold text-[#1C1917] mb-1">Nominal Biaya (Rp)</label>
             <input
               required
-              type="number"
-              placeholder="Contoh: 1500000"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              type="text"
+              inputMode="numeric"
+              placeholder="Contoh: 1.500.000"
+              value={amount !== "" ? formatThousands(amount) : ""}
+              onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
               className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm font-bold text-[#1C1917]"
             />
           </div>

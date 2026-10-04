@@ -31,7 +31,7 @@ import {
   FileBadge,
 } from "lucide-react";
 import { createSaleAction } from "@/app/actions/sale";
-import { formatRupiah, cn } from "@/lib/utils";
+import { formatRupiah, cn, formatThousands, parseThousands } from "@/lib/utils";
 
 interface AvailableVehicle {
   id: string;
@@ -414,11 +414,11 @@ export function SaleNewClient({
               </label>
               <input
                 required
-                type="number"
-                min={1}
-                placeholder="Contoh: 165000000"
-                value={sellingPrice}
-                onChange={(e) => setSellingPrice(Number(e.target.value))}
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 165.000.000"
+                value={sellingPrice !== "" ? formatThousands(sellingPrice) : ""}
+                onChange={(e) => setSellingPrice(parseThousands(e.target.value) || "")}
                 className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
               />
             </div>
@@ -510,15 +510,11 @@ export function SaleNewClient({
                 Nominal DP / Pembayaran Masuk (Rp) *
               </label>
               <input
-                type="number"
-                min={0}
-                placeholder="Contoh: 105000000"
-                value={initialPaymentAmount}
-                onChange={(e) =>
-                  setInitialPaymentAmount(
-                    e.target.value === "" ? "" : Number(e.target.value)
-                  )
-                }
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 105.000.000"
+                value={initialPaymentAmount !== "" ? formatThousands(initialPaymentAmount) : ""}
+                onChange={(e) => setInitialPaymentAmount(parseThousands(e.target.value) || "")}
                 className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
               />
               <span className="text-[10px] text-[#6B6560] mt-1 block">
@@ -934,13 +930,11 @@ export function SaleNewClient({
                 <span>Odometer Terakhir Saat Serah Terima (KM)</span>
               </label>
               <input
-                type="number"
-                min={0}
-                placeholder="Contoh: 19850"
-                value={handoverOdometer}
-                onChange={(e) =>
-                  setHandoverOdometer(e.target.value === "" ? "" : Number(e.target.value))
-                }
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 19.850"
+                value={handoverOdometer !== "" ? formatThousands(handoverOdometer) : ""}
+                onChange={(e) => setHandoverOdometer(parseThousands(e.target.value) || "")}
                 className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
               />
               <span className="text-[10px] text-[#6B6560] mt-1 block">
@@ -1033,13 +1027,11 @@ export function SaleNewClient({
                   Nominal Komisi Makelar (Rp)
                 </label>
                 <input
-                  type="number"
-                  min={0}
-                  placeholder="Contoh: 1500000"
-                  value={brokerFee}
-                  onChange={(e) =>
-                    setBrokerFee(e.target.value === "" ? "" : Number(e.target.value))
-                  }
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="Contoh: 1.500.000"
+                  value={brokerFee !== "" ? formatThousands(brokerFee) : ""}
+                  onChange={(e) => setBrokerFee(parseThousands(e.target.value) || "")}
                   className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-xl text-xs font-bold text-[#D97706] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
                 />
                 {brokerFeeNum > 0 && (

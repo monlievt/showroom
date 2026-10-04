@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { updateVehicleAction } from "@/app/actions/vehicle";
 import { generateVehicleSlug } from "@/lib/utils/slug";
-import { cn } from "@/lib/utils";
+import { cn, formatThousands, parseThousands } from "@/lib/utils";
 
 // AUCTION PRESETS
 const AUCTION_HOUSE_PRESETS: Record<
@@ -482,14 +482,14 @@ export function VehicleEditClient({ vehicle }: VehicleEditClientProps) {
                 Estimasi Pajak Tahunan (Rp)
               </label>
               <input
-                type="number"
-                min={0}
-                placeholder="Contoh: 2800000"
-                value={formData.taxNominal || ""}
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 2.800.000"
+                value={formatThousands(formData.taxNominal)}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    taxNominal: Number(e.target.value),
+                    taxNominal: parseThousands(e.target.value),
                   })
                 }
                 className="w-full h-11 px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
@@ -692,12 +692,12 @@ export function VehicleEditClient({ vehicle }: VehicleEditClientProps) {
                 Odometer (KM)
               </label>
               <input
-                type="number"
-                min={0}
-                placeholder="45000"
-                value={formData.odometer}
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 45.000"
+                value={formatThousands(formData.odometer)}
                 onChange={(e) =>
-                  setFormData({ ...formData, odometer: Number(e.target.value) })
+                  setFormData({ ...formData, odometer: parseThousands(e.target.value) })
                 }
                 className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
               />
@@ -751,13 +751,14 @@ export function VehicleEditClient({ vehicle }: VehicleEditClientProps) {
               </label>
               <input
                 required
-                type="number"
-                placeholder="150000000"
-                value={formData.purchasePrice || ""}
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 150.000.000"
+                value={formatThousands(formData.purchasePrice)}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    purchasePrice: Number(e.target.value),
+                    purchasePrice: parseThousands(e.target.value),
                   })
                 }
                 className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
@@ -772,13 +773,14 @@ export function VehicleEditClient({ vehicle }: VehicleEditClientProps) {
                 Target Banderol Jual (Rp)
               </label>
               <input
-                type="number"
-                placeholder="170000000"
-                value={formData.targetSellingPrice}
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 170.000.000"
+                value={formatThousands(formData.targetSellingPrice)}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    targetSellingPrice: e.target.value,
+                    targetSellingPrice: parseThousands(e.target.value),
                   })
                 }
                 className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-emerald-300 rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
@@ -793,13 +795,14 @@ export function VehicleEditClient({ vehicle }: VehicleEditClientProps) {
                 Batas Bawah Nego / Net (Rp)
               </label>
               <input
-                type="number"
-                placeholder="162000000"
-                value={formData.minSellingPrice}
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 162.000.000"
+                value={formatThousands(formData.minSellingPrice)}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    minSellingPrice: e.target.value,
+                    minSellingPrice: parseThousands(e.target.value),
                   })
                 }
                 className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-amber-300 rounded-xl text-sm font-medium text-[#92400E] focus:outline-none focus:ring-2 focus:ring-[#92400E]/40"

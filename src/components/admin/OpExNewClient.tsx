@@ -15,6 +15,7 @@ import {
   Loader2,
   Info,
 } from "lucide-react";
+import { formatThousands, parseThousands } from "@/lib/utils";
 import { recordOperationalExpense } from "@/app/actions/operational-expense";
 import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
@@ -160,15 +161,11 @@ export function OpExNewClient() {
               </label>
               <input
                 required
-                type="number"
-                min={1}
-                placeholder="Contoh: 1500000"
-                value={amount}
-                onChange={(e) =>
-                  setAmount(
-                    e.target.value === "" ? "" : Number(e.target.value)
-                  )
-                }
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 1.500.000"
+                value={amount !== "" ? formatThousands(amount) : ""}
+                onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
                 className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
             </div>

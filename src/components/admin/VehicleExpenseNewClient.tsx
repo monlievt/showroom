@@ -17,7 +17,7 @@ import {
   Car,
 } from "lucide-react";
 import { createExpenseAction } from "@/app/actions/expense";
-import { formatRupiah } from "@/lib/utils";
+import { formatRupiah, formatThousands, parseThousands } from "@/lib/utils";
 import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
 interface VehicleSummary {
@@ -238,11 +238,11 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
               </label>
               <input
                 required
-                type="number"
-                min={1}
-                placeholder="Contoh: 750000"
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 750.000"
+                value={amount ? formatThousands(amount) : ""}
+                onChange={(e) => setAmount(parseThousands(e.target.value) || 0)}
                 className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
               />
             </div>

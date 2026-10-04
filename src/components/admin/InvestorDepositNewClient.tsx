@@ -21,6 +21,7 @@ import {
   Trash2,
   Image as ImageIcon,
 } from "lucide-react";
+import { formatThousands, parseThousands } from "@/lib/utils";
 import { depositInvestorCapital } from "@/app/actions/capital-ledger";
 
 interface InvestorOption {
@@ -276,15 +277,11 @@ export function InvestorDepositNewClient({
             </label>
             <input
               required
-              type="number"
-              min={1}
-              placeholder="Contoh: 50000000"
-              value={amount}
-              onChange={(e) =>
-                setAmount(
-                  e.target.value === "" ? "" : Number(e.target.value)
-                )
-              }
+              type="text"
+              inputMode="numeric"
+              placeholder="Contoh: 50.000.000"
+              value={amount !== "" ? formatThousands(amount) : ""}
+              onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
               className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
             />
           </div>

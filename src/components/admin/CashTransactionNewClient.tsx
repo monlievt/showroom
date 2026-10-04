@@ -14,6 +14,7 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
+import { formatThousands, parseThousands } from "@/lib/utils";
 import { recordManualCashTransaction } from "@/app/actions/cash-transaction";
 import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
@@ -139,13 +140,11 @@ export function CashTransactionNewClient() {
             </label>
             <input
               required
-              type="number"
-              min={1}
-              placeholder="Contoh: 5000000"
-              value={amount}
-              onChange={(e) =>
-                setAmount(e.target.value === "" ? "" : Number(e.target.value))
-              }
+              type="text"
+              inputMode="numeric"
+              placeholder="Contoh: 5.000.000"
+              value={amount !== "" ? formatThousands(amount) : ""}
+              onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
               className={`w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 ${
                 isIncome
                   ? "text-emerald-700 focus:ring-emerald-500/20"

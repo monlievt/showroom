@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Bell,
   RotateCcw,
@@ -528,51 +528,7 @@ export function SettingsClient({ logs, auditLogs, initialSettings = [] }: Settin
 
       {/* TAB 2: AUDIT LOG */}
       {activeTab === "audit" && (
-        <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm">
-          <div className="p-5 border-b border-[#D9D4CB] bg-[#FBF9F6]">
-            <h3 className="font-bold text-[#1C1917]">Jejak Audit Finansial & Operasional</h3>
-            <p className="text-xs text-[#6B6560] mt-0.5">
-              Setiap pembuatan unit, pencatatan beban biaya, alokasi modal, dan eksekusi bagi hasil tersimpan di AuditLog.
-            </p>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold">
-                <tr>
-                  <th className="py-3 px-4">Waktu</th>
-                  <th className="py-3 px-4">Aksi</th>
-                  <th className="py-3 px-4">Entitas</th>
-                  <th className="py-3 px-4">ID Referensi</th>
-                  <th className="py-3 px-4">Pelaku (User)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
-                {auditLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-[#FAF9F6]">
-                    <td className="py-3 px-4 text-xs text-[#6B6560] whitespace-nowrap">
-                      {formatDate(log.createdAt)}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className="text-xs font-bold text-[#1C1917] bg-[#F7F5F2] border border-[#D9D4CB] px-2 py-0.5 rounded">
-                        {log.action}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-xs font-semibold text-[#D97706]">
-                      {log.entityType}
-                    </td>
-                    <td className="py-3 px-4 text-xs text-[#6B6560] font-mono">
-                      {log.entityId}
-                    </td>
-                    <td className="py-3 px-4 text-xs text-[#1C1917]">
-                      {log.actorUserId}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <AuditLogTab auditLogs={auditLogs} />
       )}
 
       {/* TAB 3: BACKUP MULTI-LAYER & DISASTER RECOVERY */}
@@ -726,6 +682,293 @@ export function SettingsClient({ logs, auditLogs, initialSettings = [] }: Settin
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── AuditLogTab Component ─────────────────────────────────────────────────────
+
+type AuditLogEntry = {
+  id: string;
+  actorUserId: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  createdAt: string | Date;
+  afterData?: any;
+};
+
+const ACTION_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
+  CREATE:        { bg: "bg-green-50",  text: "text-green-700",  border: "border-green-200",  label: "Buat" },
+  UPDATE:        { bg: "bg-blue-50",   text: "text-blue-700",   border: "border-blue-200",   label: "Ubah" },
+  VOID:          { bg: "bg-red-50",    text: "text-red-700",    border: "border-red-200",    label: "Batal" },
+  CORRECTION:    { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-200", label: "Koreksi" },
+  PROFIT_SHARE:  { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200", label: "Bagi Hasil" },
+  SALE:          { bg: "bg-amber-50",  text: "text-amber-700",  border: "border-amber-200",  label: "Penjualan" },
+  STATUS_CHANGE: { bg: "bg-sky-50",    text: "text-sky-700",    border: "border-sky-200",    label: "Ubah Status" },
+};
+
+const ENTITY_LABELS: Record<string, string> = {
+  Vehicle:            "Unit Kendaraan",
+  Expense:            "Beban Unit",
+  Sale:               "Penjualan",
+  Investment:         "Modal Investor",
+  CapitalLedger:      "Buku Modal",
+  ProfitShareRule:    "Aturan Bagi Hasil",
+  OperationalExpense: "Pengeluaran Ops",
+  CashTransaction:    "Kas Masuk/Keluar",
+  Asset:              "Aset Inventaris",
+  Setting:            "Pengaturan",
+  Investor:           "Investor",
+};
+
+function formatDateTime(date: string | Date): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Jakarta",
+  }).format(d);
+}
+
+function getEntityLink(entityType: string, entityId: string): string | null {
+  switch (entityType) {
+    case "Vehicle":  return `/admin/inventory/${entityId}`;
+    case "Sale":     return `/admin/inventory/${entityId}`;
+    case "OperationalExpense":
+    case "CashTransaction": return `/admin/finance`;
+    case "Asset":    return `/admin/assets`;
+    case "Investor":
+    case "Investment":
+    case "CapitalLedger":
+    case "ProfitShareRule": return `/admin/investors`;
+    default: return null;
+  }
+}
+
+function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [filterAction, setFilterAction] = useState("ALL");
+  const [filterEntity, setFilterEntity] = useState("ALL");
+  const [searchId, setSearchId] = useState("");
+
+  const uniqueActions = useMemo(
+    () => ["ALL", ...Array.from(new Set(auditLogs.map((l) => l.action)))],
+    [auditLogs]
+  );
+  const uniqueEntities = useMemo(
+    () => ["ALL", ...Array.from(new Set(auditLogs.map((l) => l.entityType)))],
+    [auditLogs]
+  );
+
+  const filtered = useMemo(() => {
+    return auditLogs.filter((log) => {
+      if (filterAction !== "ALL" && log.action !== filterAction) return false;
+      if (filterEntity !== "ALL" && log.entityType !== filterEntity) return false;
+      if (searchId && !log.entityId.toLowerCase().includes(searchId.toLowerCase())) return false;
+      return true;
+    });
+  }, [auditLogs, filterAction, filterEntity, searchId]);
+
+  return (
+    <div className="space-y-4">
+      <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm">
+        {/* Header */}
+        <div className="p-5 border-b border-[#D9D4CB] bg-[#FBF9F6] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 className="font-bold text-[#1C1917] flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-[#D97706]" />
+              Jejak Audit Finansial &amp; Operasional
+            </h3>
+            <p className="text-xs text-[#6B6560] mt-0.5">
+              {auditLogs.length} entri tercatat &middot; Klik <strong>Lihat</strong> pada baris untuk membuka detail perubahan data
+            </p>
+          </div>
+          <span className="text-xs bg-amber-50 border border-amber-200 text-amber-700 font-bold px-3 py-1 rounded-full self-start sm:self-auto whitespace-nowrap">
+            Immutable &middot; Read-only
+          </span>
+        </div>
+
+        {/* Filter Bar */}
+        <div className="px-4 py-3 border-b border-[#D9D4CB] bg-[#FAF9F6] flex flex-wrap gap-3 items-center">
+          <div className="flex items-center gap-2">
+            <Search className="w-3.5 h-3.5 text-[#6B6560]" />
+            <input
+              type="text"
+              placeholder="Cari ID Referensi..."
+              value={searchId}
+              onChange={(e) => setSearchId(e.target.value)}
+              className="border border-[#D9D4CB] rounded-lg px-3 py-1.5 bg-white text-xs w-48 focus:outline-none focus:ring-1 focus:ring-[#D97706]"
+            />
+          </div>
+          <select
+            value={filterAction}
+            onChange={(e) => setFilterAction(e.target.value)}
+            className="border border-[#D9D4CB] rounded-lg px-3 py-1.5 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-[#D97706]"
+          >
+            {uniqueActions.map((a) => (
+              <option key={a} value={a}>{a === "ALL" ? "Semua Aksi" : a}</option>
+            ))}
+          </select>
+          <select
+            value={filterEntity}
+            onChange={(e) => setFilterEntity(e.target.value)}
+            className="border border-[#D9D4CB] rounded-lg px-3 py-1.5 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-[#D97706]"
+          >
+            {uniqueEntities.map((e) => (
+              <option key={e} value={e}>
+                {e === "ALL" ? "Semua Entitas" : (ENTITY_LABELS[e] ?? e)}
+              </option>
+            ))}
+          </select>
+          {(filterAction !== "ALL" || filterEntity !== "ALL" || searchId) && (
+            <button
+              onClick={() => { setFilterAction("ALL"); setFilterEntity("ALL"); setSearchId(""); }}
+              className="text-xs text-[#6B6560] hover:text-[#1C1917] underline"
+            >
+              Reset filter
+            </button>
+          )}
+          <span className="ml-auto text-xs text-[#6B6560] whitespace-nowrap">{filtered.length} ditampilkan</span>
+        </div>
+
+        {/* Empty state */}
+        {filtered.length === 0 ? (
+          <div className="py-16 flex flex-col items-center gap-3 text-center px-4">
+            <ShieldCheck className="w-10 h-10 text-[#D9D4CB]" />
+            <p className="text-sm font-semibold text-[#1C1917]">
+              {auditLogs.length === 0 ? "Belum ada jejak audit" : "Tidak ada hasil filter"}
+            </p>
+            <p className="text-xs text-[#6B6560] max-w-xs">
+              {auditLogs.length === 0
+                ? "Jejak audit muncul otomatis saat ada transaksi: pembuatan unit, catat biaya, penjualan, dll."
+                : "Coba ubah filter atau reset untuk melihat semua entri."}
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold border-b border-[#D9D4CB]">
+                <tr>
+                  <th className="py-3 px-4 w-40">Waktu</th>
+                  <th className="py-3 px-4 w-28">Aksi</th>
+                  <th className="py-3 px-4">Entitas</th>
+                  <th className="py-3 px-4">ID Referensi</th>
+                  <th className="py-3 px-4">Pelaku</th>
+                  <th className="py-3 px-4 w-16 text-center">Detail</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#D9D4CB]">
+                {filtered.map((log) => {
+                  const actionStyle = ACTION_COLORS[log.action] ?? {
+                    bg: "bg-stone-50", text: "text-stone-700", border: "border-stone-200", label: log.action,
+                  };
+                  const entityLink = getEntityLink(log.entityType, log.entityId);
+                  const isExpanded = expandedId === log.id;
+                  const hasDetail =
+                    log.afterData != null &&
+                    typeof log.afterData === "object" &&
+                    Object.keys(log.afterData).length > 0;
+
+                  return (
+                    <React.Fragment key={log.id}>
+                      <tr className={cn("transition-colors", isExpanded ? "bg-amber-50/40" : "hover:bg-[#FAF9F6]")}>
+                        {/* Waktu */}
+                        <td className="py-3 px-4 text-xs text-[#6B6560] whitespace-nowrap">
+                          {formatDateTime(log.createdAt)}
+                        </td>
+                        {/* Aksi */}
+                        <td className="py-3 px-4">
+                          <span className={cn("text-xs font-bold px-2 py-0.5 rounded-full border", actionStyle.bg, actionStyle.text, actionStyle.border)}>
+                            {actionStyle.label}
+                          </span>
+                        </td>
+                        {/* Entitas */}
+                        <td className="py-3 px-4 text-xs font-semibold text-[#D97706]">
+                          {ENTITY_LABELS[log.entityType] ?? log.entityType}
+                        </td>
+                        {/* ID Referensi */}
+                        <td className="py-3 px-4">
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className="text-xs text-[#6B6560] font-mono truncate max-w-[160px]"
+                              title={log.entityId}
+                            >
+                              {log.entityId.length > 20
+                                ? `${log.entityId.slice(0, 8)}…${log.entityId.slice(-6)}`
+                                : log.entityId}
+                            </span>
+                            {entityLink && (
+                              <a
+                                href={entityLink}
+                                className="text-[#D97706] hover:text-amber-700 shrink-0"
+                                title="Buka halaman terkait"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                          </div>
+                        </td>
+                        {/* Pelaku */}
+                        <td className="py-3 px-4 text-xs text-[#1C1917] font-medium">
+                          {log.actorUserId === "SYSTEM" ? (
+                            <span className="text-[#6B6560] italic">Sistem</span>
+                          ) : (
+                            <span title={log.actorUserId}>
+                              {log.actorUserId.length > 20
+                                ? `${log.actorUserId.slice(0, 16)}…`
+                                : log.actorUserId}
+                            </span>
+                          )}
+                        </td>
+                        {/* Detail toggle */}
+                        <td className="py-3 px-4 text-center">
+                          {hasDetail ? (
+                            <button
+                              onClick={() => setExpandedId(isExpanded ? null : log.id)}
+                              className={cn(
+                                "text-xs px-2.5 py-1 rounded-lg border transition-colors font-medium",
+                                isExpanded
+                                  ? "bg-amber-100 border-amber-300 text-amber-700"
+                                  : "bg-white border-[#D9D4CB] text-[#6B6560] hover:border-amber-300 hover:text-amber-700"
+                              )}
+                            >
+                              {isExpanded ? "Tutup" : "Lihat"}
+                            </button>
+                          ) : (
+                            <span className="text-xs text-[#D9D4CB]">–</span>
+                          )}
+                        </td>
+                      </tr>
+
+                      {/* Expanded Detail Row */}
+                      {isExpanded && hasDetail && (
+                        <tr className="bg-amber-50/20">
+                          <td colSpan={6} className="px-6 pb-5 pt-2">
+                            <div className="bg-white border border-amber-200 rounded-xl p-4">
+                              <p className="text-xs font-bold text-[#1C1917] mb-3 flex items-center gap-1.5">
+                                <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+                                Data setelah perubahan (afterData)
+                              </p>
+                              <pre className="text-xs text-[#6B6560] whitespace-pre-wrap break-all leading-relaxed font-mono bg-stone-50 rounded-lg p-3 border border-stone-200 max-h-72 overflow-y-auto">
+                                {JSON.stringify(log.afterData, null, 2)}
+                              </pre>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

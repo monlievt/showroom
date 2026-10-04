@@ -48,3 +48,24 @@ export function parseProofUrls(proofUrl?: string | null): string[] {
   return [proofUrl];
 }
 
+/**
+ * Format angka atau string angka ke format ribuan dengan pemisah titik (misal: 150000000 -> "150.000.000")
+ */
+export function formatThousands(value: number | string | null | undefined): string {
+  if (value === null || value === undefined || value === "") return "";
+  const cleaned = String(value).replace(/\D/g, "");
+  if (!cleaned) return "";
+  return new Intl.NumberFormat("id-ID").format(Number(cleaned));
+}
+
+/**
+ * Parse string dengan pemisah ribuan titik/koma menjadi angka integer (misal: "150.000.000" -> 150000000)
+ */
+export function parseThousands(value: string | number | null | undefined): number {
+  if (value === null || value === undefined) return 0;
+  if (typeof value === "number") return value;
+  const cleaned = value.replace(/\D/g, "");
+  return cleaned ? parseInt(cleaned, 10) : 0;
+}
+
+
