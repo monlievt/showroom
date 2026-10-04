@@ -22,7 +22,8 @@ import {
   Sliders,
   PanelLeftClose,
   PanelLeftOpen,
-  LayoutDashboard
+  LayoutDashboard,
+  History
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/actions/auth";
@@ -237,6 +238,29 @@ export function AdminSidebar({
                 )}
               />
               {!isCollapsed && <span className="truncate">Penjualan & Piutang</span>}
+            </Link>
+          )}
+
+          {/* 4b. Arsip & Benchmark Toko Lama */}
+          {!isSales && (
+            <Link
+              href="/admin/archive"
+              title={isCollapsed ? "Arsip & Benchmark" : undefined}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                pathname.startsWith("/admin/archive")
+                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
+                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                isCollapsed && "justify-center px-0"
+              )}
+            >
+              <History
+                className={cn(
+                  "w-4 h-4 shrink-0",
+                  pathname.startsWith("/admin/archive") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                )}
+              />
+              {!isCollapsed && <span className="truncate">Arsip & Benchmark</span>}
             </Link>
           )}
 

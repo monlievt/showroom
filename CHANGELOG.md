@@ -26,16 +26,15 @@
 
 Pada rilis ini, seluruh data riwayat bisnis showroom dari tahun 2021 hingga unit terkini diimpor secara presisi ke dalam sistem produksi:
 
+* **🌟 Pemisahan Bersih — Entitas Khusus Arsip & Benchmark (`HistoricalSale`):**
+  - Mengarsipkan seluruh 127 penjualan mobil lama (2021-2025) ke tabel terpisah `HistoricalSale` agar tidak mengotori buku kas harian maupun memunculkan setoran modal semu.
+  - Membuka halaman baru **`/admin/archive` (Arsip & Benchmark Harga)** lengkap dengan statistik akumulasi omzet Rp 14,94 Miliar, laba historis Rp 683,6 Juta, filter merk/tahun, serta modal pop-up rincian biaya HPP dan tombol edit.
 * **🌟 Onboarding 13 Unit Stok Aktif Garasi (`Vehicle`):**
-  - Mengonversi data kulakan unit berjalan ke dalam Inventori Aktif dengan status `READY_FOR_SALE` dan `IN_REPAIR` (Gran Max Blindvan).
+  - Hanya 13 unit mobil/motor riil yang masih ada di garasi yang masuk ke Inventori Aktif dengan status `READY_FOR_SALE` dan `IN_REPAIR` (Gran Max Blindvan).
   - Mengintegrasikan harga jual estimasi sebagai `targetSellingPrice` di katalog publik (Stargazer BK1953AEE, Stargazer BK1959AEE, Ertiga GX B2437TBZ, Ertiga Diesel DD1271YA, Confero L1229MX).
   - Masing-masing unit dapat diedit spesifikasi, harga pasang, rincian biaya, atau langsung dicatat penjualannya saat laku di dunia nyata.
-* **🌟 Import 127 Unit Penjualan Historis (`Vehicle` & `Sale`):**
-  - Mengimpor 59 unit dari arsip 2021-2024 dan 68 unit dari buku transaksi terbaru berstatus `SOLD_SETTLED`.
-  - Merekam 529 rincian biaya perbaikan, admin lelang, ongkos ambil unit, poles, cat body, dan spareparts.
-  - Menghubungkan 126 transaksi penjualan resmi beserta mutasi pelunasannya.
-* **🌟 Buku Kas Berjalan & Rekonsiliasi Neraca:**
-  - Menghasilkan 796 mutasi kas masuk/keluar (`CashTransaction`) dengan pencatatan saldo kas berjalan (`runningBalance`).
+* **🌟 Buku Kas Bersih & Murni (Clean Cash Flow):**
+  - Buku kas toko dibersihkan dari 796 mutasi historis masa lalu dan saldo modal gaib 500jt. Buku kas siap mencatat saldo kas riil toko Anda dari hari ini ke depan.
 * **🌟 Script Importer Terpadu (`npm run db:import-history`):**
   - Menambahkan script otomasi `prisma/seed-history.ts` dan dataset `prisma/history-data.json` agar sinkronisasi di server VPS produksi dapat dijalankan dalam satu perintah.
 

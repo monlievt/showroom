@@ -681,3 +681,35 @@ model WorkshopSupplyUsage {
   @@index([usedDate])
 }
 
+// ── ARSIP & BENCHMARK PENJUALAN HISTORIS (TOKO LAMA) ────────────────────────
+model HistoricalSale {
+  id                  String    @id @default(uuid())
+  plateNumber         String
+  brand               String
+  model               String
+  year                Int
+  color               String?   @default("HITAM")
+  transmission        String?   @default("MANUAL")
+  sourceType          String?   @default("AUCTION")
+  auctionHouse        String?
+  purchasePrice       Decimal   @db.Decimal(15, 2)
+  purchaseDate        DateTime?
+  repairExpenses      Decimal   @db.Decimal(15, 2) @default(0)
+  totalHpp            Decimal   @db.Decimal(15, 2)
+  sellingPrice        Decimal   @db.Decimal(15, 2)
+  saleDate            DateTime?
+  grossProfit         Decimal   @db.Decimal(15, 2)
+  buyerName           String?
+  notes               String?   @db.Text
+  expenseDetails      Json?
+  distributionDetails Json?
+  sourceFile          String?   // "File 1 (2021-2024)" | "File 2 (2024-2025)"
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  @@index([plateNumber])
+  @@index([brand])
+  @@index([year])
+  @@index([saleDate])
+}
+
