@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import Decimal from "decimal.js";
 import { prisma } from "@/lib/prisma";
 import { createVehicleSchema, type CreateVehicleInput } from "@/lib/validations/vehicle";
 import { canTransition, type VehicleStatus } from "@/lib/calculations/vehicle-state";
@@ -398,6 +399,50 @@ export async function deleteVehicleDocumentAction(documentId: string, vehicleId:
   } catch (error: any) {
     console.error("Error deleting vehicle document:", error);
     return { success: false, error: error.message || "Gagal menghapus dokumen" };
+  }
+}
+
+export async function updateVehicleAction(
+  vehicleId: string,
+  data: {
+    brand?: string;
+    model?: string;
+    year?: number;
+    color?: string;
+    odometer?: number;
+    targetSellingPrice?: number | null;
+    minSellingPrice?: number | null;
+    notes?: string | null;
+    currentLocation?: string;
+  }
+) {
+  try {
+    const updated = await prisma.vehicle.update({
+      where: { id: vehicleId },
+      data: {
+        ...(data.brand && { brand: data.brand }),
+        ...(data.model && { model: data.model }),
+        ...(data.year && { year: data.year }),
+        ...(data.color && { color: data.color }),
+        ...(data.odometer !== undefined && { odometer: data.odometer }),
+        ...(data.targetSellingPrice !== undefined && {
+          targetSellingPrice: data.targetSellingPrice ? new Decimal(data.targetSellingPrice) : null,
+        }),
+        ...(data.minSellingPrice !== undefined && {
+          minSellingPrice: data.minSellingPrice ? new Decimal(data.minSellingPrice) : null,
+        }),
+        ...(data.notes !== undefined && { notes: data.notes }),
+        ...(data.currentLocation && { currentLocation: data.currentLocation }),
+      },
+    });
+
+    revalidatePath("/admin/inventory");
+    revalidatePath(`/admin/inventory/${vehicleId}`);
+    revalidatePath("/katalog");
+    return { success: true, data: updated };
+  } catch (error: any) {
+    console.error("Error updating vehicle details:", error);
+    return { success: false, error: error.message || "Gagal memperbarui data unit kendaraan" };
   }
 }
 

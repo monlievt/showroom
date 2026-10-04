@@ -1,0 +1,6077 @@
+{
+  "investors": [
+    {
+      "name": "Owner Nur Mobil",
+      "type": "OWNER_EQUITY",
+      "phone": "081234567890"
+    },
+    {
+      "name": "Uti (Ibu)",
+      "type": "MOTHER_SIBLING",
+      "phone": "081234567891"
+    },
+    {
+      "name": "Rio Hatta Prayogi",
+      "type": "MOTHER_SIBLING",
+      "phone": "081234567892"
+    },
+    {
+      "name": "Mirna Yekti Anggraini",
+      "type": "MOTHER_SIBLING",
+      "phone": "081234567893"
+    },
+    {
+      "name": "Shinta Nurmala Sanza",
+      "type": "MOTHER_SIBLING",
+      "phone": "081234567894"
+    },
+    {
+      "name": "Bu Khusnul",
+      "type": "THIRD_PARTY",
+      "phone": "081234567895"
+    },
+    {
+      "name": "Pak Harya",
+      "type": "THIRD_PARTY",
+      "phone": "081234567896"
+    }
+  ],
+  "activeVehicles": [
+    {
+      "sheet": "B2190TIF",
+      "plateNumber": "B2190TIF",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU SIGRA D 1.0 MT 2019",
+      "year": 2019,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1000,
+      "sourceType": "AUCTION",
+      "auctionHouse": "LEGOAS",
+      "purchasePrice": 66500000.0,
+      "purchaseDate": "2025-12-02",
+      "targetSellingPrice": null,
+      "totalHpp": 75011000.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2500000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 4500000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1311000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "W3204NEQ",
+      "plateNumber": "W3204NEQ",
+      "brand": "HONDA",
+      "model": "HONDA SONIC 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 150,
+      "sourceType": "AUCTION",
+      "auctionHouse": "SMARTBID",
+      "purchasePrice": 11466600.0,
+      "purchaseDate": "2025-08-22",
+      "targetSellingPrice": null,
+      "totalHpp": 14301600.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 750000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 116600.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 500000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 90000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 745000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 750000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "AG2737EFF",
+      "plateNumber": "AG2737EFF",
+      "brand": "HONDA",
+      "model": "HONSA VARIO 160 2024",
+      "year": 2024,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 160,
+      "sourceType": "AUCTION",
+      "auctionHouse": "SMARTBID",
+      "purchasePrice": 21879900.0,
+      "purchaseDate": "2024-09-25",
+      "targetSellingPrice": null,
+      "totalHpp": 22184900.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 750000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 229900.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 105000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 100000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "AG2977PAT",
+      "plateNumber": "AG2977PAT",
+      "brand": "HONDA",
+      "model": "HONSA VARIO 160 2024",
+      "year": 2024,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 160,
+      "sourceType": "AUCTION",
+      "auctionHouse": "SMARTBID",
+      "purchasePrice": 21475500.0,
+      "purchaseDate": "2024-09-25",
+      "targetSellingPrice": null,
+      "totalHpp": 21780500.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 750000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 225500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 105000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 100000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "B3200ESY",
+      "plateNumber": "B3200ESY",
+      "brand": "YAMAHA",
+      "model": "YAMAHA AEROX 155 ABS 2021",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 155,
+      "sourceType": "AUCTION",
+      "auctionHouse": "CAREADY",
+      "purchasePrice": 18192500.0,
+      "purchaseDate": "2025-08-06",
+      "targetSellingPrice": null,
+      "totalHpp": 19176500.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 500000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 192500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 105000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 779000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "L1229MX",
+      "plateNumber": "L1229MX",
+      "brand": "WULING",
+      "model": "WULING CONFERO S 2019",
+      "year": 2019,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "CAREADY",
+      "purchasePrice": 79000000.0,
+      "purchaseDate": "2026-08-14",
+      "targetSellingPrice": 89000000.0,
+      "totalHpp": 83750000.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 700000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 850000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 500000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 2300000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "D8745FN",
+      "plateNumber": "D8745FN",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU GRAN MAX BLINDVAN 1.3 AC",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1300,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 70000000.0,
+      "purchaseDate": "2026-07-24",
+      "targetSellingPrice": null,
+      "totalHpp": 84710000.0,
+      "status": "IN_REPAIR",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 1100000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 13385000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 125000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "B1442NZN",
+      "plateNumber": "B1442NZN",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU SIGRA D MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 74500000.0,
+      "purchaseDate": "2026-08-10",
+      "targetSellingPrice": null,
+      "totalHpp": 81687000.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 700000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 5000000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 387000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "H1187CS",
+      "plateNumber": "H1187CS",
+      "brand": "TOYOTA",
+      "model": "TOYOTA AVANZA G MT 2022 ABU-ABU",
+      "year": 2022,
+      "color": "ABU-ABU",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 153000000.0,
+      "purchaseDate": "2026-08-10",
+      "targetSellingPrice": null,
+      "totalHpp": 159470000.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 1000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2500000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 750000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1120000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "DD1271YA",
+      "plateNumber": "DD1271YA",
+      "brand": "SUZUKI",
+      "model": "SUZUKI ERTIGA DIESEL 2016",
+      "year": 2016,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "HYBID",
+      "purchasePrice": 60621500.0,
+      "purchaseDate": "2026-08-21",
+      "targetSellingPrice": 115000000.0,
+      "totalHpp": 93321500.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3500000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 621500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 600000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 750000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "OTHER",
+          "amount": 26628500.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "B2437TBZ",
+      "plateNumber": "B2437TBZ",
+      "brand": "SUZUKI",
+      "model": "SUZUKI ALL NEW ERTIGA GX MT",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "LEGOAS",
+      "purchasePrice": 134000000.0,
+      "purchaseDate": "2026-08-10",
+      "targetSellingPrice": 155000000.0,
+      "totalHpp": 142450000.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 350000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 350000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1200000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "OTHER",
+          "amount": 250000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "BK1959AEE",
+      "plateNumber": "BK1959AEE",
+      "brand": "HYUNDAI",
+      "model": "STARGAZER TREND MT 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 122000000.0,
+      "purchaseDate": "2026-09-18",
+      "targetSellingPrice": 143000000.0,
+      "totalHpp": 123715000.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 38000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 700000.0,
+          "notes": "Poles & Salon"
+        }
+      ],
+      "sale": null
+    },
+    {
+      "sheet": "BK1953AEE",
+      "plateNumber": "BK1953AEE",
+      "brand": "HYUNDAI",
+      "model": "STARGAZER TREND MT 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 125000000.0,
+      "purchaseDate": "2026-09-25",
+      "targetSellingPrice": 143000000.0,
+      "totalHpp": 127474000.0,
+      "status": "READY_FOR_SALE",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 180000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 700000.0,
+          "notes": "Poles & Salon"
+        }
+      ],
+      "sale": null
+    }
+  ],
+  "soldVehicles": [
+    {
+      "sheet": "B1552NZL",
+      "plateNumber": "B1552NZL",
+      "brand": "WULING",
+      "model": "WULING CONFERO S ABS 2020",
+      "year": 2020,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 72500000.0,
+      "purchaseDate": "2026-01-23",
+      "targetSellingPrice": null,
+      "totalHpp": 81755000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1900000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 4105000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-01-30",
+        "sellingPrice": 87000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2421BZA",
+      "plateNumber": "B2421BZA",
+      "brand": "LAINNYA",
+      "model": "IGNIS GX MT BIRU 2017",
+      "year": 2017,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "ALTO",
+      "purchasePrice": 87413000.0,
+      "purchaseDate": "2025-04-10",
+      "targetSellingPrice": null,
+      "totalHpp": 99588000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3500000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 913000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 227000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 400000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 7927000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-08-03",
+        "sellingPrice": 103000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2422TON",
+      "plateNumber": "B2422TON",
+      "brand": "SUZUKI",
+      "model": "SUZUKI ERTIGA GL 2017",
+      "year": 2017,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "HYBID",
+      "purchasePrice": 101000000.0,
+      "purchaseDate": "2025-01-21",
+      "targetSellingPrice": null,
+      "totalHpp": 109645000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 2500000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 1900000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 4000000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 750000.0,
+          "notes": "Poles & Salon"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-03-09",
+        "sellingPrice": 118000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "D1795AKI",
+      "plateNumber": "D1795AKI",
+      "brand": "SUZUKI",
+      "model": "SUZUKI ALL NEW ERTIGA GL 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "HYBID",
+      "purchasePrice": 143023500.0,
+      "purchaseDate": "2024-12-19",
+      "targetSellingPrice": null,
+      "totalHpp": 149571000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1523500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 737500.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 3250000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2024-12-31",
+        "sellingPrice": 165000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1214WUP",
+      "plateNumber": "B1214WUP",
+      "brand": "WULING",
+      "model": "WULING CORTEZ 1.8 AMT 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "AUTOMATIC",
+      "engineCapacity": 1800,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 90000000.0,
+      "purchaseDate": "2025-01-25",
+      "targetSellingPrice": null,
+      "totalHpp": 98395000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 15000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 1225000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 400000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 3235000.0,
+          "notes": "Pajak / Mutasi STNK"
+        },
+        {
+          "category": "OTHER",
+          "amount": 3520000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-02-20",
+        "sellingPrice": 101000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "F1193NZ",
+      "plateNumber": "F1193NZ",
+      "brand": "SUZUKI",
+      "model": "SUZUKI ERTIGA GL 2017",
+      "year": 2017,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "UCAUCTION",
+      "purchasePrice": 70737000.0,
+      "purchaseDate": "2024-09-02",
+      "targetSellingPrice": null,
+      "totalHpp": 93956500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 737000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 773500.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 230000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 400000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 600000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 7357500.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 1600000.0,
+          "notes": "Pajak / Mutasi STNK"
+        },
+        {
+          "category": "OTHER",
+          "amount": 8321500.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-01-04",
+        "sellingPrice": 118000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1833WYN",
+      "plateNumber": "B1833WYN",
+      "brand": "WULING",
+      "model": "WULING CONFERO S MT L 2017",
+      "year": 2017,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "GROSIRMOBIL",
+      "purchasePrice": 82880000.0,
+      "purchaseDate": "2024-06-24",
+      "targetSellingPrice": null,
+      "totalHpp": 96549000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 2000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 880000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 400000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 700000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 700000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 3415000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2300000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 700000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 2310000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 2494000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-03-14",
+        "sellingPrice": 88000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1600UKI",
+      "plateNumber": "B1600UKI",
+      "brand": "WULING",
+      "model": "WULING CONFERO S C 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 80000000.0,
+      "purchaseDate": "2025-01-11",
+      "targetSellingPrice": null,
+      "totalHpp": 85581500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 739000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 2750000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "OTHER",
+          "amount": 2092500.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-03-14",
+        "sellingPrice": 89000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "A1195WA",
+      "plateNumber": "A1195WA",
+      "brand": "WULING",
+      "model": "WULING CONFERO S MT C 2021",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "CAREADY",
+      "purchasePrice": 88429500.0,
+      "purchaseDate": "2024-06-22",
+      "targetSellingPrice": null,
+      "totalHpp": 100004500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 929500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 350000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 600000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 600000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 450000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1300000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 8175000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-01-11",
+        "sellingPrice": 97000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "F1409PP",
+      "plateNumber": "F1409PP",
+      "brand": "LAINNYA",
+      "model": "ERTIGA GL MT 2017",
+      "year": 2017,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "GROSIRMOBIL",
+      "purchasePrice": 112188000.0,
+      "purchaseDate": "2025-03-17",
+      "targetSellingPrice": null,
+      "totalHpp": 115513000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1188000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 355000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 2090000.0,
+          "notes": "Servis & Ganti Oli"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-03-29",
+        "sellingPrice": 120000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2986UKU",
+      "plateNumber": "B2986UKU",
+      "brand": "LAINNYA",
+      "model": "ALL NEW ERTIGA GL MT 2019",
+      "year": 2019,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 135200000.0,
+      "purchaseDate": "2025-03-04",
+      "targetSellingPrice": null,
+      "totalHpp": 139500000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 275000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 50000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2550000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1425000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-04-19",
+        "sellingPrice": 141000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "AB1058ER",
+      "plateNumber": "AB1058ER",
+      "brand": "WULING",
+      "model": "WULING CONFERO S C 2021",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "TRIBIK",
+      "purchasePrice": 81858000.0,
+      "purchaseDate": "2024-12-19",
+      "targetSellingPrice": null,
+      "totalHpp": 91168000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 858000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 260000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 7160000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-01-25",
+        "sellingPrice": 98000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "AD1897DC",
+      "plateNumber": "AD1897DC",
+      "brand": "WULING",
+      "model": "WULING FORMO 1.2 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "AUCTION",
+      "auctionHouse": "SMARTBID",
+      "purchasePrice": 75000000.0,
+      "purchaseDate": "2025-01-24",
+      "targetSellingPrice": null,
+      "totalHpp": 78638000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 245500.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 150000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 300000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 2150000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-04-16",
+        "sellingPrice": 90000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1521KKR",
+      "plateNumber": "B1521KKR",
+      "brand": "SUZUKI",
+      "model": "SUZUKI SPLASH GL 2011",
+      "year": 2011,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "AUCTION",
+      "auctionHouse": "HYBID",
+      "purchasePrice": 62649000.0,
+      "purchaseDate": "2024-08-28",
+      "targetSellingPrice": null,
+      "totalHpp": 72500000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 649000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 361000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 300000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 407000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 6413000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-04-18",
+        "sellingPrice": 72000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "G8106TG",
+      "plateNumber": "G8106TG",
+      "brand": "LAINNYA",
+      "model": "NEW CARRY 1.5 NON AC/PS",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "TRIBIK",
+      "purchasePrice": 60627000.0,
+      "purchaseDate": "2025-01-31",
+      "targetSellingPrice": null,
+      "totalHpp": 70246000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 627000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 230000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 150000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 1648000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 950000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 200000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 3570000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-03-14",
+        "sellingPrice": 89000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2964TZV",
+      "plateNumber": "B2964TZV",
+      "brand": "LAINNYA",
+      "model": "ALL NEW ERTIGA GX 1.5 MT 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "HYBID",
+      "purchasePrice": 127000000.0,
+      "purchaseDate": "2025-04-17",
+      "targetSellingPrice": null,
+      "totalHpp": 131732500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 320000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1750000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-05-01",
+        "sellingPrice": 146000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "S8737JG",
+      "plateNumber": "S8737JG",
+      "brand": "LAINNYA",
+      "model": "NEW CARRY 1.5 NON AC/PS",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "CAREADY",
+      "purchasePrice": 63660000.0,
+      "purchaseDate": "2025-03-04",
+      "targetSellingPrice": null,
+      "totalHpp": 78304000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 660000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 1650000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1750000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 200000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 9330000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-06-22",
+        "sellingPrice": 85000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2732TZY",
+      "plateNumber": "B2732TZY",
+      "brand": "LAINNYA",
+      "model": "ALL NEW ERTIGA GL 1.5 MT 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "HYBID",
+      "purchasePrice": 115500000.0,
+      "purchaseDate": "2025-04-17",
+      "targetSellingPrice": null,
+      "totalHpp": 121970000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 470000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2850000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-06-17",
+        "sellingPrice": 137000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1255WIL",
+      "plateNumber": "B2964TZV-1",
+      "brand": "LAINNYA",
+      "model": "CONFERO DB 1.5 MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "TRIBIK",
+      "purchasePrice": 77308500.0,
+      "purchaseDate": "2025-04-24",
+      "targetSellingPrice": null,
+      "totalHpp": 84964000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 808500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 2419500.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 3036000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-06-22",
+        "sellingPrice": 90000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "D8905FM",
+      "plateNumber": "D8905FM",
+      "brand": "LAINNYA",
+      "model": "NEW CARRY 1.5 NON AC/PS",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "UCAUCTION",
+      "purchasePrice": 66693000.0,
+      "purchaseDate": "2025-04-21",
+      "targetSellingPrice": null,
+      "totalHpp": 77544000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 693000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 650000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 2450000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1350000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 3670000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-07-17",
+        "sellingPrice": 82500000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "F1576ABJ",
+      "plateNumber": "F1576ABJ",
+      "brand": "LAINNYA",
+      "model": "FORMO 1.2 MT 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "AUCTION",
+      "auctionHouse": "SMARTBID",
+      "purchasePrice": 67704000.0,
+      "purchaseDate": "2025-05-07",
+      "targetSellingPrice": null,
+      "totalHpp": 76594000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 704000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 1900000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1950000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 2290000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-07-19",
+        "sellingPrice": 89000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "T1092HQ",
+      "plateNumber": "T1092HQ",
+      "brand": "LAINNYA",
+      "model": "ALL NEW XENIA X MT 1.3 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1300,
+      "sourceType": "AUCTION",
+      "auctionHouse": "ALTO",
+      "purchasePrice": 136952000.0,
+      "purchaseDate": "2025-06-30",
+      "targetSellingPrice": null,
+      "totalHpp": 144300000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3500000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1452000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 98000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 400000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 1000000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 3150000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-07-19",
+        "sellingPrice": 159000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "L1204BAV",
+      "plateNumber": "L1204BAV",
+      "brand": "LAINNYA",
+      "model": "CORTEZ ST MT HITAM 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1800,
+      "sourceType": "AUCTION",
+      "auctionHouse": "ALTO",
+      "purchasePrice": 94490000.0,
+      "purchaseDate": "2025-04-10",
+      "targetSellingPrice": null,
+      "totalHpp": 102339500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3500000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 990000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 201000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 500000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1680500.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 2750000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-05-21",
+        "sellingPrice": 112000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2163PKK",
+      "plateNumber": "B2163PKK",
+      "brand": "WULING",
+      "model": "WULING CONFERO DB 2019",
+      "year": 2019,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "SMARTBID",
+      "purchasePrice": 64165500.0,
+      "purchaseDate": "2025-07-23",
+      "targetSellingPrice": null,
+      "totalHpp": 70190500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 665500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2500000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 250000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 500000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 775000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-08-17",
+        "sellingPrice": 81000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "DD8485UB",
+      "plateNumber": "DD8485UB",
+      "brand": "ISUZU",
+      "model": "ISUZU TRAGA PICKUP 2021",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "TRIBIK",
+      "purchasePrice": 121792500.0,
+      "purchaseDate": "2025-04-30",
+      "targetSellingPrice": null,
+      "totalHpp": 147844000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1292500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 5500000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 600000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 5240000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1000000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 1000000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 10644000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-09-03",
+        "sellingPrice": 183000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "DA1550BR",
+      "plateNumber": "DA1550BR",
+      "brand": "HYUNDAI",
+      "model": "HYUNDAI STARGAZER TREND MT 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 129000000.0,
+      "purchaseDate": "2025-08-08",
+      "targetSellingPrice": null,
+      "totalHpp": 134445500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 5000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 400000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2400000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 770000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-08-31",
+        "sellingPrice": 150000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "G1028LC",
+      "plateNumber": "G1028LC",
+      "brand": "WULING",
+      "model": "WULING FORMO 1.2 MT 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "AUCTION",
+      "auctionHouse": "SMARTBID",
+      "purchasePrice": 57188500.0,
+      "purchaseDate": "2025-05-07",
+      "targetSellingPrice": null,
+      "totalHpp": 63988500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3100000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 588500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 1100000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 400000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2000000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 2350000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-07-08",
+        "sellingPrice": 89000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "H1659YY",
+      "plateNumber": "H1659YY",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU XENIA X AT 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "AUTOMATIC",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "TRIBIK",
+      "purchasePrice": 135946500.0,
+      "purchaseDate": "2025-07-21",
+      "targetSellingPrice": null,
+      "totalHpp": 150920000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1446500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 32000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 400000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2700000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1645000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 1200000.0,
+          "notes": "Pajak / Mutasi STNK"
+        },
+        {
+          "category": "OTHER",
+          "amount": 3550000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-08-01",
+        "sellingPrice": 162000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "G1394ZC",
+      "plateNumber": "G1394ZC",
+      "brand": "TOYOTA",
+      "model": "TOYOTA AVANZA E MT 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "TRIBIK",
+      "purchasePrice": 135946500.0,
+      "purchaseDate": "2025-07-24",
+      "targetSellingPrice": null,
+      "totalHpp": 147471500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1446500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 600000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2400000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 690000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 1360000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-09-07",
+        "sellingPrice": 161500000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B9235SCI",
+      "plateNumber": "B9235SCI",
+      "brand": "WULING",
+      "model": "WULING FORMO BLINDVAN 2020",
+      "year": 2020,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "GROSIRMOBIL",
+      "purchasePrice": 51528000.0,
+      "purchaseDate": "2025-08-06",
+      "targetSellingPrice": null,
+      "totalHpp": 65328000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 528000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2100000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 415000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2400000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 685000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 7500000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-10-03",
+        "sellingPrice": 63500000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "R8046K",
+      "plateNumber": "R8046K",
+      "brand": "MITSUBISHI",
+      "model": "MITSUBISHI L300 EURO 4 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "ALTO",
+      "purchasePrice": 149084000.0,
+      "purchaseDate": "2025-08-21",
+      "targetSellingPrice": null,
+      "totalHpp": 161744000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3500000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1584000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 1050000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 300000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 350000.0,
+          "notes": "Pajak / Mutasi STNK"
+        },
+        {
+          "category": "OTHER",
+          "amount": 5776000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-10-09",
+        "sellingPrice": 160000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "P1371LF",
+      "plateNumber": "P1371LF",
+      "brand": "LAINNYA",
+      "model": "ALL NEW AVANZA E MT 2024",
+      "year": 2024,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "ALTO",
+      "purchasePrice": 140996000.0,
+      "purchaseDate": "2025-08-21",
+      "targetSellingPrice": null,
+      "totalHpp": 152520000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3500000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1496000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 1000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 500000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 600000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1500000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 1000000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1189000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 2000000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-10-29",
+        "sellingPrice": 168000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2160POP",
+      "plateNumber": "B2160POP",
+      "brand": "LAINNYA",
+      "model": "ALL NEW AVANZA E MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 147500000.0,
+      "purchaseDate": "2025-09-08",
+      "targetSellingPrice": null,
+      "totalHpp": 155500000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 500000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1600000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 2550000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "OTHER",
+          "amount": 350000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-11-03",
+        "sellingPrice": 165000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2544UOZ",
+      "plateNumber": "B2544UOZ",
+      "brand": "WULING",
+      "model": "WULING CORTEZ C AT 2021",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "AUTOMATIC",
+      "engineCapacity": 1800,
+      "sourceType": "AUCTION",
+      "auctionHouse": "ALTO",
+      "purchasePrice": 64160000.0,
+      "purchaseDate": "2025-09-11",
+      "targetSellingPrice": null,
+      "totalHpp": 95915000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3500000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 660000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2250000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 1600000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 3600000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 1150000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1205000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 21050000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-11-24",
+        "sellingPrice": 104000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2634UZZ",
+      "plateNumber": "B2634UZZ",
+      "brand": "LAINNYA",
+      "model": "ALL NEW XENIA X MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "CAREADY",
+      "purchasePrice": 137330000.0,
+      "purchaseDate": "2025-10-11",
+      "targetSellingPrice": null,
+      "totalHpp": 145736000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 330000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 500000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 500000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 50000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 3806000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-11-03",
+        "sellingPrice": 160000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2156POP",
+      "plateNumber": "B2156POP",
+      "brand": "LAINNYA",
+      "model": "ALL NEW AVANZA E MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 147500000.0,
+      "purchaseDate": "2025-10-03",
+      "targetSellingPrice": null,
+      "totalHpp": 151685000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 500000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 335000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "OTHER",
+          "amount": 350000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-10-15",
+        "sellingPrice": 165000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "DD1092FI",
+      "plateNumber": "DD1092FI",
+      "brand": "WULING",
+      "model": "WULING FORMO S 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "SMARTBID",
+      "purchasePrice": 43440000.0,
+      "purchaseDate": "2025-07-23",
+      "targetSellingPrice": null,
+      "totalHpp": 69912500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 440000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 3414000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 600000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 1650000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1650000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 4073000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 5995000.0,
+          "notes": "Pajak / Mutasi STNK"
+        },
+        {
+          "category": "OTHER",
+          "amount": 5150500.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-12-28",
+        "sellingPrice": 75000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "DD1301XAG",
+      "plateNumber": "DD1301XAG",
+      "brand": "WULING",
+      "model": "WULING CONFERO DB 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "TRIBIK",
+      "purchasePrice": 43440000.0,
+      "purchaseDate": "2025-08-18",
+      "targetSellingPrice": null,
+      "totalHpp": 72765000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 440000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 3414000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 500000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2200000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 1150000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 5370000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 5875000.0,
+          "notes": "Pajak / Mutasi STNK"
+        },
+        {
+          "category": "OTHER",
+          "amount": 6876000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-01-03",
+        "sellingPrice": 79000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1228SNO",
+      "plateNumber": "B1228SNO",
+      "brand": "HYUNDAI",
+      "model": "HYUNDAI IONIQ 5 PRIME LONGRANGE",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "CAREADY",
+      "purchasePrice": 220500000.0,
+      "purchaseDate": "2025-12-06",
+      "targetSellingPrice": null,
+      "totalHpp": 224989587.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 375000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 1400000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 1000000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-01-24",
+        "sellingPrice": 225000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2809TIF",
+      "plateNumber": "B2809TIF",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU SIGRA D 1.0 MT 2019",
+      "year": 2019,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1000,
+      "sourceType": "AUCTION",
+      "auctionHouse": "LEGOAS",
+      "purchasePrice": 62000000.0,
+      "purchaseDate": "2025-12-02",
+      "targetSellingPrice": null,
+      "totalHpp": 70424000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2000000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 3700000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 700000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1374000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-01-25",
+        "sellingPrice": 80000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2876TIC",
+      "plateNumber": "B2876TIC",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU SIGRA D 1.0 MT 2019",
+      "year": 2019,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1000,
+      "sourceType": "AUCTION",
+      "auctionHouse": "LEGOAS",
+      "purchasePrice": 66500000.0,
+      "purchaseDate": "2025-12-02",
+      "targetSellingPrice": null,
+      "totalHpp": 74670000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 4000000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 920000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-01-28",
+        "sellingPrice": 80000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1739NZL",
+      "plateNumber": "B1739NZL",
+      "brand": "WULING",
+      "model": "WULING CONFERO S ABS 2020",
+      "year": 2020,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 68500000.0,
+      "purchaseDate": "2026-01-15",
+      "targetSellingPrice": null,
+      "totalHpp": 79405000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 3550000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 4105000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-01-31",
+        "sellingPrice": 87000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1504NZL",
+      "plateNumber": "B1504NZL",
+      "brand": "WULING",
+      "model": "WULING CONFERO S ABS 2020",
+      "year": 2020,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 73500000.0,
+      "purchaseDate": "2026-01-23",
+      "targetSellingPrice": null,
+      "totalHpp": 82465000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1400000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 110000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 4105000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-02-28",
+        "sellingPrice": 87000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2439KIB",
+      "plateNumber": "B1504NZL-1",
+      "brand": "LAINNYA",
+      "model": "ALL NEW AVANZA E AT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "AUTOMATIC",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 160000000.0,
+      "purchaseDate": "2026-02-17",
+      "targetSellingPrice": null,
+      "totalHpp": 163350000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2300000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "OTHER",
+          "amount": 350000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-02-24",
+        "sellingPrice": 170000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "BG8121JN",
+      "plateNumber": "BG8121JN",
+      "brand": "ISUZU",
+      "model": "ISUZU TRAGA PICKUP 2021",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "ACCBID",
+      "purchasePrice": 134430000.0,
+      "purchaseDate": "2025-09-08",
+      "targetSellingPrice": null,
+      "totalHpp": 194724000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1430000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 3300000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 500000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 9310000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 24284000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 1300000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 10500000.0,
+          "notes": "Pajak / Mutasi STNK"
+        },
+        {
+          "category": "OTHER",
+          "amount": 6670000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2025-11-03",
+        "sellingPrice": 172000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "AG8671YU",
+      "plateNumber": "DD8333SJ",
+      "brand": "MITSUBISHI",
+      "model": "MITSUBISHI FE 71 BOX 2020",
+      "year": 2020,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "IBID",
+      "purchasePrice": 168220000.0,
+      "purchaseDate": "2025-09-04",
+      "targetSellingPrice": null,
+      "totalHpp": 199888000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 2000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 220000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 5700000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 7981000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 4000000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 1000000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 9087000.0,
+          "notes": "Pajak / Mutasi STNK"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1680000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-28",
+        "sellingPrice": 177450000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "AG8725YU",
+      "plateNumber": "DD8952YV",
+      "brand": "ISUZU",
+      "model": "ISUZU NLR 85 U",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "CAREADY",
+      "purchasePrice": 236541000.0,
+      "purchaseDate": "2025-09-29",
+      "targetSellingPrice": null,
+      "totalHpp": 259476000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 2541000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 5700000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 2350000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 12185000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-12",
+        "sellingPrice": 231744800.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2475KKM",
+      "plateNumber": "B2475KKM",
+      "brand": "LAINNYA",
+      "model": "ERTIGA GA MT 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "CAREADY",
+      "purchasePrice": 92979000.0,
+      "purchaseDate": "2026-02-25",
+      "targetSellingPrice": null,
+      "totalHpp": 99849000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 979000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 3470000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-19",
+        "sellingPrice": 101867000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1618FZF",
+      "plateNumber": "B1618FZF",
+      "brand": "LAINNYA",
+      "model": "BRIO SATYA E MT 2016",
+      "year": 2016,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "AUCTION",
+      "auctionHouse": "TRIBIK",
+      "purchasePrice": 86407500.0,
+      "purchaseDate": "2026-03-13",
+      "targetSellingPrice": null,
+      "totalHpp": 93674500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 907500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 4767000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-26",
+        "sellingPrice": 86537500.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2312PZB",
+      "plateNumber": "B2312PZB",
+      "brand": "LAINNYA",
+      "model": "ALL NEW AVANZA E MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 151000000.0,
+      "purchaseDate": "2026-03-15",
+      "targetSellingPrice": null,
+      "totalHpp": 158246000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 2046000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 1700000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-19",
+        "sellingPrice": 159000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "D1644AIM",
+      "plateNumber": "D1644AIM",
+      "brand": "WULING",
+      "model": "WULING CONFERO MT 2019",
+      "year": 2019,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 78000000.0,
+      "purchaseDate": "2026-05-16",
+      "targetSellingPrice": null,
+      "totalHpp": 82900000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 700000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1800000.0,
+          "notes": "Cat Body"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-31",
+        "sellingPrice": 87000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2219BYU",
+      "plateNumber": "B2219BYU",
+      "brand": "WULING",
+      "model": "WULING CONFERO MT 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 73000000.0,
+      "purchaseDate": "2026-05-16",
+      "targetSellingPrice": null,
+      "totalHpp": 78250000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1400000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 50000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "OTHER",
+          "amount": 800000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-06-19",
+        "sellingPrice": 86000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2220BYJ",
+      "plateNumber": "B2220BYJ",
+      "brand": "WULING",
+      "model": "WULING CONFERO MT 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 73000000.0,
+      "purchaseDate": "2026-05-16",
+      "targetSellingPrice": null,
+      "totalHpp": 78150000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1600000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 50000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "OTHER",
+          "amount": 500000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-06-19",
+        "sellingPrice": 86000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "DD8637UA",
+      "plateNumber": "DD8637UA",
+      "brand": "ISUZU",
+      "model": "ISUZU DMAX 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 180430500.0,
+      "purchaseDate": "2026-05-16",
+      "targetSellingPrice": null,
+      "totalHpp": 188180500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 1930500.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2500000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 250000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 1000000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 3000000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-19",
+        "sellingPrice": 247225000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "L1154AAB",
+      "plateNumber": "L1154AAB",
+      "brand": "TOYOTA",
+      "model": "TOYOTA AVANZA G MT 2021",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 144500000.0,
+      "purchaseDate": "2026-06-13",
+      "targetSellingPrice": null,
+      "totalHpp": 147700000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 350000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 350000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 900000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 250000.0,
+          "notes": "Poles & Salon"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-06-27",
+        "sellingPrice": 151000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "L1147AAB",
+      "plateNumber": "L1147AAB",
+      "brand": "TOYOTA",
+      "model": "TOYOTA AVANZA G MT 2021",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 145000000.0,
+      "purchaseDate": "2026-06-13",
+      "targetSellingPrice": null,
+      "totalHpp": 149450000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 700000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 250000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1750000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-06-27",
+        "sellingPrice": 153000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "D1766AJN",
+      "plateNumber": "D1766AJN",
+      "brand": "TOYOTA",
+      "model": "TOYOTA AVANZA G AT 2021",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "AUTOMATIC",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 160000000.0,
+      "purchaseDate": "2026-06-11",
+      "targetSellingPrice": null,
+      "totalHpp": 164773000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 900000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1500000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-07-16",
+        "sellingPrice": 170000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2927PZA",
+      "plateNumber": "B2886PZA",
+      "brand": "LAINNYA",
+      "model": "ALL NEW AVANZA E MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 150500000.0,
+      "purchaseDate": "2026-03-15",
+      "targetSellingPrice": null,
+      "totalHpp": 159910000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 5500000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 250000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 160000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "OTHER",
+          "amount": 500000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-19",
+        "sellingPrice": 155000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B2886PZA",
+      "plateNumber": "B2886PZA-1",
+      "brand": "LAINNYA",
+      "model": "ALL NEW AVANZA E MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 151000000.0,
+      "purchaseDate": "2026-03-15",
+      "targetSellingPrice": null,
+      "totalHpp": 160525000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 5500000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 250000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 445000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "OTHER",
+          "amount": 830000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-19",
+        "sellingPrice": 154500000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1471NZS",
+      "plateNumber": "B1471NZS",
+      "brand": "TOYOTA",
+      "model": "TOYOTA AVANZA E MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 143500000.0,
+      "purchaseDate": "2026-06-09",
+      "targetSellingPrice": null,
+      "totalHpp": 151040000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 700000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 250000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 2240000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-08-17",
+        "sellingPrice": 158000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "D1607AHC",
+      "plateNumber": "D1607AHC",
+      "brand": "WULING",
+      "model": "WULING CONFERO MT 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 73000000.0,
+      "purchaseDate": "2026-05-16",
+      "targetSellingPrice": null,
+      "totalHpp": 78350000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 2200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1200000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 500000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "OTHER",
+          "amount": 350000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-05-19",
+        "sellingPrice": 85000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "W1949RH",
+      "plateNumber": "W1949RH",
+      "brand": "WULING",
+      "model": "WULING CONFERO DB 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "BELI SENDIRI",
+      "purchasePrice": 72000000.0,
+      "purchaseDate": "2026-08-14",
+      "targetSellingPrice": null,
+      "totalHpp": 76961000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 50000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 350000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 350000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 871000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "OTHER",
+          "amount": 2840000.0,
+          "notes": "Biaya Rekondisi & Operasional Unit"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-09-09",
+        "sellingPrice": 80000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "D1141AJK",
+      "plateNumber": "D1141AJK",
+      "brand": "TOYOTA",
+      "model": "TOYOTA INNOVA G DIESEL HITAM",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 2000,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 263500000.0,
+      "purchaseDate": "2026-07-24",
+      "targetSellingPrice": null,
+      "totalHpp": 268192000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 840000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 690000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 900000.0,
+          "notes": "Cat Body"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-08-01",
+        "sellingPrice": 275000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "N1786ABH",
+      "plateNumber": "N1786ABH",
+      "brand": "WULING",
+      "model": "WULING CONFERO MT 2018",
+      "year": 2018,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "GROSIRMOBIL",
+      "purchasePrice": 72759000.0,
+      "purchaseDate": "2026-07-23",
+      "targetSellingPrice": null,
+      "totalHpp": 81859000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "OTHER",
+          "amount": 759000.0,
+          "notes": "PPN Lelang 1.1%"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 1305000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 2000000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 1060000.0,
+          "notes": "Belanja Spareparts"
+        },
+        {
+          "category": "DOCUMENT_TAX_MUTATION",
+          "amount": 1425000.0,
+          "notes": "Pajak / Mutasi STNK"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-08-31",
+        "sellingPrice": 85000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "BK1952AEE",
+      "plateNumber": "BK1952AEE",
+      "brand": "HYUNDAI",
+      "model": "STARGAZER TREND MT 2023",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 126000000.0,
+      "purchaseDate": "2026-08-28",
+      "targetSellingPrice": null,
+      "totalHpp": 129182000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 55000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 700000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 700000.0,
+          "notes": "Poles & Salon"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-09-15",
+        "sellingPrice": 143000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "L1757AAQ",
+      "plateNumber": "L1757AAQ",
+      "brand": "TOYOTA",
+      "model": "TOYOTA AVANZA E MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 138500000.0,
+      "purchaseDate": "2026-08-10",
+      "targetSellingPrice": null,
+      "totalHpp": 147106500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 750000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 200000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "OIL_AND_SERVICE",
+          "amount": 500000.0,
+          "notes": "Servis & Ganti Oli"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 3150000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 350000.0,
+          "notes": "Poles & Salon"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 3356500.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-08-17",
+        "sellingPrice": 157500000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "B1648NZN",
+      "plateNumber": "B1648NZN",
+      "brand": "TOYOTA",
+      "model": "TOYOTA AVANZA G MT 2022",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 166500000.0,
+      "purchaseDate": "2026-08-10",
+      "targetSellingPrice": null,
+      "totalHpp": 169010000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 700000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 100000.0,
+          "notes": "BBM Ambil Unit"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 1300000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "SPAREPARTS",
+          "amount": 410000.0,
+          "notes": "Belanja Spareparts"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-09-26",
+        "sellingPrice": 163000000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "BK1713AED",
+      "plateNumber": "BK1713AED",
+      "brand": "HYUNDAI",
+      "model": "STARGAZER TREND MT PUTIH 2023",
+      "year": 2023,
+      "color": "PUTIH",
+      "odometer": 50000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "AUCTION",
+      "auctionHouse": "AUKSI",
+      "purchasePrice": 128000000.0,
+      "purchaseDate": "2026-09-04",
+      "targetSellingPrice": null,
+      "totalHpp": 130693000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [
+        {
+          "category": "AUCTION_ADMIN_FEE",
+          "amount": 3000000.0,
+          "notes": "Admin Lelang"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 116000.0,
+          "notes": "Biaya Ambil / Sopir"
+        },
+        {
+          "category": "TRANSPORT_PICKUP",
+          "amount": 300000.0,
+          "notes": "Tol Ambil Unit"
+        },
+        {
+          "category": "BODY_PAINT",
+          "amount": 950000.0,
+          "notes": "Cat Body"
+        },
+        {
+          "category": "DETAILING_SALON",
+          "amount": 700000.0,
+          "notes": "Poles & Salon"
+        }
+      ],
+      "sale": {
+        "saleDate": "2026-09-24",
+        "sellingPrice": 141500000.0,
+        "buyerName": "Pelanggan Showroom (Umum)"
+      }
+    },
+    {
+      "sheet": "File1-Row2",
+      "plateNumber": "AG1286YU",
+      "brand": "SUZUKI",
+      "model": "SUZUKI SPLASH MT SILVER 2012",
+      "year": 2019,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 74000000.0,
+      "purchaseDate": "2019-05-01",
+      "targetSellingPrice": 75000000.0,
+      "totalHpp": 74000000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2019-06-15",
+        "sellingPrice": 75000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row3",
+      "plateNumber": "B1013ZKF",
+      "brand": "HONDA",
+      "model": "HONDA MOBILIO S MT 2017",
+      "year": 2019,
+      "color": "ABU-ABU MET",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 139500000.0,
+      "purchaseDate": "2019-05-01",
+      "targetSellingPrice": 138000000.0,
+      "totalHpp": 139500000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2019-06-15",
+        "sellingPrice": 138000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row4",
+      "plateNumber": "B2827PVP",
+      "brand": "SUZUKI",
+      "model": "SUZUKI IGNIS GX MT 2018",
+      "year": 2019,
+      "color": "ORANYE",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 116250000.0,
+      "purchaseDate": "2019-05-01",
+      "targetSellingPrice": 122500000.0,
+      "totalHpp": 116250000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2019-06-15",
+        "sellingPrice": 122500000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row5",
+      "plateNumber": "F1210DJ",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU AYLA X AT 2016",
+      "year": 2020,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "AUTOMATIC",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 78813000.0,
+      "purchaseDate": "2020-05-01",
+      "targetSellingPrice": 81000000.0,
+      "totalHpp": 78813000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2020-06-15",
+        "sellingPrice": 81000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row6",
+      "plateNumber": "T1749ET",
+      "brand": "MITSUBISHI",
+      "model": "MITSUBISHI MIRAGE GLX MT 2015",
+      "year": 2020,
+      "color": "MERAH MARUN",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 81673000.0,
+      "purchaseDate": "2020-05-01",
+      "targetSellingPrice": 84800000.0,
+      "totalHpp": 81673000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2020-06-15",
+        "sellingPrice": 84800000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row7",
+      "plateNumber": "E1841RV",
+      "brand": "SUZUKI",
+      "model": "SUZUKI IGNIS GX MT 2019",
+      "year": 2020,
+      "color": "PUTIH MET",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 116176000.0,
+      "purchaseDate": "2020-05-01",
+      "targetSellingPrice": 118750000.0,
+      "totalHpp": 116176000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2020-06-15",
+        "sellingPrice": 118750000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row8",
+      "plateNumber": "B1940CZL",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU AYLA X AT 2020",
+      "year": 2020,
+      "color": "ORANYE",
+      "odometer": 60000,
+      "transmission": "AUTOMATIC",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 96170000.0,
+      "purchaseDate": "2020-05-01",
+      "targetSellingPrice": 99000000.0,
+      "totalHpp": 96170000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2020-06-15",
+        "sellingPrice": 99000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row9",
+      "plateNumber": "F1443RG",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU AYLA M MT 2018",
+      "year": 2020,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 69295000.0,
+      "purchaseDate": "2020-05-01",
+      "targetSellingPrice": 70000000.0,
+      "totalHpp": 69295000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2020-06-15",
+        "sellingPrice": 70000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row10",
+      "plateNumber": "Z1580LL",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU AYLA R MT 2020",
+      "year": 2021,
+      "color": "ORANYE",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 87494000.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 91000000.0,
+      "totalHpp": 87494000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 91000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row11",
+      "plateNumber": "F1132OT",
+      "brand": "DAIHATSU",
+      "model": "DAIHATSU AYLA X MT 2019",
+      "year": 2021,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 87238000.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 86500000.0,
+      "totalHpp": 87238000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 86500000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row12",
+      "plateNumber": "AG1241PJ",
+      "brand": "MITSUBISHI",
+      "model": "MITSUBISHI MIRAGE GLX MT 2017",
+      "year": 2021,
+      "color": "PUTIH MET",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 80000000.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 94000000.0,
+      "totalHpp": 80000000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 94000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row13",
+      "plateNumber": "D1497AFO",
+      "brand": "MITSUBISHI",
+      "model": "MITSUBISHI MIRAGE GLX MT 2016",
+      "year": 2021,
+      "color": "MERAH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 82224000.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 86000000.0,
+      "totalHpp": 82224000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 86000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row14",
+      "plateNumber": "AG9058RM",
+      "brand": "SUZUKI",
+      "model": "SUZUKI CARRY PICKUP NON AC/PS 2019",
+      "year": 2021,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 90550000.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 90200000.0,
+      "totalHpp": 90550000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 90200000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row15",
+      "plateNumber": "AG1979ZD",
+      "brand": "LAINNYA",
+      "model": "CONVERO S TYPE C MT 2018",
+      "year": 2021,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 81000000.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 92000000.0,
+      "totalHpp": 81000000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 92000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row16",
+      "plateNumber": "AG1186ZV",
+      "brand": "LAINNYA",
+      "model": "CONVERO S TYPE C MT 2018",
+      "year": 2021,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 85825000.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 99500000.0,
+      "totalHpp": 85825000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 99500000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row17",
+      "plateNumber": "D1703AHQ",
+      "brand": "TOYOTA",
+      "model": "TOYOTA CALYA E ABS MT 2019",
+      "year": 2021,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 82852000.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 88300000.0,
+      "totalHpp": 82852000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 88300000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row18",
+      "plateNumber": "DK1691OF",
+      "brand": "TOYOTA",
+      "model": "TOYOTA KIJANG INNOVA V MT 2011",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 2000,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 113100000.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 110500000.0,
+      "totalHpp": 113100000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 110500000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row19",
+      "plateNumber": "AG1203ZH",
+      "brand": "HONDA",
+      "model": "HONDA BRIO S MT 2019",
+      "year": 2022,
+      "color": "MERAH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 126947000.0,
+      "purchaseDate": "2022-05-01",
+      "targetSellingPrice": 132000000.0,
+      "totalHpp": 126947000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2022-06-15",
+        "sellingPrice": 132000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row20",
+      "plateNumber": "AG1204ZH",
+      "brand": "HONDA",
+      "model": "HONDA BRIO S MT 2019",
+      "year": 2022,
+      "color": "ABU-ABU",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 124832500.0,
+      "purchaseDate": "2022-05-01",
+      "targetSellingPrice": 124000000.0,
+      "totalHpp": 124832500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2022-06-15",
+        "sellingPrice": 124000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row21",
+      "plateNumber": "AG1067ZI",
+      "brand": "WULING",
+      "model": "WULING CORTEZ C MT 2021",
+      "year": 2022,
+      "color": "BURGUNDY",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1800,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 132772000.0,
+      "purchaseDate": "2022-05-01",
+      "targetSellingPrice": 131000000.0,
+      "totalHpp": 132772000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2022-06-15",
+        "sellingPrice": 131000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row22",
+      "plateNumber": "DP1181KD",
+      "brand": "WULING",
+      "model": "WULING CORTEZ C MT 2021",
+      "year": 2022,
+      "color": "HITAM",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1800,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 101100000.0,
+      "purchaseDate": "2022-05-01",
+      "targetSellingPrice": 99000000.0,
+      "totalHpp": 101100000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2022-06-15",
+        "sellingPrice": 99000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row23",
+      "plateNumber": "B-DATSUN-23",
+      "brand": "DATSUN",
+      "model": "DATSUN GO PLUS PANCA MT 2017",
+      "year": 2022,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 62939000.0,
+      "purchaseDate": "2022-05-01",
+      "targetSellingPrice": 62800000.0,
+      "totalHpp": 62939000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2022-06-15",
+        "sellingPrice": 62800000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row24",
+      "plateNumber": "AG1387ZC",
+      "brand": "SUZUKI",
+      "model": "SUZUKI ERTIGA DIESEL MT",
+      "year": 2023,
+      "color": "ABU-ABU",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 145052500.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 150000000.0,
+      "totalHpp": 145052500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 150000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row25",
+      "plateNumber": "B1789PRE",
+      "brand": "MITSUBISHI",
+      "model": "MITSUBISHI MIRAGE GLX MT 2014",
+      "year": 2023,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 82565500.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 84500000.0,
+      "totalHpp": 82565500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 84500000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row26",
+      "plateNumber": "AG1653ZR",
+      "brand": "SUZUKI",
+      "model": "SUZUKI IGNIS GX MT 2017",
+      "year": 2023,
+      "color": "ORANYE",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 116640000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 116000000.0,
+      "totalHpp": 116640000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 116000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row27",
+      "plateNumber": "AG8992KJ",
+      "brand": "SUZUKI",
+      "model": "SUZUKI CARRY PICKUP NON AC/PS 2021",
+      "year": 2023,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 77625000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 86700000.0,
+      "totalHpp": 77625000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 86700000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row28",
+      "plateNumber": "L-ERTIGA-28",
+      "brand": "LAINNYA",
+      "model": "ERTIGA GL 2018",
+      "year": 2023,
+      "color": "BURGUNDY",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 151940000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 154000000.0,
+      "totalHpp": 151940000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 154000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row29",
+      "plateNumber": "B-BRIOSM-29",
+      "brand": "LAINNYA",
+      "model": "BRIO S MT 2020",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 115517500.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 120000000.0,
+      "totalHpp": 115517500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 120000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row30",
+      "plateNumber": "F-NEWCAR-30",
+      "brand": "LAINNYA",
+      "model": "NEW CARRY 2019",
+      "year": 2023,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 81998500.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 85000000.0,
+      "totalHpp": 81998500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 85000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row31",
+      "plateNumber": "L-ALLNEW-31",
+      "brand": "LAINNYA",
+      "model": "ALL NEW ERTIGA MKS",
+      "year": 2023,
+      "color": "ABU-ABU",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 138752000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 149000000.0,
+      "totalHpp": 138752000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 149000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row32",
+      "plateNumber": "H8521UG",
+      "brand": "LAINNYA",
+      "model": "ERTIGA GL H8521UG",
+      "year": 2023,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 119237500.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 122000000.0,
+      "totalHpp": 119237500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 122000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row33",
+      "plateNumber": "N1488ABH",
+      "brand": "LAINNYA",
+      "model": "AVANZA G NON AIRBAG",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 110295100.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 114000000.0,
+      "totalHpp": 110295100.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 114000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row34",
+      "plateNumber": "L1820ABN",
+      "brand": "LAINNYA",
+      "model": "XENIA X MT",
+      "year": 2023,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 123150000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 127000000.0,
+      "totalHpp": 123150000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 127000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row35",
+      "plateNumber": "L1811FK",
+      "brand": "LAINNYA",
+      "model": "AVANZA G MT",
+      "year": 2023,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 122500000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 131500000.0,
+      "totalHpp": 122500000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 131500000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row36",
+      "plateNumber": "A1833VU",
+      "brand": "NISSAN",
+      "model": "LIVINA SV MT",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 69494000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 76000000.0,
+      "totalHpp": 69494000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 76000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row37",
+      "plateNumber": "S1207S",
+      "brand": "LAINNYA",
+      "model": "AYLA 1.0 D MT",
+      "year": 2023,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1000,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 80748000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 83500000.0,
+      "totalHpp": 80748000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 83500000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row38",
+      "plateNumber": "B1011JRA",
+      "brand": "LAINNYA",
+      "model": "VIOS 1.5 G MT",
+      "year": 2023,
+      "color": "HITAM",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 103589500.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 109000000.0,
+      "totalHpp": 103589500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 109000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row39",
+      "plateNumber": "S1813TC",
+      "brand": "LAINNYA",
+      "model": "AYLA 1.0 X MT",
+      "year": 2023,
+      "color": "ABU-ABU",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1000,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 87575000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 91000000.0,
+      "totalHpp": 87575000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 91000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row40",
+      "plateNumber": "T1250HT",
+      "brand": "LAINNYA",
+      "model": "AGYA 1.2 GR SPORT MT",
+      "year": 2023,
+      "color": "MERAH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 129632500.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 133000000.0,
+      "totalHpp": 129632500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 133000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row41",
+      "plateNumber": "T1175GH",
+      "brand": "LAINNYA",
+      "model": "CONFERO S 1.5 L MT",
+      "year": 2023,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 103035000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 106250000.0,
+      "totalHpp": 103035000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 106250000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row42",
+      "plateNumber": "D1205YBE",
+      "brand": "LAINNYA",
+      "model": "AGYA 1.0 G AT",
+      "year": 2023,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "AUTOMATIC",
+      "engineCapacity": 1000,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 82613200.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 84000000.0,
+      "totalHpp": 82613200.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 84000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row43",
+      "plateNumber": "AE1321VG",
+      "brand": "LAINNYA",
+      "model": "ALL NEW ERTIGA GL MT 2020",
+      "year": 2023,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 143663000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 155000000.0,
+      "totalHpp": 143663000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 155000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row44",
+      "plateNumber": "G1647JC",
+      "brand": "LAINNYA",
+      "model": "CORTEZ CT S MT 2021",
+      "year": 2023,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1800,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 122765000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 124000000.0,
+      "totalHpp": 122765000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 124000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row45",
+      "plateNumber": "F1045NW",
+      "brand": "HONDA",
+      "model": "HONDA BRIO SATYA S 1.2 MT",
+      "year": 2023,
+      "color": "MERAH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 99520000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 99520000.0,
+      "totalHpp": 99520000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 99520000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row46",
+      "plateNumber": "W1802EA",
+      "brand": "LAINNYA",
+      "model": "ERTIGA DIESEL HYBRID",
+      "year": 2023,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 127371000.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 125000000.0,
+      "totalHpp": 127371000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 125000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row47",
+      "plateNumber": "B2736KZW",
+      "brand": "LAINNYA",
+      "model": "XENIA M M MT 2022",
+      "year": 2023,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 160306500.0,
+      "purchaseDate": "2023-05-01",
+      "targetSellingPrice": 160306500.0,
+      "totalHpp": 160306500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2023-06-15",
+        "sellingPrice": 160306500.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row48",
+      "plateNumber": "G1634IZ",
+      "brand": "LAINNYA",
+      "model": "CONFERO S G1634IZ",
+      "year": 2024,
+      "color": "ABU-ABU",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 98199200.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 119000000.0,
+      "totalHpp": 98199200.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 119000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row49",
+      "plateNumber": "B1218VZA",
+      "brand": "LAINNYA",
+      "model": "CONFERO B1218VZA",
+      "year": 2024,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 86433000.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 101000000.0,
+      "totalHpp": 86433000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 101000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row50",
+      "plateNumber": "A1512RI",
+      "brand": "LAINNYA",
+      "model": "CONFERO A1512RI",
+      "year": 2024,
+      "color": "HITAM",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 90960000.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 80500000.0,
+      "totalHpp": 90960000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 80500000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row51",
+      "plateNumber": "D-MOBILI-51",
+      "brand": "LAINNYA",
+      "model": "MOBILIO S MT 2018",
+      "year": 2024,
+      "color": "ABU-ABU",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 122831500.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 126770500.0,
+      "totalHpp": 122831500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 126770500.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row52",
+      "plateNumber": "F-AYLAXM-52",
+      "brand": "LAINNYA",
+      "model": "AYLA X MT 2020",
+      "year": 2024,
+      "color": "KUNING",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1200,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 91216000.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 91500000.0,
+      "totalHpp": 91216000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 91500000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row53",
+      "plateNumber": "L1193GS",
+      "brand": "LAINNYA",
+      "model": "CONFERO S L1193GS",
+      "year": 2024,
+      "color": "MERAH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 88844000.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 102000000.0,
+      "totalHpp": 88844000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 102000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row54",
+      "plateNumber": "E3293PBX",
+      "brand": "LAINNYA",
+      "model": "NMAX E3293PBX",
+      "year": 2024,
+      "color": "HITAM",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 155,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 21481900.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 23800000.0,
+      "totalHpp": 21481900.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 23800000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row55",
+      "plateNumber": "A1882DB",
+      "brand": "LAINNYA",
+      "model": "IGNIS A1882DB",
+      "year": 2024,
+      "color": "MERAH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 113821500.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 115000000.0,
+      "totalHpp": 113821500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 115000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row56",
+      "plateNumber": "H8521UG-1",
+      "brand": "LAINNYA",
+      "model": "CORTEZ H1728VS",
+      "year": 2024,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1800,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 111467000.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 119000000.0,
+      "totalHpp": 111467000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 119000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row57",
+      "plateNumber": "H1723VS",
+      "brand": "LAINNYA",
+      "model": "CORTEZ H1723VS",
+      "year": 2024,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1800,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 109617000.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 110200000.0,
+      "totalHpp": 109617000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 110200000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row58",
+      "plateNumber": "D1344UBB",
+      "brand": "LAINNYA",
+      "model": "ERTIGA D1344UBB",
+      "year": 2024,
+      "color": "SILVER",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 120714000.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 128000000.0,
+      "totalHpp": 120714000.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 128000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row59",
+      "plateNumber": "H9061OV",
+      "brand": "ISUZU",
+      "model": "ISUZU TRAGA 2022 EURO4",
+      "year": 2024,
+      "color": "PUTIH",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 170433500.0,
+      "purchaseDate": "2024-05-01",
+      "targetSellingPrice": 189000000.0,
+      "totalHpp": 170433500.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2024-06-15",
+        "sellingPrice": 189000000.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    },
+    {
+      "sheet": "File1-Row66",
+      "plateNumber": "TOTALKEUNTUNGAN-CAR-66",
+      "brand": "LAINNYA",
+      "model": "",
+      "year": 2021,
+      "color": "HITAM",
+      "odometer": 60000,
+      "transmission": "MANUAL",
+      "engineCapacity": 1500,
+      "sourceType": "DIRECT_BUY",
+      "auctionHouse": null,
+      "purchasePrice": 0.0,
+      "purchaseDate": "2021-05-01",
+      "targetSellingPrice": 0.0,
+      "totalHpp": 0.0,
+      "status": "SOLD_SETTLED",
+      "expenses": [],
+      "sale": {
+        "saleDate": "2021-06-15",
+        "sellingPrice": 0.0,
+        "buyerName": "Pelanggan Toko Bu Nur (2021-2024)"
+      }
+    }
+  ]
+}

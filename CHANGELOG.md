@@ -21,6 +21,26 @@
 
 ---
 
+### [v1.7.0] — 4 Oktober 2026
+#### 🚗 *Real Historical Sales Import & Active Garage Inventory Onboarding*
+
+Pada rilis ini, seluruh data riwayat bisnis showroom dari tahun 2021 hingga unit terkini diimpor secara presisi ke dalam sistem produksi:
+
+* **🌟 Onboarding 13 Unit Stok Aktif Garasi (`Vehicle`):**
+  - Mengonversi data kulakan unit berjalan ke dalam Inventori Aktif dengan status `READY_FOR_SALE` dan `IN_REPAIR` (Gran Max Blindvan).
+  - Mengintegrasikan harga jual estimasi sebagai `targetSellingPrice` di katalog publik (Stargazer BK1953AEE, Stargazer BK1959AEE, Ertiga GX B2437TBZ, Ertiga Diesel DD1271YA, Confero L1229MX).
+  - Masing-masing unit dapat diedit spesifikasi, harga pasang, rincian biaya, atau langsung dicatat penjualannya saat laku di dunia nyata.
+* **🌟 Import 127 Unit Penjualan Historis (`Vehicle` & `Sale`):**
+  - Mengimpor 59 unit dari arsip 2021-2024 dan 68 unit dari buku transaksi terbaru berstatus `SOLD_SETTLED`.
+  - Merekam 529 rincian biaya perbaikan, admin lelang, ongkos ambil unit, poles, cat body, dan spareparts.
+  - Menghubungkan 126 transaksi penjualan resmi beserta mutasi pelunasannya.
+* **🌟 Buku Kas Berjalan & Rekonsiliasi Neraca:**
+  - Menghasilkan 796 mutasi kas masuk/keluar (`CashTransaction`) dengan pencatatan saldo kas berjalan (`runningBalance`).
+* **🌟 Script Importer Terpadu (`npm run db:import-history`):**
+  - Menambahkan script otomasi `prisma/seed-history.ts` dan dataset `prisma/history-data.json` agar sinkronisasi di server VPS produksi dapat dijalankan dalam satu perintah.
+
+---
+
 ### [v1.6.0] — 3 Oktober 2026
 #### 🚀 *Multi-Proof Digital Ecosystem, 7-Tier Profit Sharing & Financial Hardening*
 
