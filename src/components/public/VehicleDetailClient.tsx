@@ -23,6 +23,7 @@ import {
   Archive,
   Sparkles,
   Clock,
+  Info,
 } from "lucide-react";
 import { formatRupiah, formatDate, formatUpcomingPrice, cn } from "@/lib/utils";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
@@ -670,24 +671,24 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
         <div className="bg-white rounded-3xl border border-[#D9D4CB] p-6 sm:p-8 shadow-sm space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#EBE7E1] pb-6">
             <div>
-              <div className="inline-flex items-center gap-2 bg-[#FEF3C7] text-[#92400E] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-                <Clock className="w-4 h-4 text-[#D97706]" />
-                <span>Tahap Pengecekan 160 Titik Sedang Berjalan</span>
+              <div className="inline-flex items-center gap-2 bg-[#EFECE8] text-[#6B6560] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 border border-[#D9D4CB]">
+                <Info className="w-4 h-4 text-[#6B6560]" />
+                <span>Inspeksi Digital Belum Tersedia</span>
               </div>
               <h2 className="text-2xl font-bold text-[#1C1917] tracking-tight">
                 Lembar Hasil Inspeksi Fisik &amp; Uji 15 Titik Panel Cat
               </h2>
-              <p className="text-xs text-[#6B6560] mt-1 max-w-2xl">
-                Unit ini baru tiba di garasi showroom kami dan sedang dalam antrean inspeksi menyeluruh oleh teknisi. Hasil uji ketebalan cat bodi (mikron), uji fungsi mesin, indikator MIL/airbag, dan deteksi bebas banjir akan dipublikasikan secara lengkap begitu unit siap tayang (*Ready for Sale*).
+              <p className="text-xs sm:text-sm text-[#6B6560] mt-1 max-w-2xl leading-relaxed">
+                Inspeksi digital resmi belum dilakukan untuk unit ini. Unit dijual dalam kondisi siap pakai sesuai spesifikasi yang tertera. Calon pembeli dipersilakan menghubungi tim kami untuk jadwal inspeksi mandiri atau test drive di showroom.
               </p>
             </div>
-            <div className="px-4 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold shrink-0 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-600" />
-              <span>Sertifikat Digital Dalam Proses</span>
+            <div className="px-4 py-2.5 rounded-xl bg-[#F7F5F2] border border-[#D9D4CB] text-[#6B6560] text-xs font-semibold shrink-0 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#8C827A]" />
+              <span>Sertifikat Belum Tersedia</span>
             </div>
           </div>
 
-          {/* Preview Tab Checklist Transparan yang Akan Diuji */}
+          {/* Preview Tab Checklist Transparan */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="p-4 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
@@ -697,8 +698,8 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
               <p className="text-[11px] text-[#6B6560] leading-relaxed">
                 Sensor mikron digital untuk membedakan cat asli pabrik (ori kaleng), repaint tipis, atau bekas dempul benturan.
               </p>
-              <span className="inline-block text-[10px] font-bold text-amber-700 bg-amber-100/60 px-2 py-0.5 rounded">
-                Menunggu Uji Alat
+              <span className="inline-block text-[10px] font-bold text-[#6B6560] bg-[#EFECE8] border border-[#D9D4CB] px-2 py-0.5 rounded">
+                Belum Tersedia
               </span>
             </div>
 
@@ -710,8 +711,8 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
               <p className="text-[11px] text-[#6B6560] leading-relaxed">
                 Cek rembesan oli, suara klep/timing chain, getaran engine mounting, dan kepekatan gas buang knalpot.
               </p>
-              <span className="inline-block text-[10px] font-bold text-amber-700 bg-amber-100/60 px-2 py-0.5 rounded">
-                Menunggu Uji Mesin
+              <span className="inline-block text-[10px] font-bold text-[#6B6560] bg-[#EFECE8] border border-[#D9D4CB] px-2 py-0.5 rounded">
+                Belum Tersedia
               </span>
             </div>
 
@@ -723,8 +724,8 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
               <p className="text-[11px] text-[#6B6560] leading-relaxed">
                 Inspeksi apron depan, tulang sasis utama, pilar A/B/C, sealer pintu, dan lantai bagasi untuk garansi bebas tabrak.
               </p>
-              <span className="inline-block text-[10px] font-bold text-amber-700 bg-amber-100/60 px-2 py-0.5 rounded">
-                Menunggu Uji Sasis
+              <span className="inline-block text-[10px] font-bold text-[#6B6560] bg-[#EFECE8] border border-[#D9D4CB] px-2 py-0.5 rounded">
+                Belum Tersedia
               </span>
             </div>
 
@@ -736,8 +737,8 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
               <p className="text-[11px] text-[#6B6560] leading-relaxed">
                 Pemeriksaan kolong dasbor, rel jok, soket sekring, dan modul ECU untuk menjamin 0% residu lumpur banjir.
               </p>
-              <span className="inline-block text-[10px] font-bold text-amber-700 bg-amber-100/60 px-2 py-0.5 rounded">
-                Menunggu Uji Banjir
+              <span className="inline-block text-[10px] font-bold text-[#6B6560] bg-[#EFECE8] border border-[#D9D4CB] px-2 py-0.5 rounded">
+                Belum Tersedia
               </span>
             </div>
           </div>
