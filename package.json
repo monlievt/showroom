@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "tsx --test 'src/**/*.test.ts'",
     "db:clean": "tsx prisma/reset-clean.ts",
-    "db:import-history": "tsx prisma/seed-history.ts"
+    "db:import-history": "tsx prisma/seed-history.ts",
+    "db:seed-users": "tsx prisma/seed-users.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
