@@ -123,8 +123,8 @@ export default async function HomePage() {
 
         {/* 1. COUNTER STATISTIK KEPERCAYAAN & REKAM JEJAK */}
         <section className="bg-white rounded-2xl border border-[#D9D4CB] p-6 sm:p-8 shadow-sm">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 divide-y md:divide-y-0 md:divide-x divide-[#E5E0D8]">
-            <div className="space-y-1 text-center sm:text-left pt-3 md:pt-0">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 divide-y lg:divide-y-0 lg:divide-x divide-[#E5E0D8]">
+            <div className="space-y-1 text-center sm:text-left pt-3 lg:pt-0">
               <div className="flex items-center justify-center sm:justify-start gap-1.5 text-[#D97706]">
                 <TrendingUp className="w-5 h-5" />
                 <span className="text-3xl font-black text-[#1C1917]">{stats.totalSold}+</span>
@@ -133,7 +133,7 @@ export default async function HomePage() {
               <p className="text-[11px] text-[#6B6560]">Kepercayaan pembeli sejak 2021 se-Jawa Timur</p>
             </div>
 
-            <div className="space-y-1 text-center sm:text-left pt-3 md:pt-0 md:pl-6">
+            <div className="space-y-1 text-center sm:text-left pt-3 lg:pt-0 lg:pl-6">
               <div className="flex items-center justify-center sm:justify-start gap-1.5 text-blue-600">
                 <Gauge className="w-5 h-5" />
                 <span className="text-3xl font-black text-[#1C1917]">{stats.pointsTestedPerCar} Titik</span>
@@ -142,31 +142,22 @@ export default async function HomePage() {
               <p className="text-[11px] text-[#6B6560]">Standar uji presisi di 15 panel bodi & pilar</p>
             </div>
 
-            <div className="space-y-1 text-center sm:text-left pt-3 md:pt-0 md:pl-6">
+            <div className="space-y-1 text-center sm:text-left pt-3 lg:pt-0 lg:pl-6">
               <div className="flex items-center justify-center sm:justify-start gap-1.5 text-emerald-600">
                 <FileCheck className="w-5 h-5" />
                 <span className="text-3xl font-black text-[#1C1917]">{stats.samsatVerifiedPct}%</span>
               </div>
-              <p className="text-xs font-bold text-[#1C1917] uppercase tracking-wide">Dokumen Sah Samsat</p>
-              <p className="text-[11px] text-[#6B6560]">Cek fisik BPKB, STNK & Faktur bebas blokir hukum</p>
+              <p className="text-xs font-bold text-[#1C1917] uppercase tracking-wide">Dokumen Sah</p>
+              <p className="text-[11px] text-[#6B6560]">Cek fisik BPKB, STNK & Faktur bebas masalah hukum</p>
             </div>
 
-            <div className="space-y-1 text-center sm:text-left pt-3 md:pt-0 md:pl-6">
-              <div className="flex items-center justify-center sm:justify-start gap-1.5 text-purple-600">
-                <Clock className="w-5 h-5" />
-                <span className="text-3xl font-black text-[#1C1917]">&lt; {stats.avgDaysToSell} Hari</span>
-              </div>
-              <p className="text-xs font-bold text-[#1C1917] uppercase tracking-wide">Rata-rata Terjual</p>
-              <p className="text-[11px] text-[#6B6560]">Perputaran cepat karena harga riil & transparan</p>
-            </div>
-
-            <div className="space-y-1 text-center sm:text-left pt-3 md:pt-0 md:pl-6 col-span-2 md:col-span-1">
+            <div className="space-y-1 text-center sm:text-left pt-3 lg:pt-0 lg:pl-6">
               <div className="flex items-center justify-center sm:justify-start gap-1.5 text-[#D97706]">
                 <ShieldCheck className="w-5 h-5" />
                 <span className="text-3xl font-black text-[#1C1917]">100%</span>
               </div>
               <p className="text-xs font-bold text-[#1C1917] uppercase tracking-wide">Garansi Buyback</p>
-              <p className="text-[11px] text-[#6B6560]">Jaminan uang kembali jika ada eks laka berat/banjir</p>
+              <p className="text-[11px] text-[#6B6560]">Jaminan uang kembali jika surat-surat tidak sah</p>
             </div>
           </div>
         </section>

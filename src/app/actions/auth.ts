@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 import { createSession, destroySession, getSession } from "@/lib/auth/session";
 import { rateLimiter } from "@/lib/security/rate-limiter";
 import { revalidatePath } from "next/cache";
@@ -8,14 +9,16 @@ import { redirect } from "next/navigation";
 
 export async function loginAction(formData: {
   identifier: string; // username, phone, or name
-  pin: string;
+  pin?: string;
+  password?: string;
   role: "OWNER" | "ADMIN" | "STAFF_ADMIN" | "SALES" | "INVESTOR";
 }) {
   try {
-    const { identifier, pin, role } = formData;
+    const { identifier, role } = formData;
+    const inputPassword = (formData.password || formData.pin || "").trim();
 
-    if (!identifier || !pin) {
-      return { success: false, error: "Nomor HP / Username dan PIN wajib diisi" };
+    if (!identifier || !inputPassword) {
+      return { success: false, error: "Nomor HP / Username dan kata sandi wajib diisi" };
     }
 
     const cleanIdentifier = identifier.trim().toLowerCase();
@@ -29,99 +32,10 @@ export async function loginAction(formData: {
       };
     }
 
-    // Default PIN master operasional untuk demo/lokal: 123456
-    // Bisa disesuaikan di production via environment variable MASTER_PIN
-    const validPin = process.env.MASTER_PIN || "123456";
-    if (pin !== validPin && pin !== "admin123") {
-      return {
-        success: false,
-        error: `PIN atau kata sandi yang Anda masukkan salah. Sisa percobaan: ${limitCheck.remaining}.`,
-      };
-    }
+    // ── CARI USER PROFILE DI DATABASE ──
+    let userProfile = null;
 
-    // Login sukses: reset penghitung kegagalan
-    rateLimiter.reset(`login:${cleanIdentifier}`);
-
-    if (role === "OWNER" || role === "ADMIN") {
-      // Cari atau buat UserProfile Owner
-      let profile = await prisma.userProfile.findFirst({
-        where: { role: { in: ["OWNER", "ADMIN"] } },
-      });
-
-      if (!profile) {
-        profile = await prisma.userProfile.create({
-          data: {
-            authUserId: "admin-owner-001",
-            role: "OWNER",
-            fullName: "Owner Nur Mobil (Toko Bu Nur)",
-            phone: identifier,
-          },
-        });
-      }
-
-      await createSession({
-        userId: profile.id,
-        authUserId: profile.authUserId,
-        role: "OWNER",
-        fullName: profile.fullName,
-        phone: profile.phone,
-      });
-
-      return { success: true, redirectUrl: "/admin" };
-    } else if (role === "STAFF_ADMIN") {
-      // Cari atau buat UserProfile Staff Admin
-      let profile = await prisma.userProfile.findFirst({
-        where: { role: "STAFF_ADMIN" },
-      });
-
-      if (!profile) {
-        profile = await prisma.userProfile.create({
-          data: {
-            authUserId: "staff-admin-001",
-            role: "STAFF_ADMIN",
-            fullName: "Staff Operasional & Garasi",
-            phone: identifier,
-          },
-        });
-      }
-
-      await createSession({
-        userId: profile.id,
-        authUserId: profile.authUserId,
-        role: "STAFF_ADMIN",
-        fullName: profile.fullName,
-        phone: profile.phone,
-      });
-
-      return { success: true, redirectUrl: "/admin/inventory" };
-    } else if (role === "SALES") {
-      // Cari atau buat UserProfile Sales
-      let profile = await prisma.userProfile.findFirst({
-        where: { role: "SALES" },
-      });
-
-      if (!profile) {
-        profile = await prisma.userProfile.create({
-          data: {
-            authUserId: "sales-field-001",
-            role: "SALES",
-            fullName: "Tim Sales Nur Mobil",
-            phone: identifier,
-          },
-        });
-      }
-
-      await createSession({
-        userId: profile.id,
-        authUserId: profile.authUserId,
-        role: "SALES",
-        fullName: profile.fullName,
-        phone: profile.phone,
-      });
-
-      return { success: true, redirectUrl: "/admin/inventory?status=READY_FOR_SALE" };
-    } else {
-      // INVESTOR
+    if (role === "INVESTOR") {
       const cleanPhone = identifier.replace(/\D/g, "");
       const investor = await prisma.investor.findFirst({
         where: {
@@ -143,8 +57,7 @@ export async function loginAction(formData: {
         };
       }
 
-      // Pastikan ada UserProfile yang tertaut
-      let userProfile = investor.userProfile;
+      userProfile = investor.userProfile;
       if (!userProfile) {
         userProfile = await prisma.userProfile.create({
           data: {
@@ -156,18 +69,118 @@ export async function loginAction(formData: {
           },
         });
       }
+    } else {
+      // Cari akun berdasarkan authUserId (termasuk alias default) atau nomor telepon
+      const aliasMap: Record<string, string[]> = {
+        owner: ["admin-owner-001", "owner"],
+        admin_garasi: ["staff-admin-001", "admin_garasi"],
+        sales01: ["sales-field-001", "sales01"],
+      };
+      const possibleAuthIds = [cleanIdentifier, ...(aliasMap[cleanIdentifier] || [])];
 
-      await createSession({
-        userId: userProfile.id,
-        authUserId: userProfile.authUserId,
-        role: "INVESTOR",
-        fullName: investor.name,
-        phone: investor.phone,
-        investorId: investor.id,
+      userProfile = await prisma.userProfile.findFirst({
+        where: {
+          OR: [
+            { authUserId: { in: possibleAuthIds } },
+            { phone: identifier },
+            { phone: cleanIdentifier },
+          ],
+        },
       });
-
-      return { success: true, redirectUrl: `/investor?id=${investor.id}` };
     }
+
+    // ── CEK STATUS AKTIF AKUN ──
+    if (userProfile && !userProfile.isActive) {
+      return {
+        success: false,
+        error: "Akun ini telah dinonaktifkan oleh administrator. Hubungi Owner untuk aktivasi.",
+      };
+    }
+
+    // ── VERIFIKASI KATA SANDI (DATABASE BCRYPT / ENVIRONMENT VARIABLE FALLBACK) ──
+    let isPasswordValid = false;
+
+    // 1. Cek jika user memiliki passwordHash tersimpan di database
+    if (userProfile?.passwordHash) {
+      isPasswordValid = bcrypt.compareSync(inputPassword, userProfile.passwordHash);
+    }
+
+    // 2. Fallback: Cek konfigurasi env (AUTH_PASSWORD_... atau MASTER_PASSWORD)
+    if (!isPasswordValid) {
+      const masterPassword = process.env.MASTER_PASSWORD || process.env.MASTER_PIN;
+      const rolePasswordMap: Record<string, string | undefined> = {
+        OWNER: process.env.AUTH_PASSWORD_OWNER,
+        ADMIN: process.env.AUTH_PASSWORD_OWNER,
+        STAFF_ADMIN: process.env.AUTH_PASSWORD_STAFF,
+        SALES: process.env.AUTH_PASSWORD_SALES,
+        INVESTOR: process.env.AUTH_PASSWORD_INVESTOR,
+      };
+
+      const targetRole = userProfile ? userProfile.role : role;
+      const targetPassword = rolePasswordMap[targetRole];
+      isPasswordValid = Boolean(
+        (targetPassword && inputPassword === targetPassword) ||
+        (masterPassword && inputPassword === masterPassword)
+      );
+    }
+
+    if (!isPasswordValid) {
+      return {
+        success: false,
+        error: `Password salah. Sisa percobaan: ${limitCheck.remaining}.`,
+      };
+    }
+
+    // Login sukses: reset penghitung kegagalan
+    rateLimiter.reset(`login:${cleanIdentifier}`);
+
+    // Jika userProfile belum ada (misal login pertama kali via role fallback), buatkan profilnya
+    if (!userProfile) {
+      const defaultNames: Record<string, string> = {
+        OWNER: "Owner Nur Mobil",
+        ADMIN: "Admin Nur Mobil",
+        STAFF_ADMIN: "Staff Operasional & Garasi",
+        SALES: "Tim Sales Nur Mobil",
+      };
+
+      userProfile = await prisma.userProfile.create({
+        data: {
+          authUserId: cleanIdentifier,
+          role: role,
+          fullName: defaultNames[role] || "Pengguna Sistem",
+          phone: identifier.match(/^\d+$/) ? identifier : null,
+          passwordHash: bcrypt.hashSync(inputPassword, 10),
+          isActive: true,
+        },
+      });
+    } else if (!userProfile.passwordHash) {
+      // Simpan hash password ke DB jika sebelumnya belum tersimpan
+      await prisma.userProfile.update({
+        where: { id: userProfile.id },
+        data: { passwordHash: bcrypt.hashSync(inputPassword, 10) },
+      });
+    }
+
+    // ── BUAT SESI LOGIN SESUAI ROLE PROFIL DI DATABASE ──
+    const effectiveRole = userProfile.role;
+    await createSession({
+      userId: userProfile.id,
+      authUserId: userProfile.authUserId,
+      role: effectiveRole,
+      fullName: userProfile.fullName,
+      phone: userProfile.phone,
+    });
+
+    let redirectUrl = "/admin";
+    if (effectiveRole === "STAFF_ADMIN") {
+      redirectUrl = "/admin/inventory";
+    } else if (effectiveRole === "SALES") {
+      redirectUrl = "/admin/inventory?status=READY_FOR_SALE";
+    } else if (effectiveRole === "INVESTOR") {
+      redirectUrl = userProfile.investorId ? `/investor?id=${userProfile.investorId}` : "/investor";
+    }
+
+    return { success: true, redirectUrl };
   } catch (error: any) {
     return { success: false, error: error.message || "Gagal melakukan proses login" };
   }

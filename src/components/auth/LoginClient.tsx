@@ -8,10 +8,9 @@ import {
   Phone,
   User,
   ArrowRight,
-  Sparkles,
-  KeyRound,
-  CheckCircle2,
   AlertCircle,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { loginAction } from "@/app/actions/auth";
 import { cn } from "@/lib/utils";
@@ -23,18 +22,36 @@ export function LoginClient() {
 
   const [role, setRole] = useState<"OWNER" | "STAFF_ADMIN" | "SALES" | "INVESTOR">("OWNER");
   const [identifier, setIdentifier] = useState("owner");
-  const [pin, setPin] = useState("123456");
+  const [pin, setPin] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
+
+    if (!identifier.trim()) {
+      setError("Username atau nomor telepon wajib diisi.");
+      return;
+    }
+
+    if (!pin) {
+      setError("Kata sandi wajib diisi.");
+      return;
+    }
+
+    if (pin.length < 8) {
+      setError("Password salah.");
+      return;
+    }
+
+    setLoading(true);
 
     const res = await loginAction({
       identifier,
       pin,
+      password: pin,
       role,
     });
 
@@ -49,14 +66,13 @@ export function LoginClient() {
     }
   };
 
-  const handleQuickLogin = (
+  const handleSelectRole = (
     targetRole: "OWNER" | "STAFF_ADMIN" | "SALES" | "INVESTOR",
-    targetId: string,
-    targetPin: string = "123456"
+    targetId: string
   ) => {
     setRole(targetRole);
     setIdentifier(targetId);
-    setPin(targetPin);
+    setError(null);
   };
 
   return (
@@ -84,7 +100,6 @@ export function LoginClient() {
               onClick={() => {
                 setRole("OWNER");
                 setIdentifier("owner");
-                setPin("123456");
                 setError(null);
               }}
               className={cn(
@@ -101,7 +116,6 @@ export function LoginClient() {
               onClick={() => {
                 setRole("STAFF_ADMIN");
                 setIdentifier("admin_garasi");
-                setPin("123456");
                 setError(null);
               }}
               className={cn(
@@ -118,7 +132,6 @@ export function LoginClient() {
               onClick={() => {
                 setRole("SALES");
                 setIdentifier("sales01");
-                setPin("123456");
                 setError(null);
               }}
               className={cn(
@@ -135,7 +148,6 @@ export function LoginClient() {
               onClick={() => {
                 setRole("INVESTOR");
                 setIdentifier("081298765432");
-                setPin("123456");
                 setError(null);
               }}
               className={cn(
@@ -189,22 +201,27 @@ export function LoginClient() {
 
             <div>
               <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
-                PIN Akses Keamanan (6 Digit)
+                Kata Sandi Keamanan
               </label>
               <div className="relative">
-                <KeyRound className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
+                <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  placeholder="123456"
+                  placeholder="Masukkan kata sandi..."
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold tracking-widest focus:outline-none focus:border-[#D97706]"
+                  className="w-full pl-10 pr-10 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B6560] hover:text-[#1C1917] focus:outline-none p-1 cursor-pointer"
+                  title={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
-                PIN demo sistem lokal: <strong>123456</strong>
-              </span>
             </div>
 
             <button
@@ -229,20 +246,23 @@ export function LoginClient() {
             </button>
           </form>
 
-          {/* Quick Demo Selector */}
+          {/* Quick Role Preset Selector */}
           <div className="pt-4 border-t border-[#EBE7E1] space-y-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B6560] block text-center">
-              Pintasan Uji Coba Cepat (Akun Demo)
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B6560]">
+                Pilih Cepat Peran Pengguna
+              </span>
+              <span className="text-[10px] text-[#6B6560]">Isi otomatis username</span>
+            </div>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <button
                 type="button"
-                onClick={() => handleQuickLogin("OWNER", "owner", "123456")}
+                onClick={() => handleSelectRole("OWNER", "owner")}
                 className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
               >
                 <div>
                   <span className="font-bold text-[#1C1917] block">👑 Owner</span>
-                  <span className="text-[10px] text-[#6B6560]">Akses penuh semua</span>
+                  <span className="text-[10px] text-[#6B6560]">Akses penuh sistem</span>
                 </div>
                 <span className="text-[9px] font-bold bg-[#FEF3C7] text-[#92400E] px-1.5 py-0.5 rounded">
                   PILIH
@@ -251,7 +271,7 @@ export function LoginClient() {
 
               <button
                 type="button"
-                onClick={() => handleQuickLogin("STAFF_ADMIN", "admin_garasi", "123456")}
+                onClick={() => handleSelectRole("STAFF_ADMIN", "admin_garasi")}
                 className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
               >
                 <div>
@@ -265,7 +285,7 @@ export function LoginClient() {
 
               <button
                 type="button"
-                onClick={() => handleQuickLogin("SALES", "sales01", "123456")}
+                onClick={() => handleSelectRole("SALES", "sales01")}
                 className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
               >
                 <div>
@@ -279,11 +299,11 @@ export function LoginClient() {
 
               <button
                 type="button"
-                onClick={() => handleQuickLogin("INVESTOR", "081298765432", "123456")}
+                onClick={() => handleSelectRole("INVESTOR", "081298765432")}
                 className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
               >
                 <div>
-                  <span className="font-bold text-[#1C1917] block">🤝 Ibu Nurdiah</span>
+                  <span className="font-bold text-[#1C1917] block">🤝 Mitra Investor</span>
                   <span className="text-[10px] text-[#6B6560]">Portal 4 saudara</span>
                 </div>
                 <span className="text-[9px] font-bold bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded">

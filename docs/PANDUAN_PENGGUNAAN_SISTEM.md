@@ -475,7 +475,7 @@ Untuk mencegah kebocoran data sensitif serta membatasi wewenang setiap personel 
 - Hanya dapat mengakses rute `/investor` untuk melihat kinerja modal miliknya sendiri. Jika mencoba membuka `/admin/*`, middleware akan otomatis mengarahkan ke `/investor`.
 
 ### 5. Mekanisme Login & Pengalihan Cepat
-- Halaman login (`/login`) menyediakan pemilih peran cepat (👑 Owner, 🔧 Staff Garasi, 🎯 Tim Sales, 🤝 Mitra Investor) dengan PIN default `123456`.
+- Halaman login (`/login`) menyediakan pemilih peran cepat (👑 Owner, 🔧 Staff Garasi, 🎯 Tim Sales, 🤝 Mitra Investor). Kata sandi autentikasi diamankan melalui variabel lingkungan (`.env`) di server sehingga tidak terekspos ke publik atau GitHub.
 
 ---
 

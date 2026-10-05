@@ -104,7 +104,7 @@ async function main() {
       phone: "081234567892",
     },
   });
-  console.log("✓ Akun Login Operasional (Owner, Staff, Sales) siap dengan PIN 123456");
+  console.log("✓ Akun Login Operasional (Owner, Staff, Sales) siap digunakan");
 
   // 3. Pastikan Aturan Standar Bagi Hasil 4 Saudara Tersedia
   await prisma.profitShareRule.deleteMany({});

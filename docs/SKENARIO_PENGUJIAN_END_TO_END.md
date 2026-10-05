@@ -443,7 +443,7 @@ Menguji pembatasan wewenang antara `OWNER`, `STAFF_ADMIN`, `SALES`, dan `INVESTO
 ### 📝 Langkah Pengujian:
 
 #### Bagian A: Pengujian Peran `SALES` (Marketing & Penjualan)
-1. Buka halaman login (`/login`), pilih role **SALES**, masukkan PIN `123456`, klik Masuk.
+1. Buka halaman login (`/login`), pilih role **SALES**, masukkan kata sandi sesuai `.env` (atau master password), klik Masuk.
 2. Buka menu navigasi Sidebar:
    - Verifikasi menu yang muncul: **Katalog Stok Ready** (`/admin/inventory`) dan **Buka Katalog Web** (`/katalog`).
    - Verifikasi menu yang **TIDAK MUNCUL / DISEMBUNYIKAN**: *Dashboard Utama, Cek Fisik & Inspeksi, Gudang Bahan & Alat, Penjualan & Piutang, Keuangan & Kas (Kas Bank BCA), Investor & Bagi Hasil, Sistem & Notifikasi*.
@@ -454,7 +454,7 @@ Menguji pembatasan wewenang antara `OWNER`, `STAFF_ADMIN`, `SALES`, dan `INVESTO
    - Ketik URL: `http://localhost:3000/admin/settings` ➔ Ditolak / Diredirect.
 
 #### Bagian B: Pengujian Peran `STAFF_ADMIN` (Operasional Garasi)
-1. Logout, lalu login kembali dengan role **STAFF_ADMIN**, PIN `123456`.
+1. Logout, lalu login kembali dengan role **STAFF_ADMIN**, masukkan kata sandi sesuai `.env`.
 2. Buka menu navigasi Sidebar:
    - Menu yang muncul: **Dashboard Utama**, **Inventori Unit**, **Cek Fisik & Inspeksi**, **Gudang Bahan & Alat**, **Penjualan & Piutang**, dan **Buka Katalog Web**.
    - Menu yang **DISEMBUNYIKAN**: *Keuangan & Kas (Kas Besar BCA / Prive), Investor & Bagi Hasil, Sistem & Notifikasi*.
@@ -466,12 +466,12 @@ Menguji pembatasan wewenang antara `OWNER`, `STAFF_ADMIN`, `SALES`, dan `INVESTO
    - Ketik URL: `http://localhost:3000/admin/settings` (Pengaturan Sistem) ➔ Ditolak.
 
 #### Bagian C: Pengujian Peran `INVESTOR` (Pemodal Mitra)
-1. Logout, lalu login dengan role **INVESTOR**.
+1. Logout, lalu login dengan role **INVESTOR**, masukkan kata sandi sesuai `.env`.
 2. Verifikasi layar: Langsung diarahkan ke portal investor (`/investor`).
 3. Coba ketik URL admin: `http://localhost:3000/admin` ➔ Otomatis ditolak dan dikembalikan ke `/investor`.
 
 #### Bagian D: Pengujian Peran `OWNER` (Pemilik Showroom)
-1. Logout, lalu login dengan role **OWNER**, PIN `123456`.
+1. Logout, lalu login dengan role **OWNER**, masukkan kata sandi sesuai `.env`.
 2. Verifikasi: Seluruh menu terbuka 100% tanpa ada batasan (Dashboard Utama, Inventori Unit, Cek Fisik & Inspeksi, Gudang Bahan & Alat, Penjualan & Piutang, Keuangan & Kas, Investor & Bagi Hasil, Sistem & Notifikasi).
 
 ### ✅ Hasil yang Diharapkan:

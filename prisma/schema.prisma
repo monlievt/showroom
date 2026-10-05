@@ -207,14 +207,17 @@ enum UserRole {
 // ── MODELS ───────────────────────────────────────────────────────────────────
 
 model UserProfile {
-  id         String    @id @default(uuid())
-  authUserId String    @unique // Auth user ID (Auth.js / Better Auth / custom credentials)
-  role       UserRole
-  fullName   String
-  phone      String?
-  investorId String?   @unique
-  investor   Investor? @relation(fields: [investorId], references: [id])
-  createdAt  DateTime  @default(now())
+  id           String    @id @default(uuid())
+  authUserId   String    @unique // Auth user ID / username unik untuk login
+  role         UserRole
+  fullName     String
+  phone        String?
+  passwordHash String?   @db.Text
+  isActive     Boolean   @default(true)
+  investorId   String?   @unique
+  investor     Investor? @relation(fields: [investorId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
 }
 
 model Vehicle {

@@ -45,7 +45,8 @@ export async function middleware(request: NextRequest) {
       const isRestrictedForStaff =
         pathname.startsWith("/admin/investors") ||
         pathname.startsWith("/admin/finance") ||
-        pathname.startsWith("/admin/settings");
+        pathname.startsWith("/admin/settings") ||
+        pathname.startsWith("/admin/users");
 
       if (isRestrictedForStaff) {
         return NextResponse.redirect(new URL("/admin/inventory", request.url));

@@ -485,6 +485,29 @@ export function AdminSidebar({
             </Link>
           )}
 
+          {/* 8. Manajemen Pengguna (HANYA OWNER / ADMIN) */}
+          {isOwner && (
+            <Link
+              href="/admin/users"
+              title={isCollapsed ? "Kelola Pengguna" : undefined}
+              className={cn(
+                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                pathname.startsWith("/admin/users")
+                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
+                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                isCollapsed && "justify-center px-0"
+              )}
+            >
+              <Users
+                className={cn(
+                  "w-4 h-4 shrink-0",
+                  pathname.startsWith("/admin/users") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                )}
+              />
+              {!isCollapsed && <span className="truncate">Kelola Pengguna</span>}
+            </Link>
+          )}
+
           {/* Katalog Web Publik */}
           {!isCollapsed && (
             <div className="pt-3 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#6B6560]">
