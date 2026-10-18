@@ -10,7 +10,6 @@ import {
   Send,
   Database,
   ShieldCheck,
-  FileSpreadsheet,
   RefreshCw,
   Search,
   ExternalLink,
@@ -29,7 +28,6 @@ import { retryNotificationLog } from "@/lib/services/whatsapp";
 import { sendTestWhatsAppAction } from "@/app/actions/notification";
 import { SettingItem } from "@/app/actions/setting";
 import { ApiKeySettingsClient } from "./ApiKeySettingsClient";
-import { ImportSpreadsheetPanel } from "./ImportSpreadsheetPanel";
 import { KeyRound } from "lucide-react";
 
 interface SettingsProps {
@@ -59,7 +57,7 @@ interface SettingsProps {
 
 export function SettingsClient({ logs, auditLogs, initialSettings = [] }: SettingsProps) {
   const [activeTab, setActiveTab] = useState<
-    "api_keys" | "import_spreadsheet" | "notifications" | "audit" | "backup"
+    "api_keys" | "notifications" | "audit" | "backup"
   >("api_keys");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [typeFilter, setTypeFilter] = useState("ALL");
@@ -222,18 +220,6 @@ export function SettingsClient({ logs, auditLogs, initialSettings = [] }: Settin
           <span>Kunci API & Integrasi Layanan</span>
         </button>
         <button
-          onClick={() => setActiveTab("import_spreadsheet")}
-          className={cn(
-            "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
-            activeTab === "import_spreadsheet"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
-          )}
-        >
-          <FileSpreadsheet className="w-4 h-4 text-[#D97706]" />
-          <span>Impor Data Spreadsheet Lama</span>
-        </button>
-        <button
           onClick={() => setActiveTab("notifications")}
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0",
@@ -271,11 +257,6 @@ export function SettingsClient({ logs, auditLogs, initialSettings = [] }: Settin
       {/* TAB 0: KUNCI API & INTEGRASI */}
       {activeTab === "api_keys" && (
         <ApiKeySettingsClient initialSettings={initialSettings} />
-      )}
-
-      {/* TAB 0.5: IMPOR SPREADSHEET */}
-      {activeTab === "import_spreadsheet" && (
-        <ImportSpreadsheetPanel />
       )}
 
       {/* TAB 1: NOTIFICATIONS */}
