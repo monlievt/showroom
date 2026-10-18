@@ -161,6 +161,23 @@ export async function saveVehicleInvestmentsAction(
         const capitalAmt = new Decimal(inv.capitalShare);
         const profitPercent = new Decimal(inv.profitSharePercent || 0);
 
+        // Ambil saldo kas bebas investor yang tersedia saat ini di buku besar
+        const latestLedger = await tx.capitalLedger.findFirst({
+          where: { investorId: inv.investorId },
+          orderBy: { createdAt: "desc" },
+        });
+        const currentAvail = latestLedger
+          ? new Decimal(latestLedger.runningBalance.toString())
+          : new Decimal(0);
+
+        // Validasi ketat: Saldo investor tidak boleh minus
+        if (capitalAmt.gt(currentAvail)) {
+          const investor = await tx.investor.findUnique({ where: { id: inv.investorId } });
+          throw new Error(
+            `Saldo kas bebas investor ${investor?.name || ""} tidak mencukupi (Tersedia: Rp ${currentAvail.toString()}, Diminta: Rp ${capitalAmt.toString()}). Investor tidak boleh bersaldo minus. Sisa kekurangan modal wajib didanai oleh investor lain atau kas showroom.`
+          );
+        }
+
         const newInv = await tx.vehicleInvestment.create({
           data: {
             vehicleId,

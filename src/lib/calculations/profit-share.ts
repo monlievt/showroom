@@ -236,6 +236,20 @@ export function calculateProfitDistribution(params: {
           notes: `Tier '${matchedRule.name}': Rp ${amountPerPerson.toString()} untuk ${siblingName}.`,
         });
       }
+
+      // Pengaman untuk unit patungan multi-investor:
+      // Pastikan total jatah saudara tidak melebihi sisa laba unit yang tersedia setelah jatah investor akad
+      const maxForFamily = Decimal.max(0, remainingProfitAfterPercentage);
+      if (totalDistributedToFamily.gt(maxForFamily) && totalDistributedToFamily.gt(0)) {
+        const ratio = maxForFamily.div(totalDistributedToFamily);
+        for (const dist of distributions) {
+          if (dist.beneficiaryType === "MOTHER_SIBLING") {
+            dist.calculatedAmount = dist.calculatedAmount.times(ratio).toDecimalPlaces(2);
+            dist.notes = `${dist.notes} (Disesuaikan proporsional dengan sisa laba unit).`;
+          }
+        }
+        totalDistributedToFamily = maxForFamily;
+      }
     }
   }
 

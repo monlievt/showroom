@@ -272,6 +272,24 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             )
           : [];
 
+      // Validasi ketat di client: tidak boleh melebihi saldo kas bebas
+      if (fundingMode === "INVESTOR") {
+        for (const row of cleanInvestments) {
+          const matchedInv = availableInvestors.find((inv) => inv.id === row.investorId);
+          const curBal = Number(matchedInv?.currentBalance) || 0;
+          const prevAllocatedToThisCar = Number(
+            (vehicle.investments || []).find((vInv: any) => vInv.investorId === row.investorId)?.capitalShare || 0
+          );
+          const maxAllowed = curBal + prevAllocatedToThisCar;
+
+          if (Number(row.capitalShare) > maxAllowed) {
+            throw new Error(
+              `Saldo kas bebas ${matchedInv?.name || "investor"} tidak mencukupi (Tersedia: ${formatRupiah(maxAllowed)}, Diinput: ${formatRupiah(row.capitalShare)}). Investor tidak boleh bersaldo minus. Silakan kurangi modalnya ke maksimal ${formatRupiah(maxAllowed)}, lalu klik "+ Tambah Investor Lain" atau gunakan kas showroom untuk mendanai sisanya.`
+            );
+          }
+        }
+      }
+
       const invRes = await saveVehicleInvestmentsAction(vehicle.id, cleanInvestments);
       if (!invRes.success) {
         throw new Error(invRes.error || "Gagal menyimpan alokasi pendanaan investor");
@@ -1027,38 +1045,59 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                           </div>
 
                           <div className="sm:col-span-4">
-                            <div className="flex items-center justify-between mb-1">
-                              <label className="block text-[11px] font-semibold text-[#1C1917]">
-                                Modal Yang Disetor (Rp) *
-                              </label>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleUpdateInvestorRow(
-                                    idx,
-                                    "capitalShare",
-                                    Number(formData.purchasePrice) || 0
-                                  )
-                                }
-                                className="text-[10px] font-bold text-[#D97706] hover:underline cursor-pointer"
-                              >
-                                100% Harga Beli
-                              </button>
-                            </div>
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              placeholder="0"
-                              value={formatThousands(row.capitalShare)}
-                              onChange={(e) =>
-                                handleUpdateInvestorRow(
-                                  idx,
-                                  "capitalShare",
-                                  parseThousands(e.target.value)
-                                )
-                              }
-                              className="w-full h-10 px-3 bg-white border border-[#D9D4CB] rounded-lg text-xs font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
-                            />
+                            {(() => {
+                              const matchedInv = availableInvestors.find((inv) => inv.id === row.investorId);
+                              const curBal = Number(matchedInv?.currentBalance) || 0;
+                              const prevAllocatedToThisCar = Number(
+                                (vehicle.investments || []).find((vInv: any) => vInv.investorId === row.investorId)?.capitalShare || 0
+                              );
+                              const maxAllowed = Math.max(0, curBal + prevAllocatedToThisCar);
+                              const purchasePriceNum = Number(formData.purchasePrice) || 0;
+
+                              return (
+                                <>
+                                  <div className="flex items-center justify-between mb-1">
+                                    <label className="block text-[11px] font-semibold text-[#1C1917]">
+                                      Modal Yang Disetor (Rp) *
+                                    </label>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        handleUpdateInvestorRow(
+                                          idx,
+                                          "capitalShare",
+                                          Math.min(purchasePriceNum, maxAllowed)
+                                        )
+                                      }
+                                      className="text-[10px] font-bold text-[#D97706] hover:underline cursor-pointer"
+                                    >
+                                      {maxAllowed < purchasePriceNum
+                                        ? `Isi Maks Saldo (${formatThousands(maxAllowed)})`
+                                        : "100% Harga Beli"}
+                                    </button>
+                                  </div>
+                                  <input
+                                    type="text"
+                                    inputMode="numeric"
+                                    placeholder="0"
+                                    value={formatThousands(row.capitalShare)}
+                                    onChange={(e) =>
+                                      handleUpdateInvestorRow(
+                                        idx,
+                                        "capitalShare",
+                                        parseThousands(e.target.value)
+                                      )
+                                    }
+                                    className={cn(
+                                      "w-full h-10 px-3 bg-white border rounded-lg text-xs font-bold text-[#1C1917] focus:outline-none focus:ring-2",
+                                      Number(row.capitalShare) > maxAllowed
+                                        ? "border-red-400 focus:ring-red-400/40 text-red-700 bg-red-50/20"
+                                        : "border-[#D9D4CB] focus:ring-[#D97706]/40"
+                                    )}
+                                  />
+                                </>
+                              );
+                            })()}
                           </div>
 
                           <div className="sm:col-span-3">
@@ -1093,34 +1132,39 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                         {(() => {
                           const matchedInv = availableInvestors.find((inv) => inv.id === row.investorId);
                           const curBal = Number(matchedInv?.currentBalance) || 0;
+                          const prevAllocatedToThisCar = Number(
+                            (vehicle.investments || []).find((vInv: any) => vInv.investorId === row.investorId)?.capitalShare || 0
+                          );
+                          const maxAllowed = Math.max(0, curBal + prevAllocatedToThisCar);
                           const capShare = Number(row.capitalShare) || 0;
-                          const diff = curBal - capShare;
+                          const diff = maxAllowed - capShare;
 
                           if (!matchedInv) return null;
 
                           if (diff < 0) {
                             return (
-                              <div className="p-2.5 bg-amber-50 border border-amber-200/80 rounded-lg text-[11px] text-amber-900 flex items-start gap-2">
-                                <span className="font-bold text-amber-700 shrink-0">⚠️ Defisit:</span>
-                                <div>
-                                  <span>
-                                    Saldo kas bebas {matchedInv.name} saat ini <strong>{formatRupiah(curBal)}</strong>. Alokasi ini melebihi saldo kas bebas sebesar <strong>{formatRupiah(Math.abs(diff))}</strong>.
-                                  </span>
-                                  <span className="block text-[10px] text-amber-700/80 mt-0.5">
-                                    Sistem tetap mengizinkan penyimpanan unit ini. Saldo investor akan tercatat defisit ({formatRupiah(diff)}) hingga setoran modal berikutnya dicatatkan di menu Investor.
-                                  </span>
+                              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-[11px] text-red-900 space-y-1">
+                                <div className="flex items-center gap-1.5 font-bold text-red-800">
+                                  <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
+                                  <span>Saldo Kas Bebas {matchedInv.name} Tidak Mencukupi!</span>
                                 </div>
+                                <p className="text-red-700 leading-relaxed">
+                                  Saldo kas bebas {matchedInv.name} hanya tersedia <strong>{formatRupiah(maxAllowed)}</strong>, sedangkan Anda mengalokasikan <strong>{formatRupiah(capShare)}</strong> (Kelebihan {formatRupiah(Math.abs(diff))}).
+                                </p>
+                                <p className="text-red-800 font-semibold pt-0.5">
+                                  💡 Solusi: Turunkan nominal di atas menjadi <strong>{formatRupiah(maxAllowed)}</strong>, lalu klik tombol <strong>"+ Tambah Investor Lain"</strong> di bawah untuk memilih pemodal lain (atau biarkan sisa {formatRupiah(Math.abs(diff))} didanai kas showroom).
+                                </p>
                               </div>
                             );
                           }
 
                           return (
-                            <div className="p-2 bg-emerald-50/70 border border-emerald-200/70 rounded-lg text-[11px] text-emerald-800 flex items-center justify-between">
+                            <div className="p-2.5 bg-emerald-50/70 border border-emerald-200/70 rounded-lg text-[11px] text-emerald-800 flex items-center justify-between">
                               <span className="flex items-center gap-1.5 font-medium">
-                                <span className="text-emerald-600 font-bold">✓</span> Saldo kas bebas investor mencukupi ({formatRupiah(curBal)})
+                                <span className="text-emerald-600 font-bold">✓</span> Saldo kas bebas mencukupi ({formatRupiah(maxAllowed)})
                               </span>
                               <span className="text-[10px] text-emerald-700">
-                                Sisa kas bebas setelah alokasi: <strong>{formatRupiah(diff)}</strong>
+                                Sisa saldo kas bebas setelah alokasi ini: <strong>{formatRupiah(diff)}</strong>
                               </span>
                             </div>
                           );
@@ -1154,9 +1198,12 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                         : 0;
 
                     return (
-                      <div className="p-4 bg-amber-50/60 border border-amber-200/80 rounded-xl space-y-2">
-                        <div className="text-xs font-bold text-[#92400E] flex items-center gap-2">
-                          <span>Ringkasan Komposisi Pendanaan:</span>
+                      <div className="p-4 bg-amber-50/60 border border-amber-200/80 rounded-xl space-y-3">
+                        <div className="text-xs font-bold text-[#92400E] flex items-center justify-between">
+                          <span>Ringkasan Komposisi Pendanaan Patungan Unit:</span>
+                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                            {investorFundingList.length} Investor Terdaftar
+                          </span>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
                           <div className="p-2.5 bg-white rounded-lg border border-amber-100">
@@ -1175,7 +1222,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                           </div>
                           <div className="p-2.5 bg-white rounded-lg border border-amber-100">
                             <span className="text-[10px] text-[#6B6560] block">
-                              Didanai Kas Showroom
+                              Didanai Kas Showroom ({100 - invPercent}%)
                             </span>
                             <span className="font-bold text-[#16A34A]">
                               {formatRupiah(showroomShare)}
@@ -1183,9 +1230,15 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                           </div>
                         </div>
 
+                        {showroomShare > 0 && (
+                          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-[11px] text-emerald-900 leading-relaxed">
+                            💡 <strong>Pendanaan Patungan Kas Showroom:</strong> Sisa kekurangan modal sebesar <strong>{formatRupiah(showroomShare)}</strong> ({100 - invPercent}%) otomatis didanai dari kas showroom (modal Anda). Ketika mobil ini laku, 100% laba dari porsi modal showroom ini menjadi hak Anda sebagai Owner.
+                          </div>
+                        )}
+
                         {totalInvCap > purchasePriceNum && (
-                          <div className="text-[11px] text-amber-800 bg-amber-100/80 p-2 rounded-lg mt-1">
-                            Perhatian: Jumlah modal investor melebihi harga beli unit. Kelebihan dana akan dicatat sebagai penyangga operasional/reparasi.
+                          <div className="text-[11px] text-red-800 bg-red-100 p-2.5 rounded-lg border border-red-200">
+                            ⚠️ Perhatian: Jumlah total modal investor ({formatRupiah(totalInvCap)}) melebihi harga beli unit ({formatRupiah(purchasePriceNum)}). Mohon sesuaikan nominal modal masing-masing pemodal.
                           </div>
                         )}
                       </div>
