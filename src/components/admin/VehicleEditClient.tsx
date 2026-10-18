@@ -1020,7 +1020,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                             >
                               {availableInvestors.map((inv) => (
                                 <option key={inv.id} value={inv.id}>
-                                  {inv.name} ({inv.type === "FAMILY" ? "Keluarga" : "Mitra Luar"}) — Default Bagi Hasil {inv.defaultProfitSharePercent || 50}%
+                                  {inv.name} ({inv.type === "FAMILY" ? "Keluarga" : "Mitra Luar"}) — Saldo Kas: {formatRupiah(inv.currentBalance || 0)}
                                 </option>
                               ))}
                             </select>
@@ -1088,6 +1088,43 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                             </div>
                           </div>
                         </div>
+
+                        {/* Indikator Saldo Kas Investor (Kesiapan Saldo Minus / Kurang) */}
+                        {(() => {
+                          const matchedInv = availableInvestors.find((inv) => inv.id === row.investorId);
+                          const curBal = Number(matchedInv?.currentBalance) || 0;
+                          const capShare = Number(row.capitalShare) || 0;
+                          const diff = curBal - capShare;
+
+                          if (!matchedInv) return null;
+
+                          if (diff < 0) {
+                            return (
+                              <div className="p-2.5 bg-amber-50 border border-amber-200/80 rounded-lg text-[11px] text-amber-900 flex items-start gap-2">
+                                <span className="font-bold text-amber-700 shrink-0">⚠️ Defisit:</span>
+                                <div>
+                                  <span>
+                                    Saldo kas bebas {matchedInv.name} saat ini <strong>{formatRupiah(curBal)}</strong>. Alokasi ini melebihi saldo kas bebas sebesar <strong>{formatRupiah(Math.abs(diff))}</strong>.
+                                  </span>
+                                  <span className="block text-[10px] text-amber-700/80 mt-0.5">
+                                    Sistem tetap mengizinkan penyimpanan unit ini. Saldo investor akan tercatat defisit ({formatRupiah(diff)}) hingga setoran modal berikutnya dicatatkan di menu Investor.
+                                  </span>
+                                </div>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <div className="p-2 bg-emerald-50/70 border border-emerald-200/70 rounded-lg text-[11px] text-emerald-800 flex items-center justify-between">
+                              <span className="flex items-center gap-1.5 font-medium">
+                                <span className="text-emerald-600 font-bold">✓</span> Saldo kas bebas investor mencukupi ({formatRupiah(curBal)})
+                              </span>
+                              <span className="text-[10px] text-emerald-700">
+                                Sisa kas bebas setelah alokasi: <strong>{formatRupiah(diff)}</strong>
+                              </span>
+                            </div>
+                          );
+                        })()}
                       </div>
                     ))}
                   </div>
