@@ -302,6 +302,11 @@ export async function getVehicleByIdAction(id: string) {
         inspections: {
           orderBy: { version: "asc" },
         },
+        investments: {
+          include: {
+            investor: true,
+          },
+        },
         sale: {
           include: {
             buyer: true,
@@ -340,6 +345,14 @@ export async function getVehicleByIdAction(id: string) {
         expenses: vehicle.expenses.map((e: any) => ({
           ...e,
           amount: Number(e.amount),
+        })),
+        investments: (vehicle.investments || []).map((inv: any) => ({
+          id: inv.id,
+          investorId: inv.investorId,
+          investorName: inv.investor?.name || "Investor",
+          investorType: inv.investor?.type,
+          capitalShare: Number(inv.capitalShare),
+          profitSharePercent: Number(inv.profitSharePercent),
         })),
         photos: vehicle.photos,
         documents: vehicle.documents,
