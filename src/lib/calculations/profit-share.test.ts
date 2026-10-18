@@ -137,6 +137,106 @@ describe("Profit Sharing & Loss Financial Engine", () => {
     assert.strictEqual(totalDistributed.toNumber(), 20000000);
   });
 
+  it("menghitung skenario Rio Hatta Prayogi sebagai investor 50:50 murni (tanpa modal Ibu)", () => {
+    // Skenario A:
+    // HPP: 100.000.000 (Modal Rio Rp 100jt penuh, akad 50:50)
+    // Harga Jual: 112.000.000 -> Laba kotor: 12.000.000
+    // Hasil:
+    // Rio: bagi hasil 50% * 12jt = 6.000.000, modal kembali 100.000.000
+    // Jatah saudara: 0 (karena tidak ada modal Ibu)
+    // Owner: sisa laba = 6.000.000
+    const investments: InvestmentData[] = [
+      {
+        investorId: "inv-rio",
+        investorName: "Rio Hatta Prayogi",
+        investorType: "THIRD_PARTY",
+        capitalShare: 100000000,
+        profitSharePercent: 50.0,
+      },
+    ];
+
+    const result = calculateProfitDistribution({
+      sellingPrice: 112000000,
+      paidAmount: 112000000,
+      purchasePrice: 95000000,
+      expenses: [{ amount: 5000000 }],
+      investments,
+      rules: sampleRules,
+    });
+
+    assert.strictEqual(result.grossProfit.toNumber(), 12000000);
+
+    // Rio Hatta Prayogi
+    const rioDist = result.distributions.find((d) => d.investorId === "inv-rio");
+    assert.ok(rioDist);
+    assert.strictEqual(rioDist.calculatedAmount.toNumber(), 6000000);
+    assert.strictEqual(rioDist.returnedCapital?.toNumber(), 100000000);
+
+    // Tidak ada jatah saudara
+    const siblingDist = result.distributions.filter((d) => d.beneficiaryType === "MOTHER_SIBLING");
+    assert.strictEqual(siblingDist.length, 0);
+
+    // Owner
+    const ownerDist = result.distributions.find((d) => d.beneficiaryType === "OWNER");
+    assert.ok(ownerDist);
+    assert.strictEqual(ownerDist.calculatedAmount.toNumber(), 6000000);
+  });
+
+  it("menghitung skenario campuran: Rio Hatta Prayogi 50:50 dan Modal Ibu (Rio dapat 50:50 + jatah saudara)", () => {
+    // Skenario C:
+    // HPP: 100.000.000 (Rio 50jt 50:50, Ibu Nurdiah 50jt Tier)
+    // Harga Jual: 120.000.000 -> Laba kotor: 20.000.000 (Tier > 10jt: 1jt/saudara)
+    // Hasil:
+    // 1. Rio (Investor 50:50): 20jt * (50jt / 100jt) * 50% = 5.000.000 (+ modal 50jt)
+    // 2. 4 Saudara (termasuk Rio): masing-masing 1.000.000 = 4.000.000 total (+ modal Ibu 50jt)
+    // 3. Owner: 20jt - 5jt - 4jt = 11.000.000
+    const investments: InvestmentData[] = [
+      {
+        investorId: "inv-rio-5050",
+        investorName: "Rio Hatta Prayogi",
+        investorType: "THIRD_PARTY",
+        capitalShare: 50000000,
+        profitSharePercent: 50.0,
+      },
+      {
+        investorId: "inv-ibu",
+        investorName: "Ibu Nurdiah",
+        investorType: "MOTHER_SIBLING",
+        capitalShare: 50000000,
+        profitSharePercent: 0,
+      },
+    ];
+
+    const result = calculateProfitDistribution({
+      sellingPrice: 120000000,
+      paidAmount: 120000000,
+      purchasePrice: 90000000,
+      expenses: [{ amount: 10000000 }],
+      investments,
+      rules: sampleRules,
+    });
+
+    assert.strictEqual(result.grossProfit.toNumber(), 20000000);
+
+    // Rio sebagai investor 50:50
+    const rioInvDist = result.distributions.find((d) => d.investorId === "inv-rio-5050");
+    assert.ok(rioInvDist);
+    assert.strictEqual(rioInvDist.calculatedAmount.toNumber(), 5000000);
+    assert.strictEqual(rioInvDist.returnedCapital?.toNumber(), 50000000);
+
+    // 4 Saudara (Uti, Rio Hatta Prayogi, Mirna, Shinta)
+    const siblingDist = result.distributions.filter((d) => d.beneficiaryType === "MOTHER_SIBLING");
+    assert.strictEqual(siblingDist.length, 4);
+    const rioSiblingDist = siblingDist.find((s) => s.beneficiaryName.includes("Rio Hatta Prayogi"));
+    assert.ok(rioSiblingDist, "Rio Hatta Prayogi harus tercantum sebagai salah satu saudara");
+    assert.strictEqual(rioSiblingDist.calculatedAmount.toNumber(), 1000000);
+
+    // Owner
+    const ownerDist = result.distributions.find((d) => d.beneficiaryType === "OWNER");
+    assert.ok(ownerDist);
+    assert.strictEqual(ownerDist.calculatedAmount.toNumber(), 11000000);
+  });
+
   it("menerapkan alur rugi: modal investor kembali 100%, profit 0, dan Owner menyerap 100% kerugian", () => {
     // Skenario Rugi:
     // Harga Beli: 80.000.000

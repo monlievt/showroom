@@ -46,12 +46,19 @@ export interface ProfitDistributionResult {
   appliedRule?: RuleData;
 }
 
+export const DEFAULT_FAMILY_SIBLINGS = [
+  "Uti",
+  "Rio Hatta Prayogi",
+  "Mirna Yekti Anggraini",
+  "Shinta Nurmala Sanza",
+];
+
 /**
  * Menghitung distribusi laba/rugi untuk transaksi penjualan unit mobil secara deterministik.
  * Memenuhi PRD.md §4 & ARCHITECTURE.md §4:
  * 1. Hanya dieksekusi jika isFullyPaid = true (SUM(payments) >= sellingPrice).
- * 2. Investor Eksternal (THIRD_PARTY): (modal investor ÷ total modal unit) × persentase akad (0–100).
- * 3. Modal Ibu / 4 Saudara (MOTHER_SIBLING): tier bertingkat dari ProfitShareRule berdasarkan laba unit.
+ * 2. Investor Akad Persentase (Pihak Ketiga / Rio Hatta Prayogi 50:50): (modal investor ÷ total modal unit) × persentase akad (0–100).
+ * 3. Modal Ibu / 4 Saudara (MOTHER_SIBLING): tier bertingkat dari ProfitShareRule berdasarkan laba unit (Uti, Rio Hatta Prayogi, Mirna, Shinta).
  * 4. Owner: sisa laba bersih unit setelah investor eksternal & saudara.
  * 5. Alur Rugi: Seluruh modal investor kembali 100%, kerugian 100% diserap oleh Owner (calculatedAmount negatif).
  */
@@ -97,9 +104,12 @@ export function calculateProfitDistribution(params: {
     // Seluruh investor mendapatkan pokok modalnya kembali 100%, pembagian profit = 0
     for (const inv of params.investments) {
       const cap = new Decimal(inv.capitalShare.toString());
+      const isFamilyWithoutPercent =
+        inv.investorType === "MOTHER_SIBLING" && Number(inv.profitSharePercent) === 0;
+
       distributions.push({
         investorId: inv.investorId,
-        beneficiaryType: inv.investorType === "MOTHER_SIBLING" ? "MOTHER_SIBLING" : "INVESTOR_EXTERNAL",
+        beneficiaryType: isFamilyWithoutPercent ? "MOTHER_SIBLING" : "INVESTOR_EXTERNAL",
         beneficiaryName: inv.investorName,
         grossProfitAtCalc: grossProfit,
         totalUnitCapitalAtCalc: totalUnitCapital,
@@ -140,23 +150,24 @@ export function calculateProfitDistribution(params: {
   // =========================================================================
   // SKENARIO 2: UNTUNG ATAU IMPAS (Gross Profit >= 0)
   // =========================================================================
-  let totalDistributedToThirdParties = new Decimal(0);
+  let totalDistributedToPercentageInvestors = new Decimal(0);
 
-  // A. Hitung Pembagian Investor Pihak Ketiga (THIRD_PARTY)
-  const thirdPartyInvestments = params.investments.filter(
-    (inv) => inv.investorType === "THIRD_PARTY"
+  // A. Hitung Pembagian Investor Akad Persentase (Pihak Ketiga / Rio Hatta Prayogi Modal Mandiri 50:50)
+  // Terpicu jika investorType === "THIRD_PARTY" ATAU memiliki profitSharePercent > 0
+  const percentageInvestments = params.investments.filter(
+    (inv) => inv.investorType === "THIRD_PARTY" || Number(inv.profitSharePercent) > 0
   );
 
-  for (const inv of thirdPartyInvestments) {
+  for (const inv of percentageInvestments) {
     const cap = new Decimal(inv.capitalShare.toString());
     const percent = new Decimal(inv.profitSharePercent.toString());
 
-    // Formula PRD: (modal investor ÷ total modal unit) × persentase akad (0-100)
+    // Formula: (modal investor ÷ total modal unit) × persentase akad (0-100)
     const capitalProportion = totalUnitCapital.gt(0) ? cap.div(totalUnitCapital) : new Decimal(0);
     const agreedFraction = percent.div(100);
     const investorShare = grossProfit.times(capitalProportion).times(agreedFraction).toDecimalPlaces(2);
 
-    totalDistributedToThirdParties = totalDistributedToThirdParties.plus(investorShare);
+    totalDistributedToPercentageInvestors = totalDistributedToPercentageInvestors.plus(investorShare);
 
     distributions.push({
       investorId: inv.investorId,
@@ -169,16 +180,17 @@ export function calculateProfitDistribution(params: {
       ruleVersionId: null,
       calculatedAmount: investorShare,
       returnedCapital: cap,
-      notes: `Bagi hasil investor eksternal ${percent.toString()}% dari porsi modal (${capitalProportion.times(100).toFixed(1)}%).`,
+      notes: `Bagi hasil investor ${percent.toString()}% dari porsi modal (${capitalProportion.times(100).toFixed(1)}%).`,
     });
   }
 
-  // Sisa laba kotor yang tersedia setelah investor pihak ketiga
-  const remainingProfitAfterExternal = grossProfit.minus(totalDistributedToThirdParties);
+  // Sisa laba kotor yang tersedia setelah investor akad persentase
+  const remainingProfitAfterPercentage = grossProfit.minus(totalDistributedToPercentageInvestors);
 
-  // B. Hitung Pembagian Modal Ibu Nurdiah / 4 Saudara (MOTHER_SIBLING)
+  // B. Hitung Pembagian Modal Ibu Nurdiah / Alokasi 4 Saudara (MOTHER_SIBLING)
+  // Hanya terpicu jika ada modal Ibu Nurdiah yang tidak dialokasikan persentase khusus (profitSharePercent === 0)
   const familyInvestments = params.investments.filter(
-    (inv) => inv.investorType === "MOTHER_SIBLING"
+    (inv) => inv.investorType === "MOTHER_SIBLING" && Number(inv.profitSharePercent) === 0
   );
 
   let totalDistributedToFamily = new Decimal(0);
@@ -204,15 +216,16 @@ export function calculateProfitDistribution(params: {
       const amountPerPerson = new Decimal(matchedRule.amountPerPerson.toString());
       const numberOfPeople = matchedRule.numberOfPeople || 4;
 
-      // Buat distribusi per saudara (4 orang)
+      // Buat distribusi per saudara (Uti, Rio Hatta Prayogi, Mirna Yekti Anggraini, Shinta Nurmala Sanza)
       for (let s = 1; s <= numberOfPeople; s++) {
         const familyInvId = familyInvestments[0]?.investorId || null;
         totalDistributedToFamily = totalDistributedToFamily.plus(amountPerPerson);
+        const siblingName = DEFAULT_FAMILY_SIBLINGS[s - 1] || `Saudara ${s}`;
 
         distributions.push({
           investorId: familyInvId,
           beneficiaryType: "MOTHER_SIBLING",
-          beneficiaryName: `Saudara ${s} (Modal Ibu Nurdiah)`,
+          beneficiaryName: `${siblingName} (Jatah Saudara - Modal Ibu)`,
           grossProfitAtCalc: grossProfit,
           totalUnitCapitalAtCalc: totalUnitCapital,
           investorCapitalAtCalc: new Decimal(familyInvestments[0]?.capitalShare.toString() || 0),
@@ -220,14 +233,14 @@ export function calculateProfitDistribution(params: {
           ruleVersionId: matchedRule.id,
           calculatedAmount: amountPerPerson,
           returnedCapital: s === 1 ? new Decimal(familyInvestments[0]?.capitalShare.toString() || 0) : undefined,
-          notes: `Tier '${matchedRule.name}': Rp ${amountPerPerson.toString()} per saudara.`,
+          notes: `Tier '${matchedRule.name}': Rp ${amountPerPerson.toString()} untuk ${siblingName}.`,
         });
       }
     }
   }
 
   // C. Sisa Akhir untuk Owner (Nur Mobil)
-  const ownerShare = remainingProfitAfterExternal.minus(totalDistributedToFamily);
+  const ownerShare = remainingProfitAfterPercentage.minus(totalDistributedToFamily);
 
   distributions.push({
     investorId: null,
