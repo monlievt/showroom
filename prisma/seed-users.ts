@@ -45,6 +45,32 @@ async function main() {
     const saltRounds = 10;
     const passwordHash = bcrypt.hashSync(user.password, saltRounds);
 
+    // Jika role INVESTOR, pastikan ada record di tabel Investor dan relasikan
+    let investorId: string | undefined = undefined;
+    if (user.role === "INVESTOR") {
+      let investor = await prisma.investor.findFirst({
+        where: {
+          OR: [
+            { name: { contains: "Hendra" } },
+            { phone: user.phone },
+          ],
+        },
+      });
+
+      if (!investor) {
+        investor = await prisma.investor.create({
+          data: {
+            name: user.fullName,
+            phone: user.phone,
+            type: "THIRD_PARTY",
+            defaultProfitSharePercent: 50,
+          },
+        });
+        console.log(`✓ Record profil investor dibuat: ${investor.name} (${investor.id})`);
+      }
+      investorId = investor.id;
+    }
+
     // Cari apakah akun sudah ada (berdasarkan authUserId utama atau alias lama)
     const existing = await prisma.userProfile.findFirst({
       where: {
@@ -65,6 +91,7 @@ async function main() {
           phone: user.phone,
           passwordHash,
           isActive: true,
+          ...(investorId ? { investorId } : {}),
         },
       });
       console.log(`✓ Akun diupdate: ${user.authUserId} (${user.role}) - Password tersimpan di DB.`);
@@ -77,6 +104,7 @@ async function main() {
           phone: user.phone,
           passwordHash,
           isActive: true,
+          ...(investorId ? { investorId } : {}),
         },
       });
       console.log(`✓ Akun dibuat baru: ${user.authUserId} (${user.role}) - Password tersimpan di DB.`);

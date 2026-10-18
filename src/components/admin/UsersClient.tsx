@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Users,
   UserPlus,
@@ -71,6 +71,19 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
   // State Modal Hapus
   const [deletingUser, setDeletingUser] = useState<UserItem | null>(null);
+
+  // Aksesibilitas Keyboard (R-32): Tutup modal saat tombol Escape ditekan
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (isAddModalOpen) setIsAddModalOpen(false);
+        if (editingUser) setEditingUser(null);
+        if (deletingUser) setDeletingUser(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isAddModalOpen, editingUser, deletingUser]);
 
   const showNotification = (message: string, type: "success" | "error") => {
     setFeedback({ message, type });

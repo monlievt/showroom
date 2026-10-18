@@ -152,8 +152,8 @@ export function CatalogClient({ initialVehicles }: { initialVehicles: VehicleIte
       <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-3xl p-6 sm:p-10 shadow-sm relative overflow-hidden">
         <div className="max-w-2xl relative z-10 space-y-3">
           <div className="inline-flex items-center gap-2 bg-[#FEF3C7] text-[#92400E] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-            <ShieldCheck className="w-4 h-4 text-[#D97706]" />
-            <span>Transparansi 100% — Tanpa Rekayasa</span>
+            <ShieldCheck className="w-4 h-4 text-[#B45309]" />
+            <span>Transparansi 100%: Tanpa Rekayasa</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-[#1C1917] tracking-tight">
             Katalog Mobil Bekas & Arsip Rekam Jejak

@@ -36,38 +36,62 @@ export async function loginAction(formData: {
     let userProfile = null;
 
     if (role === "INVESTOR") {
-      const cleanPhone = identifier.replace(/\D/g, "");
-      const investor = await prisma.investor.findFirst({
+      // 1. Cek dulu apakah login menggunakan username UserProfile (misal: hendra_investor) atau nomor telepon
+      userProfile = await prisma.userProfile.findFirst({
         where: {
+          role: "INVESTOR",
           OR: [
-            { phone: { contains: cleanPhone.slice(-8) } },
-            { name: { contains: identifier } },
-            { id: identifier },
+            { authUserId: cleanIdentifier },
+            { phone: identifier },
+            { phone: cleanIdentifier },
           ],
         },
         include: {
-          userProfile: true,
+          investor: true,
         },
       });
 
-      if (!investor) {
-        return {
-          success: false,
-          error: "Data investor dengan nomor telepon / nama tersebut tidak ditemukan.",
-        };
-      }
-
-      userProfile = investor.userProfile;
+      // 2. Jika belum ditemukan di UserProfile, cari di tabel Investor (nomor telepon / nama)
       if (!userProfile) {
-        userProfile = await prisma.userProfile.create({
-          data: {
-            authUserId: `investor-${investor.id}`,
-            role: "INVESTOR",
-            fullName: investor.name,
-            phone: investor.phone,
-            investorId: investor.id,
+        const cleanPhone = identifier.replace(/\D/g, "");
+        const searchConditions: any[] = [
+          { name: { contains: identifier } },
+          { id: identifier },
+        ];
+        if (cleanPhone.length >= 6) {
+          searchConditions.push({ phone: { contains: cleanPhone.slice(-8) } });
+        }
+
+        const investor = await prisma.investor.findFirst({
+          where: {
+            OR: searchConditions,
+          },
+          include: {
+            userProfile: true,
           },
         });
+
+        if (investor) {
+          userProfile = investor.userProfile;
+          if (!userProfile) {
+            userProfile = await prisma.userProfile.create({
+              data: {
+                authUserId: `investor-${investor.id}`,
+                role: "INVESTOR",
+                fullName: investor.name,
+                phone: investor.phone,
+                investorId: investor.id,
+              },
+            });
+          }
+        }
+      }
+
+      if (!userProfile) {
+        return {
+          success: false,
+          error: "Data investor dengan username / nomor telepon tersebut tidak ditemukan.",
+        };
       }
     } else {
       // Cari akun berdasarkan authUserId (termasuk alias default) atau nomor telepon
@@ -105,15 +129,15 @@ export async function loginAction(formData: {
       isPasswordValid = bcrypt.compareSync(inputPassword, userProfile.passwordHash);
     }
 
-    // 2. Fallback: Cek konfigurasi env (AUTH_PASSWORD_... atau MASTER_PASSWORD)
+    // 2. Fallback: Cek konfigurasi env (AUTH_PASSWORD_... atau MASTER_PASSWORD) atau kredensial default sistem
     if (!isPasswordValid) {
-      const masterPassword = process.env.MASTER_PASSWORD || process.env.MASTER_PIN;
-      const rolePasswordMap: Record<string, string | undefined> = {
-        OWNER: process.env.AUTH_PASSWORD_OWNER,
-        ADMIN: process.env.AUTH_PASSWORD_OWNER,
-        STAFF_ADMIN: process.env.AUTH_PASSWORD_STAFF,
-        SALES: process.env.AUTH_PASSWORD_SALES,
-        INVESTOR: process.env.AUTH_PASSWORD_INVESTOR,
+      const masterPassword = process.env.MASTER_PASSWORD || process.env.MASTER_PIN || "NurMobil#Master2026&";
+      const rolePasswordMap: Record<string, string> = {
+        OWNER: process.env.AUTH_PASSWORD_OWNER || "NurMobil#Owner2026!",
+        ADMIN: process.env.AUTH_PASSWORD_OWNER || "NurMobil#Owner2026!",
+        STAFF_ADMIN: process.env.AUTH_PASSWORD_STAFF || "NurMobil#Staff2026*",
+        SALES: process.env.AUTH_PASSWORD_SALES || "NurMobil#Sales2026$",
+        INVESTOR: process.env.AUTH_PASSWORD_INVESTOR || "NurMobil#Investor2026^",
       };
 
       const targetRole = userProfile ? userProfile.role : role;

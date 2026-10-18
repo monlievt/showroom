@@ -25,7 +25,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Nur Mobil — Showroom Mobil Bekas Apa Adanya & Bergaransi Cek Fisik",
+  title: "Nur Mobil | Showroom Mobil Bekas Apa Adanya & Bergaransi Cek Fisik",
   description:
     "Showroom jual-beli mobil bekas transparan di Jawa Timur. Rusak dibilang rusak, eks laka dibilang eks laka. Setiap unit disertai lembar uji mikron cat 34 titik dan garansi bebas banjir.",
 };
@@ -77,6 +77,8 @@ export default async function HomePage() {
     },
   ];
 
+  const waNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "6281234567890";
+
   return (
     <div className="min-h-screen bg-[#F7F5F2] text-[#1C1917] flex flex-col justify-between">
       <PublicNavbar />
@@ -85,36 +87,31 @@ export default async function HomePage() {
         {/* HERO SECTION */}
         <section className="bg-[#EFECE8] border border-[#D9D4CB] rounded-3xl p-8 sm:p-14 relative overflow-hidden shadow-sm">
           <div className="max-w-3xl space-y-5">
-            <div className="inline-flex items-center gap-2 bg-[#FEF3C7] text-[#92400E] px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">
-              <ShieldCheck className="w-4 h-4 text-[#D97706]" />
-              <span>Standar Transparansi Nur Mobil</span>
-            </div>
-
             <h1 className="text-3xl sm:text-5xl font-black text-[#1C1917] tracking-tight leading-tight">
               Beli Mobil Bekas Tanpa Was-Was.{" "}
-              <span className="text-[#D97706]">Rusak Dibilang Rusak</span>, Eks Laka Dibilang Eks Laka.
+              <span className="text-[#B45309]">Rusak Dibilang Rusak</span>, Eks Laka Dibilang Eks Laka.
             </h1>
 
             <p className="text-base sm:text-lg text-[#6B6560] leading-relaxed">
-              Kami bukan dealer yang sekadar menjual polesan mengkilap. Kami menyajikan fakta apa adanya lewat alat uji mikron ketebalan cat di 34 titik bodi, uji mesin, keabsahan Samsat, dan garansi resmi bebas tabrak & bebas banjir.
+              Kami bukan dealer yang sekadar menjual polesan mengkilap. Kami menyajikan fakta apa adanya lewat alat uji mikron ketebalan cat di 34 titik bodi, uji mesin, keabsahan surat, dan garansi resmi bebas tabrak & bebas banjir.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 pt-3">
               <Link
                 href="/katalog"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#B45309] hover:bg-[#92400E] text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow focus-visible:ring-2 focus-visible:ring-[#B45309]"
               >
                 <span>Lihat Katalog Mobil Ready ({stats.readyStock} Unit)</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
               <a
-                href="https://wa.me/6281234567890?text=Halo%20Admin%20Nur%20Mobil,%20saya%20tertarik%20tanya%20unit%20mobil%20ready"
+                href={`https://wa.me/${waNumber}?text=Halo%20Admin%20Nur%20Mobil,%20saya%20tertarik%20tanya%20unit%20mobil%20ready`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-[#F7F5F2] border border-[#D9D4CB] text-[#1C1917] px-6 py-3.5 rounded-xl font-semibold text-sm transition-colors"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-[#F7F5F2] border border-[#D9D4CB] text-[#1C1917] px-6 py-3.5 rounded-xl font-semibold text-sm transition-colors focus-visible:ring-2 focus-visible:ring-[#B45309]"
               >
-                <Phone className="w-4 h-4 text-[#D97706]" />
+                <Phone className="w-4 h-4 text-[#B45309]" />
                 <span>Konsultasi Langsung via WA</span>
               </a>
             </div>
@@ -260,10 +257,10 @@ export default async function HomePage() {
                     </div>
 
                     <div className="p-5 space-y-2">
-                      <div className="text-[11px] font-bold text-[#D97706] uppercase">
+                      <div className="text-[11px] font-bold text-[#B45309] uppercase">
                         {v.brand} • {v.year} • {v.transmission}
                       </div>
-                      <h3 className="font-bold text-base text-[#1C1917] group-hover:text-[#D97706] transition-colors line-clamp-1">
+                      <h3 className="font-bold text-base text-[#1C1917] group-hover:text-[#B45309] transition-colors line-clamp-1">
                         {v.model}
                       </h3>
                       <div className="text-lg font-extrabold text-[#1C1917]">
@@ -271,7 +268,7 @@ export default async function HomePage() {
                       </div>
                       <div className="flex items-center gap-3 text-xs text-[#6B6560] pt-2 border-t border-[#EBE7E1]">
                         <span className="flex items-center gap-1">
-                          <Gauge className="w-3.5 h-3.5 text-[#D97706]" />
+                          <Gauge className="w-3.5 h-3.5 text-[#B45309]" />
                           {v.odometer.toLocaleString("id-ID")} KM
                         </span>
                         <span>•</span>
@@ -284,9 +281,8 @@ export default async function HomePage() {
                   </div>
 
                   <div className="p-5 pt-0">
-                    <div className="w-full flex items-center justify-center gap-1.5 bg-[#F7F5F2] group-hover:bg-[#D97706] group-hover:text-white border border-[#D9D4CB] group-hover:border-[#D97706] text-[#1C1917] text-xs font-bold py-2.5 rounded-xl transition-all">
+                    <div className="w-full flex items-center justify-center gap-1.5 bg-[#F7F5F2] group-hover:bg-[#B45309] group-hover:text-white border border-[#D9D4CB] group-hover:border-[#B45309] text-[#1C1917] text-xs font-bold py-2.5 rounded-xl transition-all">
                       <span>Lihat Detail & Hasil Inspeksi</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
                     </div>
                   </div>
                 </Link>
@@ -301,7 +297,7 @@ export default async function HomePage() {
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 border-b border-[#EBE7E1] pb-4">
               <div>
                 <div className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-900 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                  <Sparkles className="w-3.5 h-3.5 text-amber-700" />
                   <span>Baru Masuk • Tahap Salon &amp; Detailing</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1C1917] tracking-tight">
@@ -313,7 +309,7 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/katalog"
-                className="text-xs font-bold text-[#D97706] hover:underline flex items-center gap-1 shrink-0"
+                className="text-xs font-bold text-[#B45309] hover:underline flex items-center gap-1 shrink-0"
               >
                 <span>Lihat Tab Segera Hadir di Katalog</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -325,7 +321,7 @@ export default async function HomePage() {
                 <Link
                   key={v.id}
                   href={`/katalog/${v.slug}`}
-                  className="bg-white rounded-2xl border border-amber-300 hover:border-amber-500 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between group cursor-pointer text-inherit no-underline"
+                  className="bg-white rounded-2xl border border-amber-300 hover:border-amber-500 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col justify-between group cursor-pointer text-inherit no-underline focus-visible:ring-2 focus-visible:ring-[#B45309]"
                 >
                   <div>
                     <div className="relative aspect-[16/11] bg-amber-50/50 overflow-hidden">
@@ -354,10 +350,10 @@ export default async function HomePage() {
                     </div>
 
                     <div className="p-4 space-y-2">
-                      <div className="text-[10px] font-bold text-[#D97706] uppercase">
+                      <div className="text-[10px] font-bold text-[#B45309] uppercase">
                         {v.brand} • {v.year} • {v.transmission}
                       </div>
-                      <h3 className="font-bold text-sm text-[#1C1917] group-hover:text-[#D97706] transition-colors line-clamp-1">
+                      <h3 className="font-bold text-sm text-[#1C1917] group-hover:text-[#B45309] transition-colors line-clamp-1">
                         {v.model}
                       </h3>
                       <div>
@@ -369,16 +365,15 @@ export default async function HomePage() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-[#6B6560] pt-2 border-t border-[#EBE7E1]">
-                        <Gauge className="w-3.5 h-3.5 text-[#D97706]" />
+                        <Gauge className="w-3.5 h-3.5 text-[#B45309]" />
                         <span>{v.odometer.toLocaleString("id-ID")} KM</span>
                       </div>
                     </div>
                   </div>
 
                   <div className="p-4 pt-0">
-                    <div className="w-full flex items-center justify-center gap-1.5 bg-amber-50 group-hover:bg-[#D97706] group-hover:text-white border border-amber-300 group-hover:border-[#D97706] text-amber-900 text-xs font-bold py-2 rounded-xl transition-all">
+                    <div className="w-full flex items-center justify-center gap-1.5 bg-amber-50 group-hover:bg-[#B45309] group-hover:text-white border border-amber-300 group-hover:border-[#B45309] text-amber-900 text-xs font-bold py-2 rounded-xl transition-all">
                       <span>Booking Duluan / Lihat Info</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
                     </div>
                   </div>
                 </Link>
@@ -536,44 +531,44 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* 6. ALUR PEMBELIAN 3 LANGKAH TANPA WAS-WAS */}
-        <section className="space-y-6">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="text-xs font-bold text-[#D97706] uppercase tracking-wider block">
-              Alur Transaksi Aman
+        {/* 6. ALUR TRANSAKSI TRANSPARAN KHAS GARASI */}
+        <section className="bg-white rounded-3xl border border-[#D9D4CB] p-6 sm:p-10 shadow-sm space-y-6">
+          <div className="max-w-2xl space-y-2">
+            <span className="text-xs font-bold text-[#B45309] uppercase tracking-wider block">
+              Alur Transaksi Transparan
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1C1917] tracking-tight">
-              3 Langkah Beli Mobil Tanpa Rasa Curiga
+              Proses Pembelian Jujur Tanpa Rasa Curiga
             </h2>
+            <p className="text-xs sm:text-sm text-[#6B6560]">
+              Mulai dari penelusuran digital hingga uji langsung di garasi bersama teknisi kepercayaan Anda.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-[#D9D4CB] shadow-sm space-y-3 relative">
-              <span className="text-4xl font-black text-[#E5E0D8] absolute top-4 right-4">01</span>
-              <div className="w-10 h-10 rounded-xl bg-amber-100 text-[#D97706] flex items-center justify-center font-black">
-                1
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+            <div className="bg-[#FAF9F6] p-6 rounded-2xl border border-[#EBE7E1] space-y-3">
+              <div className="text-xs font-black text-[#B45309] uppercase tracking-wider">
+                Langkah 1: Verifikasi Online
               </div>
               <h3 className="font-bold text-base text-[#1C1917]">Pilih Unit & Cek Laporan Mikron</h3>
               <p className="text-xs text-[#6B6560] leading-relaxed">
-                Pelajari lembar blueprint inspeksi 34 titik online. Ketahui titik mana saja yang cat kaleng ori, ada solan, atau minus minor sebelum datang ke lokasi.
+                Pelajari lembar blueprint inspeksi 34 titik secara terbuka. Ketahui titik mana saja yang cat kaleng orisinal, ada solan, atau minus minor sebelum datang ke lokasi.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-[#D9D4CB] shadow-sm space-y-3 relative">
-              <span className="text-4xl font-black text-[#E5E0D8] absolute top-4 right-4">02</span>
-              <div className="w-10 h-10 rounded-xl bg-amber-100 text-[#D97706] flex items-center justify-center font-black">
-                2
+            <div className="bg-[#FAF9F6] p-6 rounded-2xl border border-[#EBE7E1] space-y-3">
+              <div className="text-xs font-black text-[#B45309] uppercase tracking-wider">
+                Langkah 2: Uji Langsung
               </div>
               <h3 className="font-bold text-base text-[#1C1917]">Cek Fisik & Bebas Bawa Montir</h3>
               <p className="text-xs text-[#6B6560] leading-relaxed">
-                Kunjungi showroom kami. Anda dipersilakan membawa montir kepercayaan Anda sendiri untuk memeriksa mesin, transmisi, dan test drive di jalan sepuasnya.
+                Kunjungi garasi showroom kami. Anda dipersilakan membawa montir kepercayaan Anda sendiri untuk memeriksa mesin, transmisi, dan test drive di jalan sepuasnya.
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-[#D9D4CB] shadow-sm space-y-3 relative">
-              <span className="text-4xl font-black text-[#E5E0D8] absolute top-4 right-4">03</span>
-              <div className="w-10 h-10 rounded-xl bg-amber-100 text-[#D97706] flex items-center justify-center font-black">
-                3
+            <div className="bg-[#FAF9F6] p-6 rounded-2xl border border-[#EBE7E1] space-y-3">
+              <div className="text-xs font-black text-[#B45309] uppercase tracking-wider">
+                Langkah 3: Akad & Garansi
               </div>
               <h3 className="font-bold text-base text-[#1C1917]">Transaksi Aman & Garansi Buyback</h3>
               <p className="text-xs text-[#6B6560] leading-relaxed">

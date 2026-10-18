@@ -43,3 +43,10 @@ next-env.d.ts
 
 # excel private docs
 docs/*.xlsx
+
+# AI agent skills & local audit
+.agents/
+anti-slop/
+scripts/skillspector-scan.sh
+
+

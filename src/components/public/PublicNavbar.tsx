@@ -59,10 +59,10 @@ export function PublicNavbar() {
         {/* Desktop WhatsApp CTA */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="https://wa.me/6281234567890?text=Halo%20Admin%20Nur%20Mobil,%20saya%20ingin%20tanya%20stok%20unit%20mobil%20bekas"
+            href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "6281234567890"}?text=Halo%20Admin%20Nur%20Mobil,%20saya%20ingin%20tanya%20stok%20unit%20mobil%20bekas`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all hover:shadow"
+            className="flex items-center gap-2 bg-[#B45309] hover:bg-[#92400E] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all hover:shadow focus-visible:ring-2 focus-visible:ring-[#B45309]"
           >
             <Phone className="w-4 h-4" />
             <span>Hubungi Admin</span>
@@ -72,7 +72,7 @@ export function PublicNavbar() {
         {/* Mobile Menu Toggle Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-[#1C1917] hover:bg-[#F7F5F2] rounded-lg"
+          className="md:hidden p-2 text-[#1C1917] hover:bg-[#F7F5F2] rounded-lg focus-visible:ring-2 focus-visible:ring-[#B45309] outline-none"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

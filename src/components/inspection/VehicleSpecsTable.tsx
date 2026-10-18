@@ -84,7 +84,7 @@ export function VehicleSpecsTable({ vehicle, inspection }: VehicleSpecsProps) {
                 <span className="text-3xl font-black">{overallGrade}</span>
               </div>
               <div>
-                <div className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
+                <div className="text-xs font-bold text-[#B45309] uppercase tracking-wider">
                   Standar Penilaian Cek Fisik Profesional
                 </div>
                 <h3 className="text-lg font-bold text-[#1C1917]">
@@ -100,19 +100,19 @@ export function VehicleSpecsTable({ vehicle, inspection }: VehicleSpecsProps) {
             <div className="grid grid-cols-4 gap-2.5 sm:gap-3 w-full md:w-auto text-center">
               <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
                 <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Mesin</span>
-                <span className="text-xl font-black text-[#D97706]">{inspection!.engineGrade}</span>
+                <span className="text-xl font-black text-[#B45309]">{inspection!.engineGrade}</span>
               </div>
               <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
                 <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Interior</span>
-                <span className="text-xl font-black text-[#D97706]">{inspection!.interiorGrade}</span>
+                <span className="text-xl font-black text-[#B45309]">{inspection!.interiorGrade}</span>
               </div>
               <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
                 <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Eksterior</span>
-                <span className="text-xl font-black text-[#D97706]">{inspection!.exteriorGrade}</span>
+                <span className="text-xl font-black text-[#B45309]">{inspection!.exteriorGrade}</span>
               </div>
               <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
                 <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Rangka</span>
-                <span className="text-xl font-black text-[#D97706]">{inspection!.frameGrade}</span>
+                <span className="text-xl font-black text-[#B45309]">{inspection!.frameGrade}</span>
               </div>
             </div>
           </div>

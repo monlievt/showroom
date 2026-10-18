@@ -237,7 +237,7 @@ export async function getShowroomHomepageData() {
           transmission: v.transmission,
           price: v.sale?.sellingPrice ? Number(v.sale.sellingPrice) : Number(v.targetSellingPrice || 0),
           soldDate: v.sale?.saleDate || new Date(),
-          buyerName: v.sale?.buyer?.name || "Konsumen Jawa Timur",
+          buyerName: v.sale?.buyer?.name || "[Konsumen Terverifikasi]",
           buyerLocation: v.sale?.buyer?.address || "Jawa Timur",
           photoUrl: v.photos[0]?.fileUrl || "/images/cars/jazz/front.jpg",
           notes: v.notes,

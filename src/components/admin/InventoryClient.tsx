@@ -779,7 +779,7 @@ function AgingBadge({ days, category }: { days: number; category: string }) {
   );
 }
 
-// ── AUCTION HOUSE PRESETS — estimasi hari kerja BPKB per balai lelang ──────
+// Estimasi hari kerja BPKB per balai lelang (Auction House Presets)
 const AUCTION_HOUSE_PRESETS: Record<string, { label: string; bpkbLeadDays: number; notes: string }> = {
   "JBA":          { label: "JBA (Japan Best Auto)", bpkbLeadDays: 14, notes: "BPKB ~14 hari kerja" },
   "AUKSI":        { label: "AUKSI (Mobil88/Garansindo)", bpkbLeadDays: 7,  notes: "BPKB ~7 hari kerja" },
@@ -1006,7 +1006,7 @@ function AddVehicleModal({
                 <div>
                   <label className="block text-xs font-semibold text-[#1C1917] mb-1">
                     Estimasi BPKB Tiba{" "}
-                    <span className="font-normal text-[#6B6560]">(hari kerja — auto dari balai)</span>
+                    <span className="font-normal text-[#6B6560]">(hari kerja: otomatis dari balai)</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <input

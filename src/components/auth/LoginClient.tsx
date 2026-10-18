@@ -147,7 +147,7 @@ export function LoginClient() {
               type="button"
               onClick={() => {
                 setRole("INVESTOR");
-                setIdentifier("081298765432");
+                setIdentifier("hendra_investor");
                 setError(null);
               }}
               className={cn(
@@ -172,11 +172,11 @@ export function LoginClient() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
-                {role === "INVESTOR" ? "Nomor WhatsApp Terdaftar" : "Username / ID Pengguna"}
+                {role === "INVESTOR" ? "Username atau Nomor WhatsApp Terdaftar" : "Username / ID Pengguna"}
               </label>
               <div className="relative">
                 {role === "INVESTOR" ? (
-                  <Phone className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
+                  <User className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
                 ) : (
                   <User className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
                 )}
@@ -185,7 +185,7 @@ export function LoginClient() {
                   required
                   placeholder={
                     role === "INVESTOR"
-                      ? "Contoh: 081298765432"
+                      ? "hendra_investor atau 081234567895"
                       : role === "OWNER"
                       ? "owner"
                       : role === "STAFF_ADMIN"

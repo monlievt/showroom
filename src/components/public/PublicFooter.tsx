@@ -17,9 +17,9 @@ export function PublicFooter() {
             Showroom jual-beli mobil bekas yang mengutamakan transparansi dan kejujuran apa adanya.
             Setiap unit melalui inspeksi 11 panel body, uji mikron ketebalan cat, dan garansi bebas tabrak & banjir.
           </p>
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#D97706]">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#B45309]">
             <ShieldCheck className="w-4 h-4" />
-            <span>Garansi Apa Adanya — Rusak Dibilang Rusak</span>
+            <span>Garansi Apa Adanya: Rusak Dibilang Rusak</span>
           </div>
         </div>
 

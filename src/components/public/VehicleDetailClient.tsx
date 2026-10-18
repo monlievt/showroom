@@ -354,7 +354,7 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                 <Phone className="w-4 h-4" />
                 <span>
                   {isSold
-                    ? "Unit Sudah Terjual — Tanya Unit Serupa"
+                    ? "Unit Sudah Terjual (Tanya Unit Serupa)"
                     : isUpcoming
                     ? "Minat Unit Ini? Booking Duluan / Tanya via WA"
                     : "Tanya Admin / Booking Unit Cepat"}
@@ -401,7 +401,7 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                 Lembar Hasil Inspeksi Fisik & Uji 15 Titik Panel Cat
               </h2>
               <p className="text-xs sm:text-sm text-[#6B6560] mt-1">
-                Tanggal inspeksi: {formatDate(vehicle.inspection.inspectedAt)}. Tidak ada yang ditutupi — apa adanya, rusak dibilang rusak.
+                Tanggal inspeksi: {formatDate(vehicle.inspection.inspectedAt)}. Tidak ada yang ditutupi: apa adanya, rusak dibilang rusak.
               </p>
             </div>
 

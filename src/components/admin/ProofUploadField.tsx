@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Paperclip,
   UploadCloud,
@@ -10,6 +10,9 @@ import {
   AlertTriangle,
   Loader2,
   CheckCircle2,
+  Eye,
+  X,
+  Download,
 } from "lucide-react";
 
 interface ProofUploadFieldProps {
@@ -38,6 +41,18 @@ export function ProofUploadField({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [previewItem, setPreviewItem] = useState<{ url: string; name: string } | null>(null);
+
+  // Keyboard navigation untuk menutup preview modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && previewItem) {
+        setPreviewItem(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [previewItem]);
 
   const handleFilesUpload = async (files: FileList | File[]) => {
     const fileArray = Array.from(files);
@@ -143,23 +158,34 @@ export function ProofUploadField({
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   {isImg ? (
-                    <div className="relative w-11 h-11 rounded-lg overflow-hidden border border-[#D9D4CB] bg-white shrink-0 shadow-2xs">
+                    <div
+                      onClick={() => setPreviewItem({ url, name: fileName })}
+                      className="relative w-11 h-11 rounded-lg overflow-hidden border border-[#D9D4CB] bg-white shrink-0 shadow-2xs cursor-pointer group/thumb hover:ring-2 hover:ring-[#D97706]/50 transition-all"
+                      title="Klik untuk pratinjau foto bukti"
+                    >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={url}
                         alt={`Lampiran #${idx + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover/thumb:scale-105 transition-transform"
                       />
                     </div>
                   ) : (
-                    <div className="w-11 h-11 rounded-lg bg-amber-100 text-amber-800 flex flex-col items-center justify-center shrink-0 border border-amber-200">
+                    <div
+                      onClick={() => setPreviewItem({ url, name: fileName })}
+                      className="w-11 h-11 rounded-lg bg-amber-100 text-amber-800 flex flex-col items-center justify-center shrink-0 border border-amber-200 cursor-pointer hover:bg-amber-200 transition-colors"
+                      title="Klik untuk pratinjau dokumen PDF"
+                    >
                       <FileText className="w-5 h-5" />
                       <span className="text-[8px] font-bold">PDF</span>
                     </div>
                   )}
 
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-[#1C1917] truncate max-w-[140px] sm:max-w-[130px]">
+                    <p
+                      onClick={() => setPreviewItem({ url, name: fileName })}
+                      className="text-xs font-bold text-[#1C1917] truncate max-w-[140px] sm:max-w-[130px] cursor-pointer hover:text-[#D97706] hover:underline transition-colors"
+                    >
                       {fileName}
                     </p>
                     <span className="text-[10px] text-emerald-700 font-semibold block">
@@ -169,12 +195,21 @@ export function ProofUploadField({
                 </div>
 
                 <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setPreviewItem({ url, name: fileName })}
+                    className="p-1.5 bg-white border border-[#D9D4CB] rounded-lg text-[#1C1917] hover:bg-[#EFECE8] transition-colors shadow-2xs cursor-pointer"
+                    title="Pratinjau bukti"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-[#6B6560]" />
+                  </button>
+
                   <a
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-1.5 bg-white border border-[#D9D4CB] rounded-lg text-[#1C1917] hover:bg-[#EFECE8] transition-colors shadow-2xs"
-                    title="Buka lampiran ukuran penuh"
+                    title="Buka lampiran di tab baru"
                   >
                     <ExternalLink className="w-3.5 h-3.5 text-[#6B6560]" />
                   </a>
@@ -226,6 +261,81 @@ export function ProofUploadField({
           </div>
         )}
       </div>
+
+      {/* ── MODAL LIGHTBOX PRATINJAU BUKTI TRANSAKSI ── */}
+      {previewItem && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={() => setPreviewItem(null)}
+        >
+          <div
+            className="bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-hidden flex flex-col shadow-2xl border border-[#D9D4CB]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-5 py-3.5 bg-[#FAF9F6] border-b border-[#D9D4CB] flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <h4 className="text-sm font-bold text-[#1C1917] truncate">
+                  {previewItem.name}
+                </h4>
+                <p className="text-[11px] text-[#6B6560]">
+                  Pratinjau Lampiran Bukti Transaksi
+                </p>
+              </div>
+
+              <div className="flex items-center gap-1.5 shrink-0">
+                <a
+                  href={previewItem.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-2.5 py-1.5 bg-white border border-[#D9D4CB] hover:bg-[#EFECE8] text-[#1C1917] rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
+                  title="Buka ukuran penuh di tab baru"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-[#6B6560]" />
+                  <span className="hidden sm:inline">Tab Baru</span>
+                </a>
+
+                <a
+                  href={previewItem.url}
+                  download
+                  className="px-2.5 py-1.5 bg-white border border-[#D9D4CB] hover:bg-[#EFECE8] text-[#1C1917] rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
+                  title="Unduh file bukti"
+                >
+                  <Download className="w-3.5 h-3.5 text-[#6B6560]" />
+                  <span className="hidden sm:inline">Unduh</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setPreviewItem(null)}
+                  className="p-1.5 text-[#6B6560] hover:text-[#1C1917] hover:bg-[#EFECE8] rounded-lg transition-colors cursor-pointer ml-1"
+                  title="Tutup (Esc)"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-4 overflow-auto flex-1 flex items-center justify-center bg-[#1C1917]/5 min-h-[300px]">
+              {/\.(jpeg|jpg|png|webp)$/i.test(previewItem.url) ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={previewItem.url}
+                  alt={previewItem.name}
+                  className="max-h-[72vh] max-w-full object-contain rounded-lg shadow-md border border-[#D9D4CB] bg-white"
+                />
+              ) : (
+                <iframe
+                  src={previewItem.url}
+                  title={previewItem.name}
+                  className="w-full h-[72vh] rounded-lg border border-[#D9D4CB] bg-white"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
