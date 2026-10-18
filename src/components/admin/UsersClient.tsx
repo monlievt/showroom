@@ -32,7 +32,7 @@ import { cn } from "@/lib/utils";
 interface UsersClientProps {
   initialUsers: UserItem[];
   currentUserId: string;
-  investors?: Array<{ id: string; name: string; phone: string | null }>;
+  investors?: Array<{ id: string; name: string; phone: string | null; type?: string }>;
 }
 
 export function UsersClient({ initialUsers, currentUserId, investors = [] }: UsersClientProps) {
@@ -661,11 +661,19 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                     className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none cursor-pointer"
                   >
                     <option value="">-- Buat Profil Investor Baru Otomatis --</option>
-                    {investors.map((inv) => (
-                      <option key={inv.id} value={inv.id}>
-                        {inv.name} ({inv.phone})
-                      </option>
-                    ))}
+                    {investors.map((inv) => {
+                      const typeLabel =
+                        inv.type === "MOTHER_SIBLING"
+                          ? "Keluarga / 4 Saudara"
+                          : inv.type === "OWNER_EQUITY"
+                          ? "Owner Equity"
+                          : "Mitra Pemodal (50:50)";
+                      return (
+                        <option key={inv.id} value={inv.id}>
+                          {inv.name} ({inv.phone || "No HP Kosong"}) — [{typeLabel}]
+                        </option>
+                      );
+                    })}
                   </select>
                   <span className="text-[10px] text-[#6B6560] mt-1 block">
                     Pilih nama investor yang sudah terdaftar untuk menautkan portal transparansi bagi hasilnya.
@@ -812,11 +820,19 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                     className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none cursor-pointer"
                   >
                     <option value="">-- Tidak Tertaut --</option>
-                    {investors.map((inv) => (
-                      <option key={inv.id} value={inv.id}>
-                        {inv.name} ({inv.phone})
-                      </option>
-                    ))}
+                    {investors.map((inv) => {
+                      const typeLabel =
+                        inv.type === "MOTHER_SIBLING"
+                          ? "Keluarga / 4 Saudara"
+                          : inv.type === "OWNER_EQUITY"
+                          ? "Owner Equity"
+                          : "Mitra Pemodal (50:50)";
+                      return (
+                        <option key={inv.id} value={inv.id}>
+                          {inv.name} ({inv.phone || "No HP Kosong"}) — [{typeLabel}]
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
               )}

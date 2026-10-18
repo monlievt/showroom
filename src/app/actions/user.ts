@@ -25,7 +25,7 @@ export interface UserItem {
 export async function getUsersListAction(): Promise<{
   success: boolean;
   data?: UserItem[];
-  investors?: Array<{ id: string; name: string; phone: string | null }>;
+  investors?: Array<{ id: string; name: string; phone: string | null; type: string }>;
   error?: string;
 }> {
   try {
@@ -52,6 +52,7 @@ export async function getUsersListAction(): Promise<{
           id: true,
           name: true,
           phone: true,
+          type: true,
         },
         orderBy: { name: "asc" },
       }),
@@ -73,7 +74,7 @@ export async function getUsersListAction(): Promise<{
     return {
       success: true,
       data: sanitizedUsers,
-      investors: investors.map((i) => ({ id: i.id, name: i.name, phone: i.phone })),
+      investors: investors.map((i) => ({ id: i.id, name: i.name, phone: i.phone, type: i.type })),
     };
   } catch (error: any) {
     return { success: false, error: error.message || "Gagal memuat daftar pengguna" };
