@@ -1,7 +1,8 @@
 import React from "react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { getUsersListAction } from "@/app/actions/user";
-import { requireRole } from "@/lib/auth/session";
+import { getSession } from "@/lib/auth/session";
+import { redirect } from "next/navigation";
 import { UsersClient } from "@/components/admin/UsersClient";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +13,16 @@ export const metadata = {
 };
 
 export default async function UsersPage() {
-  const session = await requireRole(["OWNER", "ADMIN"]);
+  const session = await getSession();
+
+  if (!session) {
+    redirect("/login?callbackUrl=/admin/users");
+  }
+
+  if (session.role !== "OWNER" && session.role !== "ADMIN") {
+    redirect("/admin");
+  }
+
   const usersRes = await getUsersListAction();
   const users = usersRes.data || [];
 
@@ -24,6 +34,22 @@ export default async function UsersPage() {
       />
 
       <main className="flex-1 p-4 sm:p-8 space-y-6 max-w-7xl w-full mx-auto">
+        {!usersRes.success && (
+          <div className="p-4 rounded-xl border border-amber-300 bg-amber-50 text-amber-900 flex items-start gap-3">
+            <span className="text-xl">⚠️</span>
+            <div className="text-sm">
+              <p className="font-semibold">Sinkronisasi Database Diperlukan:</p>
+              <p>{usersRes.error || "Gagal memuat daftar pengguna dari database."}</p>
+              <p className="mt-1 text-xs text-amber-700">
+                Pastikan Anda telah menjalankan perintah berikut di terminal VPS:
+                <code className="mx-1 px-1.5 py-0.5 rounded bg-amber-200/80 font-mono">npx prisma db push</code>
+                dan
+                <code className="mx-1 px-1.5 py-0.5 rounded bg-amber-200/80 font-mono">npm run db:seed-users</code>
+              </p>
+            </div>
+          </div>
+        )}
+
         <UsersClient
           initialUsers={users}
           currentUserId={session.userId}
@@ -33,3 +59,4 @@ export default async function UsersPage() {
     </div>
   );
 }
+
