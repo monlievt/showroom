@@ -71,6 +71,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
   // State Modal Hapus
   const [deletingUser, setDeletingUser] = useState<UserItem | null>(null);
+  const [deleteModalError, setDeleteModalError] = useState<string | null>(null);
 
   // Aksesibilitas Keyboard (R-32): Tutup modal saat tombol Escape ditekan
   useEffect(() => {
@@ -78,7 +79,10 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
       if (e.key === "Escape") {
         if (isAddModalOpen) setIsAddModalOpen(false);
         if (editingUser) setEditingUser(null);
-        if (deletingUser) setDeletingUser(null);
+        if (deletingUser) {
+          setDeletingUser(null);
+          setDeleteModalError(null);
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -206,15 +210,25 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
     if (!deletingUser) return;
 
     setLoading(true);
-    const res = await deleteUserAction(deletingUser.id);
-    setLoading(false);
+    setDeleteModalError(null);
 
-    if (res.success) {
-      showNotification(res.message || "Pengguna berhasil dihapus.", "success");
-      setUsers((prev) => prev.filter((u) => u.id !== deletingUser.id));
-      setDeletingUser(null);
-    } else {
-      showNotification(res.error || "Gagal menghapus pengguna.", "error");
+    try {
+      const res = await deleteUserAction(deletingUser.id);
+      if (res.success) {
+        showNotification(res.message || "Pengguna berhasil dihapus.", "success");
+        setUsers((prev) => prev.filter((u) => u.id !== deletingUser.id));
+        setDeletingUser(null);
+        setDeleteModalError(null);
+      } else {
+        setDeleteModalError(res.error || "Gagal menghapus pengguna.");
+        showNotification(res.error || "Gagal menghapus pengguna.", "error");
+      }
+    } catch (err: any) {
+      const errMsg = err?.message || "Terjadi kendala jaringan saat menghubungi server.";
+      setDeleteModalError(errMsg);
+      showNotification(errMsg, "error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -498,7 +512,10 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                           {/* Tombol Hapus */}
                           {!isPrimaryOwner && (
                             <button
-                              onClick={() => setDeletingUser(user)}
+                              onClick={() => {
+                                setDeletingUser(user);
+                                setDeleteModalError(null);
+                              }}
                               disabled={isCurrent}
                               className={cn(
                                 "p-1.5 rounded-lg border transition-colors",
@@ -528,8 +545,16 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
       {/* ── MODAL TAMBAH PENGGUNA ── */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl border border-[#D9D4CB] shadow-xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95">
+        <div
+          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !loading) setIsAddModalOpen(false);
+          }}
+        >
+          <div
+            className="bg-white rounded-3xl border border-[#D9D4CB] shadow-xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95 my-8"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[#D97706] flex items-center justify-center">
@@ -700,8 +725,16 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
       {/* ── MODAL EDIT PENGGUNA ── */}
       {editingUser && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl border border-[#D9D4CB] shadow-xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95">
+        <div
+          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !loading) setEditingUser(null);
+          }}
+        >
+          <div
+            className="bg-white rounded-3xl border border-[#D9D4CB] shadow-xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95 my-8"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[#D97706] flex items-center justify-center">
@@ -869,8 +902,33 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
       {/* ── MODAL KONFIRMASI HAPUS ── */}
       {deletingUser && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-[#D9D4CB] shadow-xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95 text-center">
+        <div
+          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !loading) {
+              setDeletingUser(null);
+              setDeleteModalError(null);
+            }
+          }}
+        >
+          <div
+            className="relative bg-white rounded-3xl border border-[#D9D4CB] shadow-xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95 text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Tombol Tutup (X) */}
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => {
+                setDeletingUser(null);
+                setDeleteModalError(null);
+              }}
+              className="absolute right-4 top-4 p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer disabled:opacity-50"
+              aria-label="Tutup modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
             <div className="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mx-auto">
               <Trash2 className="w-6 h-6" />
             </div>
@@ -882,11 +940,26 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
               </p>
             </div>
 
+            {/* Kotak Error jika Gagal */}
+            {deleteModalError && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 text-left flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="font-semibold">Tidak dapat menghapus:</p>
+                  <p className="mt-0.5 text-stone-600">{deleteModalError}</p>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center justify-center gap-2 pt-2">
               <button
                 type="button"
-                onClick={() => setDeletingUser(null)}
-                className="px-4 py-2.5 rounded-xl border border-[#D9D4CB] text-xs font-bold text-[#1C1917] hover:bg-stone-50 cursor-pointer flex-1"
+                onClick={() => {
+                  setDeletingUser(null);
+                  setDeleteModalError(null);
+                }}
+                disabled={loading}
+                className="px-4 py-2.5 rounded-xl border border-[#D9D4CB] text-xs font-bold text-[#1C1917] hover:bg-stone-50 cursor-pointer flex-1 disabled:opacity-50"
               >
                 Batal
               </button>
@@ -894,7 +967,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                 type="button"
                 onClick={handleDeleteUser}
                 disabled={loading}
-                className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-sm transition-all cursor-pointer flex-1 flex items-center justify-center gap-1.5"
+                className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-sm transition-all cursor-pointer flex-1 flex items-center justify-center gap-1.5 disabled:opacity-70"
               >
                 {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                 <span>Ya, Hapus</span>

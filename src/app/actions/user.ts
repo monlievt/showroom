@@ -294,20 +294,12 @@ export async function deleteUserAction(id: string) {
 
     // Proteksi akun Owner Utama
     if (targetUser.authUserId === "admin-owner-001" || targetUser.authUserId === "owner") {
-      return { success: false, error: "Akun Owner Utama tidak dapat dihapus." };
+      return { success: false, error: "Akun Owner Utama tidak dapat dihapus demi keamanan sistem." };
     }
 
     // Tidak boleh menghapus akun diri sendiri yang sedang login
     if (targetUser.id === session.userId || targetUser.authUserId === session.authUserId) {
       return { success: false, error: "Anda tidak dapat menghapus akun Anda sendiri saat sedang login." };
-    }
-
-    // Jika terhubung dengan data investor, cegah atau lepaskan relasi
-    if (targetUser.investorId) {
-      return {
-        success: false,
-        error: "Pengguna ini tertaut dengan data Investor. Nonaktifkan status akun jika tidak ingin digunakan lagi.",
-      };
     }
 
     await prisma.userProfile.delete({
@@ -325,6 +317,7 @@ export async function deleteUserAction(id: string) {
           authUserId: targetUser.authUserId,
           fullName: targetUser.fullName,
           role: targetUser.role,
+          investorId: targetUser.investorId,
         },
       },
     });
