@@ -3,18 +3,10 @@
 import React from "react";
 import { 
   CheckCircle2, 
-  XCircle, 
-  ShieldCheck, 
-  FileCheck, 
   Car, 
-  Gauge, 
-  Calendar, 
-  Fuel, 
+  FileCheck, 
   Key, 
   FileText,
-  AlertTriangle,
-  Clock,
-  Sparkles,
   Info
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
@@ -49,7 +41,6 @@ export interface VehicleSpecsProps {
 }
 
 export function VehicleSpecsTable({ vehicle, inspection }: VehicleSpecsProps) {
-  // Hitung Total Grade berdasarkan 4 pilar hanya jika data inspeksi ada
   const hasInspection = !!inspection;
   const grades = hasInspection
     ? [
@@ -73,240 +64,205 @@ export function VehicleSpecsTable({ vehicle, inspection }: VehicleSpecsProps) {
 
   return (
     <div className="space-y-6">
-      {/* ── BARIS ATAS: SCORECARD 4 PILAR & TOTAL GRADE ALA IBID ── */}
+      {/* ── BARIS ATAS: SCORECARD 4 PILAR & TOTAL GRADE ── */}
       {hasInspection ? (
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 shadow-sm">
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] p-5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             {/* Total Grade Badge */}
             <div className="flex items-center gap-4 w-full md:w-auto">
-              <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-emerald-600 text-white shadow-md">
-                <span className="text-[10px] uppercase font-bold tracking-wider opacity-90">Total Grade</span>
-                <span className="text-3xl font-black">{overallGrade}</span>
+              <div className="flex flex-col items-center justify-center w-16 h-16 rounded-[var(--r-btn)] bg-[var(--ok)] text-white shadow-xs">
+                <span className="text-[9px] uppercase font-bold tracking-wider opacity-90">Grade</span>
+                <span className="text-2xl font-bold">{overallGrade}</span>
               </div>
               <div>
-                <div className="text-xs font-bold text-[#B45309] uppercase tracking-wider">
-                  Standar Penilaian Cek Fisik Profesional
-                </div>
-                <h3 className="text-lg font-bold text-[#1C1917]">
-                  Hasil Uji Kelayakan &amp; Cek Fisik Menyeluruh
+                <h3 className="text-[16px] font-bold text-[var(--ink)]">
+                  Hasil Uji Kelayakan &amp; Cek Fisik
                 </h3>
-                <p className="text-xs text-[#6B6560]">
-                  A: Sangat Baik • B: Baik • C: Cukup • D: Perlu Perbaikan
+                <p className="text-[12px] text-[var(--muted)]">
+                  A: Sangat Baik &middot; B: Baik &middot; C: Cukup &middot; D: Perlu Perbaikan
                 </p>
               </div>
             </div>
 
             {/* 4 Pilar Skor */}
             <div className="grid grid-cols-4 gap-2.5 sm:gap-3 w-full md:w-auto text-center">
-              <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
-                <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Mesin</span>
-                <span className="text-xl font-black text-[#B45309]">{inspection!.engineGrade}</span>
+              <div className="p-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] min-w-[70px]">
+                <span className="text-[10px] font-medium text-[var(--muted)] block uppercase">Mesin</span>
+                <span className="text-lg font-bold text-[var(--ink)]">{inspection!.engineGrade}</span>
               </div>
-              <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
-                <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Interior</span>
-                <span className="text-xl font-black text-[#B45309]">{inspection!.interiorGrade}</span>
+              <div className="p-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] min-w-[70px]">
+                <span className="text-[10px] font-medium text-[var(--muted)] block uppercase">Interior</span>
+                <span className="text-lg font-bold text-[var(--ink)]">{inspection!.interiorGrade}</span>
               </div>
-              <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
-                <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Eksterior</span>
-                <span className="text-xl font-black text-[#B45309]">{inspection!.exteriorGrade}</span>
+              <div className="p-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] min-w-[70px]">
+                <span className="text-[10px] font-medium text-[var(--muted)] block uppercase">Eksterior</span>
+                <span className="text-lg font-bold text-[var(--ink)]">{inspection!.exteriorGrade}</span>
               </div>
-              <div className="p-2.5 bg-[#FAF9F6] border border-[#EBE7E1] rounded-xl min-w-[70px]">
-                <span className="text-[10px] font-bold text-[#6B6560] block uppercase">Rangka</span>
-                <span className="text-xl font-black text-[#B45309]">{inspection!.frameGrade}</span>
+              <div className="p-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] min-w-[70px]">
+                <span className="text-[10px] font-medium text-[var(--muted)] block uppercase">Rangka</span>
+                <span className="text-lg font-bold text-[var(--ink)]">{inspection!.frameGrade}</span>
               </div>
             </div>
           </div>
         </div>
       ) : (
-        <div className="bg-[#FAF9F6] border border-[#D9D4CB] rounded-2xl p-5 shadow-sm">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex flex-col items-center justify-center w-20 h-20 rounded-2xl bg-[#EFECE8] border border-[#D9D4CB] text-[#6B6560] shadow-2xs shrink-0">
-              <Info className="w-6 h-6 mb-1 text-[#8C827A]" />
-              <span className="text-[9px] uppercase font-bold tracking-wider text-center leading-tight">
-                INFORMASI
-              </span>
-            </div>
-            <div className="space-y-1 text-center sm:text-left">
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#6B6560] uppercase tracking-wider">
-                <Info className="w-3.5 h-3.5 text-[#8C827A]" />
-                <span>Inspeksi Digital Belum Tersedia</span>
-              </div>
-              <h3 className="text-base font-bold text-[#1C1917]">
-                Kartu Skor &amp; Grade Belum Diterbitkan
-              </h3>
-              <p className="text-xs text-[#6B6560] leading-relaxed">
-                Unit ini belum memiliki skor inspeksi digital 4 pilar (Mesin, Interior, Eksterior, Rangka) dan dijual siap pakai sesuai spesifikasi fisik yang tertera. Calon pembeli dipersilakan melakukan cek fisik langsung, test drive, atau membawa mekanik rekanan ke showroom kami.
-              </p>
-            </div>
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] p-5">
+          <div className="flex items-center gap-3">
+            <Info className="w-5 h-5 text-[var(--muted)] shrink-0" />
+            <p className="text-[13px] text-[var(--muted)]">
+              Unit ini belum memiliki skor inspeksi digital 4 pilar. Calon pembeli dipersilakan melakukan cek fisik langsung, test drive, atau membawa mekanik rekanan ke showroom kami.
+            </p>
           </div>
         </div>
       )}
 
-      {/* ── BARIS TENGAH: DUA TABEL LENGKAP ALA IBID (INFO & DOKUMEN) ── */}
+      {/* ── BARIS TENGAH: SPESIFIKASI & DOKUMEN ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Kolom 1: Detail Spesifikasi Teknis & Fisik (7 cols) */}
-        <div className="lg:col-span-7 bg-white border border-[#D9D4CB] rounded-2xl p-5 shadow-sm space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-[#D9D4CB]">
-            <Car className="w-4 h-4 text-[#D97706]" />
-            <h4 className="font-extrabold text-sm sm:text-base text-[#1C1917]">
-              Spesifikasi Fisik & Identitas Kendaraan
+        {/* Kolom 1: Spesifikasi Fisik (7 cols) */}
+        <div className="lg:col-span-7 bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] p-5 space-y-4">
+          <div className="flex items-center gap-2 pb-3 border-b border-[var(--line)]">
+            <Car className="w-4 h-4 text-[var(--accent)]" />
+            <h4 className="font-bold text-[15px] text-[var(--ink)]">
+              Spesifikasi Fisik &amp; Identitas Kendaraan
             </h4>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 text-xs">
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Nomor Polisi</span>
-              <span className="font-bold text-[#1C1917]">{vehicle.plateNumber}</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-[13px]">
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Nomor Polisi</span>
+              <span className="font-semibold text-[var(--ink)]">{vehicle.plateNumber}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Merek & Model</span>
-              <span className="font-bold text-[#1C1917]">{vehicle.brand} {vehicle.model}</span>
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Merek &amp; Model</span>
+              <span className="font-semibold text-[var(--ink)]">{vehicle.brand} {vehicle.model}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Tahun Pembuatan</span>
-              <span className="font-bold text-[#1C1917]">{vehicle.year}</span>
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Tahun Pembuatan</span>
+              <span className="font-semibold text-[var(--ink)]">{vehicle.year}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Kapasitas Mesin (CC)</span>
-              <span className="font-bold text-[#1C1917]">{vehicle.engineCapacity.toLocaleString("id-ID")} CC</span>
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Kapasitas Mesin</span>
+              <span className="font-semibold text-[var(--ink)]">{vehicle.engineCapacity.toLocaleString("id-ID")} cc</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Transmisi</span>
-              <span className="font-bold text-[#1C1917]">{vehicle.transmission}</span>
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Transmisi</span>
+              <span className="font-semibold text-[var(--ink)]">{vehicle.transmission}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Bahan Bakar</span>
-              <span className="font-bold text-[#1C1917]">{vehicle.fuelType || "BENSIN / DIESEL"}</span>
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Bahan Bakar</span>
+              <span className="font-semibold text-[var(--ink)]">{vehicle.fuelType || "Bensin"}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Sistem Penggerak</span>
-              <span className="font-bold text-[#1C1917]">{vehicle.driveType || "4x2"}</span>
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Sistem Penggerak</span>
+              <span className="font-semibold text-[var(--ink)]">{vehicle.driveType || "4x2"}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Warna Fisik Bodi</span>
-              <span className="font-bold text-[#1C1917]">{vehicle.color}</span>
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Warna Bodi</span>
+              <span className="font-semibold text-[var(--ink)]">{vehicle.color}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Jarak Tempuh (KM)</span>
-              <span className="font-bold text-[#1C1917]">{vehicle.odometer.toLocaleString("id-ID")} KM</span>
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Jarak Tempuh</span>
+              <span className="font-semibold text-[var(--ink)]">{vehicle.odometer.toLocaleString("id-ID")} km</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9]">
-              <span className="text-[#6B6560]">Masa Berlaku Pajak STNK</span>
-              <span className="font-bold text-emerald-700">
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)]">
+              <span className="text-[var(--muted)]">Pajak STNK</span>
+              <span className="font-semibold text-[var(--ok)]">
                 {vehicle.taxExpiryDate ? formatDate(vehicle.taxExpiryDate) : "Aktif Panjang"}
               </span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9] sm:col-span-2">
-              <span className="text-[#6B6560]">Nomor Rangka (VIN)</span>
-              <span className="font-mono font-bold text-[#1C1917]">
-                {vehicle.chassisNumber || "MHKAB1BY5NK031897"}
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)] sm:col-span-2">
+              <span className="text-[var(--muted)]">Nomor Rangka (VIN)</span>
+              <span className="font-mono font-medium text-[var(--ink)]">
+                {vehicle.chassisNumber || "-"}
               </span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-[#F2EFE9] sm:col-span-2">
-              <span className="text-[#6B6560]">Nomor Mesin</span>
-              <span className="font-mono font-bold text-[#1C1917]">
-                {vehicle.engineNumber || "2GD885717"}
+            <div className="flex items-center justify-between py-1 border-b border-[var(--line)] sm:col-span-2">
+              <span className="text-[var(--muted)]">Nomor Mesin</span>
+              <span className="font-mono font-medium text-[var(--ink)]">
+                {vehicle.engineNumber || "-"}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Kolom 2: Checklist Kelengkapan Dokumen Fisik (5 cols) */}
-        <div className="lg:col-span-5 bg-white border border-[#D9D4CB] rounded-2xl p-5 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[#D9D4CB]">
+        {/* Kolom 2: Kelengkapan Dokumen (5 cols) */}
+        <div className="lg:col-span-5 bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
             <div className="flex items-center gap-2">
-              <FileCheck className="w-4 h-4 text-[#D97706]" />
-              <h4 className="font-extrabold text-sm sm:text-base text-[#1C1917]">
+              <FileCheck className="w-4 h-4 text-[var(--accent)]" />
+              <h4 className="font-bold text-[15px] text-[var(--ink)]">
                 Kelengkapan Dokumen Fisik
               </h4>
             </div>
-            <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-              Absolut Transparan
+            <span className="text-[11px] font-semibold text-[var(--ok)] bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+              Terverifikasi
             </span>
           </div>
 
-          <div className="space-y-2.5 text-xs">
-            {/* BPKB */}
-            <div className="flex items-center justify-between p-2 rounded-lg bg-[#FAF9F6] border border-[#EBE7E1]">
+          <div className="space-y-2 text-[13px]">
+            <div className="flex items-center justify-between p-2 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
               <div className="flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5 text-[#D97706]" />
-                <span className="font-medium text-[#1C1917]">Buku BPKB Asli</span>
+                <FileText className="w-3.5 h-3.5 text-[var(--muted)]" />
+                <span className="text-[var(--ink)]">Buku BPKB Asli</span>
               </div>
-              <span className="font-bold text-emerald-700 flex items-center gap-1">
+              <span className="font-semibold text-[var(--ok)] flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>{isBpkbReady ? "Ready di Tangan" : "Proses Balai Lelang"}</span>
               </span>
             </div>
 
-            {/* STNK */}
-            <div className="flex items-center justify-between p-2 rounded-lg bg-[#FAF9F6] border border-[#EBE7E1]">
+            <div className="flex items-center justify-between p-2 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
               <div className="flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5 text-[#D97706]" />
-                <span className="font-medium text-[#1C1917]">Lembar STNK Asli</span>
+                <FileText className="w-3.5 h-3.5 text-[var(--muted)]" />
+                <span className="text-[var(--ink)]">Lembar STNK Asli</span>
               </div>
-              <span className="font-bold text-emerald-700 flex items-center gap-1">
+              <span className="font-semibold text-[var(--ok)] flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>{isStnkReady ? "Fisik Ada (Aktif)" : "Proses Mutasi"}</span>
               </span>
             </div>
 
-            {/* Faktur Asli */}
-            <div className="flex items-center justify-between p-2 rounded-lg bg-[#FAF9F6] border border-[#EBE7E1]">
+            <div className="flex items-center justify-between p-2 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
               <div className="flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5 text-[#D97706]" />
-                <span className="font-medium text-[#1C1917]">Faktur Pembelian Asli ATPM</span>
+                <FileText className="w-3.5 h-3.5 text-[var(--muted)]" />
+                <span className="text-[var(--ink)]">Faktur Pembelian Asli</span>
               </div>
-              <span className="font-bold text-emerald-700 flex items-center gap-1">
+              <span className="font-semibold text-[var(--ok)] flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Lengkap Tersimpan</span>
               </span>
             </div>
 
-            {/* Kuitansi Blanko & Gesek */}
-            <div className="flex items-center justify-between p-2 rounded-lg bg-[#FAF9F6] border border-[#EBE7E1]">
+            <div className="flex items-center justify-between p-2 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
               <div className="flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5 text-[#D97706]" />
-                <span className="font-medium text-[#1C1917]">Kuitansi Blanko & Gesek No Rangka</span>
+                <FileText className="w-3.5 h-3.5 text-[var(--muted)]" />
+                <span className="text-[var(--ink)]">Kuitansi Blanko &amp; Gesek</span>
               </div>
-              <span className="font-bold text-emerald-700 flex items-center gap-1">
+              <span className="font-semibold text-[var(--ok)] flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Ada (Siap Balik Nama)</span>
               </span>
             </div>
 
-            {/* Surat Pelepasan Hak / KTP */}
-            <div className="flex items-center justify-between p-2 rounded-lg bg-[#FAF9F6] border border-[#EBE7E1]">
+            <div className="flex items-center justify-between p-2 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
               <div className="flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5 text-[#D97706]" />
-                <span className="font-medium text-[#1C1917]">Surat Pelepasan Hak / KTP Pemilik</span>
+                <FileText className="w-3.5 h-3.5 text-[var(--muted)]" />
+                <span className="text-[var(--ink)]">Buku Manual &amp; Servis</span>
               </div>
-              <span className="font-bold text-emerald-700 flex items-center gap-1">
+              <span className="font-semibold text-[var(--ok)] flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Ada & Sah</span>
+                <span>Ada</span>
               </span>
             </div>
 
-            {/* Buku Servis & Manual */}
-            <div className="flex items-center justify-between p-2 rounded-lg bg-[#FAF9F6] border border-[#EBE7E1]">
+            <div className="flex items-center justify-between p-2 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
               <div className="flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5 text-[#D97706]" />
-                <span className="font-medium text-[#1C1917]">Buku Manual & Servis Resmi</span>
+                <Key className="w-3.5 h-3.5 text-[var(--muted)]" />
+                <span className="text-[var(--ink)]">Kunci Kontak Cadangan</span>
               </div>
-              <span className="font-bold text-emerald-700 flex items-center gap-1">
+              <span className="font-semibold text-[var(--ok)] flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Ada (Record Bengkel Resmi)</span>
-              </span>
-            </div>
-
-            {/* Kunci Cadangan */}
-            <div className="flex items-center justify-between p-2 rounded-lg bg-[#FAF9F6] border border-[#EBE7E1]">
-              <div className="flex items-center gap-2">
-                <Key className="w-3.5 h-3.5 text-[#D97706]" />
-                <span className="font-medium text-[#1C1917]">Kunci Kontak Cadangan (Serep)</span>
-              </div>
-              <span className="font-bold text-emerald-700 flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Lengkap 2 Buah</span>
+                <span>Lengkap</span>
               </span>
             </div>
           </div>

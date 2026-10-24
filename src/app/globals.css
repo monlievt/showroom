@@ -1,48 +1,52 @@
 @import "tailwindcss";
 
 :root {
-  /* Core Base Palette: Warm Off-White & Dark Ink */
-  --surface: #F7F5F2;
-  --surface-alt: #EFECE8;
-  --border: #D9D4CB;
-  --ink: #1C1917;
-  --ink-muted: #6B6560;
+  /* Warna Katalog Terang (NURMOBIL_UI_REDESIGN.md §2) */
+  --bg: #F6F7F9;         /* Latar halaman */
+  --surface: #FFFFFF;    /* Kartu, header, hero */
+  --ink: #1B2430;        /* Teks utama */
+  --muted: #5E6A7A;      /* Teks sekunder */
+  --line: #E3E7EC;       /* Garis pemisah kartu */
+  --line-input: #CFD5DD; /* Border input & tombol sekunder */
+  --accent: #2F5D8C;     /* Aksen utama (tombol, tautan, logo) */
+  --accent-hover: #274E78;
+  --ok: #2E8B6A;         /* Panel cat original */
+  --ok-light: #EBF7F2;   /* Background badge status ready */
+  --warn: #E0A526;       /* Panel repaint tipis */
+  --warn-light: #FEF9EB;
+  --bad: #C0392B;        /* Panel dempul tebal */
+  --bad-light: #FDF2F1;
 
-  /* Accent: Warm Amber ("Nur" = Cahaya) */
-  --accent: #D97706;
-  --accent-text: #B45309; /* Amber 700: Rasio 5.02:1 WCAG AA compliant untuk teks normal di atas putih */
-  --accent-light: #FEF3C7;
-  --accent-dark: #92400E;
+  /* Bentuk & Elevasi */
+  --r-btn: 8px;
+  --r-card: 12px;
+  --r-input: 12px;
+  --shadow-sm: 0 2px 8px rgba(27, 36, 48, 0.05);
 
-  /* Semantic: Status & Inspeksi Fisik */
-  --ok: #16A34A;
-  --ok-light: #DCFCE7;
-  --warn: #CA8A04;
-  --warn-light: #FEF9C3;
-  --danger: #DC2626;
-  --danger-light: #FEE2E2;
-  --neutral-tag: #64748B;
-  --neutral-light: #F1F5F9;
+  /* Tata Letak */
+  --container: 1180px;
+  --gutter: 20px;
 
-  /* System Mappings */
-  --background: var(--surface);
+  /* Compatibility Fallback Mappings */
+  --background: var(--bg);
   --foreground: var(--ink);
+  --border: var(--line);
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-public-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Global Focus Indicator untuk Aksesibilitas Keyboard (R-32) */
+/* Global Focus Indicator untuk Aksesibilitas Keyboard (R-32 & Dokumen §4.1) */
 :focus-visible {
-  outline: 2px solid #B45309;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* Normalisasi tinggi elemen form: samakan tinggi dropdown <select> dengan <input> di semua browser (terutama Safari macOS) */
+/* Normalisasi tinggi elemen form: samakan tinggi dropdown <select> dengan <input> */
 @layer base {
   input[type="text"],
   input[type="number"],

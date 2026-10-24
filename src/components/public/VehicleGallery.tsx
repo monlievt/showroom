@@ -184,8 +184,8 @@ export function VehicleGallery({
           className={cn(
             "px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0",
             activeFilter === "ALL" && !isPlayingVideo
-              ? "bg-[#1C1917] text-white"
-              : "bg-white text-[#6B6560] border border-[#D9D4CB] hover:bg-[#F7F5F2]"
+              ? "bg-[var(--accent)] text-white"
+              : "bg-white text-[var(--muted)] border border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
           Semua Foto ({photos.length})
@@ -202,11 +202,11 @@ export function VehicleGallery({
           className={cn(
             "flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0",
             activeFilter === "EXTERIOR" && !isPlayingVideo
-              ? "bg-[#1C1917] text-white"
-              : "bg-white text-[#6B6560] border border-[#D9D4CB] hover:bg-[#F7F5F2]"
+              ? "bg-[var(--accent)] text-white"
+              : "bg-white text-[var(--muted)] border border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
-          <Car className="w-3.5 h-3.5 text-[#D97706]" />
+          <Car className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span>
             Eksterior Bodi{exteriorPhotos.length > 0 ? ` (${exteriorPhotos.length})` : ""}
           </span>
@@ -223,13 +223,13 @@ export function VehicleGallery({
           className={cn(
             "flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0",
             activeFilter === "ENGINE_UNDERBODY" && !isPlayingVideo
-              ? "bg-[#1C1917] text-white"
-              : "bg-white text-[#6B6560] border border-[#D9D4CB] hover:bg-[#F7F5F2]"
+              ? "bg-[var(--accent)] text-white"
+              : "bg-white text-[var(--muted)] border border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
-          <Wrench className="w-3.5 h-3.5 text-amber-600" />
+          <Wrench className="w-3.5 h-3.5 text-[var(--warn)]" />
           <span>
-            Mesin & Kolong{enginePhotos.length > 0 ? ` (${enginePhotos.length})` : ""}
+            Mesin &amp; Kolong{enginePhotos.length > 0 ? ` (${enginePhotos.length})` : ""}
           </span>
         </button>
 
@@ -244,11 +244,11 @@ export function VehicleGallery({
           className={cn(
             "flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0",
             activeFilter === "INTERIOR" && !isPlayingVideo
-              ? "bg-[#1C1917] text-white"
-              : "bg-white text-[#6B6560] border border-[#D9D4CB] hover:bg-[#F7F5F2]"
+              ? "bg-[var(--accent)] text-white"
+              : "bg-white text-[var(--muted)] border border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
-          <Layers className="w-3.5 h-3.5 text-purple-600" />
+          <Layers className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span>
             Interior{interiorPhotos.length > 0 ? ` (${interiorPhotos.length})` : ""}
           </span>
@@ -265,11 +265,11 @@ export function VehicleGallery({
           className={cn(
             "flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0",
             activeFilter === "DOCUMENT" && !isPlayingVideo
-              ? "bg-[#1C1917] text-white"
-              : "bg-white text-[#6B6560] border border-[#D9D4CB] hover:bg-[#F7F5F2]"
+              ? "bg-[var(--accent)] text-white"
+              : "bg-white text-[var(--muted)] border border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
-          <FileCheck className="w-3.5 h-3.5 text-blue-600" />
+          <FileCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span>
             Dokumen{documentPhotos.length > 0 ? ` (${documentPhotos.length})` : ""}
           </span>
@@ -285,10 +285,10 @@ export function VehicleGallery({
               setSelectedVideoIdx(0);
             }}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer shrink-0",
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-btn)] text-[12px] font-medium transition-colors cursor-pointer shrink-0",
               isPlayingVideo
                 ? "bg-red-600 text-white"
-                : "bg-white text-[#6B6560] border border-[#D9D4CB] hover:bg-[#F7F5F2]"
+                : "bg-white text-[var(--muted)] border border-[var(--line)] hover:bg-[var(--bg)]"
             )}
           >
             <Play className="w-3.5 h-3.5 fill-current text-red-500" />
@@ -298,7 +298,7 @@ export function VehicleGallery({
       </div>
 
       {/* ── AREA TAMPILAN UTAMA (FOTO BESAR / VIDEO PLAYER / EMPTY STATE) ── */}
-      <div className="relative aspect-[16/10] bg-[#EFECE8] rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm group">
+      <div className="relative aspect-[16/10] bg-[#E7EAEE] rounded-[var(--r-card)] border border-[var(--line)] overflow-hidden shadow-xs group">
         {isPlayingVideo && currentVideo ? (
           /* Pemutar Video Terintegrasi */
           <div className="w-full h-full bg-black relative">
@@ -382,7 +382,7 @@ export function VehicleGallery({
             {/* Tag & Judul Foto Overlay (Bottom Bar) */}
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-4 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
               <div>
-                <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider mb-1 shadow-sm bg-[#D97706] text-white">
+                <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider mb-1 shadow-sm bg-[var(--accent)] text-white">
                   <ShieldCheck className="w-3 h-3" />
                   <span>{tagInfo?.label || currentPhoto.title || "Foto Detail Cek Fisik"}</span>
                 </div>
@@ -399,13 +399,13 @@ export function VehicleGallery({
         ) : (
           /* Empty State Jika Kategori Belum Ada Foto */
           <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
-            <div className="w-12 h-12 rounded-2xl bg-white border border-[#D9D4CB] flex items-center justify-center text-[#D97706] mb-3 shadow-2xs">
+            <div className="w-12 h-12 rounded-2xl bg-white border border-[var(--line)] flex items-center justify-center text-[var(--accent)] mb-3 shadow-2xs">
               <Camera className="w-6 h-6" />
             </div>
-            <h4 className="font-bold text-base text-[#1C1917] mb-1">
+            <h4 className="font-bold text-base text-[var(--ink)] mb-1">
               Foto Kategori Ini Belum Tersedia
             </h4>
-            <p className="text-xs text-[#6B6560] max-w-sm mb-4 leading-relaxed">
+            <p className="text-xs text-[var(--muted)] max-w-sm mb-4 leading-relaxed">
               Belum ada arsip foto khusus untuk kategori ini. Silakan pilih kategori lain atau lihat semua foto unit.
             </p>
             <button
@@ -415,7 +415,7 @@ export function VehicleGallery({
                 setIsPlayingVideo(false);
                 setSelectedIdx(0);
               }}
-              className="text-xs font-bold bg-[#1C1917] hover:bg-stone-800 text-white px-4 py-2.5 rounded-xl transition-colors cursor-pointer"
+              className="text-xs font-bold bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2.5 rounded-xl transition-colors cursor-pointer"
             >
               Kembali ke Semua Foto ({photos.length})
             </button>
@@ -424,13 +424,6 @@ export function VehicleGallery({
       </div>
 
       {/* ── THUMBNAIL STRIP (FIXED CLIPPING & MULTI-MEDIA) ── */}
-      {/* 
-        Catatan Perbaikan:
-        1. Menambahkan `px-2 py-2` pada container agar border dan ring thumbnail pertama 
-           tidak terpotong oleh overflow-x-auto pada sisi kiri (x=0).
-        2. Menghilangkan `scale-105` yang menyebabkan elemen keluar dari bounding box overflow.
-        3. Memasukkan thumbnail video secara elegan jika unit memiliki video.
-      */}
       {(filteredPhotos.length > 1 || videoList.length > 0) && (
         <div className="flex items-center gap-2.5 overflow-x-auto px-2 py-2 scrollbar-thin rounded-xl">
           {/* Thumbnails Foto */}
@@ -444,10 +437,10 @@ export function VehicleGallery({
                   type="button"
                   onClick={() => setSelectedIdx(idx)}
                   className={cn(
-                    "relative w-24 h-16 shrink-0 rounded-xl overflow-hidden border-2 transition-all cursor-pointer text-left group",
+                    "relative w-24 h-16 shrink-0 rounded-[8px] overflow-hidden border-2 transition-all cursor-pointer text-left group",
                     selectedIdx === idx
-                      ? "border-[#D97706] ring-2 ring-[#D97706]/40 shadow-sm opacity-100"
-                      : "border-[#D9D4CB] opacity-75 hover:opacity-100 hover:border-stone-400"
+                      ? "border-[var(--accent)] ring-2 ring-[var(--accent)]/40 shadow-xs opacity-100"
+                      : "border-[var(--line)] opacity-75 hover:opacity-100 hover:border-[var(--line-input)]"
                   )}
                 >
                   <img
@@ -476,7 +469,7 @@ export function VehicleGallery({
                 "relative w-24 h-16 shrink-0 rounded-xl overflow-hidden border-2 transition-all cursor-pointer text-left group bg-stone-900",
                 isPlayingVideo && selectedVideoIdx === vIdx
                   ? "border-red-600 ring-2 ring-red-500/50 shadow-sm opacity-100"
-                  : "border-[#D9D4CB] opacity-75 hover:opacity-100 hover:border-stone-400"
+                  : "border-[var(--line)] opacity-75 hover:opacity-100 hover:border-[var(--line-input)]"
               )}
             >
               <div className="absolute inset-0 flex items-center justify-center bg-black/60 group-hover:bg-black/40 transition-colors">
@@ -498,7 +491,7 @@ export function VehicleGallery({
           {/* Header Lightbox */}
           <div className="flex items-center justify-between text-white border-b border-white/20 pb-3">
             <div>
-              <span className="text-xs text-[#D97706] font-bold uppercase tracking-wider">
+              <span className="text-xs text-[var(--accent)] font-bold uppercase tracking-wider">
                 {tagInfo?.label || "Pemeriksaan Fisik"}
               </span>
               <h3 className="text-base sm:text-lg font-bold">

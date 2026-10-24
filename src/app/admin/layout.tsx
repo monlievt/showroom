@@ -15,7 +15,7 @@ export default async function AdminLayout({
   const session = await getSession();
 
   return (
-    <div className="min-h-screen bg-[#F7F5F2] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col md:flex-row">
       <AdminSidebar
         userRole={session?.role || "ADMIN"}
         userName={session?.fullName || "Owner Nur Mobil"}
@@ -26,4 +26,3 @@ export default async function AdminLayout({
     </div>
   );
 }
-

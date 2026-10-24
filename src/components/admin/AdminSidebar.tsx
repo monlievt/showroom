@@ -70,7 +70,7 @@ export function AdminSidebar({
   return (
     <aside
       className={cn(
-        "border-r border-[#D9D4CB] bg-[#EFECE8] flex flex-col justify-between shrink-0 h-screen sticky top-0 transition-all duration-300 z-30 select-none",
+        "border-r border-[var(--line)] bg-[var(--surface)] flex flex-col justify-between shrink-0 h-screen sticky top-0 transition-all duration-300 z-30 select-none",
         isCollapsed ? "w-20" : "w-64 lg:w-72"
       )}
     >
@@ -78,7 +78,7 @@ export function AdminSidebar({
         {/* Brand Header */}
         <div
           className={cn(
-            "border-b border-[#D9D4CB] flex items-center justify-between transition-all",
+            "border-b border-[var(--line)] flex items-center justify-between transition-all",
             isCollapsed ? "p-3 flex-col gap-2" : "p-4 sm:p-5"
           )}
         >
@@ -87,15 +87,15 @@ export function AdminSidebar({
             className="flex items-center gap-3 group overflow-hidden"
             title="Nur Mobil Admin"
           >
-            <div className="w-10 h-10 rounded-xl bg-[#D97706] flex items-center justify-center text-white font-black text-xl shadow-sm transition-transform group-hover:scale-105 shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[var(--accent)] flex items-center justify-center text-white font-black text-xl shadow-sm transition-transform group-hover:scale-105 shrink-0">
               N
             </div>
             {!isCollapsed && (
               <div className="min-w-0 transition-opacity duration-200">
-                <span className="font-extrabold text-base text-[#1C1917] tracking-tight block truncate">
+                <span className="font-extrabold text-base text-[var(--ink)] tracking-tight block truncate">
                   Nur Mobil
                 </span>
-                <span className="text-[11px] text-[#6B6560] block font-medium truncate">
+                <span className="text-[11px] text-[var(--muted)] block font-medium truncate">
                   Operasional & Transparansi
                 </span>
               </div>
@@ -105,13 +105,13 @@ export function AdminSidebar({
           {/* Toggle Collapse Button */}
           <button
             onClick={toggleCollapse}
-            className="p-1.5 rounded-lg text-[#6B6560] hover:text-[#1C1917] hover:bg-[#D9D4CB]/60 transition-colors cursor-pointer shrink-0"
+            className="p-1.5 rounded-lg text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--line)]/60 transition-colors cursor-pointer shrink-0"
             title={isCollapsed ? "Perlebar Sidebar (Expand)" : "Ciutkan Sidebar (Collapse)"}
           >
             {isCollapsed ? (
-              <PanelLeftOpen className="w-4 h-4 text-[#D97706]" />
+              <PanelLeftOpen className="w-4 h-4 text-[var(--accent)]" />
             ) : (
-              <PanelLeftClose className="w-4 h-4 text-[#6B6560]" />
+              <PanelLeftClose className="w-4 h-4 text-[var(--muted)]" />
             )}
           </button>
         </div>
@@ -119,7 +119,7 @@ export function AdminSidebar({
         {/* Navigation Items (Scrollable if tall) */}
         <nav className="p-3 space-y-1 overflow-y-auto flex-1 custom-scrollbar">
           {!isCollapsed && (
-            <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#6B6560]">
+            <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">
               {isSales ? "Menu Sales" : "Menu Operasional"}
             </div>
           )}
@@ -132,15 +132,15 @@ export function AdminSidebar({
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
                 pathname === "/admin"
-                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                  ? "bg-[var(--accent)] text-white shadow-sm font-semibold"
+                  : "text-[var(--ink)] hover:bg-[var(--line)]/50",
                 isCollapsed && "justify-center px-0"
               )}
             >
               <LayoutDashboard
                 className={cn(
                   "w-4 h-4 shrink-0",
-                  pathname === "/admin" ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                  pathname === "/admin" ? "text-white" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
                 )}
               />
               {!isCollapsed && <span className="truncate">Dashboard Utama</span>}
@@ -154,15 +154,15 @@ export function AdminSidebar({
             className={cn(
               "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
               pathname.startsWith("/admin/inventory")
-                ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                ? "bg-[var(--accent)] text-white shadow-sm font-semibold"
+                : "text-[var(--ink)] hover:bg-[var(--line)]/50",
               isCollapsed && "justify-center px-0"
             )}
           >
             <Car
               className={cn(
                 "w-4 h-4 shrink-0",
-                pathname.startsWith("/admin/inventory") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                pathname.startsWith("/admin/inventory") ? "text-white" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
               )}
             />
             {!isCollapsed && (
@@ -180,15 +180,15 @@ export function AdminSidebar({
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
                 pathname.startsWith("/admin/inspections")
-                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                  ? "bg-[var(--accent)] text-white shadow-sm font-semibold"
+                  : "text-[var(--ink)] hover:bg-[var(--line)]/50",
                 isCollapsed && "justify-center px-0"
               )}
             >
               <ClipboardCheck
                 className={cn(
                   "w-4 h-4 shrink-0",
-                  pathname.startsWith("/admin/inspections") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                  pathname.startsWith("/admin/inspections") ? "text-white" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
                 )}
               />
               {!isCollapsed && <span className="truncate">Cek Fisik & Inspeksi</span>}
@@ -203,15 +203,15 @@ export function AdminSidebar({
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
                 pathname.startsWith("/admin/workshop")
-                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                  ? "bg-[var(--accent)] text-white shadow-sm font-semibold"
+                  : "text-[var(--ink)] hover:bg-[var(--line)]/50",
                 isCollapsed && "justify-center px-0"
               )}
             >
               <Wrench
                 className={cn(
                   "w-4 h-4 shrink-0",
-                  pathname.startsWith("/admin/workshop") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                  pathname.startsWith("/admin/workshop") ? "text-white" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
                 )}
               />
               {!isCollapsed && <span className="truncate">Gudang Bahan &amp; Alat</span>}
@@ -226,15 +226,15 @@ export function AdminSidebar({
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
                 pathname.startsWith("/admin/sales")
-                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                  ? "bg-[var(--accent)] text-white shadow-sm font-semibold"
+                  : "text-[var(--ink)] hover:bg-[var(--line)]/50",
                 isCollapsed && "justify-center px-0"
               )}
             >
               <ReceiptText
                 className={cn(
                   "w-4 h-4 shrink-0",
-                  pathname.startsWith("/admin/sales") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                  pathname.startsWith("/admin/sales") ? "text-white" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
                 )}
               />
               {!isCollapsed && <span className="truncate">Penjualan & Piutang</span>}
@@ -249,15 +249,15 @@ export function AdminSidebar({
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
                 pathname.startsWith("/admin/archive")
-                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                  ? "bg-[var(--accent)] text-white shadow-sm font-semibold"
+                  : "text-[var(--ink)] hover:bg-[var(--line)]/50",
                 isCollapsed && "justify-center px-0"
               )}
             >
               <History
                 className={cn(
                   "w-4 h-4 shrink-0",
-                  pathname.startsWith("/admin/archive") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                  pathname.startsWith("/admin/archive") ? "text-white" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
                 )}
               />
               {!isCollapsed && <span className="truncate">Arsip & Benchmark</span>}
@@ -272,9 +272,9 @@ export function AdminSidebar({
                   "flex items-center justify-between rounded-xl transition-all",
                   isFinanceActive
                     ? isCollapsed
-                      ? "bg-[#D97706] text-white"
-                      : "bg-[#D97706]/10 text-[#D97706] font-bold"
-                    : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                      ? "bg-[var(--accent)] text-white"
+                      : "bg-[var(--accent)]/10 text-[var(--accent)] font-bold"
+                    : "text-[var(--ink)] hover:bg-[var(--line)]/50",
                   isCollapsed ? "justify-center" : "px-3 py-2"
                 )}
               >
@@ -292,8 +292,8 @@ export function AdminSidebar({
                       isFinanceActive
                         ? isCollapsed
                           ? "text-white"
-                          : "text-[#D97706]"
-                        : "text-[#6B6560]"
+                          : "text-[var(--accent)]"
+                        : "text-[var(--muted)]"
                     )}
                   />
                   {!isCollapsed && <span className="truncate">Keuangan & Kas</span>}
@@ -304,7 +304,7 @@ export function AdminSidebar({
                       e.preventDefault();
                       setFinanceOpen(!financeOpen);
                     }}
-                    className="p-1 rounded-md hover:bg-[#D9D4CB]/60 text-[#6B6560] cursor-pointer"
+                    className="p-1 rounded-md hover:bg-[var(--line)]/60 text-[var(--muted)] cursor-pointer"
                     title="Buka/Tutup Submenu"
                   >
                     <ChevronDown
@@ -319,14 +319,14 @@ export function AdminSidebar({
 
               {/* Submenu Keuangan */}
               {!isCollapsed && financeOpen && (
-                <div className="pl-6 pr-1 py-1 space-y-1 mt-0.5 border-l-2 border-[#D97706]/30 ml-4">
+                <div className="pl-6 pr-1 py-1 space-y-1 mt-0.5 border-l-2 border-[var(--accent)]/30 ml-4">
                   <Link
                     href="/admin/finance"
                     className={cn(
                       "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
                       pathname === "/admin/finance"
-                        ? "bg-[#D97706] text-white font-semibold"
-                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                        ? "bg-[var(--accent)] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[var(--line)]/50"
                     )}
                   >
                     <Wallet className="w-3.5 h-3.5 shrink-0" />
@@ -338,8 +338,8 @@ export function AdminSidebar({
                     className={cn(
                       "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
                       pathname.startsWith("/admin/finance/expenses")
-                        ? "bg-[#D97706] text-white font-semibold"
-                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                        ? "bg-[var(--accent)] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[var(--line)]/50"
                     )}
                   >
                     <Split className="w-3.5 h-3.5 shrink-0" />
@@ -358,9 +358,9 @@ export function AdminSidebar({
                   "flex items-center justify-between rounded-xl transition-all",
                   isInvestorActive
                     ? isCollapsed
-                      ? "bg-[#D97706] text-white"
-                      : "bg-[#D97706]/10 text-[#D97706] font-bold"
-                    : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                      ? "bg-[var(--accent)] text-white"
+                      : "bg-[var(--accent)]/10 text-[var(--accent)] font-bold"
+                    : "text-[var(--ink)] hover:bg-[var(--line)]/50",
                   isCollapsed ? "justify-center" : "px-3 py-2"
                 )}
               >
@@ -378,8 +378,8 @@ export function AdminSidebar({
                       isInvestorActive
                         ? isCollapsed
                           ? "text-white"
-                          : "text-[#D97706]"
-                        : "text-[#6B6560]"
+                          : "text-[var(--accent)]"
+                        : "text-[var(--muted)]"
                     )}
                   />
                   {!isCollapsed && <span className="truncate">Investor & Bagi Hasil</span>}
@@ -390,7 +390,7 @@ export function AdminSidebar({
                       e.preventDefault();
                       setInvestorOpen(!investorOpen);
                     }}
-                    className="p-1 rounded-md hover:bg-[#D9D4CB]/60 text-[#6B6560] cursor-pointer"
+                    className="p-1 rounded-md hover:bg-[var(--line)]/60 text-[var(--muted)] cursor-pointer"
                     title="Buka/Tutup Submenu"
                   >
                     <ChevronDown
@@ -405,14 +405,14 @@ export function AdminSidebar({
 
               {/* Submenu Investor */}
               {!isCollapsed && investorOpen && (
-                <div className="pl-6 pr-1 py-1 space-y-1 mt-0.5 border-l-2 border-[#D97706]/30 ml-4">
+                <div className="pl-6 pr-1 py-1 space-y-1 mt-0.5 border-l-2 border-[var(--accent)]/30 ml-4">
                   <Link
                     href="/admin/investors"
                     className={cn(
                       "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
                       pathname === "/admin/investors"
-                        ? "bg-[#D97706] text-white font-semibold"
-                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                        ? "bg-[var(--accent)] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[var(--line)]/50"
                     )}
                   >
                     <Coins className="w-3.5 h-3.5 shrink-0" />
@@ -424,8 +424,8 @@ export function AdminSidebar({
                     className={cn(
                       "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
                       pathname.startsWith("/admin/investors/accounts")
-                        ? "bg-[#D97706] text-white font-semibold"
-                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                        ? "bg-[var(--accent)] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[var(--line)]/50"
                     )}
                   >
                     <Users className="w-3.5 h-3.5 shrink-0" />
@@ -437,8 +437,8 @@ export function AdminSidebar({
                     className={cn(
                       "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
                       pathname.startsWith("/admin/investors/history")
-                        ? "bg-[#D97706] text-white font-semibold"
-                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                        ? "bg-[var(--accent)] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[var(--line)]/50"
                     )}
                   >
                     <Clock className="w-3.5 h-3.5 shrink-0" />
@@ -450,8 +450,8 @@ export function AdminSidebar({
                     className={cn(
                       "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
                       pathname.startsWith("/admin/investors/tier-rules")
-                        ? "bg-[#D97706] text-white font-semibold"
-                        : "text-[#44403C] hover:bg-[#D9D4CB]/50"
+                        ? "bg-[var(--accent)] text-white font-semibold"
+                        : "text-[#44403C] hover:bg-[var(--line)]/50"
                     )}
                   >
                     <Sliders className="w-3.5 h-3.5 shrink-0" />
@@ -470,15 +470,15 @@ export function AdminSidebar({
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
                 pathname.startsWith("/admin/settings")
-                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                  ? "bg-[var(--accent)] text-white shadow-sm font-semibold"
+                  : "text-[var(--ink)] hover:bg-[var(--line)]/50",
                 isCollapsed && "justify-center px-0"
               )}
             >
               <ShieldCheck
                 className={cn(
                   "w-4 h-4 shrink-0",
-                  pathname.startsWith("/admin/settings") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                  pathname.startsWith("/admin/settings") ? "text-white" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
                 )}
               />
               {!isCollapsed && <span className="truncate">Sistem & Notifikasi</span>}
@@ -493,15 +493,15 @@ export function AdminSidebar({
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
                 pathname.startsWith("/admin/users")
-                  ? "bg-[#D97706] text-white shadow-sm font-semibold"
-                  : "text-[#1C1917] hover:bg-[#D9D4CB]/50",
+                  ? "bg-[var(--accent)] text-white shadow-sm font-semibold"
+                  : "text-[var(--ink)] hover:bg-[var(--line)]/50",
                 isCollapsed && "justify-center px-0"
               )}
             >
               <Users
                 className={cn(
                   "w-4 h-4 shrink-0",
-                  pathname.startsWith("/admin/users") ? "text-white" : "text-[#6B6560] group-hover:text-[#1C1917]"
+                  pathname.startsWith("/admin/users") ? "text-white" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
                 )}
               />
               {!isCollapsed && <span className="truncate">Kelola Pengguna</span>}
@@ -510,7 +510,7 @@ export function AdminSidebar({
 
           {/* Katalog Web Publik */}
           {!isCollapsed && (
-            <div className="pt-3 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#6B6560]">
+            <div className="pt-3 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">
               Katalog Publik
             </div>
           )}
@@ -519,12 +519,12 @@ export function AdminSidebar({
             target="_blank"
             title={isCollapsed ? "Buka Katalog Web" : undefined}
             className={cn(
-              "flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-[#1C1917] hover:bg-[#D9D4CB]/50 transition-colors group",
+              "flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-[var(--ink)] hover:bg-[var(--line)]/50 transition-colors group",
               isCollapsed && "justify-center px-0"
             )}
           >
             <div className="flex items-center gap-3">
-              <ExternalLink className="w-4 h-4 text-[#D97706] shrink-0" />
+              <ExternalLink className="w-4 h-4 text-[var(--accent)] shrink-0" />
               {!isCollapsed && <span className="truncate">Buka Katalog Web</span>}
             </div>
             {!isCollapsed && (
@@ -539,17 +539,17 @@ export function AdminSidebar({
       {/* User Session Footer */}
       <div
         className={cn(
-          "border-t border-[#D9D4CB] bg-[#F7F5F2] flex items-center justify-between transition-all",
+          "border-t border-[var(--line)] bg-[var(--bg)] flex items-center justify-between transition-all",
           isCollapsed ? "p-3 flex-col gap-3" : "p-3.5 sm:p-4"
         )}
       >
         <div className="flex items-center gap-2.5 overflow-hidden">
-          <div className="w-8 h-8 rounded-full bg-[#1C1917] text-white flex items-center justify-center text-xs font-semibold shrink-0 shadow-xs">
-            <ShieldCheck className="w-4 h-4 text-[#D97706]" />
+          <div className="w-8 h-8 rounded-full bg-[var(--ink)] text-white flex items-center justify-center text-xs font-semibold shrink-0 shadow-xs">
+            <ShieldCheck className="w-4 h-4 text-[var(--accent)]" />
           </div>
           {!isCollapsed && (
             <div className="overflow-hidden">
-              <div className="text-xs sm:text-sm font-bold text-[#1C1917] truncate">
+              <div className="text-xs sm:text-sm font-bold text-[var(--ink)] truncate">
                 {userName}
               </div>
               <div className="text-[11px] flex items-center gap-1 font-medium mt-0.5">
@@ -579,7 +579,7 @@ export function AdminSidebar({
         <button
           onClick={() => logoutAction()}
           title="Keluar (Logout)"
-          className="p-1.5 rounded-lg text-[#6B6560] hover:text-red-600 hover:bg-[#EFECE8] transition-colors cursor-pointer shrink-0"
+          className="p-1.5 rounded-lg text-[var(--muted)] hover:text-red-600 hover:bg-[var(--surface)] transition-colors cursor-pointer shrink-0"
         >
           <LogOut className="w-4 h-4" />
         </button>

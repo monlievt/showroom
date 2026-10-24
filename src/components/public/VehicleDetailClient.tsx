@@ -1,42 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import {
   Car,
   Gauge,
-  Calendar,
-  ShieldCheck,
-  CheckCircle2,
-  AlertTriangle,
-  ArrowLeft,
   Phone,
   FileDown,
   Play,
   FileCheck,
   MapPin,
-  Palette,
-  Wrench,
   Fuel,
   Eye,
   FileText,
-  Archive,
-  Sparkles,
-  Clock,
-  Info,
+  CheckCircle2,
+  ShieldCheck,
 } from "lucide-react";
 import { formatRupiah, formatDate, formatUpcomingPrice, cn } from "@/lib/utils";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
-import { 
-  PANEL_LABELS, 
-  getPaintMicronCategory, 
+import {
+  PANEL_LABELS,
+  getPaintMicronCategory,
   getBrandPaintStandard,
   calculateOverallVehiclePaint,
-  calculateMultiPointAnalysis 
+  calculateMultiPointAnalysis,
 } from "@/lib/calculations/inspection";
 import { VehicleSpecsTable } from "@/components/inspection/VehicleSpecsTable";
 import { InspectionChecklistTabs } from "@/components/inspection/InspectionChecklistTabs";
 import { VehicleGallery } from "@/components/public/VehicleGallery";
+import { InspectionBar } from "@/components/public/InspectionBar";
 
 interface VehicleDetailProps {
   vehicle: {
@@ -67,6 +59,7 @@ interface VehicleDetailProps {
       id: string;
       fileUrl: string;
       category: string;
+      tag?: string | null;
     }>;
     inspection?: {
       id: string;
@@ -97,8 +90,10 @@ interface VehicleDetailProps {
 
 export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
   const isBooked = vehicle.status === "BOOKED";
-  const isSold = vehicle.status === "SOLD_SETTLED";
+  const isSold = vehicle.status === "SOLD_SETTLED" || vehicle.status === "SOLD";
   const isUpcoming = vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR";
+  const isReady = vehicle.status === "READY_FOR_SALE" || vehicle.status === "READY";
+
   const brandCalibration = getBrandPaintStandard(vehicle.brand);
   const overallPaintStats = vehicle.inspection?.panels
     ? calculateOverallVehiclePaint(vehicle.inspection.panels, vehicle.brand)
@@ -115,26 +110,25 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
 
   return (
     <div className="space-y-8">
-      {/* Breadcrumb Navigation */}
-      <div className="flex items-center gap-2 text-xs font-semibold text-[#6B6560]">
-        <Link href="/" className="hover:text-[#D97706]">
+      {/* 1. Breadcrumb (§6.3: 13px --muted) */}
+      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[13px] text-[var(--muted)]">
+        <Link href="/" className="hover:text-[var(--ink)] transition-colors">
           Beranda
         </Link>
         <span>/</span>
-        <Link href="/katalog" className="hover:text-[#D97706]">
-          Katalog
+        <Link href="/katalog" className="hover:text-[var(--ink)] transition-colors">
+          Katalog Unit
         </Link>
         <span>/</span>
-        <span className="text-[#1C1917]">
-          {vehicle.brand} {vehicle.model} ({vehicle.year})
+        <span className="text-[var(--ink)] font-medium">
+          {vehicle.brand} {vehicle.model}
         </span>
-      </div>
+      </nav>
 
-      {/* Main Grid: Gallery on Left, Specs & CTA on Right */}
+      {/* 2. Dua Kolom di Desktop (≥960px): Kiri Galeri, Kanan Kartu Ringkasan Sticky */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Kolom Kiri: Galeri Foto & Video YouTube (7 cols) */}
+        {/* Kolom Kiri: Galeri Foto & Walkaround (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          {/* Komponen Galeri Foto Terkategori dengan Tag Sektor & Lightbox */}
           <VehicleGallery
             photos={vehicle.photos}
             brand={vehicle.brand}
@@ -145,16 +139,16 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
             youtubeVideoId={vehicle.youtubeVideoId}
           />
 
-          {/* Video Walkaround YouTube (ARCHITECTURE.md §14.3) */}
+          {/* Video Walkaround YouTube jika ada */}
           {vehicle.youtubeVideoId && (
-            <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-sm space-y-3">
+            <div className="bg-[var(--surface)] rounded-[var(--r-card)] border border-[var(--line)] p-4 space-y-3">
               <div className="flex items-center gap-2">
                 <Play className="w-4 h-4 text-red-600 fill-current" />
-                <h3 className="font-bold text-sm text-[#1C1917]">
-                  Video Walkaround & Review Kondisi Unit
+                <h3 className="font-bold text-[14px] text-[var(--ink)]">
+                  Video Walkaround &amp; Review Unit
                 </h3>
               </div>
-              <div className="relative aspect-video rounded-xl overflow-hidden bg-black">
+              <div className="relative aspect-video rounded-[8px] overflow-hidden bg-black">
                 <iframe
                   src={`https://www.youtube.com/embed/${vehicle.youtubeVideoId}`}
                   title={`Walkaround ${vehicle.brand} ${vehicle.model}`}
@@ -167,197 +161,99 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
           )}
         </div>
 
-        {/* Kolom Kanan: Rincian Unit, Harga & WhatsApp CTA (5 cols) */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-sm space-y-5">
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-1">
-                <span className="text-xs font-bold text-[#D97706] uppercase tracking-wider">
-                  {vehicle.brand} • {vehicle.year}
+        {/* Kolom Kanan: Kartu Ringkasan Sticky (5 cols) */}
+        <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-[80px]">
+          <div className="bg-[var(--surface)] rounded-[var(--r-card)] border border-[var(--line)] p-6 space-y-4 shadow-xs">
+            {/* Status Badge & Nama Unit */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[12px] text-[var(--muted)]">
+                  {vehicle.year} · {vehicle.transmission === "AUTOMATIC" ? "Otomatis" : vehicle.transmission === "MANUAL" ? "Manual" : vehicle.transmission} · {vehicle.odometer.toLocaleString("id-ID")} km
                 </span>
                 {isSold ? (
-                  <span className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-stone-900 text-amber-400 border border-amber-500/40 shadow-sm flex items-center gap-1.5">
-                    <Archive className="w-3.5 h-3.5 text-amber-400" />
-                    <span>TERJUAL</span>
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white text-[var(--muted)] border border-[var(--line)]">
+                    TERJUAL
                   </span>
                 ) : isUpcoming ? (
-                  <span className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500 text-white shadow-sm flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>SEGERA HADIR</span>
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white text-[var(--warn)] border border-[var(--line)]">
+                    SEGERA HADIR
                   </span>
                 ) : isBooked ? (
-                  <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-500 text-white shadow-sm">
-                    Sudah Dibooking (DP)
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white text-[var(--warn)] border border-[var(--line)]">
+                    BOOKED
                   </span>
                 ) : (
-                  <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-600 text-white shadow-sm">
-                    Tersedia di Showroom
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-white text-[var(--ok)] border border-[var(--line)]">
+                    READY
                   </span>
                 )}
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1C1917] tracking-tight">
-                {vehicle.model}
+
+              <h1 className="text-[26px] font-bold text-[var(--ink)] leading-tight tracking-[-0.015em]">
+                {vehicle.brand} {vehicle.model}
               </h1>
-              <div className="flex items-center gap-3 mt-1.5 text-xs text-[#6B6560] font-medium">
-                <span>Plat: <strong>{vehicle.plateNumber}</strong></span>
-                <span>•</span>
-                <span>Warna: {vehicle.color}</span>
+
+              <div className="text-[13px] text-[var(--muted)]">
+                Plat {vehicle.plateNumber} · Warna {vehicle.color}
               </div>
             </div>
 
-            {/* Banner Persiapan Unit Segera Hadir (Upcoming) */}
-            {isUpcoming && (
-              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[#1C1917] space-y-1.5">
-                <div className="flex items-center gap-2 text-xs font-extrabold text-amber-900 uppercase tracking-wider">
-                  <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>Tahap Persiapan & Detailing Salon</span>
-                </div>
-                <p className="text-[11px] text-stone-600 leading-relaxed">
-                  Unit ini baru saja tiba di garasi kami dan sedang dalam proses inspeksi fisik menyeluruh, perbaikan minor, dan salon detailing. Foto resmi dan hasil inspeksi lengkap akan ditayangkan setelah unit siap. Anda dapat memesan (booking) lebih awal agar tidak didahului pembeli lain.
-                </p>
+            {/* Harga 28px/700 */}
+            <div className="py-2 border-y border-[var(--line)] space-y-0.5">
+              <div className="text-[12px] text-[var(--muted)]">
+                {isSold ? "Harga realisasi transaksi:" : "Harga cash / tunai:"}
               </div>
-            )}
-
-            {/* Banner Arsip Transaksi Unit Terjual */}
-            {isSold && (
-              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[#1C1917] space-y-1.5">
-                <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <div className="flex items-center gap-2 text-xs font-extrabold text-amber-900 uppercase tracking-wider">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Resmi Terjual & Diserahterimakan</span>
-                  </div>
-                  {vehicle.soldDate && (
-                    <span className="text-[11px] font-bold text-stone-700 bg-white/80 px-2 py-0.5 rounded border border-amber-200">
-                      Terjual: {formatDate(vehicle.soldDate)}
-                    </span>
-                  )}
-                </div>
-                <p className="text-[11px] text-stone-600 leading-relaxed">
-                  Unit telah diserahterimakan kepada pembeli (BAST). Halaman ini disimpan sebagai arsip rekam jejak kondisi fisik dan sertifikat inspeksi digital terverifikasi.
-                </p>
+              <div className="text-[28px] font-bold text-[var(--ink)] tracking-tight">
+                {vehicle.price ? formatRupiah(vehicle.price) : "Hubungi Kami"}
               </div>
-            )}
+            </div>
 
-            {/* Harga */}
-            <div
-              className={cn(
-                "p-4 rounded-xl border space-y-1.5",
-                isSold
-                  ? "bg-stone-100/80 border-stone-300"
-                  : isUpcoming
-                  ? "bg-amber-50/60 border-amber-200"
-                  : "bg-[#FAF9F6] border-[#EBE7E1]"
-              )}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-[#6B6560] font-medium block">
-                  {isSold
-                    ? "Harga Penawaran Terakhir:"
-                    : isUpcoming
-                    ? "Estimasi Kisaran Harga:"
-                    : "Harga Tunai (Cash / Tukar Tambah):"}
-                </span>
+            {/* Quick Inspection Summary Bar */}
+            <div className="space-y-1">
+              <div className="text-[12px] font-medium text-[var(--muted)]">
+                Ringkasan uji mikron 8 zona:
               </div>
-
-              {isSold ? (
-                <div className="space-y-1">
-                  <div className="flex flex-wrap items-baseline gap-2.5">
-                    <span className="text-2xl sm:text-3xl font-bold text-stone-400 line-through tracking-tight">
-                      {vehicle.price ? formatRupiah(vehicle.price) : "Hubungi Kami"}
-                    </span>
-                    <span className="text-xs font-medium text-stone-500">
-                      (Harga listing saat aktif)
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-stone-500 block">
-                    *Unit telah lunas dan diserahterimakan. Harga di atas adalah harga acuan penawaran sebelum unit laku.
-                  </span>
-                </div>
-              ) : isUpcoming ? (
-                <div className="space-y-1">
-                  <div className="text-2xl sm:text-3xl font-extrabold text-amber-900 tracking-tight">
-                    {formatUpcomingPrice(vehicle.price)}
-                  </div>
-                  <span className="text-[11px] text-amber-800/80 block">
-                    *Harga final akan ditetapkan setelah proses rekondisi & detailing selesai. Booking prioritas tanpa komitmen tersedia.
-                  </span>
-                </div>
-              ) : (
-                <>
-                  <div className="text-3xl font-extrabold text-[#1C1917] tracking-tight">
-                    {vehicle.price ? formatRupiah(vehicle.price) : "Hubungi Kami"}
-                  </div>
-                  <span className="text-[11px] text-[#6B6560] block">
-                    *Negosiasi langsung di tempat setelah cek fisik & test drive.
-                  </span>
-                </>
-              )}
+              <InspectionBar
+                panels={vehicle.inspection?.panels || null}
+                plateNumber={vehicle.plateNumber}
+              />
             </div>
 
             {/* Quick Specs Grid */}
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="p-3 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6]">
-                <div className="flex items-center gap-1.5 text-[#6B6560] mb-1">
-                  <Gauge className="w-3.5 h-3.5 text-[#D97706]" />
-                  <span>Kilometer (Odo)</span>
-                </div>
-                <div className="font-bold text-[#1C1917] text-sm">
-                  {vehicle.odometer.toLocaleString("id-ID")} KM
-                </div>
+            <div className="grid grid-cols-2 gap-2 text-[13px] pt-1">
+              <div className="p-2.5 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
+                <span className="text-[11px] text-[var(--muted)] block">Transmisi</span>
+                <span className="font-semibold text-[var(--ink)]">{vehicle.transmission}</span>
               </div>
-
-              <div className="p-3 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6]">
-                <div className="flex items-center gap-1.5 text-[#6B6560] mb-1">
-                  <Car className="w-3.5 h-3.5 text-[#D97706]" />
-                  <span>Transmisi</span>
-                </div>
-                <div className="font-bold text-[#1C1917] text-sm">
-                  {vehicle.transmission}
-                </div>
+              <div className="p-2.5 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
+                <span className="text-[11px] text-[var(--muted)] block">Kapasitas Mesin</span>
+                <span className="font-semibold text-[var(--ink)]">{vehicle.engineCapacity.toLocaleString("id-ID")} cc</span>
               </div>
-
-              <div className="p-3 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6]">
-                <div className="flex items-center gap-1.5 text-[#6B6560] mb-1">
-                  <Fuel className="w-3.5 h-3.5 text-[#D97706]" />
-                  <span>Kapasitas Mesin</span>
-                </div>
-                <div className="font-bold text-[#1C1917] text-sm">
-                  {vehicle.engineCapacity.toLocaleString("id-ID")} CC
-                </div>
+              <div className="p-2.5 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
+                <span className="text-[11px] text-[var(--muted)] block">Dokumen BPKB</span>
+                <span className="font-semibold text-[var(--ok)]">
+                  {vehicle.bpkbStatus === "READY" ? "Ready & Sah" : "Dalam Proses"}
+                </span>
               </div>
-
-              <div className="p-3 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6]">
-                <div className="flex items-center gap-1.5 text-[#6B6560] mb-1">
-                  <FileCheck className="w-3.5 h-3.5 text-[#D97706]" />
-                  <span>Dokumen (BPKB/STNK)</span>
-                </div>
-                <div className="font-bold text-emerald-700 text-sm">
-                  {vehicle.bpkbStatus === "READY" ? "Lengkap & Ready" : "Dalam Proses"}
-                </div>
+              <div className="p-2.5 rounded-[8px] bg-[var(--bg)] border border-[var(--line)]">
+                <span className="text-[11px] text-[var(--muted)] block">Lokasi Garasi</span>
+                <span className="font-semibold text-[var(--ink)]">{vehicle.location || "Jawa Timur"}</span>
               </div>
             </div>
 
-            {/* Tombol Aksi Utama: WhatsApp & PDF Download */}
-            <div className="space-y-3 pt-2">
+            {/* Tombol Aksi Utama: WhatsApp & Sertifikat */}
+            <div className="space-y-2 pt-2">
               <a
                 href={waLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow cursor-pointer ${
-                  isSold
-                    ? "bg-stone-800 hover:bg-stone-900 text-white"
-                    : isUpcoming
-                    ? "bg-amber-600 hover:bg-amber-700 text-white"
-                    : "bg-[#D97706] hover:bg-[#B45309] text-white"
-                }`}
+                className="w-full flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white py-3 rounded-[var(--r-btn)] text-[14px] font-semibold transition-colors cursor-pointer"
               >
                 <Phone className="w-4 h-4" />
                 <span>
                   {isSold
-                    ? "Unit Sudah Terjual (Tanya Unit Serupa)"
-                    : isUpcoming
-                    ? "Minat Unit Ini? Booking Duluan / Tanya via WA"
-                    : "Tanya Admin / Booking Unit Cepat"}
+                    ? "Tanya Unit Serupa via WhatsApp"
+                    : "Tanya via WhatsApp"}
                 </span>
               </a>
 
@@ -366,384 +262,170 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
                   href={`/api/pdf/inspection/${vehicle.inspection.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 bg-white hover:bg-[#F7F5F2] border border-[#D9D4CB] text-[#1C1917] py-3 rounded-xl font-semibold text-xs transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-center gap-2 bg-white hover:border-[var(--ink)] border border-[var(--line-input)] text-[var(--ink)] py-2.5 rounded-[var(--r-btn)] text-[13px] font-medium transition-colors cursor-pointer"
                 >
-                  <FileDown className="w-4 h-4 text-[#D97706]" />
-                  <span>Unduh Sertifikat Inspeksi Resmi (PDF)</span>
+                  <FileDown className="w-4 h-4 text-[var(--muted)]" />
+                  <span>Unduh Sertifikat Inspeksi (PDF)</span>
                 </a>
               )}
             </div>
+          </div>
 
-            {/* Lokasi Garasi (Hanya tampil untuk unit yang belum terjual) */}
-            {!isSold && vehicle.location && (
-              <div className="flex items-center gap-2 text-xs text-[#6B6560] pt-2 border-t border-[#EBE7E1]">
-                <MapPin className="w-4 h-4 text-[#D97706] shrink-0" />
-                <span>Lokasi unit saat ini: <strong>{vehicle.location}</strong></span>
-              </div>
-            )}
+          {/* Kartu Garansi 3 Poin (§6.3) */}
+          <div className="bg-[var(--surface)] rounded-[var(--r-card)] border border-[var(--line)] p-5 space-y-3">
+            <h3 className="text-[14px] font-bold text-[var(--ink)]">
+              Jaminan &amp; Garansi Nur Mobil
+            </h3>
+            <ul className="space-y-2 text-[13px] text-[var(--muted)] leading-relaxed">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
+                <span><strong>Buyback tertulis bermaterai</strong> jika keabsahan dokumen bermasalah.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
+                <span><strong>Bebas tabrak &amp; banjir</strong> garansi pada struktur sasis dan pilar.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
+                <span><strong>Dokumen 100% sah</strong> hasil cek fisik Samsat siap balik nama.</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
 
-      {/* ── 1. DETAIL SPESIFIKASI KENDARAAN & DOKUMEN (STANDAR IBID ACV) ── */}
-      <VehicleSpecsTable vehicle={vehicle} inspection={vehicle.inspection} />
-
-      {/* ── 2. LEMBAR INSPEKSI MENYELURUH & PETA BODI INTERAKTIF (CHECKLIST 5 TAB) ── */}
-      {vehicle.inspection ? (
-        <div className="bg-white rounded-3xl border border-[#D9D4CB] p-6 sm:p-8 shadow-sm space-y-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-[#FEF3C7] text-[#92400E] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-                <ShieldCheck className="w-4 h-4 text-[#D97706]" />
-                <span>Transparansi Standar Cek Fisik & Balai Lelang</span>
-              </div>
-              <h2 className="text-2xl font-bold text-[#1C1917] tracking-tight">
-                Lembar Hasil Inspeksi Fisik & Uji 15 Titik Panel Cat
-              </h2>
-              <p className="text-xs sm:text-sm text-[#6B6560] mt-1">
-                Tanggal inspeksi: {formatDate(vehicle.inspection.inspectedAt)}. Tidak ada yang ditutupi: apa adanya, rusak dibilang rusak.
-              </p>
-            </div>
-
-            {/* Quick Action Buttons for Certificate */}
-            <div className="flex items-center gap-2 shrink-0">
-              <Link
-                href={`/inspeksi/${vehicle.inspection.id}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#D97706] hover:bg-[#B45309] text-white text-xs sm:text-sm font-bold shadow-sm transition-colors cursor-pointer"
-              >
-                <Eye className="w-4 h-4" />
-                <span>Lihat Sertifikat Digital</span>
-              </Link>
-              <a
-                href={`/api/pdf/inspection/${vehicle.inspection.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] hover:bg-[#F7F5F2] text-[#1C1917] text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
-                title="Unduh File PDF"
-              >
-                <FileText className="w-4 h-4 text-[#6B6560]" />
-                <span className="hidden sm:inline">PDF</span>
-              </a>
-            </div>
+      {/* 3. HASIL INSPEKSI 34 TITIK & UJI MIKRON (§6.3) */}
+      <div className="bg-[var(--surface)] rounded-[var(--r-card)] border border-[var(--line)] p-6 sm:p-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 pb-4 border-b border-[var(--line)]">
+          <div>
+            <h2 className="text-[20px] font-bold text-[var(--ink)] tracking-[-0.01em]">
+              Hasil inspeksi 34 titik &amp; uji mikron cat
+            </h2>
+            <p className="text-[13px] text-[var(--muted)] mt-0.5">
+              {vehicle.inspection
+                ? `Tanggal inspeksi: ${formatDate(vehicle.inspection.inspectedAt)}. Apa adanya: rusak dibilang rusak.`
+                : "Inspeksi digital mandiri dapat dijadwalkan saat cek fisik langsung di garasi."}
+            </p>
           </div>
 
-          {/* Checklist 5 Tab Interaktif dengan Siluet Mobil Blueprint & 14 Titik Rangka */}
-          <InspectionChecklistTabs
-            panels={vehicle.inspection.panels}
-            inspection={vehicle.inspection}
-            brand={vehicle.brand}
-            model={vehicle.model}
-          />
-
-          {/* Tabel Uji Mikron 15 Panel Body & Rata-rata Keseluruhan */}
-          <div className="space-y-4">
-            {overallPaintStats && overallPaintStats.totalPoints > 0 && (
-              <div className="p-4 sm:p-5 rounded-2xl border border-[#EBE7E1] bg-gradient-to-br from-white via-[#FAF9F6] to-[#F5F2EC] shadow-sm">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#EBE7E1]">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-[#1C1917] text-white tracking-wider uppercase">
-                        Standar Uji Coating Gauge
-                      </span>
-                      <span className="text-xs text-[#6B6560]">
-                        Multi-Point Digital Coating Gauge
-                      </span>
-                    </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-[#1C1917]">
-                      Hasil Rata-rata Ketebalan Cat Bodi Keseluruhan
-                    </h3>
-                    <p className="text-xs text-[#6B6560]">
-                      Diukur di {overallPaintStats.totalPoints} titik uji presisi (3 titik per panel, 4 titik panel atap). Toleransi disparitas belang: maks. 30 µm per panel.
-                    </p>
-                  </div>
-
-                  <div className="flex items-baseline md:items-end flex-col bg-white p-3.5 rounded-xl border border-[#EBE7E1] shadow-xs shrink-0">
-                    <span className="text-[11px] uppercase tracking-wider font-semibold text-[#6B6560]">
-                      Rata-Rata Total Bodi
-                    </span>
-                    <div className="flex items-baseline gap-1.5">
-                      <span
-                        className={cn(
-                          "text-3xl font-black tracking-tight",
-                          overallPaintStats.overallCondition === "ORIGINAL_FACTORY"
-                            ? "text-emerald-700"
-                            : overallPaintStats.overallCondition === "PARTIAL_REPAINT"
-                              ? "text-amber-700"
-                              : "text-red-600"
-                        )}
-                      >
-                        {overallPaintStats.overallAverage}
-                      </span>
-                      <span className="text-sm font-bold text-[#6B6560]">µm (mikron)</span>
-                    </div>
-                    <span
-                      className={cn(
-                        "text-[10px] font-extrabold uppercase px-2 py-0.5 rounded mt-1",
-                        overallPaintStats.overallCondition === "ORIGINAL_FACTORY"
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                          : overallPaintStats.overallCondition === "PARTIAL_REPAINT"
-                            ? "bg-amber-50 text-amber-700 border border-amber-200"
-                            : "bg-red-50 text-red-700 border border-red-200"
-                      )}
-                    >
-                      {overallPaintStats.overallConditionLabel}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 text-xs">
-                  <div className="p-2.5 rounded-lg bg-white/70 border border-[#EBE7E1]">
-                    <span className="text-[#6B6560] block text-[11px]">Titik Terukur</span>
-                    <strong className="text-[#1C1917] text-sm font-bold">
-                      {overallPaintStats.totalPoints} Titik Sensor
-                    </strong>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-white/70 border border-[#EBE7E1]">
-                    <span className="text-[#6B6560] block text-[11px]">Rentang Bacaan (Min - Max)</span>
-                    <strong className="text-[#1C1917] text-sm font-bold">
-                      {overallPaintStats.minMicron} – {overallPaintStats.maxMicron} µm
-                    </strong>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-white/70 border border-[#EBE7E1]">
-                    <span className="text-[#6B6560] block text-[11px]">Status Belang (Δ &gt; 30 µm)</span>
-                    <strong
-                      className={cn(
-                        "text-sm font-bold",
-                        overallPaintStats.belangPanelsCount === 0 ? "text-emerald-700" : "text-amber-700"
-                      )}
-                    >
-                      {overallPaintStats.belangPanelsCount === 0 ? "0 Panel (Presisi Merata)" : `${overallPaintStats.belangPanelsCount} Panel Belang/Spet`}
-                    </strong>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-white/70 border border-[#EBE7E1]">
-                    <span className="text-[#6B6560] block text-[11px]">Acuan OEM {vehicle.brand}</span>
-                    <strong className="text-[#1C1917] text-sm font-bold">
-                      {brandCalibration.typicalRange} (Maks. {brandCalibration.originalMax} µm)
-                    </strong>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2">
-              <div>
-                <h3 className="font-bold text-[#1C1917] text-base">
-                  Rincian Uji Mikron Tiap Titik Panel Bodi (Standar 3 Titik & Atap 4 Titik)
-                </h3>
-                <p className="text-xs text-[#6B6560]">
-                  Terkalibrasi Standar OEM: <strong className="text-[#1C1917]">{brandCalibration.brandGroupName}</strong> ({brandCalibration.typicalRange})
-                </p>
-              </div>
-              {/* Legend Ketebalan Cat Dinamis Berdasarkan Merk */}
-              <div className="flex items-center gap-4 text-xs flex-wrap">
-                <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                  <span className="text-[#6B6560]">≤{brandCalibration.originalMax} µm (Original)</span>
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                  <span className="text-[#6B6560]">{brandCalibration.originalMax + 1}–{brandCalibration.repaintMax} µm (Repaint)</span>
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                  <span className="text-[#6B6560]">&gt;{brandCalibration.repaintMax} µm (Dempul)</span>
-                </span>
-              </div>
+          {vehicle.inspection && (
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/inspeksi/${vehicle.inspection.id}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--r-btn)] bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-[13px] font-semibold transition-colors"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                <span>Sertifikat Digital</span>
+              </Link>
             </div>
+          )}
+        </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {vehicle.inspection.panels.map((p) => {
-                const label = PANEL_LABELS[p.panelType as keyof typeof PANEL_LABELS] || p.panelType;
+        {/* Bar Ringkasan 8 Zona di Bagian Atas */}
+        <div className="space-y-2">
+          <div className="text-[13px] font-medium text-[var(--muted)]">
+            Distribusi ketebalan cat 8 zona bodi:
+          </div>
+          <InspectionBar
+            panels={vehicle.inspection?.panels || null}
+            plateNumber={vehicle.plateNumber}
+          />
+        </div>
 
-                // Multi-point analysis
-                const points = [p.pointRight, p.pointCenter, p.pointLeft, p.pointExtra].filter(
-                  (val): val is number => typeof val === "number" && !isNaN(val)
-                );
-                const hasPoints = points.length > 0;
-                const pointStats = hasPoints ? calculateMultiPointAnalysis(points, 30) : null;
-                const effectiveMicron = pointStats?.average ?? p.paintThickness;
-                const cat =
-                  effectiveMicron !== undefined && effectiveMicron !== null
+        {/* Tabel / Breakdown Panel Uji Mikron */}
+        {vehicle.inspection && vehicle.inspection.panels && vehicle.inspection.panels.length > 0 ? (
+          <div className="space-y-4 pt-2">
+            {/* Checklist Tab Interaktif */}
+            <InspectionChecklistTabs
+              panels={vehicle.inspection.panels}
+              inspection={vehicle.inspection}
+              brand={vehicle.brand}
+              model={vehicle.model}
+            />
+
+            {/* Rincian Panel per Panel dengan Titik Berwarna dan Teks Status */}
+            <div className="pt-4 border-t border-[var(--line)] space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <h3 className="text-[15px] font-bold text-[var(--ink)]">
+                  Rincian ketebalan cat per panel
+                </h3>
+                {/* Legenda */}
+                <div className="flex items-center gap-4 text-[12px] text-[var(--muted)]">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]" />
+                    <span>Original (&le; {brandCalibration.originalMax} &micro;m)</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[var(--warn)]" />
+                    <span>Repaint</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[var(--bad)]" />
+                    <span>Dempul</span>
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {vehicle.inspection.panels.map((p) => {
+                  const label = PANEL_LABELS[p.panelType as keyof typeof PANEL_LABELS] || p.panelType;
+                  const points = [p.pointRight, p.pointCenter, p.pointLeft, p.pointExtra].filter(
+                    (val): val is number => typeof val === "number" && !isNaN(val)
+                  );
+                  const effectiveMicron = points.length > 0
+                    ? Math.round(points.reduce((a, b) => a + b, 0) / points.length)
+                    : p.paintThickness;
+
+                  const cat = effectiveMicron !== undefined && effectiveMicron !== null
                     ? getPaintMicronCategory(effectiveMicron, vehicle.brand)
                     : null;
 
-                const isRoof = p.panelType === "ROOF";
-
-                return (
-                  <div
-                    key={p.panelType}
-                    className={cn(
-                      "p-3.5 rounded-xl border flex flex-col justify-between transition-all",
-                      pointStats?.isBelang
-                        ? "border-amber-300 bg-amber-50/40"
-                        : "border-[#EBE7E1] bg-[#FAF9F6]"
-                    )}
-                  >
-                    <div className="flex items-start justify-between gap-2">
+                  return (
+                    <div
+                      key={p.panelType}
+                      className="p-3 bg-white border border-[var(--line)] rounded-[8px] flex items-center justify-between"
+                    >
                       <div>
-                        <span className="font-bold text-xs text-[#1C1917] block">{label}</span>
-                        <span className="text-[11px] text-[#6B6560]">
-                          Kondisi: {p.condition} {p.defectCode ? `(${p.defectCode})` : ""}
+                        <span className="text-[13px] font-semibold text-[var(--ink)] block">
+                          {label}
+                        </span>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span
+                            className={cn(
+                              "w-2 h-2 rounded-full",
+                              cat === "ORIGINAL"
+                                ? "bg-[var(--ok)]"
+                                : cat === "REPAINT"
+                                ? "bg-[var(--warn)]"
+                                : "bg-[var(--bad)]"
+                            )}
+                          />
+                          <span className="text-[12px] text-[var(--muted)]">
+                            {cat === "ORIGINAL" ? "Original" : cat === "REPAINT" ? "Repaint" : "Dempul"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[14px] font-bold text-[var(--ink)] block">
+                          {effectiveMicron ? `${effectiveMicron} µm` : "-"}
                         </span>
                       </div>
-
-                      <div className="text-right shrink-0">
-                        {effectiveMicron !== null && effectiveMicron !== undefined ? (
-                          <>
-                            <span
-                              className={cn(
-                                "font-extrabold text-sm block",
-                                cat === "ORIGINAL"
-                                  ? "text-emerald-700"
-                                  : cat === "REPAINT"
-                                    ? "text-amber-700"
-                                    : "text-red-600"
-                              )}
-                            >
-                              {effectiveMicron} µm
-                            </span>
-                            <span className="text-[10px] uppercase font-bold text-[#6B6560]">
-                              {hasPoints ? `Rata-rata • ${cat}` : cat}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="text-xs text-[#6B6560]">-</span>
-                        )}
-                      </div>
                     </div>
-
-                    {/* Titik-titik Pengukuran Detail jika ada */}
-                    {hasPoints && (
-                      <div className="mt-3 pt-2.5 border-t border-[#EBE7E1]/70">
-                        <div className="grid grid-cols-3 gap-1.5 text-center">
-                          <div className="p-1.5 rounded bg-white border border-[#EBE7E1] text-[10px]">
-                            <span className="text-[#6B6560] block text-[9px]">
-                              {isRoof ? "Kanan Dpn" : "Kanan"}
-                            </span>
-                            <strong className="text-[#1C1917] font-semibold">{p.pointRight ?? "-"} µm</strong>
-                          </div>
-                          <div className="p-1.5 rounded bg-white border border-[#EBE7E1] text-[10px]">
-                            <span className="text-[#6B6560] block text-[9px]">
-                              {isRoof ? "Kanan Blk" : "Tengah"}
-                            </span>
-                            <strong className="text-[#1C1917] font-semibold">{p.pointCenter ?? "-"} µm</strong>
-                          </div>
-                          <div className="p-1.5 rounded bg-white border border-[#EBE7E1] text-[10px]">
-                            <span className="text-[#6B6560] block text-[9px]">
-                              {isRoof ? "Kiri Dpn" : "Kiri"}
-                            </span>
-                            <strong className="text-[#1C1917] font-semibold">{p.pointLeft ?? "-"} µm</strong>
-                          </div>
-                        </div>
-                        {isRoof && p.pointExtra !== null && p.pointExtra !== undefined && (
-                          <div className="mt-1 text-center p-1 rounded bg-white border border-[#EBE7E1] text-[10px]">
-                            <span className="text-[#6B6560] text-[9px]">Kiri Blk: </span>
-                            <strong className="text-[#1C1917] font-semibold">{p.pointExtra} µm</strong>
-                          </div>
-                        )}
-
-                        {/* Disparitas / Belang Alert */}
-                        {pointStats && (
-                          <div className="mt-2 flex items-center justify-between text-[10px]">
-                            <span className="text-[#6B6560]">
-                              Disparitas: <strong>Δ {pointStats.delta} µm</strong>
-                            </span>
-                            {pointStats.isBelang ? (
-                              <span className="inline-flex items-center gap-0.5 text-amber-700 font-bold bg-amber-100/80 px-1.5 py-0.5 rounded">
-                                ⚠️ Belang / Spet Sebagian
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-0.5 text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded">
-                                ✓ Rata Presisi
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="bg-white rounded-3xl border border-[#D9D4CB] p-6 sm:p-8 shadow-sm space-y-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#EBE7E1] pb-6">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-[#EFECE8] text-[#6B6560] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 border border-[#D9D4CB]">
-                <Info className="w-4 h-4 text-[#6B6560]" />
-                <span>Inspeksi Digital Belum Tersedia</span>
-              </div>
-              <h2 className="text-2xl font-bold text-[#1C1917] tracking-tight">
-                Lembar Hasil Inspeksi Fisik &amp; Uji 15 Titik Panel Cat
-              </h2>
-              <p className="text-xs sm:text-sm text-[#6B6560] mt-1 max-w-2xl leading-relaxed">
-                Inspeksi digital resmi belum dilakukan untuk unit ini. Unit dijual dalam kondisi siap pakai sesuai spesifikasi yang tertera. Calon pembeli dipersilakan menghubungi tim kami untuk jadwal inspeksi mandiri atau test drive di showroom.
-              </p>
-            </div>
-            <div className="px-4 py-2.5 rounded-xl bg-[#F7F5F2] border border-[#D9D4CB] text-[#6B6560] text-xs font-semibold shrink-0 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-[#8C827A]" />
-              <span>Sertifikat Belum Tersedia</span>
-            </div>
+        ) : (
+          <div className="p-6 bg-[var(--bg)] border border-[var(--line)] rounded-[8px] text-center text-[var(--muted)] text-[14px]">
+            Data lembar uji mikron digital belum terbit untuk unit ini. Anda dipersilakan menguji langsung menggunakan alat ukur kami di garasi.
           </div>
+        )}
+      </div>
 
-          {/* Preview Tab Checklist Transparan */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
-                <ShieldCheck className="w-4 h-4 text-[#D97706]" />
-                <span>1. Ketebalan Cat 15 Titik Bodi</span>
-              </div>
-              <p className="text-[11px] text-[#6B6560] leading-relaxed">
-                Sensor mikron digital untuk membedakan cat asli pabrik (ori kaleng), repaint tipis, atau bekas dempul benturan.
-              </p>
-              <span className="inline-block text-[10px] font-bold text-[#6B6560] bg-[#EFECE8] border border-[#D9D4CB] px-2 py-0.5 rounded">
-                Belum Tersedia
-              </span>
-            </div>
-
-            <div className="p-4 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
-                <Wrench className="w-4 h-4 text-[#D97706]" />
-                <span>2. Ruang Mesin &amp; Kompresi</span>
-              </div>
-              <p className="text-[11px] text-[#6B6560] leading-relaxed">
-                Cek rembesan oli, suara klep/timing chain, getaran engine mounting, dan kepekatan gas buang knalpot.
-              </p>
-              <span className="inline-block text-[10px] font-bold text-[#6B6560] bg-[#EFECE8] border border-[#D9D4CB] px-2 py-0.5 rounded">
-                Belum Tersedia
-              </span>
-            </div>
-
-            <div className="p-4 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
-                <CheckCircle2 className="w-4 h-4 text-[#D97706]" />
-                <span>3. Uji Rangka Bebas Laka</span>
-              </div>
-              <p className="text-[11px] text-[#6B6560] leading-relaxed">
-                Inspeksi apron depan, tulang sasis utama, pilar A/B/C, sealer pintu, dan lantai bagasi untuk garansi bebas tabrak.
-              </p>
-              <span className="inline-block text-[10px] font-bold text-[#6B6560] bg-[#EFECE8] border border-[#D9D4CB] px-2 py-0.5 rounded">
-                Belum Tersedia
-              </span>
-            </div>
-
-            <div className="p-4 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
-                <FileCheck className="w-4 h-4 text-[#D97706]" />
-                <span>4. Deteksi Rendaman Banjir</span>
-              </div>
-              <p className="text-[11px] text-[#6B6560] leading-relaxed">
-                Pemeriksaan kolong dasbor, rel jok, soket sekring, dan modul ECU untuk menjamin 0% residu lumpur banjir.
-              </p>
-              <span className="inline-block text-[10px] font-bold text-[#6B6560] bg-[#EFECE8] border border-[#D9D4CB] px-2 py-0.5 rounded">
-                Belum Tersedia
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 4. DETAIL SPESIFIKASI & DOKUMEN */}
+      <VehicleSpecsTable vehicle={vehicle} inspection={vehicle.inspection} />
     </div>
   );
 }

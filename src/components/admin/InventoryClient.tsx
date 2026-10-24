@@ -251,31 +251,31 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
       </div>
 
       {/* ── VEHICLES TABLE ────────────────────────────────────── */}
-      <div className="bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
-              <tr className="border-b border-[#D9D4CB] bg-[#EFECE8] text-xs font-semibold uppercase tracking-wider text-[#6B6560]">
-                <th className="py-3.5 px-4">Plat & Unit</th>
+              <tr className="border-b border-[var(--line)] bg-[var(--bg)] text-[13px] font-semibold text-[var(--muted)]">
+                <th className="py-3.5 px-4">Plat &amp; Unit</th>
                 <th className="py-3.5 px-4">Spesifikasi</th>
-                <th className="py-3.5 px-4">Status & Alur</th>
+                <th className="py-3.5 px-4">Status &amp; Alur</th>
                 <th className="py-3.5 px-4">Umur di Garasi</th>
-                <th className="py-3.5 px-4">HPP & Biaya</th>
+                <th className="py-3.5 px-4">HPP &amp; Biaya</th>
                 <th className="py-3.5 px-4">Target / Batas Bawah</th>
                 <th className="py-3.5 px-4 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#D9D4CB]">
+            <tbody className="divide-y divide-[var(--line)]">
               {filteredVehicles.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-[#6B6560]">
+                  <td colSpan={7} className="py-12 text-center text-[var(--muted)]">
                     Tidak ada unit yang cocok dengan filter atau pencarian saat ini.
                   </td>
                 </tr>
               ) : (
                 filteredVehicles.map((vehicle) => {
                   return (
-                    <tr key={vehicle.id} className="hover:bg-[#EFECE8]/50 transition-colors">
+                    <tr key={vehicle.id} className="hover:bg-[var(--bg)] transition-colors">
                       {/* Plat & Brand */}
                       <td className="py-4 px-4 align-top">
                         <div className="font-bold text-base text-[#1C1917] tracking-tight">

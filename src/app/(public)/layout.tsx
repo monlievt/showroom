@@ -8,9 +8,9 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#F7F5F2] text-[#1C1917] flex flex-col justify-between">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col justify-between">
       <PublicNavbar />
-      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8">
+      <div className="flex-1 max-w-[1180px] mx-auto w-full px-5 py-8">
         {children}
       </div>
       <PublicFooter />

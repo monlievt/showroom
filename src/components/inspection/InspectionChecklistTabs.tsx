@@ -6,18 +6,12 @@ import { CarBlueprintView, PanelData } from "./CarBlueprintView";
 import { 
   ShieldCheck, 
   CheckCircle2, 
-  AlertTriangle, 
   Wrench, 
   Car, 
-  Eye, 
-  Gauge, 
   Wind,
-  Layers,
   Sparkles,
-  Info,
   KeyRound,
   BookOpen,
-  Activity
 } from "lucide-react";
 import { calculateTotalGrade, GRADE_LABELS } from "@/lib/calculations/inspection";
 
@@ -124,24 +118,24 @@ export function InspectionChecklistTabs({
 
   return (
     <div className="space-y-6">
-      {/* ── EXECUTIVE SUMMARY SCORECARD BANNER (ALA IBID ACV HALAMAN 1) ── */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-[#FAF9F6] via-white to-[#F5F2EC] border border-[#D9D4CB] shadow-xs space-y-4">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-[#EBE7E1]">
+      {/* ── EXECUTIVE SUMMARY SCORECARD BANNER ── */}
+      <div className="p-5 sm:p-6 rounded-[var(--r-card)] bg-[var(--surface)] border border-[var(--line)] space-y-4">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-[var(--line)]">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-[#D97706] text-white flex flex-col items-center justify-center shadow-sm">
-              <span className="text-[9px] uppercase font-bold tracking-wider">Total</span>
-              <span className="text-2xl font-black leading-none">{totalGrade}</span>
+            <div className="w-12 h-12 rounded-[var(--r-btn)] bg-[var(--accent)] text-white flex flex-col items-center justify-center shadow-xs">
+              <span className="text-[9px] uppercase font-bold tracking-wider opacity-90">Total</span>
+              <span className="text-xl font-bold leading-none">{totalGrade}</span>
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-extrabold text-[#1C1917]">
-                  Hasil Valuasi & Grade Keseluruhan (Total Grade)
+                <span className="text-[14px] font-bold text-[var(--ink)]">
+                  Hasil Valuasi &amp; Grade Keseluruhan
                 </span>
-                <span className="text-[10px] bg-[#FEF3C7] text-[#92400E] font-bold px-2 py-0.5 rounded-full">
+                <span className="text-[11px] bg-[var(--bg)] text-[var(--ink)] font-semibold px-2 py-0.5 rounded border border-[var(--line)]">
                   {GRADE_LABELS[totalGrade]?.desc || "Prima"}
                 </span>
               </div>
-              <p className="text-xs text-[#6B6560] mt-0.5">
+              <p className="text-[12px] text-[var(--muted)] mt-0.5">
                 Nilai komposit dari 4 pilar teknis dengan bobot perlindungan struktur sasis.
               </p>
             </div>
@@ -149,185 +143,185 @@ export function InspectionChecklistTabs({
 
           {/* 4 Pilar Pill */}
           <div className="grid grid-cols-4 gap-2 text-center text-xs w-full md:w-auto">
-            <div className="p-2 bg-white rounded-xl border border-[#D9D4CB] px-3 shadow-2xs">
-              <span className="text-[10px] text-[#6B6560] block font-semibold">Mesin</span>
-              <span className="font-extrabold text-[#1C1917] text-sm">Grade {inspection.engineGrade}</span>
+            <div className="p-2 bg-[var(--bg)] rounded-[var(--r-btn)] border border-[var(--line)] px-3">
+              <span className="text-[10px] text-[var(--muted)] block font-medium">Mesin</span>
+              <span className="font-bold text-[var(--ink)] text-[13px]">Grade {inspection.engineGrade}</span>
             </div>
-            <div className="p-2 bg-white rounded-xl border border-[#D9D4CB] px-3 shadow-2xs">
-              <span className="text-[10px] text-[#6B6560] block font-semibold">Interior</span>
-              <span className="font-extrabold text-[#1C1917] text-sm">Grade {inspection.interiorGrade}</span>
+            <div className="p-2 bg-[var(--bg)] rounded-[var(--r-btn)] border border-[var(--line)] px-3">
+              <span className="text-[10px] text-[var(--muted)] block font-medium">Interior</span>
+              <span className="font-bold text-[var(--ink)] text-[13px]">Grade {inspection.interiorGrade}</span>
             </div>
-            <div className="p-2 bg-white rounded-xl border border-[#D9D4CB] px-3 shadow-2xs">
-              <span className="text-[10px] text-[#6B6560] block font-semibold">Eksterior</span>
-              <span className="font-extrabold text-[#1C1917] text-sm">Grade {inspection.exteriorGrade}</span>
+            <div className="p-2 bg-[var(--bg)] rounded-[var(--r-btn)] border border-[var(--line)] px-3">
+              <span className="text-[10px] text-[var(--muted)] block font-medium">Eksterior</span>
+              <span className="font-bold text-[var(--ink)] text-[13px]">Grade {inspection.exteriorGrade}</span>
             </div>
-            <div className="p-2 bg-white rounded-xl border border-[#D9D4CB] px-3 shadow-2xs">
-              <span className="text-[10px] text-[#6B6560] block font-semibold">Rangka</span>
-              <span className="font-extrabold text-[#059669] text-sm">Grade {inspection.frameGrade}</span>
+            <div className="p-2 bg-[var(--bg)] rounded-[var(--r-btn)] border border-[var(--line)] px-3">
+              <span className="text-[10px] text-[var(--muted)] block font-medium">Rangka</span>
+              <span className="font-bold text-[var(--ok)] text-[13px]">Grade {inspection.frameGrade}</span>
             </div>
           </div>
         </div>
 
         {/* Status Bebas Laka/Banjir & Kelengkapan Kunci/Buku */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-emerald-800">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[12px]">
+          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-[8px] flex items-center gap-2 text-emerald-800">
             <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span className="font-bold">
-              {inspection.accidentHistory ? "Terindikasi Tabrakan" : "✓ 100% Bebas Tabrakan Berat"}
+            <span className="font-semibold">
+              {inspection.accidentHistory ? "Terindikasi Tabrakan" : "✓ Bebas Tabrakan Berat"}
             </span>
           </div>
 
-          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2.5 text-emerald-800">
+          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-[8px] flex items-center gap-2 text-emerald-800">
             <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span className="font-bold">
-              {inspection.floodHistory ? "Terindikasi Banjir" : "✓ 100% Bebas Rendaman Banjir"}
+            <span className="font-semibold">
+              {inspection.floodHistory ? "Terindikasi Banjir" : "✓ Bebas Rendaman Banjir"}
             </span>
           </div>
 
-          <div className="p-2.5 bg-white border border-[#D9D4CB] rounded-xl flex items-center justify-between text-[#1C1917]">
-            <span className="flex items-center gap-1.5 font-bold">
-              <KeyRound className="w-3.5 h-3.5 text-[#D97706]" />
+          <div className="p-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-[8px] flex items-center justify-between text-[var(--ink)]">
+            <span className="flex items-center gap-1.5 font-medium">
+              <KeyRound className="w-3.5 h-3.5 text-[var(--accent)]" />
               <span>{inspection.hasSpareKey !== false ? "Kunci Serep: 2 Buah" : "Kunci: 1 Buah"}</span>
             </span>
-            <span className="text-[#6B6560]">•</span>
-            <span className="flex items-center gap-1.5 font-bold">
-              <BookOpen className="w-3.5 h-3.5 text-[#D97706]" />
-              <span>{inspection.hasServiceBook !== false ? "Buku Servis: Ada" : "Buku: Tidak Ada"}</span>
+            <span className="text-[var(--muted)]">&middot;</span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <BookOpen className="w-3.5 h-3.5 text-[var(--accent)]" />
+              <span>{inspection.hasServiceBook !== false ? "Buku Servis: Ada" : "Buku: -"}</span>
             </span>
           </div>
         </div>
 
-        {/* Ringkasan Catatan Inspektur Terstruktur */}
+        {/* Ringkasan Catatan Resmi */}
         {(inspection.engineNotes || inspection.interiorNotes || inspection.exteriorNotes || inspection.frameNotes) && (
-          <div className="p-3 bg-white rounded-xl border border-[#EBE7E1] text-xs space-y-1">
-            <span className="font-extrabold text-[#1C1917] block text-[11px] uppercase tracking-wider text-[#D97706]">
-              Catatan Resmi Tim Inspektur (Executive Summary):
+          <div className="p-3 bg-[var(--bg)] rounded-[8px] border border-[var(--line)] text-[12px] space-y-1">
+            <span className="font-bold text-[var(--ink)] block text-[11px] uppercase tracking-wider">
+              Catatan Resmi Tim Inspektur:
             </span>
-            <p className="text-[#57534E] leading-relaxed">
+            <p className="text-[var(--muted)] leading-relaxed">
               {[
                 inspection.engineNotes ? `Mesin: ${inspection.engineNotes}` : null,
                 inspection.interiorNotes ? `Interior: ${inspection.interiorNotes}` : null,
                 inspection.exteriorNotes ? `Eksterior: ${inspection.exteriorNotes}` : null,
                 inspection.frameNotes ? `Rangka: ${inspection.frameNotes}` : null,
-              ].filter(Boolean).join(" • ")}
+              ].filter(Boolean).join(" · ")}
             </p>
           </div>
         )}
       </div>
 
       {/* ── TAB SELECTOR ── */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[#D9D4CB]">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[var(--line)]">
         <button
           onClick={() => setActiveTab("blueprint")}
           className={cn(
-            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0",
+            "flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-btn)] text-[13px] font-semibold transition-all cursor-pointer shrink-0",
             activeTab === "blueprint"
-              ? "bg-[#D97706] text-white shadow-sm"
-              : "bg-white text-[#6B6560] hover:text-[#1C1917] hover:bg-[#FAF9F6] border border-[#D9D4CB]"
+              ? "bg-[var(--accent)] text-white shadow-xs"
+              : "bg-white text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] border border-[var(--line)]"
           )}
         >
-          <Car className="w-4 h-4" />
-          <span>1. Peta Bodi & Uji Mikron (15 Panel)</span>
+          <Car className="w-3.5 h-3.5" />
+          <span>1. Peta Bodi (15 Panel)</span>
         </button>
 
         <button
           onClick={() => setActiveTab("frame")}
           className={cn(
-            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0",
+            "flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-btn)] text-[13px] font-semibold transition-all cursor-pointer shrink-0",
             activeTab === "frame"
-              ? "bg-[#D97706] text-white shadow-sm"
-              : "bg-white text-[#6B6560] hover:text-[#1C1917] hover:bg-[#FAF9F6] border border-[#D9D4CB]"
+              ? "bg-[var(--accent)] text-white shadow-xs"
+              : "bg-white text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] border border-[var(--line)]"
           )}
         >
-          <ShieldCheck className="w-4 h-4" />
-          <span>2. Rangka Utama (14 Titik Bebas Tabrak)</span>
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>2. Rangka Utama (14 Titik)</span>
         </button>
 
         <button
           onClick={() => setActiveTab("exterior")}
           className={cn(
-            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0",
+            "flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-btn)] text-[13px] font-semibold transition-all cursor-pointer shrink-0",
             activeTab === "exterior"
-              ? "bg-[#D97706] text-white shadow-sm"
-              : "bg-white text-[#6B6560] hover:text-[#1C1917] hover:bg-[#FAF9F6] border border-[#D9D4CB]"
+              ? "bg-[var(--accent)] text-white shadow-xs"
+              : "bg-white text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] border border-[var(--line)]"
           )}
         >
-          <Sparkles className="w-4 h-4" />
-          <span>3. Eksterior & Kelengkapan</span>
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>3. Eksterior</span>
         </button>
 
         <button
           onClick={() => setActiveTab("interior")}
           className={cn(
-            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0",
+            "flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-btn)] text-[13px] font-semibold transition-all cursor-pointer shrink-0",
             activeTab === "interior"
-              ? "bg-[#D97706] text-white shadow-sm"
-              : "bg-white text-[#6B6560] hover:text-[#1C1917] hover:bg-[#FAF9F6] border border-[#D9D4CB]"
+              ? "bg-[var(--accent)] text-white shadow-xs"
+              : "bg-white text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] border border-[var(--line)]"
           )}
         >
-          <Wind className="w-4 h-4" />
-          <span>4. Interior & Kelistrikan</span>
+          <Wind className="w-3.5 h-3.5" />
+          <span>4. Interior &amp; AC</span>
         </button>
 
         <button
           onClick={() => setActiveTab("mechanical")}
           className={cn(
-            "flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0",
+            "flex items-center gap-2 px-3.5 py-2 rounded-[var(--r-btn)] text-[13px] font-semibold transition-all cursor-pointer shrink-0",
             activeTab === "mechanical"
-              ? "bg-[#D97706] text-white shadow-sm"
-              : "bg-white text-[#6B6560] hover:text-[#1C1917] hover:bg-[#FAF9F6] border border-[#D9D4CB]"
+              ? "bg-[var(--accent)] text-white shadow-xs"
+              : "bg-white text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] border border-[var(--line)]"
           )}
         >
-          <Wrench className="w-4 h-4" />
-          <span>5. Mesin & Mekanikal</span>
+          <Wrench className="w-3.5 h-3.5" />
+          <span>5. Mesin &amp; Kaki-kaki</span>
         </button>
       </div>
 
       {/* ── ISI TAB ── */}
-      {/* 1. Tab Peta Bodi (Blueprint Siluet Mobil Adaptif) */}
+      {/* 1. Tab Peta Bodi */}
       {activeTab === "blueprint" && (
         <CarBlueprintView panels={panels} brand={brand} model={model} />
       )}
 
       {/* 2. Tab Rangka Utama (14 Titik) */}
       {activeTab === "frame" && (
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#D9D4CB]">
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] p-5 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--line)]">
             <div>
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-extrabold text-base sm:text-lg text-[#1C1917]">
-                  Pemeriksaan 14 Titik Rangka Utama & Sasis
+                <ShieldCheck className="w-4 h-4 text-[var(--ok)]" />
+                <h3 className="font-bold text-[15px] text-[var(--ink)]">
+                  Pemeriksaan 14 Titik Rangka Utama &amp; Sasis
                 </h3>
               </div>
-              <p className="text-xs text-[#6B6560] mt-1">
-                Jaminan integritas struktur mobil: Bebas benturan keras tulang sasis & bebas rendaman banjir.
+              <p className="text-[12px] text-[var(--muted)] mt-0.5">
+                Bebas benturan keras tulang sasis &amp; bebas rendaman banjir.
               </p>
             </div>
-            <span className="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 font-bold text-xs rounded-full border border-emerald-200">
-              Grade Rangka: {inspection.frameGrade} (Lolos Uji Integritas)
+            <span className="px-3 py-1 bg-emerald-50 text-[var(--ok)] font-semibold text-[12px] rounded-full border border-emerald-200">
+              Grade Rangka: {inspection.frameGrade}
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {frameCheckpoints.map((pt, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] flex items-start justify-between gap-3"
+                className="p-3 rounded-[8px] border border-[var(--line)] bg-[var(--bg)] flex items-start justify-between gap-3"
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] flex items-center justify-center shrink-0">
+                    <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[9px] flex items-center justify-center shrink-0">
                       {idx + 1}
                     </span>
-                    <span className="font-bold text-xs text-[#1C1917]">{pt.name}</span>
+                    <span className="font-semibold text-[13px] text-[var(--ink)]">{pt.name}</span>
                   </div>
-                  <p className="text-[11px] text-[#6B6560] mt-1 ml-7 leading-relaxed">
+                  <p className="text-[11px] text-[var(--muted)] mt-0.5 ml-6 leading-relaxed">
                     {pt.desc}
                   </p>
                 </div>
-                <span className="font-bold text-[11px] text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
+                <span className="font-semibold text-[11px] text-[var(--ok)] bg-emerald-50 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
+                  <CheckCircle2 className="w-3 h-3" />
                   <span>Normal</span>
                 </span>
               </div>
@@ -338,35 +332,35 @@ export function InspectionChecklistTabs({
 
       {/* 3. Tab Eksterior */}
       {activeTab === "exterior" && (
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
-          <div className="flex items-center justify-between pb-4 border-b border-[#D9D4CB]">
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
             <div>
-              <h3 className="font-extrabold text-base sm:text-lg text-[#1C1917]">
-                Checklist Komponen Eksterior & Kelengkapan
+              <h3 className="font-bold text-[15px] text-[var(--ink)]">
+                Checklist Komponen Eksterior
               </h3>
-              <p className="text-xs text-[#6B6560] mt-1">
+              <p className="text-[12px] text-[var(--muted)] mt-0.5">
                 Kondisi lampu, kaca, bemper, spion, serta ketebalan tapak ban.
               </p>
             </div>
-            <span className="px-3 py-1 bg-amber-50 text-amber-800 font-bold text-xs rounded-full border border-amber-200">
+            <span className="px-3 py-1 bg-[var(--bg)] text-[var(--ink)] font-semibold text-[12px] rounded-full border border-[var(--line)]">
               Grade Eksterior: {inspection.exteriorGrade}
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {exteriorCheckpoints.map((pt, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] flex items-start justify-between gap-3"
+                className="p-3 rounded-[8px] border border-[var(--line)] bg-[var(--bg)] flex items-start justify-between gap-3"
               >
                 <div>
-                  <span className="font-bold text-xs text-[#1C1917] block">{pt.name}</span>
-                  <p className="text-[11px] text-[#6B6560] mt-0.5 leading-relaxed">
+                  <span className="font-semibold text-[13px] text-[var(--ink)] block">{pt.name}</span>
+                  <p className="text-[11px] text-[var(--muted)] mt-0.5 leading-relaxed">
                     {pt.condition}
                   </p>
                 </div>
-                <span className="font-bold text-[11px] text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
+                <span className="font-semibold text-[11px] text-[var(--ok)] bg-emerald-50 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
+                  <CheckCircle2 className="w-3 h-3" />
                   <span>Baik</span>
                 </span>
               </div>
@@ -377,36 +371,36 @@ export function InspectionChecklistTabs({
 
       {/* 4. Tab Interior */}
       {activeTab === "interior" && (
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
-          <div className="flex items-center justify-between pb-4 border-b border-[#D9D4CB]">
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
             <div>
-              <h3 className="font-extrabold text-base sm:text-lg text-[#1C1917]">
-                Checklist Kenyamanan Kabin & Elektrikal Interior
+              <h3 className="font-bold text-[15px] text-[var(--ink)]">
+                Checklist Kenyamanan Kabin &amp; Elektrikal
               </h3>
-              <p className="text-xs text-[#6B6560] mt-1">
-                Kondisi jok, sistem AC, kebersihan karpet & plafon, serta perangkat elektrikal kabin.
+              <p className="text-[12px] text-[var(--muted)] mt-0.5">
+                Kondisi jok, AC, karpet, plafon, dan instrumen speedometer.
               </p>
             </div>
-            <span className="px-3 py-1 bg-amber-50 text-amber-800 font-bold text-xs rounded-full border border-amber-200">
+            <span className="px-3 py-1 bg-[var(--bg)] text-[var(--ink)] font-semibold text-[12px] rounded-full border border-[var(--line)]">
               Grade Interior: {inspection.interiorGrade}
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {interiorCheckpoints.map((pt, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] flex items-start justify-between gap-3"
+                className="p-3 rounded-[8px] border border-[var(--line)] bg-[var(--bg)] flex items-start justify-between gap-3"
               >
                 <div>
-                  <span className="font-bold text-xs text-[#1C1917] block">{pt.name}</span>
-                  <p className="text-[11px] text-[#6B6560] mt-0.5 leading-relaxed">
+                  <span className="font-semibold text-[13px] text-[var(--ink)] block">{pt.name}</span>
+                  <p className="text-[11px] text-[var(--muted)] mt-0.5 leading-relaxed">
                     {pt.condition}
                   </p>
                 </div>
-                <span className="font-bold text-[11px] text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Bersih & Normal</span>
+                <span className="font-semibold text-[11px] text-[var(--ok)] bg-emerald-50 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
+                  <CheckCircle2 className="w-3 h-3" />
+                  <span>Bersih</span>
                 </span>
               </div>
             ))}
@@ -416,36 +410,36 @@ export function InspectionChecklistTabs({
 
       {/* 5. Tab Mesin & Mekanikal */}
       {activeTab === "mechanical" && (
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-sm space-y-5">
-          <div className="flex items-center justify-between pb-4 border-b border-[#D9D4CB]">
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
             <div>
-              <h3 className="font-extrabold text-base sm:text-lg text-[#1C1917]">
-                Checklist Ruang Mesin, Transmisi & Kaki-Kaki
+              <h3 className="font-bold text-[15px] text-[var(--ink)]">
+                Checklist Ruang Mesin, Transmisi &amp; Kaki-kaki
               </h3>
-              <p className="text-xs text-[#6B6560] mt-1">
-                Pemeriksaan getaran, suara stasioner, sistem pelumasan, pendingin radiator, dan suspensi.
+              <p className="text-[12px] text-[var(--muted)] mt-0.5">
+                Getaran, rembesan oli, sistem radiator, dan suspensi.
               </p>
             </div>
-            <span className="px-3 py-1 bg-emerald-50 text-emerald-800 font-bold text-xs rounded-full border border-emerald-200">
+            <span className="px-3 py-1 bg-emerald-50 text-[var(--ok)] font-semibold text-[12px] rounded-full border border-emerald-200">
               Grade Mesin: {inspection.engineGrade}
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {mechanicalCheckpoints.map((pt, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-xl border border-[#EBE7E1] bg-[#FAF9F6] flex items-start justify-between gap-3"
+                className="p-3 rounded-[8px] border border-[var(--line)] bg-[var(--bg)] flex items-start justify-between gap-3"
               >
                 <div>
-                  <span className="font-bold text-xs text-[#1C1917] block">{pt.name}</span>
-                  <p className="text-[11px] text-[#6B6560] mt-0.5 leading-relaxed">
+                  <span className="font-semibold text-[13px] text-[var(--ink)] block">{pt.name}</span>
+                  <p className="text-[11px] text-[var(--muted)] mt-0.5 leading-relaxed">
                     {pt.condition}
                   </p>
                 </div>
-                <span className="font-bold text-[11px] text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Sehat & Kering</span>
+                <span className="font-semibold text-[11px] text-[var(--ok)] bg-emerald-50 px-2 py-0.5 rounded flex items-center gap-1 shrink-0">
+                  <CheckCircle2 className="w-3 h-3" />
+                  <span>Sehat</span>
                 </span>
               </div>
             ))}
