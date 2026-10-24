@@ -22,12 +22,15 @@ import {
   Terminal,
   Copy,
   Check,
+  Phone,
 } from "lucide-react";
 import { formatDate, cn } from "@/lib/utils";
 import { retryNotificationLog } from "@/lib/services/whatsapp";
 import { sendTestWhatsAppAction } from "@/app/actions/notification";
 import { SettingItem } from "@/app/actions/setting";
 import { ApiKeySettingsClient } from "./ApiKeySettingsClient";
+import { WhatsAppContactsSettingsClient } from "./WhatsAppContactsSettingsClient";
+import { WhatsAppAdminContact } from "@/lib/utils/whatsapp";
 import { KeyRound } from "lucide-react";
 
 interface SettingsProps {
@@ -53,11 +56,17 @@ interface SettingsProps {
     afterData?: any;
   }>;
   initialSettings?: SettingItem[];
+  initialContacts?: WhatsAppAdminContact[];
 }
 
-export function SettingsClient({ logs, auditLogs, initialSettings = [] }: SettingsProps) {
+export function SettingsClient({
+  logs,
+  auditLogs,
+  initialSettings = [],
+  initialContacts = [],
+}: SettingsProps) {
   const [activeTab, setActiveTab] = useState<
-    "api_keys" | "notifications" | "audit" | "backup"
+    "api_keys" | "whatsapp_contacts" | "notifications" | "audit" | "backup"
   >("api_keys");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [typeFilter, setTypeFilter] = useState("ALL");
@@ -220,6 +229,18 @@ export function SettingsClient({ logs, auditLogs, initialSettings = [] }: Settin
           <span>Kunci API & Integrasi Layanan</span>
         </button>
         <button
+          onClick={() => setActiveTab("whatsapp_contacts")}
+          className={cn(
+            "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
+            activeTab === "whatsapp_contacts"
+              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
+              : "text-[#6B6560] hover:text-[#1C1917]"
+          )}
+        >
+          <Phone className="w-4 h-4 text-[#D97706]" />
+          <span>Kontak WhatsApp Admin</span>
+        </button>
+        <button
           onClick={() => setActiveTab("notifications")}
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0",
@@ -257,6 +278,11 @@ export function SettingsClient({ logs, auditLogs, initialSettings = [] }: Settin
       {/* TAB 0: KUNCI API & INTEGRASI */}
       {activeTab === "api_keys" && (
         <ApiKeySettingsClient initialSettings={initialSettings} />
+      )}
+
+      {/* TAB: KONTAK WHATSAPP ADMIN */}
+      {activeTab === "whatsapp_contacts" && (
+        <WhatsAppContactsSettingsClient initialContacts={initialContacts} />
       )}
 
       {/* TAB 1: NOTIFICATIONS */}

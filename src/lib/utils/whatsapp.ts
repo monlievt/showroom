@@ -10,6 +10,59 @@ export interface WhatsAppVehiclePayload {
   url?: string;
 }
 
+export interface WhatsAppAdminContact {
+  id: string;
+  name: string;
+  role: string;
+  phone: string;
+  isPrimary: boolean;
+  isActive: boolean;
+}
+
+export const DEFAULT_WHATSAPP_ADMINS: WhatsAppAdminContact[] = [
+  {
+    id: "admin-rio",
+    name: "Rio",
+    role: "Konsultasi & Negosiasi Unit",
+    phone: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "081234567890",
+    isPrimary: true,
+    isActive: true,
+  },
+  {
+    id: "admin-garasi",
+    name: "Admin Garasi Nur Mobil",
+    role: "Jadwal Cek Fisik & Lokasi Showroom",
+    phone: process.env.GARAGE_WHATSAPP_NUMBER || "081398765432",
+    isPrimary: false,
+    isActive: true,
+  },
+];
+
+/**
+ * Normalisasi format nomor WhatsApp ke awalan 62 tanpa karakter non-digit
+ */
+export function normalizeWhatsAppNumber(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("0")) {
+    return "62" + digits.slice(1);
+  }
+  if (digits.startsWith("62")) {
+    return digits;
+  }
+  return "62" + digits;
+}
+
+/**
+ * Menghasilkan tautan langsung Click-to-WhatsApp untuk admin
+ */
+export function generateDirectWhatsAppLink(
+  phone: string,
+  message: string = "Halo Admin Nur Mobil, saya ingin tanya info unit mobil bekas."
+): string {
+  const cleanPhone = normalizeWhatsAppNumber(phone);
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+}
+
 /**
  * Menghasilkan URL Click-to-WhatsApp untuk calon pembeli di katalog publik.
  * Memuat detail mobil, plat nomor, harga listing, dan status unit.

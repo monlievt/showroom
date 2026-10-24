@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { SettingsClient } from "@/components/admin/SettingsClient";
 import { getSystemSettingsAction } from "@/app/actions/setting";
+import { getAllWhatsAppContactsAction } from "@/app/actions/contact";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ export const metadata = {
 };
 
 export default async function SettingsPage() {
-  const [logs, auditLogs, settingsRes] = await Promise.all([
+  const [logs, auditLogs, settingsRes, contactsRes] = await Promise.all([
     prisma.notificationLog.findMany({
       orderBy: { createdAt: "desc" },
       take: 100,
@@ -22,6 +23,7 @@ export default async function SettingsPage() {
       take: 100,
     }),
     getSystemSettingsAction(),
+    getAllWhatsAppContactsAction(),
   ]);
 
   return (
@@ -55,6 +57,7 @@ export default async function SettingsPage() {
             afterData: a.afterData,
           }))}
           initialSettings={settingsRes.data || []}
+          initialContacts={contactsRes.data || []}
         />
       </main>
     </div>

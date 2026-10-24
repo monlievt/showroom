@@ -4,8 +4,9 @@ import { PublicFooter } from "@/components/public/PublicFooter";
 import { HeroSearchBar } from "@/components/public/HeroSearchBar";
 import { CarCard } from "@/components/public/CarCard";
 import { getShowroomHomepageData } from "@/app/actions/catalog";
-import { formatRupiah, formatThousands } from "@/lib/utils";
-import { Check, X, Phone, Users, MapPin } from "lucide-react";
+import { getPublicWhatsAppContactsAction } from "@/app/actions/contact";
+import { formatRupiah } from "@/lib/utils";
+import { Check, X, Users, MapPin } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,10 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const result = await getShowroomHomepageData();
+  const [result, contacts] = await Promise.all([
+    getShowroomHomepageData(),
+    getPublicWhatsAppContactsAction(),
+  ]);
   const readyVehicles = result.success && result.readyVehicles ? result.readyVehicles : [];
   const upcomingVehicles = result.success && (result as any).upcomingVehicles ? (result as any).upcomingVehicles : [];
   const soldVehicles = result.success && result.soldVehicles ? result.soldVehicles : [];
@@ -62,15 +66,12 @@ export default async function HomePage() {
     },
   ];
 
-  const waNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "6281234567890";
-  const waConsultUrl = `https://wa.me/${waNumber}?text=Halo%20Admin%20Nur%20Mobil,%20saya%20tertarik%20tanya%20unit%20mobil%20ready`;
-
   // Unique brands from ready vehicles
   const availableBrands = Array.from(new Set(readyVehicles.map((v) => v.brand)));
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] flex flex-col justify-between">
-      <PublicNavbar />
+      <PublicNavbar initialContacts={contacts} />
 
       <main className="flex-1 w-full">
         {/* 1. HERO SECTION (§6.1.1) */}
@@ -93,18 +94,7 @@ export default async function HomePage() {
               />
             </div>
 
-            {/* Tombol Sekunder & Baris Kepercayaan */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-1">
-              <a
-                href={waConsultUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 bg-white text-[var(--ink)] border border-[var(--line-input)] hover:border-[var(--ink)] px-4 py-2.5 rounded-[var(--r-btn)] text-[14px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-[var(--accent)] w-fit"
-              >
-                <Phone className="w-4 h-4 text-[var(--accent)]" />
-                <span>Konsultasi Langsung via WA</span>
-              </a>
-            </div>
+
 
             {/* Baris Kepercayaan (§6.1.1) */}
             <div className="pt-2 border-t border-[var(--line)] flex flex-wrap items-center gap-x-6 gap-y-2 text-[14px] text-[var(--muted)]">
