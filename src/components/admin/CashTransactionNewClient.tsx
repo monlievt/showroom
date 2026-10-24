@@ -68,20 +68,20 @@ export function CashTransactionNewClient() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/finance"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Arus Kas</span>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-[#1C1917]">
+            <h1 className="text-xl font-bold text-[var(--ink)]">
               Pencatatan Transaksi Kas Manual
             </h1>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Penyesuaian saldo rekening kas masuk atau keluar di luar modul mobil &amp; penjualan.
             </p>
           </div>
@@ -104,22 +104,22 @@ export function CashTransactionNewClient() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Receipt className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Receipt className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               Rincian Kas Masuk / Keluar
             </h2>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
               Tipe Transaksi Kas *
             </label>
             <select
               value={cashType}
               onChange={(e) => setCashType(e.target.value)}
-              className="w-full px-3.5 py-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              className="w-full px-3.5 py-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
             >
               <optgroup label="🟢 Kas Masuk (Menambah Saldo BCA)">
                 <option value="IN_CAPITAL_DEPOSIT">Setor Modal Umum / Investor</option>
@@ -134,8 +134,8 @@ export function CashTransactionNewClient() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-              <DollarSign className="w-3.5 h-3.5 text-[#6B6560]" />
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+              <DollarSign className="w-3.5 h-3.5 text-[var(--muted)]" />
               <span>Nominal Transaksi (Rp) *</span>
             </label>
             <input
@@ -145,7 +145,7 @@ export function CashTransactionNewClient() {
               placeholder="Contoh: 5.000.000"
               value={amount !== "" ? formatThousands(amount) : ""}
               onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
-              className={`w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 ${
+              className={`w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 ${
                 isIncome
                   ? "text-emerald-700 focus:ring-emerald-500/20"
                   : "text-red-700 focus:ring-red-500/20"
@@ -154,8 +154,8 @@ export function CashTransactionNewClient() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-[#6B6560]" />
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-[var(--muted)]" />
               <span>Keterangan Transaksi</span>
             </label>
             <textarea
@@ -163,7 +163,7 @@ export function CashTransactionNewClient() {
               placeholder="Penjelasan mutasi untuk arsip pembukuan kas..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40 resize-none"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40 resize-none"
             />
           </div>
 
@@ -197,10 +197,10 @@ export function CashTransactionNewClient() {
         </div>
 
         {/* Bottom Actions Bar */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4">
           <Link
             href="/admin/finance"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
           >
             Batal &amp; Kembali
           </Link>
@@ -208,7 +208,7 @@ export function CashTransactionNewClient() {
           <button
             type="submit"
             disabled={loading || !amount || Number(amount) <= 0}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

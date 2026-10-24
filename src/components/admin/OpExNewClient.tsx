@@ -82,20 +82,20 @@ export function OpExNewClient() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/finance/expenses"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Beban &amp; Prive</span>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-[#1C1917]">
+            <h1 className="text-xl font-bold text-[var(--ink)]">
               Catat Beban Operasional Showroom
             </h1>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Pengeluaran ruko, listrik, gaji, iklan yang tidak dibebankan ke HPP unit mobil.
             </p>
           </div>
@@ -128,23 +128,23 @@ export function OpExNewClient() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
             <Building className="w-4 h-4 text-blue-600" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               Rincian Beban Operasional
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Kategori Beban *
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               >
                 {OPEX_CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -155,8 +155,8 @@ export function OpExNewClient() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-                <DollarSign className="w-3.5 h-3.5 text-[#6B6560]" />
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+                <DollarSign className="w-3.5 h-3.5 text-[var(--muted)]" />
                 <span>Nominal Pengeluaran (Rp) *</span>
               </label>
               <input
@@ -166,13 +166,13 @@ export function OpExNewClient() {
                 placeholder="Contoh: 1.500.000"
                 value={amount !== "" ? formatThousands(amount) : ""}
                 onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#6B6560]" />
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[var(--muted)]" />
                 <span>Tanggal Transaksi *</span>
               </label>
               <input
@@ -180,13 +180,13 @@ export function OpExNewClient() {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-                <Store className="w-3.5 h-3.5 text-[#6B6560]" />
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+                <Store className="w-3.5 h-3.5 text-[var(--muted)]" />
                 <span>Penerima / Vendor / Pemilik Ruko</span>
               </label>
               <input
@@ -194,14 +194,14 @@ export function OpExNewClient() {
                 placeholder="Contoh: PLN, Indihome, Pemilik Ruko Pak Haji..."
                 value={vendorName}
                 onChange={(e) => setVendorName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-[#6B6560]" />
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-[var(--muted)]" />
               <span>Keterangan Tambahan</span>
             </label>
             <textarea
@@ -209,7 +209,7 @@ export function OpExNewClient() {
               placeholder="Contoh: Pembayaran internet periode Oktober, iuran kebersihan..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-blue-500/20 resize-none"
             />
           </div>
 
@@ -224,10 +224,10 @@ export function OpExNewClient() {
         </div>
 
         {/* Bottom Actions Bar */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4">
           <Link
             href="/admin/finance/expenses"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
           >
             Batal &amp; Kembali
           </Link>

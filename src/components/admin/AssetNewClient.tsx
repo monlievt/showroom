@@ -102,20 +102,20 @@ export function AssetNewClient() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/workshop"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Gudang Bahan &amp; Alat</span>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-[#1C1917]">
+            <h1 className="text-xl font-bold text-[var(--ink)]">
               Tambah Aset Tetap &amp; Inventaris Showroom
             </h1>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Pencatatan peralatan bengkel, alat cek fisik, laptop, neon box, dan fasilitas garasi.
             </p>
           </div>
@@ -138,17 +138,17 @@ export function AssetNewClient() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Wrench className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Wrench className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               1. Identitas Barang / Peralatan
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Nama Barang / Alat Inventaris *
               </label>
               <input
@@ -157,18 +157,18 @@ export function AssetNewClient() {
                 placeholder="Contoh: Mesin Poles Dual Action Shinemate, OBD2 Scanner Autel..."
                 value={assetName}
                 onChange={(e) => setAssetName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Kondisi Fisik Alat *
               </label>
               <select
                 value={assetCondition}
                 onChange={(e) => setAssetCondition(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 {ASSET_CONDITIONS.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -181,13 +181,13 @@ export function AssetNewClient() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Kategori Aset *
               </label>
               <select
                 value={assetCategory}
                 onChange={(e) => setAssetCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 {ASSET_CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -198,32 +198,32 @@ export function AssetNewClient() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#6B6560]" />
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-[var(--muted)]" />
                 <span>Lokasi Penyimpanan</span>
               </label>
               <input
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
         </div>
 
         {/* SECTION 2: Nilai Pembelian & Valuasi */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <DollarSign className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <DollarSign className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               2. Nilai Pembelian &amp; Tanggal Pengadaan
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Harga Beli Awal (Rp) *
               </label>
               <input
@@ -237,12 +237,12 @@ export function AssetNewClient() {
                   setPurchaseCost(val);
                   if (!currentValue && val !== "") setCurrentValue(val);
                 }}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Taksiran Nilai Sekarang (Rp)
               </label>
               <input
@@ -255,13 +255,13 @@ export function AssetNewClient() {
                     e.target.value === "" ? "" : Number(e.target.value)
                   )
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#6B6560]" />
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[var(--muted)]" />
                 <span>Tanggal Beli / Masuk</span>
               </label>
               <input
@@ -269,7 +269,7 @@ export function AssetNewClient() {
                 type="date"
                 value={purchaseDate}
                 onChange={(e) => setPurchaseDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
@@ -280,7 +280,7 @@ export function AssetNewClient() {
                 type="checkbox"
                 checked={recordCashOut}
                 onChange={(e) => setRecordCashOut(e.target.checked)}
-                className="rounded text-[#D97706] focus:ring-[#D97706]"
+                className="rounded text-[var(--accent)] focus:ring-[var(--accent)]"
               />
               <span>
                 Potong saldo kas BCA showroom saat ini (Catat pengeluaran kas riil)
@@ -292,8 +292,8 @@ export function AssetNewClient() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-[#6B6560]" />
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-[var(--muted)]" />
               <span>Catatan / Nomor Seri / Garansi</span>
             </label>
             <textarea
@@ -301,7 +301,7 @@ export function AssetNewClient() {
               placeholder="Contoh: No seri 99281, garansi toko sampai Desember 2026..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40 resize-none"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40 resize-none"
             />
           </div>
 
@@ -316,10 +316,10 @@ export function AssetNewClient() {
         </div>
 
         {/* Bottom Actions Bar */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4">
           <Link
             href="/admin/workshop"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
           >
             Batal &amp; Kembali
           </Link>
@@ -327,7 +327,7 @@ export function AssetNewClient() {
           <button
             type="submit"
             disabled={loading || !purchaseCost || Number(purchaseCost) <= 0}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

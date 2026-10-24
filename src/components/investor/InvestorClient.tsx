@@ -67,11 +67,11 @@ export function InvestorClient({
 
   if (!investor) {
     return (
-      <div className="min-h-screen bg-[#F7F5F2] flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl border border-[#D9D4CB] text-center max-w-md shadow-sm">
-          <ShieldCheck className="w-12 h-12 text-[#D97706] mx-auto mb-3" />
-          <h2 className="text-xl font-bold text-[#1C1917]">Portal Investor Nur Mobil</h2>
-          <p className="text-sm text-[#6B6560] mt-2">
+      <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-2xl border border-[var(--line)] text-center max-w-md shadow-sm">
+          <ShieldCheck className="w-12 h-12 text-[var(--accent)] mx-auto mb-3" />
+          <h2 className="text-xl font-bold text-[var(--ink)]">Portal Investor Nur Mobil</h2>
+          <p className="text-sm text-[var(--muted)] mt-2">
             Akun Anda belum ditautkan ke data investor manapun, atau belum ada data investor yang terdaftar.
           </p>
         </div>
@@ -80,19 +80,19 @@ export function InvestorClient({
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F5F2] text-[#1C1917]">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)]">
       {/* Top Navbar */}
-      <header className="bg-white border-b border-[#D9D4CB] sticky top-0 z-40">
+      <header className="bg-white border-b border-[var(--line)] sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#D97706] flex items-center justify-center text-white font-bold text-lg shadow-sm">
+            <div className="w-9 h-9 rounded-xl bg-[var(--accent)] flex items-center justify-center text-white font-bold text-lg shadow-sm">
               N
             </div>
             <div>
-              <span className="font-bold text-base text-[#1C1917] tracking-tight block">
+              <span className="font-bold text-base text-[var(--ink)] tracking-tight block">
                 Nur Mobil
               </span>
-              <span className="text-[11px] text-[#6B6560] font-medium block">
+              <span className="text-[11px] text-[var(--muted)] font-medium block">
                 Portal Transparansi Investor
               </span>
             </div>
@@ -102,11 +102,11 @@ export function InvestorClient({
             {/* Switcher untuk keperluan simulasi/demo */}
             {allInvestors && allInvestors.length > 1 && onSelectInvestor && (
               <div className="flex items-center gap-2 text-xs">
-                <span className="text-[#6B6560] hidden sm:inline">Lihat sebagai:</span>
+                <span className="text-[var(--muted)] hidden sm:inline">Lihat sebagai:</span>
                 <select
                   value={investor.id}
                   onChange={(e) => onSelectInvestor(e.target.value)}
-                  className="bg-[#F7F5F2] border border-[#D9D4CB] rounded-lg px-2.5 py-1 text-xs font-semibold text-[#1C1917]"
+                  className="bg-[var(--bg)] border border-[var(--line)] rounded-lg px-2.5 py-1 text-xs font-semibold text-[var(--ink)]"
                 >
                   {allInvestors.map((inv) => (
                     <option key={inv.id} value={inv.id}>
@@ -120,7 +120,7 @@ export function InvestorClient({
             <button
               onClick={() => logoutAction()}
               title="Keluar (Logout)"
-              className="p-1.5 rounded-lg text-[#6B6560] hover:text-red-600 hover:bg-[#F7F5F2] transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-[var(--muted)] hover:text-red-600 hover:bg-[var(--bg)] transition-colors cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -131,10 +131,10 @@ export function InvestorClient({
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         {/* Welcome Banner */}
-        <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="bg-white rounded-2xl border border-[var(--line)] p-6 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-[#1C1917] tracking-tight">
+              <h1 className="text-2xl font-bold text-[var(--ink)] tracking-tight">
                 Selamat Datang, {investor.name}
               </h1>
               <span
@@ -154,16 +154,16 @@ export function InvestorClient({
                   : "Investor Eksternal"}
               </span>
             </div>
-            <p className="text-xs text-[#6B6560] mt-1">
+            <p className="text-xs text-[var(--muted)] mt-1">
               Pantau alokasi perputaran modal, pokok investasi unit, dan rekonsiliasi bagi hasil secara realtime.
             </p>
           </div>
 
-          <div className="bg-[#FAF9F6] border border-[#EBE7E1] px-4 py-2.5 rounded-xl text-right">
-            <span className="text-[11px] font-semibold text-[#6B6560] uppercase block">
+          <div className="bg-[var(--bg)] border border-[var(--line)] px-4 py-2.5 rounded-xl text-right">
+            <span className="text-[11px] font-semibold text-[var(--muted)] uppercase block">
               Saldo Siap Alokasi
             </span>
-            <span className="text-xl font-bold text-[#D97706]">
+            <span className="text-xl font-bold text-[var(--accent)]">
               {formatRupiah(investor.currentBalance)}
             </span>
           </div>
@@ -171,23 +171,23 @@ export function InvestorClient({
 
         {/* 3 KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-sm">
-            <div className="flex items-center justify-between text-[#6B6560] mb-2">
+          <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm">
+            <div className="flex items-center justify-between text-[var(--muted)] mb-2">
               <span className="text-xs font-semibold uppercase tracking-wider">
                 Modal Aktif di Mobil
               </span>
               <Car className="w-5 h-5 text-blue-600" />
             </div>
-            <div className="text-2xl font-bold text-[#1C1917]">
+            <div className="text-2xl font-bold text-[var(--ink)]">
               {formatRupiah(investor.activeAllocatedCapital)}
             </div>
-            <div className="text-xs text-[#6B6560] mt-1">
+            <div className="text-xs text-[var(--muted)] mt-1">
               Tertanam pada {investor.investments.length} unit kendaraan
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-sm">
-            <div className="flex items-center justify-between text-[#6B6560] mb-2">
+          <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm">
+            <div className="flex items-center justify-between text-[var(--muted)] mb-2">
               <span className="text-xs font-semibold uppercase tracking-wider">
                 Total Bagi Hasil Diterima
               </span>
@@ -196,36 +196,36 @@ export function InvestorClient({
             <div className="text-2xl font-bold text-emerald-600">
               {formatRupiah(investor.totalProfitReceived)}
             </div>
-            <div className="text-xs text-[#6B6560] mt-1">
+            <div className="text-xs text-[var(--muted)] mt-1">
               Akumulasi profit dari unit yang telah lunas
             </div>
           </div>
 
-          <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-sm">
-            <div className="flex items-center justify-between text-[#6B6560] mb-2">
+          <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm">
+            <div className="flex items-center justify-between text-[var(--muted)] mb-2">
               <span className="text-xs font-semibold uppercase tracking-wider">
                 Total Pokok & Saldo
               </span>
-              <Wallet className="w-5 h-5 text-[#D97706]" />
+              <Wallet className="w-5 h-5 text-[var(--accent)]" />
             </div>
-            <div className="text-2xl font-bold text-[#1C1917]">
+            <div className="text-2xl font-bold text-[var(--ink)]">
               {formatRupiah(investor.currentBalance + investor.activeAllocatedCapital)}
             </div>
-            <div className="text-xs text-[#6B6560] mt-1">
+            <div className="text-xs text-[var(--muted)] mt-1">
               Total aset modal Anda di Nur Mobil
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-[#D9D4CB] gap-6 text-sm font-medium">
+        <div className="flex border-b border-[var(--line)] gap-6 text-sm font-medium">
           <button
             onClick={() => setActiveTab("portfolio")}
             className={cn(
               "pb-3 -mb-px transition-colors cursor-pointer",
               activeTab === "portfolio"
-                ? "border-b-2 border-[#D97706] text-[#D97706] font-semibold"
-                : "text-[#6B6560] hover:text-[#1C1917]"
+                ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-semibold"
+                : "text-[var(--muted)] hover:text-[var(--ink)]"
             )}
           >
             Portofolio Unit ({investor.investments.length})
@@ -235,8 +235,8 @@ export function InvestorClient({
             className={cn(
               "pb-3 -mb-px transition-colors cursor-pointer",
               activeTab === "ledger"
-                ? "border-b-2 border-[#D97706] text-[#D97706] font-semibold"
-                : "text-[#6B6560] hover:text-[#1C1917]"
+                ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-semibold"
+                : "text-[var(--muted)] hover:text-[var(--ink)]"
             )}
           >
             Buku Rekening Modal (Capital Ledger)
@@ -246,8 +246,8 @@ export function InvestorClient({
             className={cn(
               "pb-3 -mb-px transition-colors cursor-pointer",
               activeTab === "distributions"
-                ? "border-b-2 border-[#D97706] text-[#D97706] font-semibold"
-                : "text-[#6B6560] hover:text-[#1C1917]"
+                ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-semibold"
+                : "text-[var(--muted)] hover:text-[var(--ink)]"
             )}
           >
             Riwayat Bagi Hasil ({investor.distributions.length})
@@ -256,22 +256,22 @@ export function InvestorClient({
 
         {/* TAB: PORTOFOLIO */}
         {activeTab === "portfolio" && (
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-[#D9D4CB] bg-[#FBF9F6]">
-              <h3 className="font-bold text-[#1C1917]">Unit Mobil yang Anda Danai</h3>
-              <p className="text-xs text-[#6B6560] mt-0.5">
+          <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-sm">
+            <div className="p-5 border-b border-[var(--line)] bg-[#FBF9F6]">
+              <h3 className="font-bold text-[var(--ink)]">Unit Mobil yang Anda Danai</h3>
+              <p className="text-xs text-[var(--muted)] mt-0.5">
                 Status operasional dan porsi modal Anda pada setiap unit.
               </p>
             </div>
 
             {investor.investments.length === 0 ? (
-              <div className="p-8 text-center text-[#6B6560]">
+              <div className="p-8 text-center text-[var(--muted)]">
                 Belum ada unit mobil yang dialokasikan saat ini.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold">
+                  <thead className="bg-[var(--bg)] text-xs uppercase text-[var(--muted)] font-semibold">
                     <tr>
                       <th className="py-3 px-4">Unit Kendaraan</th>
                       <th className="py-3 px-4">Status Mobil</th>
@@ -279,26 +279,26 @@ export function InvestorClient({
                       <th className="py-3 px-4 text-right">Akad Bagi Hasil</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#D9D4CB]">
+                  <tbody className="divide-y divide-[var(--line)]">
                     {investor.investments.map((inv) => (
-                      <tr key={inv.id} className="hover:bg-[#FAF9F6]">
+                      <tr key={inv.id} className="hover:bg-[var(--bg)]">
                         <td className="py-4 px-4">
-                          <span className="font-bold text-[#1C1917] block">
+                          <span className="font-bold text-[var(--ink)] block">
                             {inv.vehiclePlate}
                           </span>
-                          <span className="text-xs text-[#6B6560]">
+                          <span className="text-xs text-[var(--muted)]">
                             {inv.vehicleName} ({inv.vehicleYear})
                           </span>
                         </td>
                         <td className="py-4 px-4">
-                          <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#FAF9F6] border border-[#EBE7E1] text-[#1C1917]">
+                          <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)]">
                             {inv.vehicleStatus.replace(/_/g, " ")}
                           </span>
                         </td>
-                        <td className="py-4 px-4 text-right font-bold text-[#1C1917]">
+                        <td className="py-4 px-4 text-right font-bold text-[var(--ink)]">
                           {formatRupiah(inv.capitalShare)}
                         </td>
-                        <td className="py-4 px-4 text-right text-xs font-semibold text-[#D97706]">
+                        <td className="py-4 px-4 text-right text-xs font-semibold text-[var(--accent)]">
                           {inv.profitSharePercent > 0
                             ? `${inv.profitSharePercent}% dari Laba`
                             : "Aturan Bertingkat Ibu"}
@@ -314,17 +314,17 @@ export function InvestorClient({
 
         {/* TAB: LEDGER */}
         {activeTab === "ledger" && (
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-[#D9D4CB] bg-[#FBF9F6]">
-              <h3 className="font-bold text-[#1C1917]">Mutasi Saldo Rekening Modal</h3>
-              <p className="text-xs text-[#6B6560] mt-0.5">
+          <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-sm">
+            <div className="p-5 border-b border-[var(--line)] bg-[#FBF9F6]">
+              <h3 className="font-bold text-[var(--ink)]">Mutasi Saldo Rekening Modal</h3>
+              <p className="text-xs text-[var(--muted)] mt-0.5">
                 Riwayat setoran, alokasi unit, pengembalian pokok modal, dan pembayaran profit.
               </p>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold">
+                <thead className="bg-[var(--bg)] text-xs uppercase text-[var(--muted)] font-semibold">
                   <tr>
                     <th className="py-3 px-4">Tanggal</th>
                     <th className="py-3 px-4">Tipe Mutasi</th>
@@ -333,7 +333,7 @@ export function InvestorClient({
                     <th className="py-3 px-4 text-right">Saldo Berjalan</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#D9D4CB]">
+                <tbody className="divide-y divide-[var(--line)]">
                   {investor.ledgerEntries.map((entry) => {
                     const isIncrease =
                       entry.type === "DEPOSIT" ||
@@ -341,8 +341,8 @@ export function InvestorClient({
                       entry.type === "PROFIT_PAID";
 
                     return (
-                      <tr key={entry.id} className="hover:bg-[#FAF9F6]">
-                        <td className="py-3 px-4 text-xs text-[#6B6560] whitespace-nowrap">
+                      <tr key={entry.id} className="hover:bg-[var(--bg)]">
+                        <td className="py-3 px-4 text-xs text-[var(--muted)] whitespace-nowrap">
                           {formatDate(entry.createdAt)}
                         </td>
                         <td className="py-3 px-4">
@@ -357,7 +357,7 @@ export function InvestorClient({
                             {entry.type}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-xs text-[#1C1917]">
+                        <td className="py-3 px-4 text-xs text-[var(--ink)]">
                           {entry.notes || "-"}
                         </td>
                         <td
@@ -368,7 +368,7 @@ export function InvestorClient({
                         >
                           {isIncrease ? "+" : "-"} {formatRupiah(entry.amount)}
                         </td>
-                        <td className="py-3 px-4 text-right font-semibold text-xs text-[#1C1917] whitespace-nowrap">
+                        <td className="py-3 px-4 text-right font-semibold text-xs text-[var(--ink)] whitespace-nowrap">
                           {formatRupiah(entry.runningBalance)}
                         </td>
                       </tr>
@@ -382,22 +382,22 @@ export function InvestorClient({
 
         {/* TAB: DISTRIBUTIONS */}
         {activeTab === "distributions" && (
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-[#D9D4CB] bg-[#FBF9F6]">
-              <h3 className="font-bold text-[#1C1917]">Riwayat Bagi Hasil yang Diterima</h3>
-              <p className="text-xs text-[#6B6560] mt-0.5">
+          <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-sm">
+            <div className="p-5 border-b border-[var(--line)] bg-[#FBF9F6]">
+              <h3 className="font-bold text-[var(--ink)]">Riwayat Bagi Hasil yang Diterima</h3>
+              <p className="text-xs text-[var(--muted)] mt-0.5">
                 Bagi hasil hanya dibayarkan setelah transaksi penjualan mobil lunas 100%.
               </p>
             </div>
 
             {investor.distributions.length === 0 ? (
-              <div className="p-8 text-center text-[#6B6560]">
+              <div className="p-8 text-center text-[var(--muted)]">
                 Belum ada bagi hasil yang dibagikan.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold">
+                  <thead className="bg-[var(--bg)] text-xs uppercase text-[var(--muted)] font-semibold">
                     <tr>
                       <th className="py-3 px-4">Tanggal Pembagian</th>
                       <th className="py-3 px-4">Unit Mobil</th>
@@ -406,16 +406,16 @@ export function InvestorClient({
                       <th className="py-3 px-4 text-center">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#D9D4CB]">
+                  <tbody className="divide-y divide-[var(--line)]">
                     {investor.distributions.map((d) => (
-                      <tr key={d.id} className="hover:bg-[#FAF9F6]">
-                        <td className="py-3 px-4 text-xs text-[#6B6560]">
+                      <tr key={d.id} className="hover:bg-[var(--bg)]">
+                        <td className="py-3 px-4 text-xs text-[var(--muted)]">
                           {formatDate(d.calculatedAt)}
                         </td>
-                        <td className="py-3 px-4 font-bold text-xs text-[#1C1917]">
+                        <td className="py-3 px-4 font-bold text-xs text-[var(--ink)]">
                           {d.vehiclePlate} ({d.vehicleName})
                         </td>
-                        <td className="py-3 px-4 text-xs text-[#6B6560]">{d.notes || "-"}</td>
+                        <td className="py-3 px-4 text-xs text-[var(--muted)]">{d.notes || "-"}</td>
                         <td className="py-3 px-4 text-right font-bold text-xs text-emerald-600">
                           {formatRupiah(d.calculatedAmount)}
                         </td>

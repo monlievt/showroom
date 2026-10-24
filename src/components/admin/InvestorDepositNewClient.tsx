@@ -171,20 +171,20 @@ export function InvestorDepositNewClient({
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/investors/accounts"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Akun Investor</span>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-[#1C1917]">
+            <h1 className="text-xl font-bold text-[var(--ink)]">
               Penyetoran Modal Investor
             </h1>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Pencatatan dana segar yang disetorkan investor ke rekening operasional showroom.
             </p>
           </div>
@@ -217,18 +217,18 @@ export function InvestorDepositNewClient({
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-5">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Coins className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-5">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Coins className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               Rincian Setoran Modal Investor
             </h2>
           </div>
 
           {/* 1. Pilih Investor */}
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-[#6B6560]" />
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-[var(--muted)]" />
               <span>Pilih Akun Investor *</span>
             </label>
             {investors.length === 0 ? (
@@ -240,7 +240,7 @@ export function InvestorDepositNewClient({
                 required
                 value={selectedInvestorId}
                 onChange={(e) => setSelectedInvestorId(e.target.value)}
-                className="w-full px-3.5 py-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 {investors.map((inv) => (
                   <option key={inv.id} value={inv.id}>
@@ -253,8 +253,8 @@ export function InvestorDepositNewClient({
 
           {/* 2. Tanggal Setoran Modal */}
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-[#D97706]" />
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-[var(--accent)]" />
               <span>Tanggal Setoran Modal *</span>
             </label>
             <input
@@ -262,17 +262,17 @@ export function InvestorDepositNewClient({
               type="date"
               value={depositDate}
               onChange={(e) => setDepositDate(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
             />
-            <span className="text-[11px] text-[#6B6560] mt-1 block">
+            <span className="text-[11px] text-[var(--muted)] mt-1 block">
               Pilih tanggal saat dana masuk atau ditransfer ke rekening showroom.
             </span>
           </div>
 
           {/* 3. Nominal Setoran Modal */}
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-              <DollarSign className="w-3.5 h-3.5 text-[#6B6560]" />
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+              <DollarSign className="w-3.5 h-3.5 text-[var(--muted)]" />
               <span>Nominal Setoran Modal (Rp) *</span>
             </label>
             <input
@@ -282,15 +282,15 @@ export function InvestorDepositNewClient({
               placeholder="Contoh: 50.000.000"
               value={amount !== "" ? formatThousands(amount) : ""}
               onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
-              className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
             />
           </div>
 
           {/* 4. Lampiran Bukti Transfer (Bisa Beberapa Foto / Screenshot) */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold text-[#1C1917] flex items-center gap-1.5">
-                <Paperclip className="w-3.5 h-3.5 text-[#D97706]" />
+              <label className="text-xs font-semibold text-[var(--ink)] flex items-center gap-1.5">
+                <Paperclip className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Lampiran Bukti Transfer Bank (Bisa Beberapa Foto / Screenshot)</span>
               </label>
               {proofList.length > 0 && (
@@ -331,11 +331,11 @@ export function InvestorDepositNewClient({
                   return (
                     <div
                       key={proof.id}
-                      className="p-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-2xl flex items-center justify-between gap-3 shadow-2xs group hover:border-[#D97706]/40 transition-colors"
+                      className="p-3 bg-[var(--bg)] border border-[var(--line)] rounded-2xl flex items-center justify-between gap-3 shadow-2xs group hover:border-[var(--accent)]/40 transition-colors"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         {isImg ? (
-                          <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-[#D9D4CB] bg-white shrink-0 shadow-2xs">
+                          <div className="relative w-12 h-12 rounded-xl overflow-hidden border border-[var(--line)] bg-white shrink-0 shadow-2xs">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={proof.url}
@@ -351,7 +351,7 @@ export function InvestorDepositNewClient({
                         )}
 
                         <div className="min-w-0">
-                          <p className="text-xs font-bold text-[#1C1917] truncate max-w-[150px] sm:max-w-[130px]">
+                          <p className="text-xs font-bold text-[var(--ink)] truncate max-w-[150px] sm:max-w-[130px]">
                             {proof.name || `Bukti Transfer #${idx + 1}`}
                           </p>
                           <span className="text-[10px] text-emerald-700 font-semibold block">
@@ -365,10 +365,10 @@ export function InvestorDepositNewClient({
                           href={proof.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1.5 bg-white border border-[#D9D4CB] rounded-xl text-[#1C1917] hover:bg-[#EFECE8] transition-colors shadow-2xs"
+                          className="p-1.5 bg-white border border-[var(--line)] rounded-xl text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-2xs"
                           title="Buka bukti ukuran penuh"
                         >
-                          <ExternalLink className="w-3.5 h-3.5 text-[#6B6560]" />
+                          <ExternalLink className="w-3.5 h-3.5 text-[var(--muted)]" />
                         </a>
 
                         <button
@@ -393,28 +393,28 @@ export function InvestorDepositNewClient({
                   fileInputRef.current?.click();
                 }
               }}
-              className="border-2 border-dashed border-[#D9D4CB] hover:border-[#D97706] bg-[#FAF9F6] hover:bg-[#F7F5F2] rounded-2xl p-4 sm:p-5 text-center cursor-pointer transition-colors group"
+              className="border-2 border-dashed border-[var(--line)] hover:border-[var(--accent)] bg-[var(--bg)] hover:bg-[var(--bg)] rounded-2xl p-4 sm:p-5 text-center cursor-pointer transition-colors group"
             >
               {uploadingProof ? (
                 <div className="flex flex-col items-center justify-center py-2 space-y-2">
-                  <Loader2 className="w-6 h-6 animate-spin text-[#D97706]" />
-                  <span className="text-xs font-bold text-[#1C1917]">
+                  <Loader2 className="w-6 h-6 animate-spin text-[var(--accent)]" />
+                  <span className="text-xs font-bold text-[var(--ink)]">
                     Mengunggah lampiran foto/screenshot...
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center space-y-2">
-                  <div className="w-10 h-10 rounded-full bg-amber-50 group-hover:bg-amber-100 text-[#D97706] flex items-center justify-center transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-amber-50 group-hover:bg-amber-100 text-[var(--accent)] flex items-center justify-center transition-colors">
                     <UploadCloud className="w-5 h-5" />
                   </div>
-                  <div className="text-xs text-[#1C1917]">
-                    <span className="font-bold text-[#D97706] underline">
+                  <div className="text-xs text-[var(--ink)]">
+                    <span className="font-bold text-[var(--accent)] underline">
                       {proofList.length > 0
                         ? "+ Klik untuk menambah foto / screenshot lainnya"
                         : "Klik untuk memilih satu atau beberapa foto / screenshot"}
                     </span>
                   </div>
-                  <span className="text-[11px] text-[#6B6560]">
+                  <span className="text-[11px] text-[var(--muted)]">
                     Bisa pilih sekaligus lebih dari 1 file • Format: JPG, PNG, WEBP, PDF (Maksimal 10MB per file)
                   </span>
                 </div>
@@ -424,8 +424,8 @@ export function InvestorDepositNewClient({
 
           {/* 5. Keterangan / Catatan */}
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-[#6B6560]" />
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-[var(--muted)]" />
               <span>Keterangan / Catatan Transfer Bank</span>
             </label>
             <textarea
@@ -433,16 +433,16 @@ export function InvestorDepositNewClient({
               placeholder="Contoh: Transfer modal tambahan via BCA untuk alokasi lelang unit Fortuner..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40 resize-none"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40 resize-none"
             />
           </div>
         </div>
 
         {/* Bottom Actions Bar */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4">
           <Link
             href="/admin/investors/accounts"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
           >
             Batal & Kembali
           </Link>
@@ -456,7 +456,7 @@ export function InvestorDepositNewClient({
               Number(amount) <= 0 ||
               investors.length === 0
             }
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

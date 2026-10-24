@@ -429,12 +429,12 @@ export function AssetsInventoryPageClient({
         </div>
 
         {/* 4. Laba Keringat Jasa Mandiri Showroom */}
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1 bg-[#F7F5F2]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1 bg-[var(--bg)]">
           <div className="flex items-center justify-between text-[#92400E]">
             <span className="text-[11px] font-bold uppercase tracking-wider">4. Laba Jasa Garasi Mandiri</span>
-            <Coins className="w-5 h-5 text-[#D97706]" />
+            <Coins className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-[#D97706] tracking-tight">
+          <div className="text-2xl font-black text-[var(--accent)] tracking-tight">
             +{formatRupiah(supplies.summary.totalWorkshopMarginEarned)}
           </div>
           <p className="text-xs text-[#92400E] font-medium">
@@ -450,7 +450,7 @@ export function AssetsInventoryPageClient({
             <Car className="w-4 h-4 text-emerald-600" />
             <span>Stok Mobil (Aset Lancar)</span>
           </div>
-          <p className="text-xs text-[#6B6560] leading-relaxed">
+          <p className="text-xs text-[var(--muted)] leading-relaxed">
             Unit dagangan yang dibeli lelang/langsung untuk <strong>segera dijual kembali</strong>. Nilainya dicatat dari <strong>HPP (Beli + Servis/Salon)</strong> dan langsung cair menjadi kas setelah laku.
           </p>
         </div>
@@ -460,7 +460,7 @@ export function AssetsInventoryPageClient({
             <Droplet className="w-4 h-4 text-amber-600" />
             <span>Bahan Habis Pakai (Supplies)</span>
           </div>
-          <p className="text-xs text-[#6B6560] leading-relaxed">
+          <p className="text-xs text-[var(--muted)] leading-relaxed">
             Persediaan oli, filter, bohlam, dan chemical salon. Saat dipakai sendiri ke mobil (misal ganti oli Rp 500rb), <strong>stok terpotong, HPP mobil naik, dan selisihnya menjadi laba jasa showroom Anda!</strong>
           </p>
         </div>
@@ -470,14 +470,14 @@ export function AssetsInventoryPageClient({
             <Wrench className="w-4 h-4 text-blue-600" />
             <span>Aset Tetap (Peralatan Kerja)</span>
           </div>
-          <p className="text-xs text-[#6B6560] leading-relaxed">
+          <p className="text-xs text-[var(--muted)] leading-relaxed">
             Peralatan garasi yang <strong>tidak habis dan tidak dijual</strong> (Mesin Poles Shinemate, Scanner OBD2, Paint Gauge, Dongkrak Buaya, Neon Box). Memiliki masa pakai lama &amp; nilai bukunya menyusut.
           </p>
         </div>
       </div>
 
       {/* ── MAIN TAB BUTTONS ── */}
-      <div className="flex items-center gap-2 border-b border-[#D9D4CB] pb-2">
+      <div className="flex items-center gap-2 border-b border-[var(--line)] pb-2">
         <button
           onClick={() => {
             setActiveMainTab("SUPPLIES");
@@ -486,8 +486,8 @@ export function AssetsInventoryPageClient({
           className={cn(
             "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2",
             activeMainTab === "SUPPLIES"
-              ? "bg-[#D97706] text-white shadow-sm"
-              : "bg-[#EFECE8] text-[#6B6560] hover:text-[#1C1917]"
+              ? "bg-[var(--accent)] text-white shadow-sm"
+              : "bg-[var(--bg)] text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           <Droplet className="w-4 h-4" />
@@ -507,8 +507,8 @@ export function AssetsInventoryPageClient({
           className={cn(
             "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2",
             activeMainTab === "ASSETS"
-              ? "bg-[#1C1917] text-white shadow-sm"
-              : "bg-[#EFECE8] text-[#6B6560] hover:text-[#1C1917]"
+              ? "bg-[var(--ink)] text-white shadow-sm"
+              : "bg-[var(--bg)] text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           <Wrench className="w-4 h-4" />
@@ -524,7 +524,7 @@ export function AssetsInventoryPageClient({
             "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2",
             activeMainTab === "HISTORY"
               ? "bg-[#16A34A] text-white shadow-sm"
-              : "bg-[#EFECE8] text-[#6B6560] hover:text-[#1C1917]"
+              : "bg-[var(--bg)] text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           <History className="w-4 h-4" />
@@ -533,10 +533,10 @@ export function AssetsInventoryPageClient({
       </div>
 
       {/* ── TOOLBAR / ACTION BAR ── */}
-      <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[#6B6560] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder={
@@ -548,7 +548,7 @@ export function AssetsInventoryPageClient({
             }
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-[#D9D4CB] rounded-xl text-xs sm:text-sm bg-[#F7F5F2] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/20 transition-all"
+            className="w-full pl-10 pr-4 py-2 border border-[var(--line)] rounded-xl text-xs sm:text-sm bg-[var(--bg)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 transition-all"
           />
         </div>
 
@@ -557,7 +557,7 @@ export function AssetsInventoryPageClient({
           {activeMainTab === "SUPPLIES" && (
             <button
               onClick={() => setShowSupplyModal(true)}
-              className="flex items-center justify-center gap-2 px-4 py-2 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer"
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>+ Beli / Restock Bahan Baru</span>
@@ -567,7 +567,7 @@ export function AssetsInventoryPageClient({
           {activeMainTab === "ASSETS" && (
             <button
               onClick={() => setShowAssetModal(true)}
-              className="flex items-center justify-center gap-2 px-4 py-2 bg-[#1C1917] hover:bg-[#44403C] text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer"
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--ink)] hover:bg-[#44403C] text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>+ Tambah Aset Tetap</span>
@@ -578,11 +578,11 @@ export function AssetsInventoryPageClient({
 
       {/* ── TAB 1: STOK BARANG HABIS PAKAI (SUPPLIES) ── */}
       {activeMainTab === "SUPPLIES" && (
-        <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-xs">
+        <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-[#D9D4CB] bg-[#F7F5F2] text-[#6B6560] font-bold uppercase text-[10px] sm:text-xs">
+                <tr className="border-b border-[var(--line)] bg-[var(--bg)] text-[var(--muted)] font-bold uppercase text-[10px] sm:text-xs">
                   <th className="py-3 px-4">Nama Barang &amp; Lokasi</th>
                   <th className="py-3 px-4">Kategori</th>
                   <th className="py-3 px-4 text-center">Sisa Stok Fisik</th>
@@ -592,20 +592,20 @@ export function AssetsInventoryPageClient({
                   <th className="py-3 px-4 text-center">Aksi Cepat</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
+              <tbody className="divide-y divide-[var(--line)]">
                 {filteredSupplies.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-[#6B6560]">
+                    <td colSpan={7} className="py-12 text-center text-[var(--muted)]">
                       Belum ada stok barang habis pakai yang cocok.
                     </td>
                   </tr>
                 ) : (
                   filteredSupplies.map((item) => (
-                    <tr key={item.id} className="hover:bg-[#F7F5F2]/60 transition-colors">
+                    <tr key={item.id} className="hover:bg-[var(--bg)]/60 transition-colors">
                       {/* Nama & Lokasi */}
                       <td className="py-3.5 px-4 align-top">
-                        <div className="font-bold text-[#1C1917]">{item.name}</div>
-                        <div className="text-[11px] text-[#6B6560] mt-0.5">
+                        <div className="font-bold text-[var(--ink)]">{item.name}</div>
+                        <div className="text-[11px] text-[var(--muted)] mt-0.5">
                           📍 {item.location || "Rak Gudang Garasi"}
                         </div>
                         {item.notes && (
@@ -627,9 +627,9 @@ export function AssetsInventoryPageClient({
 
                       {/* Sisa Stok */}
                       <td className="py-3.5 px-4 align-top text-center">
-                        <div className="inline-flex items-center gap-1.5 font-black text-sm text-[#1C1917]">
+                        <div className="inline-flex items-center gap-1.5 font-black text-sm text-[var(--ink)]">
                           <span>{item.currentStock}</span>
-                          <span className="text-xs font-normal text-[#6B6560]">{item.unit}</span>
+                          <span className="text-xs font-normal text-[var(--muted)]">{item.unit}</span>
                         </div>
                         {item.isLowStock && (
                           <div className="text-[10px] font-bold text-red-600 mt-0.5 flex items-center justify-center gap-1">
@@ -640,12 +640,12 @@ export function AssetsInventoryPageClient({
                       </td>
 
                       {/* Modal Beli per Satuan */}
-                      <td className="py-3.5 px-4 align-top text-right text-xs text-[#6B6560]">
+                      <td className="py-3.5 px-4 align-top text-right text-xs text-[var(--muted)]">
                         {formatRupiah(item.costPerUnit)}
                       </td>
 
                       {/* Standar HPP Alokasi ke Mobil */}
-                      <td className="py-3.5 px-4 align-top text-right font-bold text-[#D97706]">
+                      <td className="py-3.5 px-4 align-top text-right font-bold text-[var(--accent)]">
                         {formatRupiah(item.standardHppCharge)}
                         <div className="text-[10px] text-[#16A34A] font-semibold mt-0.5">
                           Jasa: +{formatRupiah(item.standardHppCharge - item.costPerUnit)}
@@ -653,7 +653,7 @@ export function AssetsInventoryPageClient({
                       </td>
 
                       {/* Total Nilai Stok */}
-                      <td className="py-3.5 px-4 align-top text-right font-black text-[#1C1917]">
+                      <td className="py-3.5 px-4 align-top text-right font-black text-[var(--ink)]">
                         {formatRupiah(item.stockValue)}
                       </td>
 
@@ -663,7 +663,7 @@ export function AssetsInventoryPageClient({
                           <button
                             onClick={() => openUsageModal(item)}
                             disabled={item.currentStock <= 0}
-                            className="px-3 py-1.5 rounded-lg bg-[#D97706] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all disabled:opacity-40 cursor-pointer flex items-center gap-1"
+                            className="px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all disabled:opacity-40 cursor-pointer flex items-center gap-1"
                             title="Gunakan untuk servis mandiri mobil tertentu"
                           >
                             <ArrowRight className="w-3.5 h-3.5" />
@@ -690,11 +690,11 @@ export function AssetsInventoryPageClient({
 
       {/* ── TAB 2: ASET TETAP SHOWROOM (ALAT) ── */}
       {activeMainTab === "ASSETS" && (
-        <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-xs">
+        <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-[#D9D4CB] bg-[#F7F5F2] text-[#6B6560] font-bold uppercase text-[10px] sm:text-xs">
+                <tr className="border-b border-[var(--line)] bg-[var(--bg)] text-[var(--muted)] font-bold uppercase text-[10px] sm:text-xs">
                   <th className="py-3 px-4">Nama Barang &amp; Lokasi</th>
                   <th className="py-3 px-4">Kategori Aset</th>
                   <th className="py-3 px-4">Kondisi Alat</th>
@@ -703,26 +703,26 @@ export function AssetsInventoryPageClient({
                   <th className="py-3 px-4 text-center">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
+              <tbody className="divide-y divide-[var(--line)]">
                 {filteredAssets.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-12 text-center text-[#6B6560]">
+                    <td colSpan={6} className="py-12 text-center text-[var(--muted)]">
                       Belum ada aset tetap yang cocok dengan pencarian.
                     </td>
                   </tr>
                 ) : (
                   filteredAssets.map((item) => (
-                    <tr key={item.id} className="hover:bg-[#F7F5F2]/60 transition-colors">
+                    <tr key={item.id} className="hover:bg-[var(--bg)]/60 transition-colors">
                       <td className="py-3.5 px-4 align-top">
-                        <div className="font-bold text-[#1C1917]">{item.name}</div>
-                        <div className="text-[11px] text-[#6B6560] mt-0.5">
+                        <div className="font-bold text-[var(--ink)]">{item.name}</div>
+                        <div className="text-[11px] text-[var(--muted)] mt-0.5">
                           Beli: {formatDate(item.purchaseDate)} • Lokasi: {item.location || "Showroom"}
                         </div>
                         {item.notes && (
-                          <div className="text-[11px] text-[#6B6560] mt-0.5 italic">{item.notes}</div>
+                          <div className="text-[11px] text-[var(--muted)] mt-0.5 italic">{item.notes}</div>
                         )}
                       </td>
-                      <td className="py-3.5 px-4 align-top text-xs text-[#1C1917]">
+                      <td className="py-3.5 px-4 align-top text-xs text-[var(--ink)]">
                         {ASSET_CATEGORY_LABELS[item.category] || item.category}
                       </td>
                       <td className="py-3.5 px-4 align-top">
@@ -735,7 +735,7 @@ export function AssetsInventoryPageClient({
                           {ASSET_CONDITION_LABELS[item.condition]?.label || item.condition}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 align-top text-right text-xs text-[#6B6560]">
+                      <td className="py-3.5 px-4 align-top text-right text-xs text-[var(--muted)]">
                         {formatRupiah(item.purchaseCost)}
                       </td>
                       <td className="py-3.5 px-4 align-top text-right font-black text-blue-700">
@@ -762,7 +762,7 @@ export function AssetsInventoryPageClient({
       {/* ── TAB 3: RIWAYAT PEMAKAIAN KE MOBIL & LABA JASA GARASI ── */}
       {activeMainTab === "HISTORY" && (
         <div className="space-y-4">
-          <div className="bg-[#FEF3C7] border border-[#D97706]/40 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[#92400E]">
+          <div className="bg-[#FEF3C7] border border-[var(--accent)]/40 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[#92400E]">
             <div>
               <span className="font-bold block text-sm mb-0.5">Ringkasan Laba Efisiensi Servis Mandiri Garasi</span>
               <span>
@@ -772,17 +772,17 @@ export function AssetsInventoryPageClient({
             </div>
             <div className="sm:text-right">
               <span className="text-[11px] uppercase tracking-wider block font-semibold">Total Laba Jasa Showroom</span>
-              <span className="text-xl font-black text-[#D97706]">
+              <span className="text-xl font-black text-[var(--accent)]">
                 +{formatRupiah(supplies.summary.totalWorkshopMarginEarned)}
               </span>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-xs">
+          <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
                 <thead>
-                  <tr className="border-b border-[#D9D4CB] bg-[#F7F5F2] text-[#6B6560] font-bold uppercase text-[10px] sm:text-xs">
+                  <tr className="border-b border-[var(--line)] bg-[var(--bg)] text-[var(--muted)] font-bold uppercase text-[10px] sm:text-xs">
                     <th className="py-3 px-4">Tanggal &amp; Mobil Target</th>
                     <th className="py-3 px-4">Jenis Servis &amp; Bahan Dipakai</th>
                     <th className="py-3 px-4 text-right">Modal Bahan Fisik</th>
@@ -791,42 +791,42 @@ export function AssetsInventoryPageClient({
                     <th className="py-3 px-4">Catatan</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#D9D4CB]">
+                <tbody className="divide-y divide-[var(--line)]">
                   {allHistoryUsages.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-12 text-center text-[#6B6560]">
+                      <td colSpan={6} className="py-12 text-center text-[var(--muted)]">
                         Belum ada riwayat alokasi pemakaian bahan ke mobil.
                       </td>
                     </tr>
                   ) : (
                     allHistoryUsages.map((usage) => (
-                      <tr key={usage.id} className="hover:bg-[#F7F5F2]/60 transition-colors">
+                      <tr key={usage.id} className="hover:bg-[var(--bg)]/60 transition-colors">
                         <td className="py-3.5 px-4 align-top">
-                          <div className="font-bold text-[#1C1917]">{usage.vehicle.plateNumber}</div>
-                          <div className="text-[11px] text-[#6B6560]">
+                          <div className="font-bold text-[var(--ink)]">{usage.vehicle.plateNumber}</div>
+                          <div className="text-[11px] text-[var(--muted)]">
                             {usage.vehicle.brand} {usage.vehicle.model}
                           </div>
                           <div className="text-[10px] text-[#8C827A] mt-0.5">{formatDate(usage.usedDate)}</div>
                         </td>
 
                         <td className="py-3.5 px-4 align-top">
-                          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-[#EFECE8] text-[#1C1917] border border-[#D9D4CB] mb-1">
+                          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] mb-1">
                             {usage.serviceType === "SALON_MANDIRI"
                               ? "Salon / Detailing Mandiri"
                               : usage.serviceType === "GANTI_BOHLAM"
                               ? "Ganti Lampu / Fast Moving"
                               : "Ganti Oli & Servis Mandiri"}
                           </span>
-                          <div className="text-xs font-semibold text-[#1C1917]">
+                          <div className="text-xs font-semibold text-[var(--ink)]">
                             {usage.quantityUsed} {usage.supplyUnit} {usage.supplyName}
                           </div>
                         </td>
 
-                        <td className="py-3.5 px-4 align-top text-right text-xs text-[#6B6560]">
+                        <td className="py-3.5 px-4 align-top text-right text-xs text-[var(--muted)]">
                           {formatRupiah(usage.unitCostAtUsage)}
                         </td>
 
-                        <td className="py-3.5 px-4 align-top text-right font-bold text-[#1C1917]">
+                        <td className="py-3.5 px-4 align-top text-right font-bold text-[var(--ink)]">
                           {formatRupiah(usage.chargedHppAmount)}
                         </td>
 
@@ -834,7 +834,7 @@ export function AssetsInventoryPageClient({
                           +{formatRupiah(usage.workshopMargin)}
                         </td>
 
-                        <td className="py-3.5 px-4 align-top text-xs text-[#6B6560]">
+                        <td className="py-3.5 px-4 align-top text-xs text-[var(--muted)]">
                           {usage.notes || "Pengerjaan mandiri di garasi showroom"}
                         </td>
                       </tr>
@@ -850,15 +850,15 @@ export function AssetsInventoryPageClient({
       {/* ── MODAL 1: ALOKASI / PAKAI BAHAN KE MOBIL (DIY SERVICE) ── */}
       {showUsageModal && selectedSupplyForUsage && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[#D9D4CB] space-y-4">
-            <div className="border-b border-[#EFECE8] pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#D97706]">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[var(--line)] space-y-4">
+            <div className="border-b border-[var(--bg)] pb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">
                 Pengerjaan Servis Mandiri di Garasi
               </span>
-              <h3 className="text-lg font-black text-[#1C1917] mt-0.5">
+              <h3 className="text-lg font-black text-[var(--ink)] mt-0.5">
                 Gunakan {selectedSupplyForUsage.name}
               </h3>
-              <p className="text-xs text-[#6B6560]">
+              <p className="text-xs text-[var(--muted)]">
                 Stok tersedia saat ini: <strong>{selectedSupplyForUsage.currentStock} {selectedSupplyForUsage.unit}</strong>
               </p>
             </div>
@@ -866,14 +866,14 @@ export function AssetsInventoryPageClient({
             <form onSubmit={handleUsageSubmit} className="space-y-4">
               {/* Pilih Mobil Target */}
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-bold text-[var(--ink)] mb-1.5">
                   Pilih Mobil yang Dikerjakan *
                 </label>
                 <select
                   required
                   value={usageVehicleId}
                   onChange={(e) => setUsageVehicleId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] text-xs sm:text-sm font-semibold text-[#1C1917] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/30"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] text-xs sm:text-sm font-semibold text-[var(--ink)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                 >
                   {activeVehicles.map((v) => (
                     <option key={v.id} value={v.id}>
@@ -886,7 +886,7 @@ export function AssetsInventoryPageClient({
               {/* Jumlah Barang & Jenis Pengerjaan */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1.5">
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1.5">
                     Jumlah Dipakai ({selectedSupplyForUsage.unit}) *
                   </label>
                   <input
@@ -896,18 +896,18 @@ export function AssetsInventoryPageClient({
                     max={selectedSupplyForUsage.currentStock}
                     value={usageQty}
                     onChange={(e) => setUsageQty(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-sm font-bold text-[#1C1917]"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-sm font-bold text-[var(--ink)]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1.5">
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1.5">
                     Jenis Servis
                   </label>
                   <select
                     value={usageServiceType}
                     onChange={(e) => setUsageServiceType(e.target.value as any)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs font-semibold text-[#1C1917]"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs font-semibold text-[var(--ink)]"
                   >
                     <option value="GANTI_OLI">Ganti Oli Mandiri</option>
                     <option value="SALON_MANDIRI">Salon &amp; Poles Mandiri</option>
@@ -919,11 +919,11 @@ export function AssetsInventoryPageClient({
 
               {/* Nilai HPP yang Dibebankan ke Mobil */}
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] mb-1">
                   Nilai HPP yang Dibebankan ke Mobil (Rp) *
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[#6B6560]">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--muted)]">
                     Rp
                   </span>
                   <input
@@ -931,25 +931,25 @@ export function AssetsInventoryPageClient({
                     type="number"
                     value={usageHppCharged}
                     onChange={(e) => setUsageHppCharged(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-[#D9D4CB] text-sm font-black text-[#D97706]"
+                    className="w-full pl-10 pr-4 py-2 rounded-xl border border-[var(--line)] text-sm font-black text-[var(--accent)]"
                   />
                 </div>
-                <span className="text-[11px] text-[#6B6560] mt-1 block">
+                <span className="text-[11px] text-[var(--muted)] mt-1 block">
                   Nilai ini otomatis masuk ke HPP modal mobil dan ditarik kembali saat mobil laku terjual.
                 </span>
               </div>
 
               {/* ── LIVE PREVIEW SELISIH KEUNTUNGAN SHOWROOM ── */}
-              <div className="p-3.5 rounded-xl bg-[#FEF3C7] border border-[#D97706]/40 space-y-1.5 text-xs text-[#92400E]">
+              <div className="p-3.5 rounded-xl bg-[#FEF3C7] border border-[var(--accent)]/40 space-y-1.5 text-xs text-[#92400E]">
                 <div className="flex justify-between items-center">
                   <span>Modal Fisik Bahan Terpakai:</span>
                   <span className="font-semibold">{formatRupiah(modalCostTotal)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Nilai HPP Masuk ke Mobil:</span>
-                  <span className="font-bold text-[#1C1917]">{formatRupiah(modalHppNum)}</span>
+                  <span className="font-bold text-[var(--ink)]">{formatRupiah(modalHppNum)}</span>
                 </div>
-                <div className="border-t border-[#D97706]/30 pt-1.5 flex justify-between items-center font-bold text-sm">
+                <div className="border-t border-[var(--accent)]/30 pt-1.5 flex justify-between items-center font-bold text-sm">
                   <span>Upah Jasa Mandiri Showroom:</span>
                   <span className="text-[#16A34A] font-black">+{formatRupiah(modalMarginNum)}</span>
                 </div>
@@ -960,13 +960,13 @@ export function AssetsInventoryPageClient({
 
               {/* Catatan */}
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] mb-1">Catatan Tambahan (Opsional)</label>
+                <label className="block text-xs font-bold text-[var(--ink)] mb-1">Catatan Tambahan (Opsional)</label>
                 <input
                   type="text"
                   placeholder="Contoh: Ganti oli mesin + bersihkan filter udara"
                   value={usageNotes}
                   onChange={(e) => setUsageNotes(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                 />
               </div>
 
@@ -975,14 +975,14 @@ export function AssetsInventoryPageClient({
                 <button
                   type="button"
                   onClick={() => setShowUsageModal(false)}
-                  className="px-4 py-2 rounded-xl border border-[#D9D4CB] text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 rounded-xl border border-[var(--line)] text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 rounded-xl bg-[#D97706] hover:bg-[#92400E] text-white text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
                 >
                   {loading ? "Menyimpan..." : "Terapkan ke Mobil"}
                 </button>
@@ -995,36 +995,36 @@ export function AssetsInventoryPageClient({
       {/* ── MODAL 2: TAMBAH / RESTOCK BARANG HABIS PAKAI ── */}
       {showSupplyModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[#D9D4CB] space-y-4">
-            <div className="border-b border-[#EFECE8] pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#D97706]">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[var(--line)] space-y-4">
+            <div className="border-b border-[var(--bg)] pb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">
                 Gudang Persediaan Garasi
               </span>
-              <h3 className="text-lg font-black text-[#1C1917] mt-0.5">
+              <h3 className="text-lg font-black text-[var(--ink)] mt-0.5">
                 Beli / Restock Stok Bahan Baru
               </h3>
             </div>
 
             <form onSubmit={handleSupplySubmit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] mb-1">Nama Barang / Part *</label>
+                <label className="block text-xs font-bold text-[var(--ink)] mb-1">Nama Barang / Part *</label>
                 <input
                   required
                   type="text"
                   placeholder="Contoh: Oli Mesin Shell Helix HX7 10W-40, Filter Oli Brio, Compound 3M"
                   value={supplyName}
                   onChange={(e) => setSupplyName(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs sm:text-sm"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs sm:text-sm"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Kategori *</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Kategori *</label>
                   <select
                     value={supplyCategory}
                     onChange={(e) => setSupplyCategory(e.target.value as any)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   >
                     <option value="OIL_AND_FLUIDS">Pelumas &amp; Oli</option>
                     <option value="FAST_MOVING_PARTS">Filter &amp; Bohlam Lampu</option>
@@ -1034,11 +1034,11 @@ export function AssetsInventoryPageClient({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Satuan Barang</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Satuan Barang</label>
                   <select
                     value={supplyUnit}
                     onChange={(e) => setSupplyUnit(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   >
                     <option value="Galon">Galon (4L)</option>
                     <option value="Pcs">Pcs / Buah</option>
@@ -1052,7 +1052,7 @@ export function AssetsInventoryPageClient({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Jumlah Beli (Stok) *</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Jumlah Beli (Stok) *</label>
                   <input
                     required
                     type="number"
@@ -1060,25 +1060,25 @@ export function AssetsInventoryPageClient({
                     placeholder="Contoh: 10"
                     value={supplyStock}
                     onChange={(e) => setSupplyStock(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Batas Alert Menipis</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Batas Alert Menipis</label>
                   <input
                     type="number"
                     min={1}
                     value={supplyMinAlert}
                     onChange={(e) => setSupplyMinAlert(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">
                     Harga Modal Beli / Satuan *
                   </label>
                   <input
@@ -1087,12 +1087,12 @@ export function AssetsInventoryPageClient({
                     placeholder="280000"
                     value={supplyCostPerUnit}
                     onChange={(e) => setSupplyCostPerUnit(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">
                     Standar HPP Alokasi ke Mobil
                   </label>
                   <input
@@ -1100,44 +1100,44 @@ export function AssetsInventoryPageClient({
                     placeholder="500000"
                     value={supplyStandardHpp}
                     onChange={(e) => setSupplyStandardHpp(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs font-bold text-[#D97706]"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--accent)]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Lokasi Simpan</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Lokasi Simpan</label>
                   <input
                     type="text"
                     value={supplyLocation}
                     onChange={(e) => setSupplyLocation(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Catatan</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Catatan</label>
                   <input
                     type="text"
                     placeholder="Grosir toko oli rekanan"
                     value={supplyNotes}
                     onChange={(e) => setSupplyNotes(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   />
                 </div>
               </div>
 
               {/* Potong Kas */}
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#F7F5F2] border border-[#D9D4CB]">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-[var(--bg)] border border-[var(--line)]">
                 <input
                   type="checkbox"
                   id="supplyDeductCash"
                   checked={supplyDeductCash}
                   onChange={(e) => setSupplyDeductCash(e.target.checked)}
-                  className="rounded border-[#D9D4CB] text-[#D97706] focus:ring-[#D97706]"
+                  className="rounded border-[var(--line)] text-[var(--accent)] focus:ring-[var(--accent)]"
                 />
-                <label htmlFor="supplyDeductCash" className="text-xs text-[#1C1917] cursor-pointer">
+                <label htmlFor="supplyDeductCash" className="text-xs text-[var(--ink)] cursor-pointer">
                   Catat pengeluaran kas sekarang (Total: {formatRupiah(Number(supplyStock || 0) * Number(supplyCostPerUnit || 0))})
                 </label>
               </div>
@@ -1146,14 +1146,14 @@ export function AssetsInventoryPageClient({
                 <button
                   type="button"
                   onClick={() => setShowSupplyModal(false)}
-                  className="px-4 py-2 rounded-xl border border-[#D9D4CB] text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 rounded-xl border border-[var(--line)] text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 rounded-xl bg-[#D97706] hover:bg-[#92400E] text-white text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
                 >
                   {loading ? "Menyimpan..." : "Simpan Stok Bahan"}
                 </button>
@@ -1166,36 +1166,36 @@ export function AssetsInventoryPageClient({
       {/* ── MODAL 3: TAMBAH ASET TETAP ── */}
       {showAssetModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[#D9D4CB] space-y-4">
-            <div className="border-b border-[#EFECE8] pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#1C1917]">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[var(--line)] space-y-4">
+            <div className="border-b border-[var(--bg)] pb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">
                 Inventaris Tetap Showroom
               </span>
-              <h3 className="text-lg font-black text-[#1C1917] mt-0.5">
+              <h3 className="text-lg font-black text-[var(--ink)] mt-0.5">
                 Tambah Peralatan / Aset Tetap
               </h3>
             </div>
 
             <form onSubmit={handleAssetSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] mb-1">Nama Peralatan / Aset *</label>
+                <label className="block text-xs font-bold text-[var(--ink)] mb-1">Nama Peralatan / Aset *</label>
                 <input
                   required
                   type="text"
                   placeholder="Contoh: Mesin Poles Shinemate EX620, Scanner OBD2"
                   value={assetName}
                   onChange={(e) => setAssetName(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Kategori Aset *</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Kategori Aset *</label>
                   <select
                     value={assetCategory}
                     onChange={(e) => setAssetCategory(e.target.value as any)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   >
                     <option value="INSPECTION_TOOLS">Peralatan Cek Fisik &amp; Inspeksi</option>
                     <option value="WORKSHOP_EQUIPMENT">Peralatan Poles &amp; Bengkel Garasi</option>
@@ -1207,11 +1207,11 @@ export function AssetsInventoryPageClient({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Kondisi Saat Ini</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Kondisi Saat Ini</label>
                   <select
                     value={assetCondition}
                     onChange={(e) => setAssetCondition(e.target.value as any)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   >
                     <option value="EXCELLENT">Sangat Baik (Prima)</option>
                     <option value="GOOD">Baik (Normal)</option>
@@ -1223,72 +1223,72 @@ export function AssetsInventoryPageClient({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Harga Beli Awal (Rp) *</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Harga Beli Awal (Rp) *</label>
                   <input
                     required
                     type="number"
                     placeholder="3500000"
                     value={assetPurchaseCost}
                     onChange={(e) => setAssetPurchaseCost(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Nilai Buku Taksiran (Rp)</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Nilai Buku Taksiran (Rp)</label>
                   <input
                     type="number"
                     placeholder="Kosongkan jika sama dengan harga beli"
                     value={assetCurrentValue}
                     onChange={(e) => setAssetCurrentValue(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Tanggal Beli</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Tanggal Beli</label>
                   <input
                     type="date"
                     value={assetPurchaseDate}
                     onChange={(e) => setAssetPurchaseDate(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] mb-1">Lokasi Penyimpanan</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Lokasi Penyimpanan</label>
                   <input
                     type="text"
                     placeholder="Koper Inspeksi / Meja Kasir"
                     value={assetLocation}
                     onChange={(e) => setAssetLocation(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] mb-1">Catatan Aset</label>
+                <label className="block text-xs font-bold text-[var(--ink)] mb-1">Catatan Aset</label>
                 <input
                   type="text"
                   placeholder="Nomor seri, kelengkapan adaptor, atau garansi"
                   value={assetNotes}
                   onChange={(e) => setAssetNotes(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[#D9D4CB] text-xs"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
                 />
               </div>
 
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-[#F7F5F2] border border-[#D9D4CB]">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-[var(--bg)] border border-[var(--line)]">
                 <input
                   type="checkbox"
                   id="assetDeductCash"
                   checked={assetDeductCash}
                   onChange={(e) => setAssetDeductCash(e.target.checked)}
-                  className="rounded border-[#D9D4CB] text-[#1C1917] focus:ring-[#1C1917]"
+                  className="rounded border-[var(--line)] text-[var(--ink)] focus:ring-[var(--ink)]"
                 />
-                <label htmlFor="assetDeductCash" className="text-xs text-[#1C1917] cursor-pointer">
+                <label htmlFor="assetDeductCash" className="text-xs text-[var(--ink)] cursor-pointer">
                   Catat pengeluaran kas pembelian aset sekarang ({formatRupiah(Number(assetPurchaseCost) || 0)})
                 </label>
               </div>
@@ -1297,14 +1297,14 @@ export function AssetsInventoryPageClient({
                 <button
                   type="button"
                   onClick={() => setShowAssetModal(false)}
-                  className="px-4 py-2 rounded-xl border border-[#D9D4CB] text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 rounded-xl border border-[var(--line)] text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 rounded-xl bg-[#1C1917] hover:bg-[#44403C] text-white text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2 rounded-xl bg-[var(--ink)] hover:bg-[#44403C] text-white text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
                 >
                   {loading ? "Menyimpan..." : "Simpan Aset"}
                 </button>

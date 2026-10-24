@@ -56,7 +56,7 @@ export default async function VehicleInspectionsPage({
       >
         <Link
           href={`/admin/inspections/${vehicle.id}/new`}
-          className="flex items-center gap-2 px-4 py-2 bg-[#D97706] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors"
+          className="flex items-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors"
         >
           <Plus className="w-4 h-4" />
           <span>Buat Inspeksi Baru</span>
@@ -66,22 +66,22 @@ export default async function VehicleInspectionsPage({
       <main className="p-8 max-w-6xl mx-auto w-full space-y-8">
         <Link
           href="/admin/inventory"
-          className="inline-flex items-center gap-2 text-sm text-[#6B6560] hover:text-[#1C1917] font-semibold"
+          className="inline-flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--ink)] font-semibold"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Kembali ke Inventori</span>
         </Link>
 
         {inspections.length === 0 ? (
-          <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-12 text-center space-y-4">
-            <Layers className="w-12 h-12 text-[#D97706] mx-auto opacity-80" />
-            <h2 className="text-xl font-bold text-[#1C1917]">Belum Ada Laporan Cek Fisik</h2>
-            <p className="text-sm text-[#6B6560] max-w-md mx-auto">
+          <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-12 text-center space-y-4">
+            <Layers className="w-12 h-12 text-[var(--accent)] mx-auto opacity-80" />
+            <h2 className="text-xl font-bold text-[var(--ink)]">Belum Ada Laporan Cek Fisik</h2>
+            <p className="text-sm text-[var(--muted)] max-w-md mx-auto">
               Unit ini belum memiliki riwayat uji mikron cat atau penilaian 4 pilar. Buat inspeksi awal (Intake) untuk mencatat kondisi asli mobil saat datang.
             </p>
             <Link
               href={`/admin/inspections/${vehicle.id}/new`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-lg text-sm font-bold shadow-sm transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-bold shadow-sm transition-colors"
             >
               <Plus className="w-4 h-4" />
               <span>Mulai Cek Fisik Sekarang</span>
@@ -90,16 +90,16 @@ export default async function VehicleInspectionsPage({
         ) : (
           <div className="space-y-8">
             {/* Version Switcher Tabs */}
-            <div className="flex items-center gap-3 border-b border-[#D9D4CB] pb-3 overflow-x-auto">
-              <span className="text-xs font-bold uppercase text-[#6B6560] mr-2">Versi Laporan:</span>
+            <div className="flex items-center gap-3 border-b border-[var(--line)] pb-3 overflow-x-auto">
+              <span className="text-xs font-bold uppercase text-[var(--muted)] mr-2">Versi Laporan:</span>
               {inspections.map((insp) => (
                 <div
                   key={insp.id}
                   className={cn(
                     "px-4 py-2 rounded-xl text-xs font-bold border flex items-center gap-2",
                     insp.isCurrent
-                      ? "bg-[#1C1917] text-white border-[#1C1917] shadow-sm"
-                      : "bg-[#EFECE8] text-[#6B6560] border-[#D9D4CB]"
+                      ? "bg-[var(--ink)] text-white border-[var(--ink)] shadow-sm"
+                      : "bg-[var(--bg)] text-[var(--muted)] border-[var(--line)]"
                   )}
                 >
                   <span>Versi {insp.version} ({insp.stage})</span>
@@ -116,18 +116,18 @@ export default async function VehicleInspectionsPage({
             {currentInspection && (
               <div className="space-y-6">
                 {/* Header Action Bar */}
-                <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h2 className="text-xl font-bold text-[#1C1917]">
+                      <h2 className="text-xl font-bold text-[var(--ink)]">
                         Laporan Inspeksi Versi {currentInspection.version}
                       </h2>
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#92400E] border border-[#D97706]/30">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#92400E] border border-[var(--accent)]/30">
                         {currentInspection.stage}
                       </span>
                     </div>
-                    <div className="text-xs text-[#6B6560] mt-1">
-                      Diperiksa oleh: <strong className="text-[#1C1917]">{currentInspection.inspectedBy}</strong> pada {formatDate(currentInspection.inspectedAt)}
+                    <div className="text-xs text-[var(--muted)] mt-1">
+                      Diperiksa oleh: <strong className="text-[var(--ink)]">{currentInspection.inspectedBy}</strong> pada {formatDate(currentInspection.inspectedAt)}
                     </div>
                   </div>
 
@@ -135,7 +135,7 @@ export default async function VehicleInspectionsPage({
                     <Link
                       href={`/inspeksi/${currentInspection.id}`}
                       target="_blank"
-                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#1C1917] hover:bg-[#D97706] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--ink)] hover:bg-[var(--accent)] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer"
                     >
                       <Eye className="w-4 h-4" />
                       <span>Preview Sertifikat Web (Mobile Friendly)</span>
@@ -154,20 +154,20 @@ export default async function VehicleInspectionsPage({
 
                 {/* Total Grade & 4 Pilar Grades */}
                 <div className="space-y-3">
-                  <div className="p-4 rounded-xl bg-white border border-[#D9D4CB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="p-4 rounded-xl bg-white border border-[var(--line)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="p-2.5 rounded-lg bg-[#FEF3C7] text-[#D97706] border border-[#D97706]/30">
+                      <div className="p-2.5 rounded-lg bg-[#FEF3C7] text-[var(--accent)] border border-[var(--accent)]/30">
                         <Sparkles className="w-6 h-6" />
                       </div>
                       <div>
-                        <span className="text-xs uppercase font-bold text-[#6B6560]">
+                        <span className="text-xs uppercase font-bold text-[var(--muted)]">
                           Total Grade Keseluruhan Unit
                         </span>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-2xl font-black text-[#1C1917]">
+                          <span className="text-2xl font-black text-[var(--ink)]">
                             Grade {currentInspection.totalGrade || "A"}
                           </span>
-                          <span className="text-xs font-semibold text-[#6B6560]">
+                          <span className="text-xs font-semibold text-[var(--muted)]">
                             • Skor Gabungan Mesin, Interior, Eksterior & Rangka
                           </span>
                         </div>
@@ -195,21 +195,21 @@ export default async function VehicleInspectionsPage({
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 text-center">
-                      <span className="text-xs text-[#6B6560] uppercase font-semibold">Mesin & Transmisi</span>
-                      <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.engineGrade}</div>
+                    <div className="bg-white border border-[var(--line)] rounded-xl p-4 text-center">
+                      <span className="text-xs text-[var(--muted)] uppercase font-semibold">Mesin & Transmisi</span>
+                      <div className="text-3xl font-extrabold text-[var(--accent)] mt-1">{currentInspection.engineGrade}</div>
                     </div>
-                    <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 text-center">
-                      <span className="text-xs text-[#6B6560] uppercase font-semibold">Interior & AC</span>
-                      <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.interiorGrade}</div>
+                    <div className="bg-white border border-[var(--line)] rounded-xl p-4 text-center">
+                      <span className="text-xs text-[var(--muted)] uppercase font-semibold">Interior & AC</span>
+                      <div className="text-3xl font-extrabold text-[var(--accent)] mt-1">{currentInspection.interiorGrade}</div>
                     </div>
-                    <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 text-center">
-                      <span className="text-xs text-[#6B6560] uppercase font-semibold">Eksterior & Bodi</span>
-                      <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.exteriorGrade}</div>
+                    <div className="bg-white border border-[var(--line)] rounded-xl p-4 text-center">
+                      <span className="text-xs text-[var(--muted)] uppercase font-semibold">Eksterior & Bodi</span>
+                      <div className="text-3xl font-extrabold text-[var(--accent)] mt-1">{currentInspection.exteriorGrade}</div>
                     </div>
-                    <div className="bg-white border border-[#D9D4CB] rounded-xl p-4 text-center">
-                      <span className="text-xs text-[#6B6560] uppercase font-semibold">Rangka / Sasis</span>
-                      <div className="text-3xl font-extrabold text-[#D97706] mt-1">{currentInspection.frameGrade}</div>
+                    <div className="bg-white border border-[var(--line)] rounded-xl p-4 text-center">
+                      <span className="text-xs text-[var(--muted)] uppercase font-semibold">Rangka / Sasis</span>
+                      <div className="text-3xl font-extrabold text-[var(--accent)] mt-1">{currentInspection.frameGrade}</div>
                     </div>
                   </div>
                 </div>
@@ -252,17 +252,17 @@ export default async function VehicleInspectionsPage({
                 </div>
 
                 {/* 15 Panel Table */}
-                <div className="bg-white border border-[#D9D4CB] rounded-2xl overflow-hidden shadow-sm">
-                  <div className="p-4 bg-[#EFECE8] border-b border-[#D9D4CB] font-bold text-sm text-[#1C1917] flex items-center justify-between">
+                <div className="bg-white border border-[var(--line)] rounded-2xl overflow-hidden shadow-sm">
+                  <div className="p-4 bg-[var(--bg)] border-b border-[var(--line)] font-bold text-sm text-[var(--ink)] flex items-center justify-between">
                     <span>Hasil Pengukuran 15 Titik Panel Bodi & Bumper (Standar Inspeksi)</span>
-                    <span className="text-xs font-normal text-[#6B6560]">
+                    <span className="text-xs font-normal text-[var(--muted)]">
                       Termasuk Rocker Panel & Bumper Plastik Non-Mikron
                     </span>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
                       <thead>
-                        <tr className="border-b border-[#D9D4CB] text-xs font-semibold uppercase text-[#6B6560]">
+                        <tr className="border-b border-[var(--line)] text-xs font-semibold uppercase text-[var(--muted)]">
                           <th className="py-3 px-4">Panel</th>
                           <th className="py-3 px-4">Material</th>
                           <th className="py-3 px-4">Ketebalan Cat</th>
@@ -271,14 +271,14 @@ export default async function VehicleInspectionsPage({
                           <th className="py-3 px-4">Catatan</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-[#EFECE8]">
+                      <tbody className="divide-y divide-[var(--bg)]">
                         {currentInspection.panels.map((panel) => {
                           const isPlasticBumper = panel.panelType === "BUMPER_FRONT" || panel.panelType === "BUMPER_REAR";
                           const category = !isPlasticBumper ? getPaintMicronCategory(panel.paintThickness) : null;
 
                           return (
                             <tr key={panel.id}>
-                              <td className="py-3 px-4 font-semibold text-xs text-[#1C1917]">
+                              <td className="py-3 px-4 font-semibold text-xs text-[var(--ink)]">
                                 {PANEL_LABELS[panel.panelType] || panel.panelType}
                               </td>
                               <td className="py-3 px-4 text-xs">
@@ -294,7 +294,7 @@ export default async function VehicleInspectionsPage({
                               </td>
                               <td className="py-3 px-4">
                                 {isPlasticBumper ? (
-                                  <span className="text-[#6B6560] italic text-xs">
+                                  <span className="text-[var(--muted)] italic text-xs">
                                     Non-Micron
                                   </span>
                                 ) : (
@@ -319,13 +319,13 @@ export default async function VehicleInspectionsPage({
                                     {panel.defectCode}
                                   </span>
                                 ) : (
-                                  <span className="text-[#6B6560]">-</span>
+                                  <span className="text-[var(--muted)]">-</span>
                                 )}
                               </td>
-                              <td className="py-3 px-4 text-xs text-[#1C1917]">
+                              <td className="py-3 px-4 text-xs text-[var(--ink)]">
                                 {CONDITION_LABELS[panel.condition] || panel.condition}
                               </td>
-                              <td className="py-3 px-4 text-xs text-[#6B6560]">
+                              <td className="py-3 px-4 text-xs text-[var(--muted)]">
                                 {panel.notes || "-"}
                               </td>
                             </tr>

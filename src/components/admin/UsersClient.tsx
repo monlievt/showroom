@@ -302,17 +302,17 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
       )}
 
       {/* Header & Action Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[#D9D4CB] shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[var(--line)] shadow-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-[#D97706]">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-[var(--accent)]">
               <Users className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-black text-[#1C1917] tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-black text-[var(--ink)] tracking-tight">
                 Kelola Pengguna & Hak Akses
               </h1>
-              <p className="text-xs sm:text-sm text-[#6B6560]">
+              <p className="text-xs sm:text-sm text-[var(--muted)]">
                 Manajemen akun staf showroom, pengaturan peran RBAC, dan pengelolaan kata sandi aman.
               </p>
             </div>
@@ -321,7 +321,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center justify-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-sm transition-all hover:shadow cursor-pointer shrink-0"
+          className="flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-sm transition-all hover:shadow cursor-pointer shrink-0"
         >
           <UserPlus className="w-4 h-4" />
           <span>Tambah Pengguna Baru</span>
@@ -330,49 +330,49 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
       {/* Ringkasan Statistik */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[#D9D4CB] shadow-sm">
-          <span className="text-xs font-semibold text-[#6B6560] block">Total Pengguna</span>
-          <span className="text-xl sm:text-2xl font-black text-[#1C1917] mt-1 block">{stats.total}</span>
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm">
+          <span className="text-xs font-semibold text-[var(--muted)] block">Total Pengguna</span>
+          <span className="text-xl sm:text-2xl font-black text-[var(--ink)] mt-1 block">{stats.total}</span>
           <span className="text-[11px] text-emerald-700 font-bold mt-1 block">
             {stats.active} akun aktif
           </span>
         </div>
 
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[#D9D4CB] shadow-sm">
-          <span className="text-xs font-semibold text-[#6B6560] block">Direksi & Owner</span>
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm">
+          <span className="text-xs font-semibold text-[var(--muted)] block">Direksi & Owner</span>
           <span className="text-xl sm:text-2xl font-black text-amber-700 mt-1 block">{stats.ownerAdmin}</span>
-          <span className="text-[11px] text-[#6B6560] mt-1 block">Akses penuh</span>
+          <span className="text-[11px] text-[var(--muted)] mt-1 block">Akses penuh</span>
         </div>
 
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[#D9D4CB] shadow-sm">
-          <span className="text-xs font-semibold text-[#6B6560] block">Staff Garasi</span>
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm">
+          <span className="text-xs font-semibold text-[var(--muted)] block">Staff Garasi</span>
           <span className="text-xl sm:text-2xl font-black text-blue-700 mt-1 block">{stats.staff}</span>
-          <span className="text-[11px] text-[#6B6560] mt-1 block">Unit & kasir SPK</span>
+          <span className="text-[11px] text-[var(--muted)] mt-1 block">Unit & kasir SPK</span>
         </div>
 
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[#D9D4CB] shadow-sm">
-          <span className="text-xs font-semibold text-[#6B6560] block">Tim Sales</span>
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm">
+          <span className="text-xs font-semibold text-[var(--muted)] block">Tim Sales</span>
           <span className="text-xl sm:text-2xl font-black text-emerald-700 mt-1 block">{stats.sales}</span>
-          <span className="text-[11px] text-[#6B6560] mt-1 block">Katalog siap jual</span>
+          <span className="text-[11px] text-[var(--muted)] mt-1 block">Katalog siap jual</span>
         </div>
 
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[#D9D4CB] shadow-sm col-span-2 sm:col-span-1">
-          <span className="text-xs font-semibold text-[#6B6560] block">Mitra Investor</span>
+        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm col-span-2 sm:col-span-1">
+          <span className="text-xs font-semibold text-[var(--muted)] block">Mitra Investor</span>
           <span className="text-xl sm:text-2xl font-black text-purple-700 mt-1 block">{stats.investor}</span>
-          <span className="text-[11px] text-[#6B6560] mt-1 block">Portal bagi hasil</span>
+          <span className="text-[11px] text-[var(--muted)] mt-1 block">Portal bagi hasil</span>
         </div>
       </div>
 
       {/* Filter & Pencarian */}
-      <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
           <input
             type="text"
             placeholder="Cari nama, username, HP..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-3 py-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-[#D97706]"
+            className="w-full pl-10 pr-3 py-2 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:border-[var(--accent)]"
           />
         </div>
 
@@ -380,7 +380,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="px-3 py-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-xs font-bold text-[#1C1917] focus:outline-none cursor-pointer flex-1 sm:flex-none"
+            className="px-3 py-2 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-xs font-bold text-[var(--ink)] focus:outline-none cursor-pointer flex-1 sm:flex-none"
           >
             <option value="ALL">Semua Peran</option>
             <option value="OWNER">👑 Owner / Direksi</option>
@@ -392,7 +392,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-xs font-bold text-[#1C1917] focus:outline-none cursor-pointer flex-1 sm:flex-none"
+            className="px-3 py-2 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-xs font-bold text-[var(--ink)] focus:outline-none cursor-pointer flex-1 sm:flex-none"
           >
             <option value="ALL">Semua Status</option>
             <option value="ACTIVE">Hanya Aktif</option>
@@ -402,11 +402,11 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
       </div>
 
       {/* Tabel Pengguna */}
-      <div className="bg-white rounded-3xl border border-[#D9D4CB] shadow-sm overflow-hidden">
+      <div className="bg-white rounded-3xl border border-[var(--line)] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
             <thead>
-              <tr className="border-b border-[#D9D4CB] bg-[#FAF9F6] text-[#6B6560] font-bold text-[11px] uppercase tracking-wider">
+              <tr className="border-b border-[var(--line)] bg-[var(--bg)] text-[var(--muted)] font-bold text-[11px] uppercase tracking-wider">
                 <th className="py-3.5 px-4 sm:px-6">Pengguna</th>
                 <th className="py-3.5 px-4">Peran (Role)</th>
                 <th className="py-3.5 px-4">Kontak Telepon</th>
@@ -415,10 +415,10 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                 <th className="py-3.5 px-4 sm:px-6 text-right">Tindakan</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#EBE7E1]">
+            <tbody className="divide-y divide-[var(--line)]">
               {filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-[#6B6560]">
+                  <td colSpan={6} className="py-12 text-center text-[var(--muted)]">
                     <Users className="w-8 h-8 mx-auto text-stone-400 mb-2" />
                     <p className="font-bold text-sm">Tidak ada pengguna yang cocok</p>
                     <p className="text-xs text-stone-500 mt-0.5">
@@ -432,15 +432,15 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   const isPrimaryOwner = user.authUserId === "admin-owner-001" || user.authUserId === "owner";
 
                   return (
-                    <tr key={user.id} className="hover:bg-[#FAF9F6] transition-colors">
+                    <tr key={user.id} className="hover:bg-[var(--bg)] transition-colors">
                       {/* Identitas Pengguna */}
                       <td className="py-3.5 px-4 sm:px-6">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-[#D97706] font-bold flex items-center justify-center shrink-0 uppercase text-xs">
+                          <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-[var(--accent)] font-bold flex items-center justify-center shrink-0 uppercase text-xs">
                             {user.fullName.slice(0, 2)}
                           </div>
                           <div>
-                            <span className="font-bold text-[#1C1917] block text-sm">
+                            <span className="font-bold text-[var(--ink)] block text-sm">
                               {user.fullName}
                               {isCurrent && (
                                 <span className="ml-2 text-[10px] font-bold bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">
@@ -448,7 +448,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                                 </span>
                               )}
                             </span>
-                            <span className="text-[11px] font-mono text-[#6B6560]">
+                            <span className="text-[11px] font-mono text-[var(--muted)]">
                               @{user.authUserId}
                             </span>
                           </div>
@@ -461,9 +461,9 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                       {/* Kontak */}
                       <td className="py-3.5 px-4">
                         {user.phone ? (
-                          <span className="font-medium text-[#1C1917]">{user.phone}</span>
+                          <span className="font-medium text-[var(--ink)]">{user.phone}</span>
                         ) : (
-                          <span className="text-[#6B6560] italic text-xs">Tidak ada nomor</span>
+                          <span className="text-[var(--muted)] italic text-xs">Tidak ada nomor</span>
                         )}
                       </td>
 
@@ -503,7 +503,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                           {/* Tombol Edit */}
                           <button
                             onClick={() => openEditModal(user)}
-                            className="p-1.5 rounded-lg border border-[#D9D4CB] bg-white hover:bg-stone-50 text-[#1C1917] transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-stone-50 text-[var(--ink)] transition-colors cursor-pointer"
                             title="Edit data / ganti password"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -552,15 +552,15 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
           }}
         >
           <div
-            className="bg-white rounded-3xl border border-[#D9D4CB] shadow-xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95 my-8"
+            className="bg-white rounded-3xl border border-[var(--line)] shadow-xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95 my-8"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[#D97706] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[var(--accent)] flex items-center justify-center">
                   <UserPlus className="w-4 h-4" />
                 </div>
-                <h3 className="font-bold text-base text-[#1C1917]">Tambah Pengguna Baru</h3>
+                <h3 className="font-bold text-base text-[var(--ink)]">Tambah Pengguna Baru</h3>
               </div>
               <button
                 onClick={() => setIsAddModalOpen(false)}
@@ -572,7 +572,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Nama Lengkap Staf / Pengguna <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -581,12 +581,12 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   placeholder="Contoh: Budi Santoso"
                   value={addForm.fullName}
                   onChange={(e) => setAddForm({ ...addForm, fullName: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
+                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold focus:outline-none focus:border-[var(--accent)]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Username Login <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -604,16 +604,16 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                         authUserId: e.target.value.toLowerCase().replace(/\s+/g, "_"),
                       })
                     }
-                    className="w-full pl-8 pr-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold font-mono focus:outline-none focus:border-[#D97706]"
+                    className="w-full pl-8 pr-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold font-mono focus:outline-none focus:border-[var(--accent)]"
                   />
                 </div>
-                <span className="text-[10px] text-[#6B6560] mt-1 block">
+                <span className="text-[10px] text-[var(--muted)] mt-1 block">
                   Digunakan untuk masuk di form login. Huruf kecil tanpa spasi.
                 </span>
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Nomor WhatsApp / Telepon
                 </label>
                 <input
@@ -621,18 +621,18 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   placeholder="08123456789"
                   value={addForm.phone}
                   onChange={(e) => setAddForm({ ...addForm, phone: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
+                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold focus:outline-none focus:border-[var(--accent)]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Peran & Hak Akses (RBAC) <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={addForm.role}
                   onChange={(e) => setAddForm({ ...addForm, role: e.target.value as any })}
-                  className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none cursor-pointer"
+                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none cursor-pointer"
                 >
                   <option value="STAFF_ADMIN">🔧 Staff Garasi (Unit, Inspeksi, Gudang, SPK Kasir)</option>
                   <option value="SALES">🎯 Tim Sales (Katalog Siap Jual & Harga Saja)</option>
@@ -643,7 +643,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
               {addForm.role === "INVESTOR" && (
                 <div>
-                  <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                  <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                     Tautkan ke Data Investor Terdaftar
                   </label>
                   <select
@@ -658,7 +658,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                         ...(selected && !addForm.phone ? { phone: selected.phone || "" } : {}),
                       });
                     }}
-                    className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none cursor-pointer"
+                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none cursor-pointer"
                   >
                     <option value="">-- Buat Profil Investor Baru Otomatis --</option>
                     {investors.map((inv) => {
@@ -675,14 +675,14 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                       );
                     })}
                   </select>
-                  <span className="text-[10px] text-[#6B6560] mt-1 block">
+                  <span className="text-[10px] text-[var(--muted)] mt-1 block">
                     Pilih nama investor yang sudah terdaftar untuk menautkan portal transparansi bagi hasilnya.
                   </span>
                 </div>
               )}
 
               <div>
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Kata Sandi Baru <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
@@ -694,7 +694,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                     placeholder="Minimal 8 karakter..."
                     value={addForm.password}
                     onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
-                    className="w-full pl-10 pr-10 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
+                    className="w-full pl-10 pr-10 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold focus:outline-none focus:border-[var(--accent)]"
                   />
                   <button
                     type="button"
@@ -704,23 +704,23 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                     {showAddPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                <span className="text-[10px] text-[#6B6560] mt-1 block">
+                <span className="text-[10px] text-[var(--muted)] mt-1 block">
                   Password akan dienkripsi aman menggunakan algoritma bcrypt di database lokal.
                 </span>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#EBE7E1]">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--line)]">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl border border-[#D9D4CB] text-xs font-bold text-[#1C1917] hover:bg-stone-50 cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--ink)] hover:bg-stone-50 cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+                  className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
                 >
                   {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                   <span>Simpan Pengguna</span>
@@ -740,17 +740,17 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
           }}
         >
           <div
-            className="bg-white rounded-3xl border border-[#D9D4CB] shadow-xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95 my-8"
+            className="bg-white rounded-3xl border border-[var(--line)] shadow-xl max-w-md w-full p-6 space-y-5 animate-in zoom-in-95 my-8"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[#D97706] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[var(--accent)] flex items-center justify-center">
                   <Edit2 className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base text-[#1C1917]">Edit Data Pengguna</h3>
-                  <span className="text-xs font-mono text-[#6B6560]">@{editingUser.authUserId}</span>
+                  <h3 className="font-bold text-base text-[var(--ink)]">Edit Data Pengguna</h3>
+                  <span className="text-xs font-mono text-[var(--muted)]">@{editingUser.authUserId}</span>
                 </div>
               </div>
               <button
@@ -763,7 +763,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
             <form onSubmit={handleUpdateUser} className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Nama Lengkap <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -771,31 +771,31 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   required
                   value={editForm.fullName}
                   onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
+                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold focus:outline-none focus:border-[var(--accent)]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Nomor WhatsApp / Telepon
                 </label>
                 <input
                   type="text"
                   value={editForm.phone}
                   onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
+                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold focus:outline-none focus:border-[var(--accent)]"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Peran & Hak Akses (RBAC) <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={editForm.role}
                   disabled={editingUser.authUserId === "admin-owner-001" || editingUser.authUserId === "owner"}
                   onChange={(e) => setEditForm({ ...editForm, role: e.target.value as any })}
-                  className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none cursor-pointer disabled:opacity-60"
+                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none cursor-pointer disabled:opacity-60"
                 >
                   <option value="STAFF_ADMIN">🔧 Staff Garasi (Unit, Inspeksi, Gudang, SPK Kasir)</option>
                   <option value="SALES">🎯 Tim Sales (Katalog Siap Jual & Harga Saja)</option>
@@ -811,13 +811,13 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
               {editForm.role === "INVESTOR" && (
                 <div>
-                  <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                  <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                     Tautkan ke Data Investor
                   </label>
                   <select
                     value={editForm.investorId}
                     onChange={(e) => setEditForm({ ...editForm, investorId: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none cursor-pointer"
+                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none cursor-pointer"
                   >
                     <option value="">-- Tidak Tertaut --</option>
                     {investors.map((inv) => {
@@ -839,17 +839,17 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
               {/* Status Akun Aktif / Nonaktif */}
               <div>
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Status Akun
                 </label>
                 <div className="flex items-center gap-3">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[#1C1917]">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[var(--ink)]">
                     <input
                       type="radio"
                       name="isActive"
                       checked={editForm.isActive}
                       onChange={() => setEditForm({ ...editForm, isActive: true })}
-                      className="accent-[#D97706]"
+                      className="accent-[var(--accent)]"
                     />
                     <span>Aktif (Dapat Login)</span>
                   </label>
@@ -860,7 +860,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                       checked={!editForm.isActive}
                       disabled={editingUser.authUserId === "admin-owner-001" || editingUser.authUserId === "owner"}
                       onChange={() => setEditForm({ ...editForm, isActive: false })}
-                      className="accent-[#D97706]"
+                      className="accent-[var(--accent)]"
                     />
                     <span>Nonaktif (Blokir Akses)</span>
                   </label>
@@ -868,8 +868,8 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
               </div>
 
               {/* Reset Password */}
-              <div className="pt-2 border-t border-[#EBE7E1]">
-                <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+              <div className="pt-2 border-t border-[var(--line)]">
+                <label className="text-xs font-bold text-[var(--ink)] block mb-1.5">
                   Reset Kata Sandi Baru (Opsional)
                 </label>
                 <div className="relative">
@@ -879,7 +879,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                     placeholder="Kosongkan jika sandi tidak diubah"
                     value={editForm.newPassword}
                     onChange={(e) => setEditForm({ ...editForm, newPassword: e.target.value })}
-                    className="w-full pl-10 pr-10 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
+                    className="w-full pl-10 pr-10 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold focus:outline-none focus:border-[var(--accent)]"
                   />
                   <button
                     type="button"
@@ -889,23 +889,23 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                     {showEditPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                <span className="text-[10px] text-[#6B6560] mt-1 block">
+                <span className="text-[10px] text-[var(--muted)] mt-1 block">
                   Jika diisi, kata sandi baru akan langsung menggantikan sandi lama pengguna.
                 </span>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#EBE7E1]">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-[var(--line)]">
                 <button
                   type="button"
                   onClick={() => setEditingUser(null)}
-                  className="px-4 py-2.5 rounded-xl border border-[#D9D4CB] text-xs font-bold text-[#1C1917] hover:bg-stone-50 cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--ink)] hover:bg-stone-50 cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+                  className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
                 >
                   {loading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                   <span>Simpan Perubahan</span>
@@ -928,7 +928,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
           }}
         >
           <div
-            className="relative bg-white rounded-3xl border border-[#D9D4CB] shadow-xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95 text-center"
+            className="relative bg-white rounded-3xl border border-[var(--line)] shadow-xl max-w-sm w-full p-6 space-y-4 animate-in zoom-in-95 text-center"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Tombol Tutup (X) */}
@@ -950,8 +950,8 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
             </div>
 
             <div className="space-y-1">
-              <h3 className="font-bold text-base text-[#1C1917]">Hapus Pengguna Ini?</h3>
-              <p className="text-xs text-[#6B6560]">
+              <h3 className="font-bold text-base text-[var(--ink)]">Hapus Pengguna Ini?</h3>
+              <p className="text-xs text-[var(--muted)]">
                 Anda akan menghapus akun <strong>{deletingUser.fullName}</strong> (@{deletingUser.authUserId}). Pengguna ini tidak akan dapat login lagi ke sistem.
               </p>
             </div>
@@ -975,7 +975,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   setDeleteModalError(null);
                 }}
                 disabled={loading}
-                className="px-4 py-2.5 rounded-xl border border-[#D9D4CB] text-xs font-bold text-[#1C1917] hover:bg-stone-50 cursor-pointer flex-1 disabled:opacity-50"
+                className="px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--ink)] hover:bg-stone-50 cursor-pointer flex-1 disabled:opacity-50"
               >
                 Batal
               </button>

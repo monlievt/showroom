@@ -5,12 +5,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
   ShieldCheck,
   Lock,
-  Phone,
   User,
   ArrowRight,
   AlertCircle,
   Eye,
   EyeOff,
+  Wrench,
+  TrendingUp,
+  Briefcase,
+  Users,
 } from "lucide-react";
 import { loginAction } from "@/app/actions/auth";
 import { cn } from "@/lib/utils";
@@ -76,25 +79,25 @@ export function LoginClient() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F5F2] flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen bg-[var(--bg)] flex flex-col justify-center items-center p-4">
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-2xl bg-[#D97706] flex items-center justify-center text-white font-extrabold text-2xl shadow-sm mx-auto">
+          <div className="w-12 h-12 rounded-[10px] bg-[var(--accent)] flex items-center justify-center text-white font-bold text-xl shadow-xs mx-auto">
             N
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#1C1917] tracking-tight">
+          <h1 className="text-2xl font-bold text-[var(--ink)] tracking-tight">
             Nur Mobil
           </h1>
-          <p className="text-xs sm:text-sm text-[#6B6560]">
-            Portal Operasional Internal & Transparansi Investor
+          <p className="text-[13px] text-[var(--muted)]">
+            Portal Operasional Internal &amp; Transparansi Investor
           </p>
         </div>
 
         {/* Card Form */}
-        <div className="bg-white rounded-3xl border border-[#D9D4CB] p-6 sm:p-8 shadow-sm space-y-6">
+        <div className="bg-[var(--surface)] rounded-[var(--r-card)] border border-[var(--line)] p-6 sm:p-7 shadow-xs space-y-5">
           {/* Tab Selector: 4 Peran RBAC */}
-          <div className="grid grid-cols-4 gap-1 bg-[#F7F5F2] p-1.5 rounded-2xl border border-[#D9D4CB]">
+          <div className="grid grid-cols-4 gap-1 bg-[var(--bg)] p-1 rounded-[var(--r-btn)] border border-[var(--line)]">
             <button
               type="button"
               onClick={() => {
@@ -103,13 +106,13 @@ export function LoginClient() {
                 setError(null);
               }}
               className={cn(
-                "py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center",
+                "py-1.5 rounded-[6px] text-[12px] font-semibold transition-all cursor-pointer text-center",
                 role === "OWNER"
-                  ? "bg-white text-[#1C1917] shadow-sm"
-                  : "text-[#6B6560] hover:text-[#1C1917]"
+                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-xs border border-[var(--line)] font-bold"
+                  : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
-              👑 Owner
+              Owner
             </button>
             <button
               type="button"
@@ -119,13 +122,13 @@ export function LoginClient() {
                 setError(null);
               }}
               className={cn(
-                "py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center",
+                "py-1.5 rounded-[6px] text-[12px] font-semibold transition-all cursor-pointer text-center",
                 role === "STAFF_ADMIN"
-                  ? "bg-white text-[#1C1917] shadow-sm"
-                  : "text-[#6B6560] hover:text-[#1C1917]"
+                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-xs border border-[var(--line)] font-bold"
+                  : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
-              🔧 Staff
+              Staf
             </button>
             <button
               type="button"
@@ -135,13 +138,13 @@ export function LoginClient() {
                 setError(null);
               }}
               className={cn(
-                "py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center",
+                "py-1.5 rounded-[6px] text-[12px] font-semibold transition-all cursor-pointer text-center",
                 role === "SALES"
-                  ? "bg-white text-[#1C1917] shadow-sm"
-                  : "text-[#6B6560] hover:text-[#1C1917]"
+                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-xs border border-[var(--line)] font-bold"
+                  : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
-              🎯 Sales
+              Sales
             </button>
             <button
               type="button"
@@ -151,18 +154,18 @@ export function LoginClient() {
                 setError(null);
               }}
               className={cn(
-                "py-2 rounded-xl text-xs font-bold transition-all cursor-pointer text-center",
+                "py-1.5 rounded-[6px] text-[12px] font-semibold transition-all cursor-pointer text-center",
                 role === "INVESTOR"
-                  ? "bg-white text-[#1C1917] shadow-sm"
-                  : "text-[#6B6560] hover:text-[#1C1917]"
+                  ? "bg-[var(--surface)] text-[var(--ink)] shadow-xs border border-[var(--line)] font-bold"
+                  : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
-              🤝 Investor
+              Investor
             </button>
           </div>
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-xl text-xs flex items-center gap-2">
+            <div className="p-3 bg-red-50 border border-red-200 text-red-800 rounded-[var(--r-btn)] text-[12px] flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
               <span>{error}</span>
             </div>
@@ -171,15 +174,11 @@ export function LoginClient() {
           {/* Form Inputs */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+              <label className="text-[12px] font-semibold text-[var(--muted)] block mb-1">
                 {role === "INVESTOR" ? "Username atau Nomor WhatsApp Terdaftar" : "Username / ID Pengguna"}
               </label>
               <div className="relative">
-                {role === "INVESTOR" ? (
-                  <User className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
-                ) : (
-                  <User className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
-                )}
+                <User className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
                 <input
                   type="text"
                   required
@@ -194,29 +193,29 @@ export function LoginClient() {
                   }
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
+                  className="w-full pl-9 pr-3 py-2 bg-[var(--surface)] border border-[var(--line-input)] rounded-[var(--r-btn)] text-[14px] text-[var(--ink)] font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[#1C1917] block mb-1.5">
+              <label className="text-[12px] font-semibold text-[var(--muted)] block mb-1">
                 Kata Sandi Keamanan
               </label>
               <div className="relative">
-                <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6560]" />
+                <Lock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
                 <input
                   type={showPassword ? "text" : "password"}
                   required
                   placeholder="Masukkan kata sandi..."
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
-                  className="w-full pl-10 pr-10 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold focus:outline-none focus:border-[#D97706]"
+                  className="w-full pl-9 pr-10 py-2 bg-[var(--surface)] border border-[var(--line-input)] rounded-[var(--r-btn)] text-[14px] text-[var(--ink)] font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B6560] hover:text-[#1C1917] focus:outline-none p-1 cursor-pointer"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--ink)] focus:outline-none p-1 cursor-pointer"
                   title={showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -227,7 +226,7 @@ export function LoginClient() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow cursor-pointer mt-2"
+              className="w-full flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white py-2.5 rounded-[var(--r-btn)] font-semibold text-[14px] shadow-xs transition-colors cursor-pointer disabled:opacity-50 mt-1"
             >
               <span>
                 {loading
@@ -236,7 +235,7 @@ export function LoginClient() {
                       role === "OWNER"
                         ? "Owner Showroom"
                         : role === "STAFF_ADMIN"
-                        ? "Staff Garasi"
+                        ? "Staf Garasi"
                         : role === "SALES"
                         ? "Tim Sales"
                         : "Mitra Investor"
@@ -247,67 +246,87 @@ export function LoginClient() {
           </form>
 
           {/* Quick Role Preset Selector */}
-          <div className="pt-4 border-t border-[#EBE7E1] space-y-2">
+          <div className="pt-4 border-t border-[var(--line)] space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B6560]">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)]">
                 Pilih Cepat Peran Pengguna
               </span>
-              <span className="text-[10px] text-[#6B6560]">Isi otomatis username</span>
+              <span className="text-[11px] text-[var(--muted)]">Isi otomatis akun</span>
             </div>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <button
                 type="button"
                 onClick={() => handleSelectRole("OWNER", "owner")}
-                className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
+                className="p-2.5 rounded-[var(--r-btn)] border border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--bg)] text-left transition-colors flex items-center justify-between cursor-pointer group"
               >
-                <div>
-                  <span className="font-bold text-[#1C1917] block">👑 Owner</span>
-                  <span className="text-[10px] text-[#6B6560]">Akses penuh sistem</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-md bg-[var(--bg)] flex items-center justify-center text-[var(--ink)]">
+                    <Briefcase className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="font-semibold text-[12px] text-[var(--ink)] block">Owner</span>
+                    <span className="text-[10px] text-[var(--muted)]">Akses penuh</span>
+                  </div>
                 </div>
-                <span className="text-[9px] font-bold bg-[#FEF3C7] text-[#92400E] px-1.5 py-0.5 rounded">
-                  PILIH
+                <span className="text-[10px] font-medium text-[var(--muted)] group-hover:text-[var(--accent)]">
+                  Pilih
                 </span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectRole("STAFF_ADMIN", "admin_garasi")}
-                className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
+                className="p-2.5 rounded-[var(--r-btn)] border border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--bg)] text-left transition-colors flex items-center justify-between cursor-pointer group"
               >
-                <div>
-                  <span className="font-bold text-[#1C1917] block">🔧 Staff Garasi</span>
-                  <span className="text-[10px] text-[#6B6560]">Unit, SPK & kasir</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-md bg-[var(--bg)] flex items-center justify-center text-[var(--ink)]">
+                    <Wrench className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="font-semibold text-[12px] text-[var(--ink)] block">Staf Garasi</span>
+                    <span className="text-[10px] text-[var(--muted)]">Unit &amp; SPK</span>
+                  </div>
                 </div>
-                <span className="text-[9px] font-bold bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">
-                  PILIH
+                <span className="text-[10px] font-medium text-[var(--muted)] group-hover:text-[var(--accent)]">
+                  Pilih
                 </span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectRole("SALES", "sales01")}
-                className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
+                className="p-2.5 rounded-[var(--r-btn)] border border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--bg)] text-left transition-colors flex items-center justify-between cursor-pointer group"
               >
-                <div>
-                  <span className="font-bold text-[#1C1917] block">🎯 Tim Sales</span>
-                  <span className="text-[10px] text-[#6B6560]">Stok ready & harga</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-md bg-[var(--bg)] flex items-center justify-center text-[var(--ink)]">
+                    <TrendingUp className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="font-semibold text-[12px] text-[var(--ink)] block">Tim Sales</span>
+                    <span className="text-[10px] text-[var(--muted)]">Katalog &amp; harga</span>
+                  </div>
                 </div>
-                <span className="text-[9px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">
-                  PILIH
+                <span className="text-[10px] font-medium text-[var(--muted)] group-hover:text-[var(--accent)]">
+                  Pilih
                 </span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSelectRole("INVESTOR", "081298765432")}
-                className="p-2.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#F7F5F2] text-left transition-colors flex items-center justify-between cursor-pointer"
+                className="p-2.5 rounded-[var(--r-btn)] border border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--bg)] text-left transition-colors flex items-center justify-between cursor-pointer group"
               >
-                <div>
-                  <span className="font-bold text-[#1C1917] block">🤝 Mitra Investor</span>
-                  <span className="text-[10px] text-[#6B6560]">Portal 4 saudara</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-md bg-[var(--bg)] flex items-center justify-center text-[var(--ink)]">
+                    <Users className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="font-semibold text-[12px] text-[var(--ink)] block">Mitra Investor</span>
+                    <span className="text-[10px] text-[var(--muted)]">Bagi hasil</span>
+                  </div>
                 </div>
-                <span className="text-[9px] font-bold bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded">
-                  PILIH
+                <span className="text-[10px] font-medium text-[var(--muted)] group-hover:text-[var(--accent)]">
+                  Pilih
                 </span>
               </button>
             </div>
@@ -315,8 +334,8 @@ export function LoginClient() {
         </div>
 
         {/* Security Notice */}
-        <div className="flex items-center justify-center gap-2 text-xs text-[#6B6560]">
-          <ShieldCheck className="w-4 h-4 text-[#D97706]" />
+        <div className="flex items-center justify-center gap-2 text-[12px] text-[var(--muted)]">
+          <ShieldCheck className="w-4 h-4 text-[var(--accent)]" />
           <span>Sesi terenkripsi HMAC SHA-256 aman di server lokal</span>
         </div>
       </div>

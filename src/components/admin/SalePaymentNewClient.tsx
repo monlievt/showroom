@@ -184,20 +184,20 @@ export function SalePaymentNewClient({
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/sales"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Penjualan</span>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-[#1C1917]">
+            <h1 className="text-xl font-bold text-[var(--ink)]">
               Catat Pembayaran Masuk / Pelunasan
             </h1>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Pencatatan angsuran tempo atau pelunasan penjualan unit mobil.
             </p>
           </div>
@@ -205,22 +205,22 @@ export function SalePaymentNewClient({
       </div>
 
       {/* Info Card Unit & Buyer */}
-      <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="p-3 bg-white rounded-xl border border-[#D9D4CB] text-[#D97706]">
+          <div className="p-3 bg-white rounded-xl border border-[var(--line)] text-[var(--accent)]">
             <Car className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-base text-[#1C1917]">
+              <span className="font-extrabold text-base text-[var(--ink)]">
                 {sale.vehicle.brand} {sale.vehicle.model}
               </span>
-              <span className="text-xs font-mono font-bold text-[#D97706] bg-white px-2 py-0.5 rounded border border-[#D9D4CB]">
+              <span className="text-xs font-mono font-bold text-[var(--accent)] bg-white px-2 py-0.5 rounded border border-[var(--line)]">
                 {sale.vehicle.plateNumber}
               </span>
             </div>
-            <div className="text-xs text-[#6B6560] mt-1 flex items-center gap-2">
-              <User className="w-3.5 h-3.5 text-[#6B6560]" />
+            <div className="text-xs text-[var(--muted)] mt-1 flex items-center gap-2">
+              <User className="w-3.5 h-3.5 text-[var(--muted)]" />
               <span>Pembeli: <strong>{sale.buyer.name}</strong></span>
               {sale.buyer.isShowroom && (
                 <span className="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.2 rounded-full font-bold">
@@ -231,22 +231,22 @@ export function SalePaymentNewClient({
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 border-t md:border-t-0 md:border-l border-[#D9D4CB] pt-3 md:pt-0 md:pl-5 text-right">
+        <div className="grid grid-cols-3 gap-3 border-t md:border-t-0 md:border-l border-[var(--line)] pt-3 md:pt-0 md:pl-5 text-right">
           <div>
-            <span className="text-[10px] text-[#6B6560] block font-medium">Harga Jual</span>
-            <span className="text-xs font-bold text-[#1C1917]">
+            <span className="text-[10px] text-[var(--muted)] block font-medium">Harga Jual</span>
+            <span className="text-xs font-bold text-[var(--ink)]">
               {formatRupiah(sale.sellingPrice)}
             </span>
           </div>
           <div>
-            <span className="text-[10px] text-[#6B6560] block font-medium">Sudah Masuk</span>
+            <span className="text-[10px] text-[var(--muted)] block font-medium">Sudah Masuk</span>
             <span className="text-xs font-bold text-emerald-600">
               {formatRupiah(sale.paidAmount)}
             </span>
           </div>
           <div>
-            <span className="text-[10px] text-[#6B6560] block font-bold">Sisa Piutang</span>
-            <span className="text-xs font-extrabold text-[#D97706]">
+            <span className="text-[10px] text-[var(--muted)] block font-bold">Sisa Piutang</span>
+            <span className="text-xs font-extrabold text-[var(--accent)]">
               {formatRupiah(sale.remainingAmount)}
             </span>
           </div>
@@ -269,17 +269,17 @@ export function SalePaymentNewClient({
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <DollarSign className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <DollarSign className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               Form Pencatatan Pembayaran
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Nominal Pembayaran Masuk (Rp) *
               </label>
               <input
@@ -293,21 +293,21 @@ export function SalePaymentNewClient({
                     e.target.value === "" ? "" : Number(e.target.value)
                   )
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Maksimal sisa piutang: {formatRupiah(sale.remainingAmount)}
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Metode Pembayaran
               </label>
               <select
                 value={method}
                 onChange={(e) => setMethod(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 <option value="TRANSFER">Transfer Bank (BCA Rekening Showroom)</option>
                 <option value="CASH">Uang Tunai (Cash di Garasi)</option>
@@ -316,7 +316,7 @@ export function SalePaymentNewClient({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Tanggal Pembayaran *
               </label>
               <input
@@ -324,7 +324,7 @@ export function SalePaymentNewClient({
                 type="date"
                 value={paidAt}
                 onChange={(e) => setPaidAt(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
@@ -337,7 +337,7 @@ export function SalePaymentNewClient({
               <select
                 value={tradeInVehicleId}
                 onChange={(e) => setTradeInVehicleId(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[#1C1917]"
+                className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)]"
               >
                 <option value="">-- Pilih unit intake trade-in --</option>
                 {availableVehicles.map((v) => (
@@ -353,7 +353,7 @@ export function SalePaymentNewClient({
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
               Catatan Pembayaran (Opsional)
             </label>
             <input
@@ -361,7 +361,7 @@ export function SalePaymentNewClient({
               placeholder="Contoh: Transfer via m-BCA a.n. Bambang Sutrisno..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
             />
           </div>
 
@@ -385,11 +385,11 @@ export function SalePaymentNewClient({
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-[#6B6560]">
+            <span className="text-[var(--muted)]">
               Sisa Baru: <strong>{formatRupiah(newRemaining)}</strong>
             </span>
             {isNowSettled ? (
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[#1C1917] text-white">
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[var(--ink)] text-white">
                 <Check className="w-3 h-3" />
                 LUNAS 100% (Settled)
               </span>
@@ -403,32 +403,32 @@ export function SalePaymentNewClient({
         </div>
 
         {/* Riwayat Pembayaran Sebelumnya */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <CreditCard className="w-4 h-4 text-[#D97706]" />
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <CreditCard className="w-4 h-4 text-[var(--accent)]" />
             <span>Riwayat Pembayaran Sebelumnya ({sale.payments.length})</span>
           </h2>
 
           {sale.payments.length === 0 ? (
-            <p className="text-xs text-[#6B6560] py-2">
+            <p className="text-xs text-[var(--muted)] py-2">
               Belum ada mutasi pembayaran yang tercatat untuk transaksi ini.
             </p>
           ) : (
-            <div className="divide-y divide-[#EBE7E1]">
+            <div className="divide-y divide-[var(--line)]">
               {sale.payments.map((p, idx) => (
                 <div
                   key={p.id}
                   className="py-3 flex items-center justify-between text-xs"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#EFECE8] flex items-center justify-center font-bold text-[10px] text-[#6B6560]">
+                    <span className="w-6 h-6 rounded-full bg-[var(--bg)] flex items-center justify-center font-bold text-[10px] text-[var(--muted)]">
                       #{idx + 1}
                     </span>
                     <div>
-                      <span className="font-bold text-[#1C1917] block">
+                      <span className="font-bold text-[var(--ink)] block">
                         {formatRupiah(p.amount)}
                       </span>
-                      <span className="text-[11px] text-[#6B6560]">
+                      <span className="text-[11px] text-[var(--muted)]">
                         {formatDate(p.paidAt)} • Metode: {p.method}
                         {p.notes ? ` • ${p.notes}` : ""}
                       </span>
@@ -444,10 +444,10 @@ export function SalePaymentNewClient({
         </div>
 
         {/* Bottom Actions Bar */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4">
           <Link
             href="/admin/sales"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
           >
             Batal & Kembali
           </Link>
@@ -455,7 +455,7 @@ export function SalePaymentNewClient({
           <button
             type="submit"
             disabled={loading || !amount || Number(amount) <= 0}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>
@@ -477,7 +477,7 @@ export function SalePaymentNewClient({
         <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl max-w-lg w-full border border-stone-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Header Dialog */}
-            <div className="bg-gradient-to-br from-[#1C1917] via-[#292524] to-[#1C1917] text-white p-6 relative">
+            <div className="bg-gradient-to-br from-[var(--ink)] via-[#292524] to-[var(--ink)] text-white p-6 relative">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-emerald-400 text-white flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
                   {settlementInfo.hasInvestor ? (

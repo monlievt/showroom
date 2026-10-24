@@ -264,15 +264,15 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       {/* 4 KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Beban Operasional Showroom */}
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Beban Operasional</span>
             <Building className="w-4 h-4 text-blue-600" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917] tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalOperationalExpenses || operationalData.totalOperational)}
           </div>
-          <p className="text-xs text-[#6B6560]">Sewa garasi, listrik, WiFi, gaji & iklan</p>
+          <p className="text-xs text-[var(--muted)]">Sewa garasi, listrik, WiFi, gaji & iklan</p>
         </div>
 
         {/* Prive Pribadi */}
@@ -300,12 +300,12 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
         </div>
 
         {/* Saldo Kas BCA Riil */}
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Saldo Kas BCA</span>
-            <Wallet className="w-4 h-4 text-[#D97706]" />
+            <Wallet className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917] tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.cashBalance)}
           </div>
           <p className="text-xs text-[#16A34A] font-semibold">Tersinkronisasi Rekening Koran</p>
@@ -315,7 +315,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       {/* Edukasi Solusi Rekening Campur BCA */}
       <div className="bg-[#FEF3C7]/40 border border-[#FDE68A] p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-[#92400E]">
         <div className="flex items-start gap-2.5">
-          <AlertTriangle className="w-4 h-4 text-[#D97706] shrink-0 mt-0.5" />
+          <AlertTriangle className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
           <div>
             <strong className="font-bold text-[#78350F]">Solusi Rekening Campur (Showroom + Pribadi):</strong>
             <p className="mt-0.5 text-[#92400E]">
@@ -326,16 +326,16 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       </div>
 
       {/* Action Bar & Quick Buttons */}
-      <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[#6B6560] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari penerima, keterangan beban atau prive..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-[#D9D4CB] rounded-xl text-xs sm:text-sm bg-[#F7F5F2] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/20 transition-all"
+            className="w-full pl-10 pr-4 py-2 border border-[var(--line)] rounded-xl text-xs sm:text-sm bg-[var(--bg)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 transition-all"
           />
         </div>
 
@@ -374,8 +374,8 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
           className={cn(
             "px-3 py-1.5 rounded-xl font-bold transition-all border shrink-0",
             expenseFilter === "ALL"
-              ? "bg-[#1C1917] text-white border-[#1C1917]"
-              : "bg-white text-[#6B6560] border-[#D9D4CB] hover:bg-[#F7F5F2]"
+              ? "bg-[var(--ink)] text-white border-[var(--ink)]"
+              : "bg-white text-[var(--muted)] border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
           Semua Mutasi ({combinedExpensesPriveList.length})
@@ -419,22 +419,22 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       </div>
 
       {/* Tabel Mutasi Pemisahan Beban & Prive */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] shadow-xs overflow-hidden">
-        <div className="p-4 border-b border-[#D9D4CB] flex items-center justify-between bg-[#F7F5F2]">
+      <div className="bg-white rounded-2xl border border-[var(--line)] shadow-xs overflow-hidden">
+        <div className="p-4 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)]">
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-purple-600" />
-            <h3 className="font-bold text-sm text-[#1C1917]">
+            <h3 className="font-bold text-sm text-[var(--ink)]">
               Rincian Pemisahan Beban Showroom vs Prive Pribadi (Rekening BCA)
             </h3>
           </div>
-          <span className="text-xs font-semibold text-[#6B6560]">
+          <span className="text-xs font-semibold text-[var(--muted)]">
             Menampilkan {filteredExpensesList.length} transaksi
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[#D9D4CB]">
+            <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[var(--line)]">
               <tr>
                 <th className="py-3 px-4">Tanggal</th>
                 <th className="py-3 px-4">Kategori & Klasifikasi</th>
@@ -443,34 +443,34 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                 <th className="py-3 px-4 text-right">Nominal (Rp)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#D9D4CB]">
+            <tbody className="divide-y divide-[var(--line)]">
               {filteredExpensesList.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-[#6B6560]">
+                  <td colSpan={5} className="py-12 text-center text-[var(--muted)]">
                     Belum ada catatan pengeluaran/prive yang sesuai filter.
                   </td>
                 </tr>
               ) : (
                 filteredExpensesList.map((item) => (
-                  <tr key={item.id} className="hover:bg-[#F7F5F2] transition-colors">
-                    <td className="py-3.5 px-4 whitespace-nowrap text-[#6B6560]">
-                      <div className="font-medium text-[#1C1917]">{formatDate(item.date)}</div>
+                  <tr key={item.id} className="hover:bg-[var(--bg)] transition-colors">
+                    <td className="py-3.5 px-4 whitespace-nowrap text-[var(--muted)]">
+                      <div className="font-medium text-[var(--ink)]">{formatDate(item.date)}</div>
                     </td>
 
                     <td className="py-3.5 px-4 whitespace-nowrap">
-                      <div className="font-bold text-[#1C1917]">{item.title}</div>
+                      <div className="font-bold text-[var(--ink)]">{item.title}</div>
                       <span className={cn("inline-block mt-0.5 text-[10px] px-2 py-0.5 rounded-full font-bold border", item.badgeColor)}>
                         {item.categoryBadge}
                       </span>
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <div className="font-medium text-[#1C1917]">{item.notes}</div>
-                      <div className="text-[11px] text-[#6B6560]">Penerima: {item.recipient}</div>
+                      <div className="font-medium text-[var(--ink)]">{item.notes}</div>
+                      <div className="text-[11px] text-[var(--muted)]">Penerima: {item.recipient}</div>
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <span className="text-[11px] text-[#6B6560] block font-medium">
+                      <span className="text-[11px] text-[var(--muted)] block font-medium">
                         {item.impactText}
                       </span>
                     </td>
@@ -491,17 +491,17 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       {/* Modal: Catat Beban Operasional Showroom */}
       {showOpExModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-[#D9D4CB] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-3">
+          <div className="bg-white rounded-3xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
                 <Building className="w-5 h-5 text-blue-600" />
-                <h3 className="font-bold text-base text-[#1C1917]">
+                <h3 className="font-bold text-base text-[var(--ink)]">
                   Catat Beban Operasional Showroom
                 </h3>
               </div>
               <button
                 onClick={() => setShowOpExModal(false)}
-                className="text-[#6B6560] hover:text-[#1C1917] text-lg font-bold cursor-pointer"
+                className="text-[var(--muted)] hover:text-[var(--ink)] text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -509,13 +509,13 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
 
             <form onSubmit={handleOpExSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                   Kategori Pengeluaran
                 </label>
                 <select
                   value={opExCategory}
                   onChange={(e: any) => setOpExCategory(e.target.value)}
-                  className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="RENT_SHOWROOM">Sewa Lahan & Garasi Showroom</option>
                   <option value="UTILITIES_WIFI">Listrik, Air & WiFi Internet</option>
@@ -529,7 +529,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                   Nominal (Rp)
                 </label>
                 <input
@@ -539,13 +539,13 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: 1500000"
                   value={opExAmount}
                   onChange={(e) => setOpExAmount(e.target.value)}
-                  className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                     Tanggal
                   </label>
                   <input
@@ -553,11 +553,11 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                     required
                     value={opExDate}
                     onChange={(e) => setOpExDate(e.target.value)}
-                    className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                     Penerima / Vendor
                   </label>
                   <input
@@ -565,13 +565,13 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                     placeholder="Contoh: PLN / Pemilik Ruko"
                     value={opExRecipient}
                     onChange={(e) => setOpExRecipient(e.target.value)}
-                    className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                   Catatan / Keterangan
                 </label>
                 <textarea
@@ -579,7 +579,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: Token listrik showroom 1 bulan..."
                   value={opExNotes}
                   onChange={(e) => setOpExNotes(e.target.value)}
-                  className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
 
@@ -587,7 +587,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                 <button
                   type="button"
                   onClick={() => setShowOpExModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
@@ -607,17 +607,17 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       {/* Modal: Catat Prive (Pribadi Owner) */}
       {showOwnerDrawModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-[#D9D4CB] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-3">
+          <div className="bg-white rounded-3xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5 text-purple-600" />
-                <h3 className="font-bold text-base text-[#1C1917]">
+                <h3 className="font-bold text-base text-[var(--ink)]">
                   Catat Prive (Kebutuhan Pribadi Owner)
                 </h3>
               </div>
               <button
                 onClick={() => setShowOwnerDrawModal(false)}
-                className="text-[#6B6560] hover:text-[#1C1917] text-lg font-bold cursor-pointer"
+                className="text-[var(--muted)] hover:text-[var(--ink)] text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -629,7 +629,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
 
             <form onSubmit={handleOwnerDrawSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                   Nominal Tarik / Transfer Pribadi (Rp)
                 </label>
                 <input
@@ -639,12 +639,12 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: 1500000"
                   value={drawAmount}
                   onChange={(e) => setDrawAmount(e.target.value)}
-                  className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                   Tanggal Penarikan
                 </label>
                 <input
@@ -652,12 +652,12 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   required
                   value={drawDate}
                   onChange={(e) => setDrawDate(e.target.value)}
-                  className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                   Keterangan Kebutuhan
                 </label>
                 <textarea
@@ -666,7 +666,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: Belanja bulanan dapur, SPP anak sekolah, keperluan pribadi..."
                   value={drawNotes}
                   onChange={(e) => setDrawNotes(e.target.value)}
-                  className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
                 />
               </div>
 
@@ -674,7 +674,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                 <button
                   type="button"
                   onClick={() => setShowOwnerDrawModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
@@ -694,17 +694,17 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       {/* Modal: Setor Modal Pribadi */}
       {showOwnerEquityModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-[#D9D4CB] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-3">
+          <div className="bg-white rounded-3xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
                 <ArrowDownLeft className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-bold text-base text-[#1C1917]">
+                <h3 className="font-bold text-base text-[var(--ink)]">
                   Setor Modal Tambahan Pribadi
                 </h3>
               </div>
               <button
                 onClick={() => setShowOwnerEquityModal(false)}
-                className="text-[#6B6560] hover:text-[#1C1917] text-lg font-bold cursor-pointer"
+                className="text-[var(--muted)] hover:text-[var(--ink)] text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -716,7 +716,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
 
             <form onSubmit={handleOwnerEquitySubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                   Nominal Setoran (Rp)
                 </label>
                 <input
@@ -726,12 +726,12 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: 10000000"
                   value={equityAmount}
                   onChange={(e) => setEquityAmount(e.target.value)}
-                  className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                   Tanggal Setor
                 </label>
                 <input
@@ -739,12 +739,12 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   required
                   value={equityDate}
                   onChange={(e) => setEquityDate(e.target.value)}
-                  className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1">
                   Catatan / Keterangan Sumber Dana
                 </label>
                 <textarea
@@ -752,7 +752,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: Tambahan modal pribadi untuk perputaran kas..."
                   value={equityNotes}
                   onChange={(e) => setEquityNotes(e.target.value)}
-                  className="w-full p-2.5 border border-[#D9D4CB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                 />
               </div>
 
@@ -760,7 +760,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                 <button
                   type="button"
                   onClick={() => setShowOwnerEquityModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>

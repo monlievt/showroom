@@ -58,7 +58,7 @@ function parseInlineFormatting(str: string): React.ReactNode[] {
   return parts.map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={i} className="text-white font-bold">
+        <strong key={i} className="text-[var(--ink)] font-bold">
           {part.slice(2, -2)}
         </strong>
       );
@@ -71,21 +71,21 @@ function renderExecutiveFormattedText(text: string) {
   if (!text) return null;
   const lines = text.split("\n");
   return (
-    <div className="space-y-2 text-xs sm:text-sm text-stone-200 leading-relaxed">
+    <div className="space-y-2 text-xs sm:text-sm text-[var(--ink)] leading-relaxed">
       {lines.map((line, idx) => {
         const trimmed = line.trim();
         if (!trimmed) return <div key={idx} className="h-1.5" />;
         if (trimmed.startsWith("### ")) {
           return (
-            <h4 key={idx} className="text-amber-400 font-bold text-sm sm:text-base pt-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+            <h4 key={idx} className="text-[var(--accent)] font-bold text-sm sm:text-base pt-2 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0" />
               <span>{trimmed.replace(/^###\s*/, "")}</span>
             </h4>
           );
         }
         if (trimmed.startsWith("## ")) {
           return (
-            <h3 key={idx} className="text-white font-black text-base sm:text-lg pt-3 border-b border-stone-800 pb-1">
+            <h3 key={idx} className="text-[var(--ink)] font-bold text-base sm:text-lg pt-3 border-b border-[var(--line)] pb-1">
               {trimmed.replace(/^##\s*/, "")}
             </h3>
           );
@@ -93,8 +93,8 @@ function renderExecutiveFormattedText(text: string) {
         if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
           return (
             <div key={idx} className="flex items-start gap-2 pl-2">
-              <span className="text-amber-400 font-bold mt-1 text-xs shrink-0">•</span>
-              <p className="text-stone-300 flex-1 leading-relaxed">
+              <span className="text-[var(--accent)] font-bold mt-1 text-xs shrink-0">•</span>
+              <p className="text-[var(--muted)] flex-1 leading-relaxed">
                 {parseInlineFormatting(trimmed.replace(/^[-*]\s*/, ""))}
               </p>
             </div>
@@ -103,15 +103,15 @@ function renderExecutiveFormattedText(text: string) {
         if (/^\d+\.\s/.test(trimmed)) {
           return (
             <div key={idx} className="flex items-start gap-2 pl-2">
-              <span className="text-amber-400 font-bold text-xs mt-0.5 shrink-0">{trimmed.match(/^\d+\./)?.[0]}</span>
-              <p className="text-stone-300 flex-1 leading-relaxed">
+              <span className="text-[var(--accent)] font-bold text-xs mt-0.5 shrink-0">{trimmed.match(/^\d+\./)?.[0]}</span>
+              <p className="text-[var(--muted)] flex-1 leading-relaxed">
                 {parseInlineFormatting(trimmed.replace(/^\d+\.\s*/, ""))}
               </p>
             </div>
           );
         }
         return (
-          <p key={idx} className="text-stone-300 leading-relaxed">
+          <p key={idx} className="text-[var(--muted)] leading-relaxed">
             {parseInlineFormatting(trimmed)}
           </p>
         );
@@ -244,29 +244,25 @@ export function DashboardClient({
   return (
     <div className="space-y-8">
       {/* ── 1. AI EXECUTIVE BRIEFING & DASHBOARD ORCHESTRATION ── */}
-      <div className="rounded-3xl bg-gradient-to-br from-[#1C1917] via-[#24201D] to-[#141210] text-white p-6 sm:p-8 shadow-2xl border border-stone-800 relative overflow-hidden">
-        {/* Glow Accent */}
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#D97706]/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 space-y-6">
+      <div className="rounded-[var(--r-card)] bg-[var(--surface)] text-[var(--ink)] p-5 sm:p-6 shadow-xs border border-[var(--line)] space-y-6">
+        <div className="space-y-6">
           {/* Header Panel */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-800/80 pb-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-5">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#D97706] to-amber-400 text-white flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
-                <Sparkles className="w-6 h-6" />
+              <div className="w-10 h-10 rounded-[var(--r-btn)] bg-[var(--accent)] text-white flex items-center justify-center shadow-xs shrink-0">
+                <Sparkles className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-lg sm:text-xl font-black tracking-tight text-white">
-                    Orkestrasi Intelijen AI & Command Center
+                  <h2 className="text-[18px] font-bold tracking-tight text-[var(--ink)]">
+                    Orkestrasi Intelijen AI &amp; Command Center
                   </h2>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                    Gemini 2.5 Flash Engine
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
+                    Gemini 2.5 Flash
                   </span>
                 </div>
-                <p className="text-xs text-stone-400 mt-0.5">
-                  Mendiagnosis kesehatan showroom, mengarahkan tindakan prioritas garasi, dan memandu kulakan lelang real-time.
+                <p className="text-[13px] text-[var(--muted)] mt-0.5">
+                  Diagnosis kesehatan showroom, prioritas garasi, dan panduan kulakan lelang real-time.
                 </p>
               </div>
             </div>
@@ -275,7 +271,7 @@ export function DashboardClient({
               <button
                 onClick={handleGenerateBriefing}
                 disabled={briefingLoading}
-                className="flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer disabled:opacity-50"
+                className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-[var(--r-btn)] text-[13px] font-semibold transition-colors cursor-pointer disabled:opacity-50"
               >
                 <RefreshCw className={cn("w-3.5 h-3.5", briefingLoading && "animate-spin")} />
                 <span>{briefingLoading ? "Mengorkestrasi..." : "Analisis & Orkestrasi AI"}</span>
@@ -285,7 +281,7 @@ export function DashboardClient({
 
           {/* AI Error Notification Banner */}
           {aiError && (
-            <div className="bg-red-950/80 border border-red-700/60 rounded-2xl p-4 text-xs text-red-200 flex items-start justify-between gap-3 shadow-md animate-in fade-in">
+            <div className="bg-red-950/80 border border-red-700/60 rounded-[var(--r-card)] p-4 text-xs text-red-200 flex items-start justify-between gap-3 shadow-md animate-in fade-in">
               <div className="flex items-start gap-2.5">
                 <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
                 <div>
@@ -304,42 +300,42 @@ export function DashboardClient({
           )}
 
           {/* ── EXECUTIVE HEALTH SCORE & STRATEGIC OVERVIEW ── */}
-          <div className="bg-stone-900/90 border border-stone-800/90 rounded-2xl p-5 sm:p-6 shadow-inner space-y-5">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-4 border-b border-stone-800/80">
+          <div className="bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-card)] p-5 space-y-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-4 border-b border-[var(--line)]">
               {/* Left: Health Score Card */}
               <div className="flex items-center gap-4">
                 <div
                   className={cn(
-                    "w-16 h-16 rounded-2xl flex flex-col items-center justify-center border-2 shrink-0 shadow-lg",
+                    "w-14 h-14 rounded-[var(--r-btn)] flex flex-col items-center justify-center border-2 shrink-0 bg-white shadow-xs",
                     orchestration.healthStatus === "PRIMA"
-                      ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400"
+                      ? "border-emerald-500 text-emerald-700"
                       : orchestration.healthStatus === "WASPADA"
-                      ? "bg-amber-500/10 border-amber-500/40 text-amber-400"
-                      : "bg-rose-500/10 border-rose-500/40 text-rose-400"
+                      ? "border-amber-500 text-amber-700"
+                      : "border-rose-500 text-rose-700"
                   )}
                 >
-                  <span className="text-xl font-black leading-none">{orchestration.healthScore}</span>
-                  <span className="text-[9px] uppercase tracking-wider font-extrabold mt-0.5">/ 100</span>
+                  <span className="text-xl font-bold leading-none">{orchestration.healthScore}</span>
+                  <span className="text-[9px] uppercase tracking-wider font-bold mt-0.5">/ 100</span>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <span
                       className={cn(
-                        "text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border",
+                        "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border",
                         orchestration.healthStatus === "PRIMA"
-                          ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                          ? "bg-emerald-50 text-emerald-800 border-emerald-300"
                           : orchestration.healthStatus === "WASPADA"
-                          ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
-                          : "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                          ? "bg-amber-50 text-amber-800 border-amber-300"
+                          : "bg-rose-50 text-rose-800 border-rose-300"
                       )}
                     >
                       Status: {orchestration.healthStatus}
                     </span>
-                    <span className="text-[11px] text-stone-500 font-medium">
+                    <span className="text-[12px] text-[var(--muted)] font-medium">
                       Diperbarui {orchestration.generatedAt}
                     </span>
                   </div>
-                  <h3 className="text-sm sm:text-base font-bold text-stone-100 mt-1 leading-snug">
+                  <h3 className="text-sm sm:text-base font-bold text-[var(--ink)] mt-1 leading-snug">
                     {orchestration.headline}
                   </h3>
                 </div>
@@ -347,37 +343,37 @@ export function DashboardClient({
 
               {/* Right: Quick Metric Pills */}
               <div className="grid grid-cols-3 gap-2 shrink-0">
-                <div className="bg-stone-800/70 border border-stone-700/60 rounded-xl px-3 py-2 text-center">
-                  <div className="text-[10px] text-stone-400 font-semibold uppercase tracking-wider">Runway Kas</div>
-                  <div className="text-xs sm:text-sm font-bold text-white mt-0.5">
+                <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] px-3 py-2 text-center shadow-xs">
+                  <div className="text-[10px] text-[var(--muted)] font-semibold uppercase tracking-wider">Runway Kas</div>
+                  <div className="text-xs sm:text-sm font-bold text-[var(--ink)] mt-0.5">
                     {orchestration.metrics.cashRunwayDays} Hari
                   </div>
-                  <div className="text-[10px] text-emerald-400 font-medium">
+                  <div className="text-[10px] text-emerald-700 font-medium">
                     {orchestration.metrics.cashRunwayVerdict}
                   </div>
                 </div>
 
-                <div className="bg-stone-800/70 border border-stone-700/60 rounded-xl px-3 py-2 text-center">
-                  <div className="text-[10px] text-stone-400 font-semibold uppercase tracking-wider">Daya Beli</div>
-                  <div className="text-xs sm:text-sm font-bold text-amber-400 mt-0.5">
+                <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] px-3 py-2 text-center shadow-xs">
+                  <div className="text-[10px] text-[var(--muted)] font-semibold uppercase tracking-wider">Daya Beli</div>
+                  <div className="text-xs sm:text-sm font-bold text-[var(--accent)] mt-0.5">
                     {orchestration.metrics.safeBuyingUnits} Unit
                   </div>
-                  <div className="text-[10px] text-stone-400 font-medium truncate max-w-[90px]">
+                  <div className="text-[10px] text-[var(--muted)] font-medium truncate max-w-[90px]">
                     Maks {formatRupiah(orchestration.metrics.safeBuyingMaxBudget)}
                   </div>
                 </div>
 
-                <div className="bg-stone-800/70 border border-stone-700/60 rounded-xl px-3 py-2 text-center">
-                  <div className="text-[10px] text-stone-400 font-semibold uppercase tracking-wider">Alarm Kritis</div>
+                <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] px-3 py-2 text-center shadow-xs">
+                  <div className="text-[10px] text-[var(--muted)] font-semibold uppercase tracking-wider">Alarm Kritis</div>
                   <div
                     className={cn(
                       "text-xs sm:text-sm font-bold mt-0.5",
-                      orchestration.metrics.taxAlertCount > 0 ? "text-rose-400" : "text-emerald-400"
+                      orchestration.metrics.taxAlertCount > 0 ? "text-rose-600" : "text-emerald-700"
                     )}
                   >
                     {orchestration.metrics.taxAlertCount} Pajak
                   </div>
-                  <div className="text-[10px] text-stone-400 font-medium">
+                  <div className="text-[10px] text-[var(--muted)] font-medium">
                     {orchestration.metrics.bpkbPendingRiskCount} BPKB Tiba
                   </div>
                 </div>
@@ -385,20 +381,20 @@ export function DashboardClient({
             </div>
 
             {/* Executive Summary paragraph */}
-            <p className="text-xs sm:text-sm text-stone-300 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed font-normal">
               {orchestration.executiveSummary}
             </p>
 
             {/* ── TABS SELECTOR ── */}
-            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-stone-800">
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[var(--line)]">
               <button
                 type="button"
                 onClick={() => setOrchestrationTab("DIRECTIVE")}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  "px-3.5 py-1.5 rounded-[var(--r-btn)] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer",
                   orchestrationTab === "DIRECTIVE"
-                    ? "bg-[#D97706] text-white shadow-md"
-                    : "bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700"
+                    ? "bg-[var(--accent)] text-white font-bold"
+                    : "bg-white text-[var(--muted)] hover:text-[var(--ink)] border border-[var(--line)]"
                 )}
               >
                 <Sparkles className="w-3.5 h-3.5" />
@@ -409,10 +405,10 @@ export function DashboardClient({
                 type="button"
                 onClick={() => setOrchestrationTab("AUCTION")}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  "px-3.5 py-1.5 rounded-[var(--r-btn)] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer",
                   orchestrationTab === "AUCTION"
-                    ? "bg-[#D97706] text-white shadow-md"
-                    : "bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700"
+                    ? "bg-[var(--accent)] text-white font-bold"
+                    : "bg-white text-[var(--muted)] hover:text-[var(--ink)] border border-[var(--line)]"
                 )}
               >
                 <Gavel className="w-3.5 h-3.5" />
@@ -423,10 +419,10 @@ export function DashboardClient({
                 type="button"
                 onClick={() => setOrchestrationTab("SALES")}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  "px-3.5 py-1.5 rounded-[var(--r-btn)] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer",
                   orchestrationTab === "SALES"
-                    ? "bg-[#D97706] text-white shadow-md"
-                    : "bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700"
+                    ? "bg-[var(--accent)] text-white font-bold"
+                    : "bg-white text-[var(--muted)] hover:text-[var(--ink)] border border-[var(--line)]"
                 )}
               >
                 <TrendingUp className="w-3.5 h-3.5" />
@@ -437,10 +433,10 @@ export function DashboardClient({
                 type="button"
                 onClick={() => setOrchestrationTab("FULL_BRIEFING")}
                 className={cn(
-                  "px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer",
+                  "px-3.5 py-1.5 rounded-[var(--r-btn)] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer",
                   orchestrationTab === "FULL_BRIEFING"
-                    ? "bg-[#D97706] text-white shadow-md"
-                    : "bg-stone-800 text-stone-400 hover:text-white hover:bg-stone-700"
+                    ? "bg-[var(--accent)] text-white font-bold"
+                    : "bg-white text-[var(--muted)] hover:text-[var(--ink)] border border-[var(--line)]"
                 )}
               >
                 <FileText className="w-3.5 h-3.5" />
@@ -455,44 +451,44 @@ export function DashboardClient({
                   <div
                     key={action.id}
                     className={cn(
-                      "rounded-xl p-4 border flex flex-col justify-between transition-all",
+                      "rounded-[var(--r-btn)] p-4 border flex flex-col justify-between transition-colors bg-white shadow-xs",
                       action.priority === "CRITICAL"
-                        ? "bg-rose-950/20 border-rose-800/40 hover:border-rose-600/60"
+                        ? "border-rose-300"
                         : action.priority === "HIGH"
-                        ? "bg-amber-950/20 border-amber-800/40 hover:border-amber-600/60"
-                        : "bg-stone-800/40 border-stone-700/50 hover:border-stone-500/60"
+                        ? "border-amber-300"
+                        : "border-[var(--line)]"
                     )}
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">
                           {action.category.replace("_", " ")}
                         </span>
                         <span
                           className={cn(
-                            "text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border",
+                            "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border",
                             action.priority === "CRITICAL"
-                              ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
+                              ? "bg-rose-50 text-rose-800 border-rose-300"
                               : action.priority === "HIGH"
-                              ? "bg-amber-500/20 text-amber-300 border-amber-500/40"
-                              : "bg-blue-500/20 text-blue-300 border-blue-500/40"
+                              ? "bg-amber-50 text-amber-800 border-amber-300"
+                              : "bg-blue-50 text-blue-800 border-blue-300"
                           )}
                         >
                           {action.badgeText}
                         </span>
                       </div>
-                      <h4 className="text-xs sm:text-sm font-bold text-stone-100 leading-snug">
+                      <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] leading-snug">
                         {action.title}
                       </h4>
-                      <p className="text-xs text-stone-400 leading-relaxed">
+                      <p className="text-xs text-[var(--muted)] leading-relaxed">
                         {action.description}
                       </p>
                     </div>
 
-                    <div className="pt-3 mt-3 border-t border-stone-800/80">
+                    <div className="pt-3 mt-3 border-t border-[var(--line)]">
                       <Link
                         href={action.actionHref}
-                        className="inline-flex items-center justify-between w-full text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors"
+                        className="inline-flex items-center justify-between w-full text-xs font-semibold text-[var(--accent)] hover:underline transition-colors"
                       >
                         <span>{action.actionLabel}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -504,15 +500,15 @@ export function DashboardClient({
             )}
 
             {orchestrationTab === "AUCTION" && (
-              <div className="bg-stone-800/40 border border-stone-700/60 rounded-xl p-5 space-y-4 animate-in fade-in">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-700/60">
+              <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] p-5 space-y-4 animate-in fade-in shadow-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--line)]">
                   <div className="flex items-center gap-2.5">
-                    <Gavel className="w-5 h-5 text-amber-400" />
+                    <Gavel className="w-5 h-5 text-[var(--accent)]" />
                     <div>
-                      <h4 className="text-sm font-bold text-stone-100">
+                      <h4 className="text-sm font-bold text-[var(--ink)]">
                         Rekomendasi Kulakan Balai Lelang
                       </h4>
-                      <p className="text-xs text-stone-400">
+                      <p className="text-xs text-[var(--muted)]">
                         Strategi berbasis histori balai favorit dan margin kotor riil garasi.
                       </p>
                     </div>
@@ -521,43 +517,43 @@ export function DashboardClient({
                     className={cn(
                       "text-xs font-bold px-3 py-1 rounded-full border shrink-0",
                       orchestration.auctionStrategy.canBuy
-                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
-                        : "bg-amber-500/20 text-amber-300 border-amber-500/40"
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                        : "bg-amber-50 text-amber-800 border-amber-300"
                     )}
                   >
-                    {orchestration.auctionStrategy.canBuy ? "✅ Aman Kulakan Hari Ini" : "⚠️ Tunda Kulakan Sementara"}
+                    {orchestration.auctionStrategy.canBuy ? "Aman Kulakan Hari Ini" : "Tunda Kulakan Sementara"}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="bg-stone-900/60 border border-stone-800 p-3 rounded-lg">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold">Target Segmen</span>
-                    <p className="text-xs sm:text-sm font-bold text-stone-200 mt-0.5">
+                  <div className="bg-[var(--bg)] border border-[var(--line)] p-3 rounded-[var(--r-btn)]">
+                    <span className="text-[10px] text-[var(--muted)] uppercase font-semibold">Target Segmen</span>
+                    <p className="text-xs sm:text-sm font-bold text-[var(--ink)] mt-0.5">
                       {orchestration.auctionStrategy.targetSegment}
                     </p>
                   </div>
-                  <div className="bg-stone-900/60 border border-stone-800 p-3 rounded-lg">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold">Batas Hammer Aman</span>
-                    <p className="text-xs sm:text-sm font-bold text-amber-400 mt-0.5">
+                  <div className="bg-[var(--bg)] border border-[var(--line)] p-3 rounded-[var(--r-btn)]">
+                    <span className="text-[10px] text-[var(--muted)] uppercase font-semibold">Batas Hammer Aman</span>
+                    <p className="text-xs sm:text-sm font-bold text-[var(--accent)] mt-0.5">
                       {formatRupiah(orchestration.auctionStrategy.recommendedMaxBudgetRupiah)}
                     </p>
                   </div>
-                  <div className="bg-stone-900/60 border border-stone-800 p-3 rounded-lg">
-                    <span className="text-[10px] text-stone-400 uppercase font-semibold">Balai Prioritas</span>
-                    <p className="text-xs sm:text-sm font-bold text-stone-200 mt-0.5">
+                  <div className="bg-[var(--bg)] border border-[var(--line)] p-3 rounded-[var(--r-btn)]">
+                    <span className="text-[10px] text-[var(--muted)] uppercase font-semibold">Balai Prioritas</span>
+                    <p className="text-xs sm:text-sm font-bold text-[var(--ink)] mt-0.5">
                       {orchestration.auctionStrategy.preferredHouse}
                     </p>
                   </div>
                 </div>
 
-                <p className="text-xs text-stone-300 leading-relaxed bg-stone-900/40 p-3.5 rounded-lg border border-stone-800">
+                <p className="text-xs text-[var(--muted)] leading-relaxed bg-[var(--bg)] p-3.5 rounded-[var(--r-btn)] border border-[var(--line)]">
                   {orchestration.auctionStrategy.tacticalAdvice}
                 </p>
 
                 <div className="flex justify-end pt-1">
                   <Link
                     href="/admin/inventory/new"
-                    className="inline-flex items-center gap-1.5 bg-[#D97706] hover:bg-[#B45309] text-white text-xs font-bold px-4 py-2 rounded-xl transition-all"
+                    className="inline-flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-semibold px-4 py-2 rounded-[var(--r-btn)] transition-colors"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Input Unit Hasil Lelang Baru</span>
@@ -567,19 +563,19 @@ export function DashboardClient({
             )}
 
             {orchestrationTab === "SALES" && (
-              <div className="bg-stone-800/40 border border-stone-700/60 rounded-xl p-5 space-y-4 animate-in fade-in">
-                <div className="pb-3 border-b border-stone-700/60">
-                  <h4 className="text-sm font-bold text-stone-100 flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] p-5 space-y-4 animate-in fade-in shadow-xs">
+                <div className="pb-3 border-b border-[var(--line)]">
+                  <h4 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-emerald-700" />
                     <span>{orchestration.salesAcceleration.headline}</span>
                   </h4>
                 </div>
 
                 <div className="space-y-2.5">
                   {orchestration.salesAcceleration.tactics.map((tactic, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 bg-stone-900/50 p-3 rounded-lg border border-stone-800">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                      <p className="text-xs text-stone-300 leading-relaxed">{tactic}</p>
+                    <div key={idx} className="flex items-start gap-2.5 bg-[var(--bg)] p-3 rounded-[var(--r-btn)] border border-[var(--line)]">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <p className="text-xs text-[var(--ink)] leading-relaxed">{tactic}</p>
                     </div>
                   ))}
                 </div>
@@ -587,7 +583,7 @@ export function DashboardClient({
                 <div className="flex justify-end pt-1">
                   <Link
                     href="/admin/inventory?status=READY_FOR_SALE"
-                    className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all"
+                    className="inline-flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-semibold px-4 py-2 rounded-[var(--r-btn)] transition-colors"
                   >
                     <span>Buka Daftar Unit Siap Jual</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -597,7 +593,7 @@ export function DashboardClient({
             )}
 
             {orchestrationTab === "FULL_BRIEFING" && (
-              <div className="bg-stone-900/80 border border-stone-800 rounded-xl p-5 animate-in fade-in">
+              <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] p-5 animate-in fade-in shadow-xs">
                 {renderExecutiveFormattedText(orchestration.fullBriefingText)}
               </div>
             )}
@@ -608,15 +604,15 @@ export function DashboardClient({
             <form onSubmit={handleAskAi} className="flex gap-2">
               <input
                 type="text"
-                placeholder="Tanya asisten AI (contoh: 'Ada yang nawarin Avanza 2019 harga 135jt eks perusahaan, aman ambil gak dengan kas sekarang?')"
+                placeholder="Tanya asisten AI (contoh: 'Ada yang tawarin Avanza 2019 harga 135jt eks perusahaan, aman ambil gak dengan kas sekarang?')"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className="flex-1 bg-stone-900/90 border border-stone-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="flex-1 bg-white border border-[var(--line-input)] rounded-[var(--r-btn)] px-4 py-2.5 text-xs sm:text-sm text-[var(--ink)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
               />
               <button
                 type="submit"
                 disabled={askingAi || !question.trim()}
-                className="bg-[#D97706] hover:bg-[#B45309] text-white px-5 py-3 rounded-xl font-bold text-xs transition-colors shrink-0 disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
+                className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2.5 rounded-[var(--r-btn)] font-semibold text-xs transition-colors shrink-0 disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{askingAi ? "Menganalisa..." : "Tanya AI"}</span>
@@ -624,8 +620,8 @@ export function DashboardClient({
             </form>
 
             {/* Quick Prompt Presets */}
-            <div className="flex flex-wrap items-center gap-2 text-[11px] text-stone-400">
-              <span className="font-semibold text-stone-500">Contoh pertanyaan:</span>
+            <div className="flex flex-wrap items-center gap-2 text-[11px] text-[var(--muted)]">
+              <span className="font-semibold">Contoh pertanyaan:</span>
               <button
                 type="button"
                 onClick={() =>
@@ -633,7 +629,7 @@ export function DashboardClient({
                     "Berapa unit dan segmen apa yang paling aman kita kulakan di lelang hari ini berdasarkan sisa kas BCA?"
                   )
                 }
-                className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+                className="bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-2.5 py-1 rounded-[var(--r-btn)] transition-colors cursor-pointer"
               >
                 Daya Kulakan Kas Hari Ini
               </button>
@@ -644,7 +640,7 @@ export function DashboardClient({
                     "Bagaimana rekomendasi penyesuaian harga dan strategi penjualan untuk mobil yang sudah di atas 30 hari di garasi?"
                   )
                 }
-                className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+                className="bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-2.5 py-1 rounded-[var(--r-btn)] transition-colors cursor-pointer"
               >
                 Strategi Unit Macet
               </button>
@@ -655,7 +651,7 @@ export function DashboardClient({
                     "Ada unit eks tarikan leasing ditawarkan di lelang besok, apa risiko yang perlu saya pertimbangkan soal BPKB dan dokumennya?"
                   )
                 }
-                className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+                className="bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-2.5 py-1 rounded-[var(--r-btn)] transition-colors cursor-pointer"
               >
                 Risiko Eks Leasing
               </button>
@@ -666,7 +662,7 @@ export function DashboardClient({
                     "Piutang saya yang mana yang sudah mendekati 2 minggu dan perlu segera saya tagih hari ini?"
                   )
                 }
-                className="bg-stone-800 hover:bg-stone-700 text-stone-300 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+                className="bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-2.5 py-1 rounded-[var(--r-btn)] transition-colors cursor-pointer"
               >
                 Piutang Mana Ditagih?
               </button>
@@ -674,13 +670,13 @@ export function DashboardClient({
 
             {/* Answer Box */}
             {aiAnswer && (
-              <div className="bg-stone-900/90 border border-amber-500/40 rounded-2xl p-5 text-xs sm:text-sm text-stone-200 space-y-3 mt-3 shadow-lg animate-in fade-in">
-                <div className="flex items-center justify-between border-b border-stone-800 pb-2">
-                  <span className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+              <div className="bg-white border border-[var(--line)] rounded-[var(--r-card)] p-5 text-xs sm:text-sm text-[var(--ink)] space-y-3 mt-3 shadow-xs animate-in fade-in">
+                <div className="flex items-center justify-between border-b border-[var(--line)] pb-2">
+                  <span className="flex items-center gap-2 text-[var(--accent)] font-bold text-xs uppercase tracking-wider">
                     <Sparkles className="w-3.5 h-3.5" />
                     Keputusan Strategis AI Advisor
                   </span>
-                  <span className="text-[11px] text-stone-500">Berdasarkan data riil showroom</span>
+                  <span className="text-[11px] text-[var(--muted)]">Berdasarkan data riil showroom</span>
                 </div>
                 <div>{renderExecutiveFormattedText(aiAnswer)}</div>
               </div>
@@ -711,7 +707,7 @@ export function DashboardClient({
         return (
           <div
             className={cn(
-              "rounded-2xl p-5 border shadow-sm transition-all relative overflow-hidden",
+              "rounded-[var(--r-card)] p-5 border shadow-sm transition-all relative overflow-hidden",
               hasOverdue
                 ? "bg-rose-50/80 border-rose-200"
                 : "bg-amber-50/80 border-amber-200"
@@ -721,11 +717,11 @@ export function DashboardClient({
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
-                    "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm",
+                    "w-10 h-10 rounded-[var(--r-btn)] flex items-center justify-center shrink-0 shadow-sm",
                     hasOverdue ? "bg-rose-600 text-white" : "bg-amber-600 text-white"
                   )}
                 >
-                  <BellRing className="w-5 h-5 animate-bounce" />
+                  <BellRing className="w-5 h-5 " />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
@@ -751,7 +747,7 @@ export function DashboardClient({
 
               <Link
                 href="/admin/sales"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-stone-900 bg-white/90 hover:bg-white border border-stone-300 px-3 py-1.5 rounded-xl transition-colors shrink-0 shadow-xs"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-stone-900 bg-white/90 hover:bg-white border border-stone-300 px-3 py-1.5 rounded-[var(--r-btn)] transition-colors shrink-0 shadow-xs"
               >
                 <span>Lihat Semua Penjualan</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -777,7 +773,7 @@ export function DashboardClient({
                 return (
                   <div
                     key={r.id}
-                    className="bg-white rounded-xl p-3.5 border border-stone-200 shadow-xs flex flex-col justify-between gap-3 hover:border-amber-400 transition-colors"
+                    className="bg-white rounded-[var(--r-btn)] p-3.5 border border-stone-200 shadow-xs flex flex-col justify-between gap-3 hover:border-amber-400 transition-colors"
                   >
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
@@ -855,16 +851,16 @@ export function DashboardClient({
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base sm:text-lg font-black text-[#1C1917] tracking-tight">
+            <h3 className="text-base sm:text-lg font-black text-[var(--ink)] tracking-tight">
               Funnel Status Operasional & Workshop Garasi
             </h3>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Monitoring alur fisik unit mulai dari penerimaan, perbaikan cat & salon poles, hingga dokumen siap jual.
             </p>
           </div>
           <Link
             href="/admin/inventory"
-            className="text-xs font-bold text-[#D97706] hover:underline flex items-center gap-1"
+            className="text-xs font-bold text-[var(--accent)] hover:underline flex items-center gap-1"
           >
             <span>Buka Inventori Lengkap</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -873,69 +869,69 @@ export function DashboardClient({
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           {/* 1. Total Unit di Garasi */}
-          <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-            <div className="flex items-center justify-between text-[#6B6560]">
+          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
+            <div className="flex items-center justify-between text-[var(--muted)]">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Di Garasi</span>
-              <Car className="w-4 h-4 text-[#D97706]" />
+              <Car className="w-4 h-4 text-[var(--accent)]" />
             </div>
-            <div className="text-2xl font-black text-[#1C1917] tracking-tight">
+            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
               {data.totalActiveVehicles}{" "}
-              <span className="text-xs font-semibold text-[#6B6560]">/ {data.garageCapacity}</span>
+              <span className="text-xs font-semibold text-[var(--muted)]">/ {data.garageCapacity}</span>
             </div>
-            <div className="w-full bg-[#EFECE8] h-1.5 rounded-full overflow-hidden mt-1">
+            <div className="w-full bg-[var(--bg)] h-1.5 rounded-full overflow-hidden mt-1">
               <div
-                className="bg-[#D97706] h-full rounded-full transition-all"
+                className="bg-[var(--accent)] h-full rounded-full transition-all"
                 style={{
                   width: `${Math.min(100, (data.totalActiveVehicles / data.garageCapacity) * 100)}%`,
                 }}
               />
             </div>
-            <p className="text-[10px] text-[#6B6560] pt-0.5">{data.emptyGarageSlots} slot kosong</p>
+            <p className="text-[10px] text-[var(--muted)] pt-0.5">{data.emptyGarageSlots} slot kosong</p>
           </div>
 
           {/* 2. Ready Siap Jual */}
-          <div className="bg-white p-4 rounded-2xl border border-emerald-200 shadow-xs space-y-1 bg-emerald-50/20">
+          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1 bg-white">
             <div className="flex items-center justify-between text-emerald-700">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Siap Jual</span>
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             </div>
-            <div className="text-2xl font-black text-emerald-800 tracking-tight">
+            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
               {data.readyCount} <span className="text-xs font-semibold text-emerald-600">Unit</span>
             </div>
             <p className="text-[10px] text-emerald-700">Tayang di katalog publik</p>
           </div>
 
           {/* 3. Belum Salon & Poles */}
-          <div className="bg-white p-4 rounded-2xl border border-amber-200 shadow-xs space-y-1 bg-amber-50/20">
+          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1 bg-white">
             <div className="flex items-center justify-between text-amber-700">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Belum Poles</span>
               <Wrench className="w-4 h-4 text-amber-600" />
             </div>
-            <div className="text-2xl font-black text-amber-800 tracking-tight">
+            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
               {data.pendingSalonCount} <span className="text-xs font-semibold text-amber-600">Unit</span>
             </div>
             <p className="text-[10px] text-amber-700">Butuh salon & detailing</p>
           </div>
 
           {/* 4. Sedang / Butuh Cat */}
-          <div className="bg-white p-4 rounded-2xl border border-blue-200 shadow-xs space-y-1 bg-blue-50/20">
+          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1 bg-white">
             <div className="flex items-center justify-between text-blue-700">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Perbaikan Cat</span>
               <Layers className="w-4 h-4 text-blue-600" />
             </div>
-            <div className="text-2xl font-black text-blue-800 tracking-tight">
+            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
               {data.pendingPaintCount} <span className="text-xs font-semibold text-blue-600">Unit</span>
             </div>
             <p className="text-[10px] text-blue-700">Di bengkel body repair</p>
           </div>
 
           {/* 5. Alarm BPKB Tertahan */}
-          <div className="bg-white p-4 rounded-2xl border border-purple-200 shadow-xs space-y-1 bg-purple-50/20">
+          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1 bg-white">
             <div className="flex items-center justify-between text-purple-700">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">BPKB Tertahan</span>
               <FileText className="w-4 h-4 text-purple-600" />
             </div>
-            <div className="text-2xl font-black text-purple-800 tracking-tight">
+            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
               {data.pendingBpkbCount} <span className="text-xs font-semibold text-purple-600">Unit</span>
             </div>
             <p className="text-[10px] text-purple-700">Proses leasing/penjual</p>
@@ -944,10 +940,10 @@ export function DashboardClient({
           {/* 6. Unit Macet (>45 Hari) */}
           <div
             className={cn(
-              "p-4 rounded-2xl border shadow-xs space-y-1 transition-all",
+              "p-4 rounded-[var(--r-card)] border shadow-xs space-y-1 transition-all",
               data.stagnantCount > 0
                 ? "bg-rose-50 border-rose-200 text-rose-800"
-                : "bg-white border-[#D9D4CB]"
+                : "bg-white border-[var(--line)]"
             )}
           >
             <div className="flex items-center justify-between">
@@ -957,22 +953,22 @@ export function DashboardClient({
               <AlertTriangle
                 className={cn(
                   "w-4 h-4",
-                  data.stagnantCount > 0 ? "text-rose-600 animate-bounce" : "text-[#6B6560]"
+                  data.stagnantCount > 0 ? "text-rose-600 " : "text-[var(--muted)]"
                 )}
               />
             </div>
             <div
               className={cn(
                 "text-2xl font-black tracking-tight",
-                data.stagnantCount > 0 ? "text-rose-800" : "text-[#1C1917]"
+                data.stagnantCount > 0 ? "text-rose-800" : "text-[var(--ink)]"
               )}
             >
-              {data.stagnantCount} <span className="text-xs font-semibold text-[#6B6560]">Unit</span>
+              {data.stagnantCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
             </div>
             <p
               className={cn(
                 "text-[10px]",
-                data.stagnantCount > 0 ? "text-rose-700 font-bold" : "text-[#6B6560]"
+                data.stagnantCount > 0 ? "text-rose-700 font-bold" : "text-[var(--muted)]"
               )}
             >
               {data.stagnantCount > 0 ? "Perlu evaluasi harga" : "Arus perputaran sehat"}
@@ -984,14 +980,14 @@ export function DashboardClient({
       {/* ── 3. AUCTION PIPELINE & CASH FLOW PROJECTION ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* ── AUCTION PIPELINE ── */}
-        <div className="bg-white rounded-2xl border border-[#D9D4CB] shadow-xs overflow-hidden">
-          <div className="p-4 sm:p-5 border-b border-[#D9D4CB] flex items-center gap-3 bg-gradient-to-r from-[#F7F5F2] to-[#FEF3C7]/30">
-            <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+        <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
+          <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center gap-3 bg-[var(--bg)] border-b border-[var(--line)]">
+            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
               <Gavel className="w-4.5 h-4.5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm text-[#1C1917]">Auction Pipeline</h3>
-              <p className="text-[11px] text-[#6B6560]">
+              <h3 className="font-extrabold text-sm text-[var(--ink)]">Auction Pipeline</h3>
+              <p className="text-[11px] text-[var(--muted)]">
                 80% beli lelang · 90% eks perusahaan (BPKB 7-14 hari)
               </p>
             </div>
@@ -1000,11 +996,11 @@ export function DashboardClient({
           <div className="p-5 space-y-4">
             {/* 3 Stat Cards */}
             <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="bg-[#F7F5F2] rounded-xl p-3 space-y-1">
-                <div className="text-xl font-black text-[#1C1917]">{ap.totalAuctionUnits}</div>
-                <div className="text-[10px] text-[#6B6560] font-semibold leading-tight">Unit dari Lelang</div>
+              <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-3 space-y-1">
+                <div className="text-xl font-black text-[var(--ink)]">{ap.totalAuctionUnits}</div>
+                <div className="text-[10px] text-[var(--muted)] font-semibold leading-tight">Unit dari Lelang</div>
               </div>
-              <div className="bg-emerald-50 rounded-xl p-3 space-y-1 border border-emerald-200/60">
+              <div className="bg-emerald-50 rounded-[var(--r-btn)] p-3 space-y-1 border border-emerald-200/60">
                 <div className="text-xl font-black text-emerald-800">{ap.eksPerusahaanCount}</div>
                 <div className="text-[10px] text-emerald-700 font-semibold leading-tight">
                   Eks Perusahaan
@@ -1014,16 +1010,16 @@ export function DashboardClient({
               </div>
               <div
                 className={cn(
-                  "rounded-xl p-3 space-y-1 border",
+                  "rounded-[var(--r-btn)] p-3 space-y-1 border",
                   ap.eksTarikLeasingCount > 0
                     ? "bg-orange-50 border-orange-200/60"
-                    : "bg-[#F7F5F2] border-[#D9D4CB]"
+                    : "bg-[var(--bg)] border-[var(--line)]"
                 )}
               >
                 <div
                   className={cn(
                     "text-xl font-black",
-                    ap.eksTarikLeasingCount > 0 ? "text-orange-800" : "text-[#1C1917]"
+                    ap.eksTarikLeasingCount > 0 ? "text-orange-800" : "text-[var(--ink)]"
                   )}
                 >
                   {ap.eksTarikLeasingCount}
@@ -1031,7 +1027,7 @@ export function DashboardClient({
                 <div
                   className={cn(
                     "text-[10px] font-semibold leading-tight",
-                    ap.eksTarikLeasingCount > 0 ? "text-orange-700" : "text-[#6B6560]"
+                    ap.eksTarikLeasingCount > 0 ? "text-orange-700" : "text-[var(--muted)]"
                   )}
                 >
                   Eks Leasing
@@ -1045,7 +1041,7 @@ export function DashboardClient({
 
             {/* BPKB Estimasi Tiba */}
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
+              <div className="flex items-center gap-2 text-xs font-bold text-[var(--ink)]">
                 <CalendarClock className="w-3.5 h-3.5 text-purple-600" />
                 <span>BPKB Estimasi Tiba dalam 7 Hari</span>
                 <span className="ml-auto text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">
@@ -1054,7 +1050,7 @@ export function DashboardClient({
               </div>
 
               {ap.unitsBpkbArrivingSoon.length === 0 ? (
-                <div className="text-[11px] text-[#6B6560] text-center py-3 bg-[#F7F5F2] rounded-xl">
+                <div className="text-[11px] text-[var(--muted)] text-center py-3 bg-[var(--bg)] rounded-[var(--r-btn)]">
                   <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
                   Tidak ada BPKB yang diperkirakan tiba dalam 7 hari ke depan
                 </div>
@@ -1064,7 +1060,7 @@ export function DashboardClient({
                     <div
                       key={i}
                       className={cn(
-                        "flex items-center justify-between text-xs rounded-xl px-3 py-2.5 border",
+                        "flex items-center justify-between text-xs rounded-[var(--r-btn)] px-3 py-2.5 border",
                         u.estimatedBpkbArrivalDays <= 0
                           ? "bg-red-50 border-red-200 text-red-800"
                           : u.estimatedBpkbArrivalDays <= 2
@@ -1093,7 +1089,7 @@ export function DashboardClient({
             </div>
 
             {/* Info Benchmark */}
-            <div className="bg-[#F7F5F2] rounded-xl px-3 py-2 text-[10px] text-[#6B6560] flex gap-4">
+            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] px-3 py-2 text-[10px] text-[var(--muted)] flex gap-4">
               <div className="flex items-center gap-1.5">
                 <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                 <span>
@@ -1111,14 +1107,14 @@ export function DashboardClient({
         </div>
 
         {/* ── CASH FLOW PROJECTION 14 HARI ── */}
-        <div className="bg-white rounded-2xl border border-[#D9D4CB] shadow-xs overflow-hidden">
-          <div className="p-4 sm:p-5 border-b border-[#D9D4CB] flex items-center gap-3 bg-gradient-to-r from-[#F7F5F2] to-emerald-50/40">
-            <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+        <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
+          <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center gap-3 bg-[var(--bg)] border-b border-[var(--line)]">
+            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
               <BarChart3 className="w-4.5 h-4.5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm text-[#1C1917]">Proyeksi Arus Kas 14 Hari</h3>
-              <p className="text-[11px] text-[#6B6560]">
+              <h3 className="font-extrabold text-sm text-[var(--ink)]">Proyeksi Arus Kas 14 Hari</h3>
+              <p className="text-[11px] text-[var(--muted)]">
                 70% pembeli bayar lunas dalam 2 minggu · Tagih hari ke-12
               </p>
             </div>
@@ -1127,14 +1123,14 @@ export function DashboardClient({
           <div className="p-5 space-y-4">
             {/* Kasflow Overview */}
             <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="bg-emerald-50 border border-emerald-200/60 rounded-xl p-3 space-y-1">
+              <div className="bg-emerald-50 border border-emerald-200/60 rounded-[var(--r-btn)] p-3 space-y-1">
                 <ArrowUpCircle className="w-4 h-4 text-emerald-600 mx-auto" />
                 <div className="text-sm font-black text-emerald-800">
                   {formatRupiah(cf.projectedCashIn14Days)}
                 </div>
                 <div className="text-[10px] text-emerald-700 font-semibold">Masuk (Est.)</div>
               </div>
-              <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3 space-y-1">
+              <div className="bg-rose-50 border border-rose-200/60 rounded-[var(--r-btn)] p-3 space-y-1">
                 <ArrowDownCircle className="w-4 h-4 text-rose-500 mx-auto" />
                 <div className="text-sm font-black text-rose-800">
                   {formatRupiah(cf.projectedCashOut14Days)}
@@ -1143,7 +1139,7 @@ export function DashboardClient({
               </div>
               <div
                 className={cn(
-                  "rounded-xl p-3 space-y-1 border",
+                  "rounded-[var(--r-btn)] p-3 space-y-1 border",
                   netPositive
                     ? "bg-emerald-50 border-emerald-200/60"
                     : "bg-red-50 border-red-200/60"
@@ -1175,7 +1171,7 @@ export function DashboardClient({
             {/* Cash Runway */}
             <div
               className={cn(
-                "rounded-xl px-4 py-3 flex items-center justify-between",
+                "rounded-[var(--r-btn)] px-4 py-3 flex items-center justify-between",
                 cf.cashRunwayDays > 90
                   ? "bg-emerald-50 border border-emerald-200"
                   : cf.cashRunwayDays > 30
@@ -1184,8 +1180,8 @@ export function DashboardClient({
               )}
             >
               <div>
-                <span className="text-xs font-bold text-[#1C1917]">Cash Runway (tanpa pemasukan)</span>
-                <p className="text-[10px] text-[#6B6560] mt-0.5">
+                <span className="text-xs font-bold text-[var(--ink)]">Cash Runway (tanpa pemasukan)</span>
+                <p className="text-[10px] text-[var(--muted)] mt-0.5">
                   Dari saldo kas BCA {formatRupiah(data.cashBalance)}
                 </p>
               </div>
@@ -1202,18 +1198,18 @@ export function DashboardClient({
                 >
                   {cf.cashRunwayDays >= 999 ? "∞" : cf.cashRunwayDays}
                 </div>
-                <div className="text-[10px] text-[#6B6560]">hari</div>
+                <div className="text-[10px] text-[var(--muted)]">hari</div>
               </div>
             </div>
 
             {/* Piutang Mendekati 2 Minggu */}
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#1C1917]">
-                <Receipt className="w-3.5 h-3.5 text-[#D97706]" />
+              <div className="flex items-center gap-2 text-xs font-bold text-[var(--ink)]">
+                <Receipt className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Piutang Mendekati 2 Minggu (Tagih Sekarang)</span>
               </div>
               {cf.pendingSettlements.filter((p) => p.isLikelyClearingSoon).length === 0 ? (
-                <div className="text-[11px] text-[#6B6560] text-center py-3 bg-[#F7F5F2] rounded-xl">
+                <div className="text-[11px] text-[var(--muted)] text-center py-3 bg-[var(--bg)] rounded-[var(--r-btn)]">
                   <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
                   Tidak ada piutang yang mendekati 2 minggu
                 </div>
@@ -1240,11 +1236,11 @@ export function DashboardClient({
                       return (
                         <div
                           key={i}
-                          className="flex items-center justify-between bg-amber-50 border border-amber-200/60 rounded-xl px-3 py-2 text-xs gap-2"
+                          className="flex items-center justify-between bg-amber-50 border border-amber-200/60 rounded-[var(--r-btn)] px-3 py-2 text-xs gap-2"
                         >
                           <div className="truncate">
-                            <span className="font-bold text-[#1C1917]">{p.vehiclePlate}</span>
-                            <span className="text-[10px] text-[#6B6560] ml-1.5">{p.buyerName}</span>
+                            <span className="font-bold text-[var(--ink)]">{p.vehiclePlate}</span>
+                            <span className="text-[10px] text-[var(--muted)] ml-1.5">{p.buyerName}</span>
                             <span className="text-[10px] text-amber-700 ml-1.5 font-semibold">
                               · {p.daysSinceSale} hari lalu
                             </span>
@@ -1273,9 +1269,9 @@ export function DashboardClient({
             </div>
 
             {/* Burn Rate Info */}
-            <div className="bg-[#F7F5F2] rounded-xl px-3 py-2 text-[10px] text-[#6B6560] flex items-center justify-between">
+            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] px-3 py-2 text-[10px] text-[var(--muted)] flex items-center justify-between">
               <span>Biaya Operasional Bulanan (avg 3 bln):</span>
-              <span className="font-bold text-[#1C1917]">
+              <span className="font-bold text-[var(--ink)]">
                 {formatRupiah(cf.monthlyOperationalBurn)} / bln
               </span>
             </div>
@@ -1286,30 +1282,30 @@ export function DashboardClient({
       {/* ── 4. KALKULATOR DAYA BELI KAS (BUYING POWER & RUNWAY KULAKAN) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Card Ringkasan Arus Kas */}
-        <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-xs font-bold uppercase tracking-wider">Saldo Kas Rekening BCA</span>
-            <Wallet className="w-5 h-5 text-[#D97706]" />
+            <Wallet className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div>
-            <div className="text-3xl font-black text-[#1C1917] tracking-tight">
+            <div className="text-3xl font-black text-[var(--ink)] tracking-tight">
               {formatRupiah(data.cashBalance)}
             </div>
             <p className="text-xs text-emerald-700 font-medium mt-1">Kas riil on-hand di rekening bank BCA</p>
           </div>
 
-          <div className="pt-3 border-t border-[#EBE7E1] space-y-2 text-xs">
-            <div className="flex justify-between text-[#6B6560]">
+          <div className="pt-3 border-t border-[var(--line)] space-y-2 text-xs">
+            <div className="flex justify-between text-[var(--muted)]">
               <span>Total Modal Terikat di Stok (HPP):</span>
-              <span className="font-bold text-[#1C1917]">{formatRupiah(data.totalInventoryHpp)}</span>
+              <span className="font-bold text-[var(--ink)]">{formatRupiah(data.totalInventoryHpp)}</span>
             </div>
-            <div className="flex justify-between text-[#6B6560]">
+            <div className="flex justify-between text-[var(--muted)]">
               <span>Cadangan Kas Operasional (Aman):</span>
               <span className="font-bold text-amber-700">
                 {formatRupiah(data.buyingPowerRecommendation.reserveFund)}
               </span>
             </div>
-            <div className="flex justify-between text-[#6B6560]">
+            <div className="flex justify-between text-[var(--muted)]">
               <span>Dana Maksimal Kulakan Baru:</span>
               <span className="font-black text-emerald-700 text-sm">
                 {formatRupiah(data.buyingPowerRecommendation.recommendedBudget)}
@@ -1319,10 +1315,10 @@ export function DashboardClient({
         </div>
 
         {/* Card Rekomendasi Keputusan Kulakan */}
-        <div className="lg:col-span-2 bg-gradient-to-br from-amber-50/60 to-orange-50/40 border border-amber-200 rounded-2xl p-6 shadow-xs space-y-3 flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-white border border-[var(--line)] rounded-[var(--r-card)] p-6 shadow-xs space-y-3 flex flex-col justify-between">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-[#92400E]">
-              <Coins className="w-5 h-5 text-[#D97706]" />
+              <Coins className="w-5 h-5 text-[var(--accent)]" />
               <h4 className="font-extrabold text-sm uppercase tracking-wider text-[#78350F]">
                 Rekomendasi Keputusan Kulakan Unit Baru
               </h4>
@@ -1334,21 +1330,21 @@ export function DashboardClient({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <div className="bg-white/90 p-3.5 rounded-xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] font-bold uppercase text-[#6B6560] block">Rekomendasi Jumlah Unit:</span>
-              <span className="text-lg font-black text-[#1C1917]">
+            <div className="bg-white/90 p-3.5 rounded-[var(--r-btn)] border border-amber-200/80 space-y-1">
+              <span className="text-[10px] font-bold uppercase text-[var(--muted)] block">Rekomendasi Jumlah Unit:</span>
+              <span className="text-lg font-black text-[var(--ink)]">
                 {data.buyingPowerRecommendation.recommendedUnits > 0
                   ? `Beli ${data.buyingPowerRecommendation.recommendedUnits} Mobil`
                   : "Tunda Kulakan"}
               </span>
-              <span className="text-[11px] text-[#6B6560] block">
+              <span className="text-[11px] text-[var(--muted)] block">
                 {data.emptyGarageSlots} slot garasi masih tersedia
               </span>
             </div>
 
-            <div className="bg-white/90 p-3.5 rounded-xl border border-amber-200/80 space-y-1">
-              <span className="text-[10px] font-bold uppercase text-[#6B6560] block">Target Segmen Disarankan:</span>
-              <span className="text-xs font-bold text-[#1C1917] block truncate">
+            <div className="bg-white/90 p-3.5 rounded-[var(--r-btn)] border border-amber-200/80 space-y-1">
+              <span className="text-[10px] font-bold uppercase text-[var(--muted)] block">Target Segmen Disarankan:</span>
+              <span className="text-xs font-bold text-[var(--ink)] block truncate">
                 {data.buyingPowerRecommendation.targetSegment}
               </span>
               <span className="text-[11px] text-emerald-700 font-semibold block">
@@ -1360,26 +1356,26 @@ export function DashboardClient({
       </div>
 
       {/* ── 5. DAFTAR PERHATIAN MENDESAK HARI INI (ACTION ITEMS) ── */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-[#D9D4CB] flex items-center justify-between bg-[#F7F5F2]">
+      <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)]">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-[#D97706]" />
-            <h3 className="font-bold text-sm text-[#1C1917]">
+            <AlertTriangle className="w-4 h-4 text-[var(--accent)]" />
+            <h3 className="font-bold text-sm text-[var(--ink)]">
               Mobil Perlu Perhatian Mendesak (BPKB Belum Datang / Mendekati Macet)
             </h3>
           </div>
-          <span className="text-xs text-[#6B6560] font-semibold">{data.urgentVehicles.length} Unit</span>
+          <span className="text-xs text-[var(--muted)] font-semibold">{data.urgentVehicles.length} Unit</span>
         </div>
 
         {data.urgentVehicles.length === 0 ? (
-          <div className="p-8 text-center text-[#6B6560] text-xs">
+          <div className="p-8 text-center text-[var(--muted)] text-xs">
             <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2 opacity-80" />
             Semua unit dalam kondisi aman. Tidak ada BPKB tertahan atau unit macet kritis.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[#D9D4CB]">
+              <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[var(--line)]">
                 <tr>
                   <th className="py-3 px-4">Plat & Unit</th>
                   <th className="py-3 px-4">Umur di Garasi</th>
@@ -1389,12 +1385,12 @@ export function DashboardClient({
                   <th className="py-3 px-4 text-right">Tindakan</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
+              <tbody className="divide-y divide-[var(--line)]">
                 {data.urgentVehicles.map((v) => (
-                  <tr key={v.id} className="hover:bg-[#F7F5F2] transition-colors">
+                  <tr key={v.id} className="hover:bg-[var(--bg)] transition-colors">
                     <td className="py-3.5 px-4">
-                      <span className="font-bold text-[#1C1917] block">{v.plateNumber}</span>
-                      <span className="text-xs text-[#6B6560]">{v.name}</span>
+                      <span className="font-bold text-[var(--ink)] block">{v.plateNumber}</span>
+                      <span className="text-xs text-[var(--muted)]">{v.name}</span>
                     </td>
 
                     <td className="py-3.5 px-4 whitespace-nowrap">
@@ -1410,21 +1406,21 @@ export function DashboardClient({
                     </td>
 
                     <td className="py-3.5 px-4">
-                      <span className="text-xs text-[#1C1917] font-medium block">{v.urgentReason}</span>
+                      <span className="text-xs text-[var(--ink)] font-medium block">{v.urgentReason}</span>
                     </td>
 
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap font-medium text-[#6B6560]">
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap font-medium text-[var(--muted)]">
                       {formatRupiah(v.hpp)}
                     </td>
 
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap font-black text-[#1C1917]">
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap font-black text-[var(--ink)]">
                       {formatRupiah(v.targetPrice)}
                     </td>
 
                     <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <Link
                         href={`/admin/inventory`}
-                        className="inline-flex items-center gap-1 text-xs text-[#D97706] hover:underline font-bold"
+                        className="inline-flex items-center gap-1 text-xs text-[var(--accent)] hover:underline font-bold"
                       >
                         <span>Kelola Unit</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -1439,15 +1435,15 @@ export function DashboardClient({
       </div>
 
       {/* ── 5B. RADAR ALARM PAJAK STNK & PLAT KALENG (H-30 HARI & OVERDUE) ── */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-[#D9D4CB] flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-[#F7F5F2] to-amber-50/40">
+      <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-[var(--line)] flex flex-wrap items-center justify-between gap-3 bg-[var(--bg)] border-b border-[var(--line)]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
               <CalendarClock className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-extrabold text-sm text-[#1C1917]">
+                <h3 className="font-extrabold text-sm text-[var(--ink)]">
                   Radar Alarm Pajak STNK & Plat Kaleng (PKB)
                 </h3>
                 {data.taxAlertSummary.overdueCount > 0 && (
@@ -1456,7 +1452,7 @@ export function DashboardClient({
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-[#6B6560]">
+              <p className="text-[11px] text-[var(--muted)]">
                 Pantauan masa berlaku pajak tahunan garasi untuk cegah tilang razia dan kendala saat serah terima
               </p>
             </div>
@@ -1481,7 +1477,7 @@ export function DashboardClient({
         </div>
 
         {data.taxAlertSummary.criticalUnits.length === 0 ? (
-          <div className="p-8 text-center text-[#6B6560] text-xs">
+          <div className="p-8 text-center text-[var(--muted)] text-xs">
             <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2 opacity-80" />
             <strong className="block text-emerald-900 font-bold mb-1">
               Seluruh Pajak Unit Pajangan Aman!
@@ -1491,7 +1487,7 @@ export function DashboardClient({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[#D9D4CB]">
+              <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[var(--line)]">
                 <tr>
                   <th className="py-3 px-4">Plat & Unit Kendaraan</th>
                   <th className="py-3 px-4">Status & Sisa Waktu</th>
@@ -1501,7 +1497,7 @@ export function DashboardClient({
                   <th className="py-3 px-4 text-right">Tindakan</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
+              <tbody className="divide-y divide-[var(--line)]">
                 {data.taxAlertSummary.criticalUnits.map((u) => {
                   const isOverdue = u.status === "OVERDUE";
                   const taxDateFormatted = new Intl.DateTimeFormat("id-ID", {
@@ -1518,10 +1514,10 @@ export function DashboardClient({
                     : "-";
 
                   return (
-                    <tr key={u.id} className="hover:bg-[#F7F5F2] transition-colors">
+                    <tr key={u.id} className="hover:bg-[var(--bg)] transition-colors">
                       <td className="py-3.5 px-4">
-                        <span className="font-bold text-[#1C1917] block">{u.plateNumber}</span>
-                        <span className="text-xs text-[#6B6560]">
+                        <span className="font-bold text-[var(--ink)] block">{u.plateNumber}</span>
+                        <span className="text-xs text-[var(--muted)]">
                           {u.brand} {u.model} ({u.year})
                         </span>
                       </td>
@@ -1541,21 +1537,21 @@ export function DashboardClient({
                       </td>
 
                       <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span className="font-semibold text-[#1C1917]">{taxDateFormatted}</span>
+                        <span className="font-semibold text-[var(--ink)]">{taxDateFormatted}</span>
                       </td>
 
-                      <td className="py-3.5 px-4 whitespace-nowrap text-[#6B6560]">
+                      <td className="py-3.5 px-4 whitespace-nowrap text-[var(--muted)]">
                         <span>{platDateFormatted}</span>
                       </td>
 
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-bold text-[#1C1917]">
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-bold text-[var(--ink)]">
                         {u.taxNominal ? formatRupiah(u.taxNominal) : "-"}
                       </td>
 
                       <td className="py-3.5 px-4 text-right whitespace-nowrap">
                         <Link
                           href={`/admin/inventory`}
-                          className="inline-flex items-center gap-1 text-xs text-[#D97706] hover:underline font-bold"
+                          className="inline-flex items-center gap-1 text-xs text-[var(--accent)] hover:underline font-bold"
                         >
                           <span>Proses Samsat</span>
                           <ArrowRight className="w-3.5 h-3.5" />
@@ -1571,15 +1567,15 @@ export function DashboardClient({
       </div>
 
       {/* ── 6. BUSINESS PATTERN ANALYTICS — dari data nyata yang diinput user ── */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-[#D9D4CB] flex items-center justify-between bg-gradient-to-r from-[#F7F5F2] to-blue-50/30">
+      <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)] border-b border-[var(--line)]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
               <BarChart3 className="w-4.5 h-4.5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm text-[#1C1917]">Analisa Pola Bisnis Nyata</h3>
-              <p className="text-[11px] text-[#6B6560]">
+              <h3 className="font-extrabold text-sm text-[var(--ink)]">Analisa Pola Bisnis Nyata</h3>
+              <p className="text-[11px] text-[var(--muted)]">
                 Dihitung langsung dari semua data yang Anda input — bukan asumsi
               </p>
             </div>
@@ -1598,20 +1594,20 @@ export function DashboardClient({
 
         <div className="p-5 space-y-5">
           {/* Data Quality Note */}
-          <div className="text-xs text-[#6B6560] bg-[#F7F5F2] rounded-xl px-4 py-3 leading-relaxed">
+          <div className="text-xs text-[var(--muted)] bg-[var(--bg)] rounded-[var(--r-btn)] px-4 py-3 leading-relaxed">
             {data.businessPatterns.dataQualityNote}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Siklus Rata-rata */}
-            <div className="bg-[#F7F5F2] rounded-xl p-4 space-y-1">
-              <div className="text-[10px] font-bold text-[#6B6560] uppercase tracking-wider flex items-center gap-1">
+            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-4 space-y-1">
+              <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
                 <Clock className="w-3 h-3" /> Siklus Rata-rata
               </div>
-              <div className="text-2xl font-black text-[#1C1917]">
+              <div className="text-2xl font-black text-[var(--ink)]">
                 {data.businessPatterns.avgTotalCycleDays > 0 ? data.businessPatterns.avgTotalCycleDays : "-"}
               </div>
-              <div className="text-[11px] text-[#6B6560]">hari beli → terjual</div>
+              <div className="text-[11px] text-[var(--muted)]">hari beli → terjual</div>
               {data.businessPatterns.avgTotalCycleDays > 0 && (
                 <div className="text-[10px] text-emerald-700">
                   Intake→Siap: ~{data.businessPatterns.avgDaysIntakeToReady}h | Siap→Jual: ~{data.businessPatterns.avgDaysReadyToSold}h
@@ -1620,14 +1616,14 @@ export function DashboardClient({
             </div>
 
             {/* Rata-rata Payment Lag */}
-            <div className="bg-[#F7F5F2] rounded-xl p-4 space-y-1">
-              <div className="text-[10px] font-bold text-[#6B6560] uppercase tracking-wider flex items-center gap-1">
+            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-4 space-y-1">
+              <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
                 <Receipt className="w-3 h-3" /> Payment Lag Nyata
               </div>
-              <div className="text-2xl font-black text-[#1C1917]">
+              <div className="text-2xl font-black text-[var(--ink)]">
                 {data.businessPatterns.avgPaymentLagDays > 0 ? data.businessPatterns.avgPaymentLagDays : "-"}
               </div>
-              <div className="text-[11px] text-[#6B6560]">hari rata-rata lunas</div>
+              <div className="text-[11px] text-[var(--muted)]">hari rata-rata lunas</div>
               {data.businessPatterns.avgPaymentLagDays > 0 && (
                 <div className="text-[10px] text-blue-700">
                   {data.businessPatterns.pctPaidWithin14Days}% lunas dalam 14 hari · {data.businessPatterns.pctPaidWithin7Days}% dalam 7 hari
@@ -1636,8 +1632,8 @@ export function DashboardClient({
             </div>
 
             {/* Rata-rata Margin */}
-            <div className="bg-[#F7F5F2] rounded-xl p-4 space-y-1">
-              <div className="text-[10px] font-bold text-[#6B6560] uppercase tracking-wider flex items-center gap-1">
+            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-4 space-y-1">
+              <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" /> Avg Margin / Unit
               </div>
               <div className="text-2xl font-black text-emerald-800">
@@ -1645,20 +1641,20 @@ export function DashboardClient({
                   ? formatRupiah(data.businessPatterns.avgGrossMarginRupiah)
                   : "-"}
               </div>
-              <div className="text-[11px] text-[#6B6560]">
+              <div className="text-[11px] text-[var(--muted)]">
                 {data.businessPatterns.avgGrossMarginPct > 0 ? `${data.businessPatterns.avgGrossMarginPct}% margin kotor` : "belum ada data"}
               </div>
             </div>
 
             {/* % dari Lelang */}
-            <div className="bg-[#F7F5F2] rounded-xl p-4 space-y-1">
-              <div className="text-[10px] font-bold text-[#6B6560] uppercase tracking-wider flex items-center gap-1">
+            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-4 space-y-1">
+              <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
                 <Gavel className="w-3 h-3" /> % Beli dari Lelang
               </div>
               <div className="text-2xl font-black text-amber-800">
                 {data.businessPatterns.totalHistoricalVehicles > 0 ? `${data.businessPatterns.pctFromAuction}%` : "-"}
               </div>
-              <div className="text-[11px] text-[#6B6560]">
+              <div className="text-[11px] text-[var(--muted)]">
                 {data.businessPatterns.pctEksPerusahaan > 0
                   ? `${data.businessPatterns.pctEksPerusahaan}% eks perusahaan`
                   : "dari total unit historis"}
@@ -1670,18 +1666,18 @@ export function DashboardClient({
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Balai lelang favorit dari data nyata */}
             <div className="space-y-2">
-              <div className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
+              <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
                 <Gavel className="w-3.5 h-3.5 text-amber-600" />
                 Balai Lelang Favorit (Data Nyata)
               </div>
               {data.businessPatterns.topAuctionHouses.length === 0 ? (
-                <p className="text-[11px] text-[#6B6560] italic">Belum ada data balai lelang tercatat</p>
+                <p className="text-[11px] text-[var(--muted)] italic">Belum ada data balai lelang tercatat</p>
               ) : (
                 <div className="space-y-1">
                   {data.businessPatterns.topAuctionHouses.map((h, i) => (
                     <div key={i} className="flex items-center justify-between text-xs">
-                      <span className="text-[#1C1917] font-medium">{h.name}</span>
-                      <span className="text-[#6B6560]">{h.count}x ({h.pct}%)</span>
+                      <span className="text-[var(--ink)] font-medium">{h.name}</span>
+                      <span className="text-[var(--muted)]">{h.count}x ({h.pct}%)</span>
                     </div>
                   ))}
                 </div>
@@ -1690,17 +1686,17 @@ export function DashboardClient({
 
             {/* Unit tercepat laku */}
             <div className="space-y-2">
-              <div className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
+              <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
                 Unit Tercepat Laku (Histori)
               </div>
               {data.businessPatterns.fastestSegments.length === 0 ? (
-                <p className="text-[11px] text-[#6B6560] italic">Belum ada data penjualan cukup</p>
+                <p className="text-[11px] text-[var(--muted)] italic">Belum ada data penjualan cukup</p>
               ) : (
                 <div className="space-y-1">
                   {data.businessPatterns.fastestSegments.slice(0, 4).map((s, i) => (
                     <div key={i} className="flex items-center justify-between text-xs">
-                      <span className="text-[#1C1917] font-medium">{s.brandModel}</span>
+                      <span className="text-[var(--ink)] font-medium">{s.brandModel}</span>
                       <span className="text-emerald-700 font-bold">{s.avgDays} hari</span>
                     </div>
                   ))}
@@ -1710,17 +1706,17 @@ export function DashboardClient({
 
             {/* Merk paling menguntungkan */}
             <div className="space-y-2">
-              <div className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
+              <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
                 <Coins className="w-3.5 h-3.5 text-blue-600" />
                 Margin Terbaik per Merk
               </div>
               {data.businessPatterns.mostProfitableBrands.length === 0 ? (
-                <p className="text-[11px] text-[#6B6560] italic">Belum ada data penjualan cukup</p>
+                <p className="text-[11px] text-[var(--muted)] italic">Belum ada data penjualan cukup</p>
               ) : (
                 <div className="space-y-1">
                   {data.businessPatterns.mostProfitableBrands.slice(0, 4).map((b, i) => (
                     <div key={i} className="flex items-center justify-between text-xs">
-                      <span className="text-[#1C1917] font-medium">{b.brand}</span>
+                      <span className="text-[var(--ink)] font-medium">{b.brand}</span>
                       <span className="text-blue-700 font-bold">{formatRupiah(b.avgMargin)}</span>
                     </div>
                   ))}

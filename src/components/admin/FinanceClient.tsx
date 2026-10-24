@@ -417,10 +417,10 @@ export function FinanceClient({
       {/* Header & Quick Action Buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-[#1C1917] tracking-tight">
+          <h1 className="text-2xl font-black text-[var(--ink)] tracking-tight">
             Keuangan & Buku Kas Showroom
           </h1>
-          <p className="text-sm text-[#6B6560] mt-1">
+          <p className="text-sm text-[var(--muted)] mt-1">
             Buku kas BCA, pemisahan pengeluaran (operasional vs prive belanja rumah tangga), dan nilai stok vs aset peralatan.
           </p>
         </div>
@@ -444,9 +444,9 @@ export function FinanceClient({
 
           <button
             onClick={() => setShowManualCashModal(true)}
-            className="flex items-center gap-1.5 bg-white hover:bg-[#F7F5F2] border border-[#D9D4CB] text-[#1C1917] px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
           >
-            <Receipt className="w-3.5 h-3.5 text-[#D97706]" />
+            <Receipt className="w-3.5 h-3.5 text-[var(--accent)]" />
             <span>+ Kas Masuk/Keluar</span>
           </button>
         </div>
@@ -454,75 +454,75 @@ export function FinanceClient({
 
       {/* 5 KARTU KPI KEUANGAN (KAS, STOK, ASET, OPEX, PRIVE) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Kas Rekening BCA</span>
-            <Wallet className="w-4 h-4 text-[#D97706]" />
+            <Wallet className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-xl font-black text-[#1C1917] tracking-tight">
+          <div className="text-xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.cashBalance)}
           </div>
-          <p className="text-[10px] text-[#6B6560]">Total kas riil on-hand di rekening</p>
+          <p className="text-[10px] text-[var(--muted)]">Total kas riil on-hand di rekening</p>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Stok Mobil (HPP)</span>
             <Car className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-xl font-black text-emerald-700 tracking-tight">
             {formatRupiah(summary.totalInventoryValue || 0)}
           </div>
-          <p className="text-[10px] text-[#6B6560]">
+          <p className="text-[10px] text-[var(--muted)]">
             {summary.activeVehiclesCount || 0} unit aktif (Aset Lancar)
           </p>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Aset Peralatan</span>
             <Wrench className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-xl font-black text-blue-700 tracking-tight">
             {formatRupiah(summary.totalAssetValue || assets.totalCurrentValue)}
           </div>
-          <p className="text-[10px] text-[#6B6560]">
+          <p className="text-[10px] text-[var(--muted)]">
             {summary.assetsCount || assets.totalItems} alat kerja (Aset Tetap)
           </p>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Beban Operasional</span>
             <Building className="w-4 h-4 text-purple-600" />
           </div>
-          <div className="text-xl font-black text-[#1C1917] tracking-tight">
+          <div className="text-xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalOperationalExpenses || operationalData.totalOperational)}
           </div>
-          <p className="text-[10px] text-[#6B6560]">Sewa, listrik, WiFi & iklan</p>
+          <p className="text-[10px] text-[var(--muted)]">Sewa, listrik, WiFi & iklan</p>
         </div>
 
-        <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Prive Owner (BCA)</span>
             <ShoppingBag className="w-4 h-4 text-rose-600" />
           </div>
           <div className="text-xl font-black text-rose-700 tracking-tight">
             {formatRupiah(summary.totalOwnerDraw || operationalData.totalOwnerDraw)}
           </div>
-          <p className="text-[10px] text-[#6B6560]">Pengeluaran pribadi (Non-HPP)</p>
+          <p className="text-[10px] text-[var(--muted)]">Pengeluaran pribadi (Non-HPP)</p>
         </div>
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex border-b border-[#D9D4CB] gap-4 sm:gap-6 text-xs sm:text-sm font-semibold overflow-x-auto pb-px">
+      <div className="flex border-b border-[var(--line)] gap-4 sm:gap-6 text-xs sm:text-sm font-semibold overflow-x-auto pb-px">
         <button
           onClick={() => setActiveTab("cash")}
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0",
             activeTab === "cash"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           Buku Kas Rekening BCA & Mutasi
@@ -533,8 +533,8 @@ export function FinanceClient({
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
             activeTab === "expenses_prive"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           <span>Pemisahan Beban & Prive (BCA)</span>
@@ -548,8 +548,8 @@ export function FinanceClient({
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
             activeTab === "assets_inventory"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           <span>Stok vs Aset Showroom</span>
@@ -563,17 +563,17 @@ export function FinanceClient({
           TAB 1: BUKU KAS REKENING BCA & MUTASI
           ========================================================================= */}
       {activeTab === "cash" && (
-        <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm">
-          <div className="p-5 border-b border-[#D9D4CB] flex items-center justify-between bg-[#FBF9F6]">
+        <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-sm">
+          <div className="p-5 border-b border-[var(--line)] flex items-center justify-between bg-[#FBF9F6]">
             <div>
-              <h3 className="font-bold text-[#1C1917]">Buku Kas Utama (Rekonsiliasi Mutasi Rekening BCA)</h3>
-              <p className="text-xs text-[#6B6560] mt-0.5">
+              <h3 className="font-bold text-[var(--ink)]">Buku Kas Utama (Rekonsiliasi Mutasi Rekening BCA)</h3>
+              <p className="text-xs text-[var(--muted)] mt-0.5">
                 Mencatat mutasi masuk & keluar kas bank: penjualan unit, perbaikan, operasional, dan penarikan prive.
               </p>
             </div>
             <button
               onClick={() => setShowManualCashModal(true)}
-              className="bg-[#D97706] hover:bg-[#B45309] text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+              className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer"
             >
               + Transaksi Kas
             </button>
@@ -581,7 +581,7 @@ export function FinanceClient({
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold">
+              <thead className="bg-[var(--bg)] text-xs uppercase text-[var(--muted)] font-semibold">
                 <tr>
                   <th className="py-3 px-4">Tanggal & Waktu</th>
                   <th className="py-3 px-4">Tipe Transaksi</th>
@@ -590,7 +590,7 @@ export function FinanceClient({
                   <th className="py-3 px-4 text-right">Saldo Berjalan</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
+              <tbody className="divide-y divide-[var(--line)]">
                 {cashTransactions.map((tx) => {
                   const isIncoming =
                     tx.type === "IN_SALE_PAYMENT" ||
@@ -598,8 +598,8 @@ export function FinanceClient({
                     tx.type === "IN_OWNER_EQUITY";
 
                   return (
-                    <tr key={tx.id} className="hover:bg-[#FAF9F6]">
-                      <td className="py-3 px-4 text-xs text-[#6B6560] whitespace-nowrap">
+                    <tr key={tx.id} className="hover:bg-[var(--bg)]">
+                      <td className="py-3 px-4 text-xs text-[var(--muted)] whitespace-nowrap">
                         {formatDate(tx.createdAt)}
                       </td>
                       <td className="py-3 px-4">
@@ -616,7 +616,7 @@ export function FinanceClient({
                           {tx.type}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-xs text-[#1C1917]">
+                      <td className="py-3 px-4 text-xs text-[var(--ink)]">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span>
                             {tx.notes || (tx.vehiclePlate ? `Unit ${tx.vehiclePlate} (${tx.vehicleName})` : "-")}
@@ -663,7 +663,7 @@ export function FinanceClient({
                           {formatRupiah(tx.amount)}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-right font-black text-xs text-[#1C1917] whitespace-nowrap">
+                      <td className="py-3 px-4 text-right font-black text-xs text-[var(--ink)] whitespace-nowrap">
                         {formatRupiah(tx.runningBalance)}
                       </td>
                     </tr>
@@ -681,16 +681,16 @@ export function FinanceClient({
       {activeTab === "expenses_prive" && (
         <div className="space-y-6">
           {/* EDUKASI & PENJELASAN 3 KANTONG PENGELUARAN */}
-          <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-6 shadow-sm">
+          <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-6 shadow-sm">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0 mt-0.5">
                 <ShoppingBag className="w-5 h-5" />
               </div>
               <div className="space-y-1">
-                <h3 className="font-bold text-base text-[#1C1917]">
+                <h3 className="font-bold text-base text-[var(--ink)]">
                   Solusi Rekening BCA Campur: Pemisahan Pengeluaran 3 Kantong
                 </h3>
-                <p className="text-xs text-[#6B6560] leading-relaxed">
+                <p className="text-xs text-[var(--muted)] leading-relaxed">
                   Jika transaksi showroom dan belanja rumah tangga masih menggunakan 1 rekening BCA yang sama,
                   catat setiap mutasi ke dalam kategori yang tepat agar <strong>saldo buku kas selalu cocok dengan mutasi bank</strong> tanpa merusak perhitungan laba mobil.
                 </p>
@@ -698,26 +698,26 @@ export function FinanceClient({
             </div>
 
             {/* 3 Kotak Pilar */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 mt-4 border-t border-[#D9D4CB]">
-              <div className="bg-white p-4 rounded-xl border border-[#D9D4CB] space-y-1.5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 mt-4 border-t border-[var(--line)]">
+              <div className="bg-white p-4 rounded-xl border border-[var(--line)] space-y-1.5">
                 <div className="flex items-center gap-1.5 text-emerald-700 font-bold text-xs uppercase">
                   <Car className="w-4 h-4" />
                   <span>1. Biaya Unit Mobil (HPP)</span>
                 </div>
-                <p className="text-[11px] text-[#6B6560] leading-relaxed">
+                <p className="text-[11px] text-[var(--muted)] leading-relaxed">
                   Cat, salon, ganti oli, sparepart, aki, pajak unit. <em>Menempel ke mobil & modal kembali saat unit laku.</em>
                 </p>
-                <div className="text-xs font-bold text-[#1C1917] pt-1">
+                <div className="text-xs font-bold text-[var(--ink)] pt-1">
                   Dicatat via Menu Inventori Mobil
                 </div>
               </div>
 
-              <div className="bg-white p-4 rounded-xl border border-[#D9D4CB] space-y-1.5">
+              <div className="bg-white p-4 rounded-xl border border-[var(--line)] space-y-1.5">
                 <div className="flex items-center gap-1.5 text-blue-700 font-bold text-xs uppercase">
                   <Building className="w-4 h-4" />
                   <span>2. Beban Operasional Showroom</span>
                 </div>
-                <p className="text-[11px] text-[#6B6560] leading-relaxed">
+                <p className="text-[11px] text-[var(--muted)] leading-relaxed">
                   Sewa garasi, listrik, WiFi, iklan FB/OLX, gaji admin, kopi tamu. <em>Mengurangi laba operasional bulanan showroom.</em>
                 </p>
                 <div className="text-xs font-bold text-blue-700 pt-1">
@@ -730,7 +730,7 @@ export function FinanceClient({
                   <ShoppingBag className="w-4 h-4" />
                   <span>3. Prive Pribadi Owner (BCA)</span>
                 </div>
-                <p className="text-[11px] text-[#6B6560] leading-relaxed">
+                <p className="text-[11px] text-[var(--muted)] leading-relaxed">
                   Belanja dapur, sekolah anak, cicilan pribadi, transfer keluarga. <em>Memotong kas BCA tanpa merusak laba mobil!</em>
                 </p>
                 <div className="text-xs font-bold text-purple-700 pt-1">
@@ -741,18 +741,18 @@ export function FinanceClient({
           </div>
 
           {/* AKSI CEPAT PENCATATAN & TABEL MUTASI */}
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm space-y-4 p-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EBE7E1] pb-4">
+          <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-sm space-y-4 p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[#6B6560]">Filter Riwayat:</span>
+                <span className="text-xs font-bold text-[var(--muted)]">Filter Riwayat:</span>
                 <div className="flex gap-1.5 overflow-x-auto text-xs font-semibold">
                   <button
                     onClick={() => setExpenseFilter("ALL")}
                     className={cn(
                       "px-3 py-1.5 rounded-lg transition-colors cursor-pointer",
                       expenseFilter === "ALL"
-                        ? "bg-[#1C1917] text-white"
-                        : "bg-[#F7F5F2] text-[#6B6560] hover:bg-[#EFECE8]"
+                        ? "bg-[var(--ink)] text-white"
+                        : "bg-[var(--bg)] text-[var(--muted)] hover:bg-[var(--bg)]"
                     )}
                   >
                     Semua ({combinedExpensesPriveList.length})
@@ -763,7 +763,7 @@ export function FinanceClient({
                       "px-3 py-1.5 rounded-lg transition-colors cursor-pointer",
                       expenseFilter === "OPERATIONAL"
                         ? "bg-blue-600 text-white"
-                        : "bg-[#F7F5F2] text-[#6B6560] hover:bg-[#EFECE8]"
+                        : "bg-[var(--bg)] text-[var(--muted)] hover:bg-[var(--bg)]"
                     )}
                   >
                     Operasional ({operationalData.operationalExpenses.length})
@@ -774,7 +774,7 @@ export function FinanceClient({
                       "px-3 py-1.5 rounded-lg transition-colors cursor-pointer",
                       expenseFilter === "OWNER_DRAW"
                         ? "bg-purple-600 text-white"
-                        : "bg-[#F7F5F2] text-[#6B6560] hover:bg-[#EFECE8]"
+                        : "bg-[var(--bg)] text-[var(--muted)] hover:bg-[var(--bg)]"
                     )}
                   >
                     Prive Pribadi ({operationalData.ownerDraws.length})
@@ -785,7 +785,7 @@ export function FinanceClient({
                       "px-3 py-1.5 rounded-lg transition-colors cursor-pointer",
                       expenseFilter === "OWNER_EQUITY"
                         ? "bg-emerald-600 text-white"
-                        : "bg-[#F7F5F2] text-[#6B6560] hover:bg-[#EFECE8]"
+                        : "bg-[var(--bg)] text-[var(--muted)] hover:bg-[var(--bg)]"
                     )}
                   >
                     Setoran Modal ({operationalData.ownerEquities.length})
@@ -816,13 +816,13 @@ export function FinanceClient({
             </div>
 
             {filteredExpensesList.length === 0 ? (
-              <div className="p-8 text-center text-[#6B6560]">
+              <div className="p-8 text-center text-[var(--muted)]">
                 Belum ada transaksi operasional atau prive yang dicatat.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold">
+                  <thead className="bg-[var(--bg)] text-xs uppercase text-[var(--muted)] font-semibold">
                     <tr>
                       <th className="py-3 px-4">Tanggal</th>
                       <th className="py-3 px-4">Kategori & Dampak Akuntansi</th>
@@ -831,10 +831,10 @@ export function FinanceClient({
                       <th className="py-3 px-4 text-right">Nominal (Rp)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#D9D4CB]">
+                  <tbody className="divide-y divide-[var(--line)]">
                     {filteredExpensesList.map((item) => (
-                      <tr key={item.id} className="hover:bg-[#FAF9F6]">
-                        <td className="py-3.5 px-4 text-xs text-[#6B6560] whitespace-nowrap">
+                      <tr key={item.id} className="hover:bg-[var(--bg)]">
+                        <td className="py-3.5 px-4 text-xs text-[var(--muted)] whitespace-nowrap">
                           {formatDate(item.date)}
                         </td>
                         <td className="py-3.5 px-4">
@@ -842,14 +842,14 @@ export function FinanceClient({
                             <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded border", item.badgeColor)}>
                               {item.categoryBadge}
                             </span>
-                            <span className="font-bold text-xs text-[#1C1917]">{item.title}</span>
+                            <span className="font-bold text-xs text-[var(--ink)]">{item.title}</span>
                           </div>
-                          <span className="text-[10px] text-[#6B6560] block mt-0.5">{item.impactText}</span>
+                          <span className="text-[10px] text-[var(--muted)] block mt-0.5">{item.impactText}</span>
                         </td>
-                        <td className="py-3.5 px-4 text-xs font-medium text-[#1C1917]">
+                        <td className="py-3.5 px-4 text-xs font-medium text-[var(--ink)]">
                           {item.recipient}
                         </td>
-                        <td className="py-3.5 px-4 text-xs text-[#6B6560]">
+                        <td className="py-3.5 px-4 text-xs text-[var(--muted)]">
                           {item.notes}
                         </td>
                         <td className="py-3.5 px-4 text-right font-black">
@@ -887,18 +887,18 @@ export function FinanceClient({
                 </span>
               </div>
 
-              <div className="text-2xl font-black text-[#1C1917]">
+              <div className="text-2xl font-black text-[var(--ink)]">
                 {formatRupiah(summary.totalInventoryValue || 0)}
               </div>
 
-              <p className="text-xs text-[#6B6560] leading-relaxed">
+              <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Nilai modal berjalan yang tertanam di seluruh unit mobil aktif (Harga Beli + Total Biaya Servis/Cat/Salon).
                 <strong> Likuid, tidak disusutkan, dan modal akan kembali saat mobil terjual.</strong>
               </p>
 
-              <div className="pt-2 border-t border-[#EBE7E1] text-[11px] text-[#6B6560] flex items-center justify-between">
+              <div className="pt-2 border-t border-[var(--line)] text-[11px] text-[var(--muted)] flex items-center justify-between">
                 <span>Perputaran normal showroom:</span>
-                <span className="font-bold text-[#1C1917]">&lt; 30 Hari per Unit</span>
+                <span className="font-bold text-[var(--ink)]">&lt; 30 Hari per Unit</span>
               </div>
             </div>
 
@@ -915,20 +915,20 @@ export function FinanceClient({
               </div>
 
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-[#1C1917]">
+                <span className="text-2xl font-black text-[var(--ink)]">
                   {formatRupiah(assets.totalCurrentValue)}
                 </span>
-                <span className="text-xs text-[#6B6560]">
+                <span className="text-xs text-[var(--muted)]">
                   (Beli Awal: {formatRupiah(assets.totalPurchaseCost)})
                 </span>
               </div>
 
-              <p className="text-xs text-[#6B6560] leading-relaxed">
+              <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Peralatan kerja & fasilitas yang dibeli <strong>bukan untuk dijual</strong>, melainkan dipakai operasional jangka panjang (&gt; 1 tahun).
                 Menambah nilai kekayaan showroom secara riil.
               </p>
 
-              <div className="pt-2 border-t border-[#EBE7E1] text-[11px] text-[#6B6560] flex items-center justify-between">
+              <div className="pt-2 border-t border-[var(--line)] text-[11px] text-[var(--muted)] flex items-center justify-between">
                 <span>Nilai buku saat ini:</span>
                 <span className="font-bold text-blue-700">{formatRupiah(assets.totalCurrentValue)}</span>
               </div>
@@ -936,20 +936,20 @@ export function FinanceClient({
           </div>
 
           {/* TABEL DAFTAR ASET TETAP SHOWROOM */}
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-[#D9D4CB] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FBF9F6]">
+          <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-sm">
+            <div className="p-5 border-b border-[var(--line)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FBF9F6]">
               <div>
-                <h3 className="font-bold text-[#1C1917] text-base">
+                <h3 className="font-bold text-[var(--ink)] text-base">
                   Daftar Inventaris Aset Peralatan & Fasilitas Showroom
                 </h3>
-                <p className="text-xs text-[#6B6560] mt-0.5">
+                <p className="text-xs text-[var(--muted)] mt-0.5">
                   Daftar peralatan inspeksi mikron, mesin poles, dongkrak, neon box, laptop kasir, dan kendaraan operasional.
                 </p>
               </div>
 
               <button
                 onClick={() => setShowAssetModal(true)}
-                className="flex items-center gap-1.5 bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm cursor-pointer self-start sm:self-auto"
+                className="flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm cursor-pointer self-start sm:self-auto"
               >
                 <Plus className="w-4 h-4" />
                 <span>+ Tambah Aset Peralatan</span>
@@ -957,13 +957,13 @@ export function FinanceClient({
             </div>
 
             {assets.items.length === 0 ? (
-              <div className="p-8 text-center text-[#6B6560]">
+              <div className="p-8 text-center text-[var(--muted)]">
                 Belum ada aset peralatan yang dicatat. Klik &quot;+ Tambah Aset Peralatan&quot; untuk mendaftarkan alat kerja Anda.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold">
+                  <thead className="bg-[var(--bg)] text-xs uppercase text-[var(--muted)] font-semibold">
                     <tr>
                       <th className="py-3 px-4">Nama Aset / Peralatan</th>
                       <th className="py-3 px-4">Kategori</th>
@@ -974,18 +974,18 @@ export function FinanceClient({
                       <th className="py-3 px-4 text-center">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#D9D4CB]">
+                  <tbody className="divide-y divide-[var(--line)]">
                     {assets.items.map((asset) => {
                       const cond = ASSET_CONDITION_LABELS[asset.condition] || ASSET_CONDITION_LABELS.GOOD;
                       return (
-                        <tr key={asset.id} className="hover:bg-[#FAF9F6]">
+                        <tr key={asset.id} className="hover:bg-[var(--bg)]">
                           <td className="py-3.5 px-4">
-                            <span className="font-bold text-[#1C1917] block">{asset.name}</span>
+                            <span className="font-bold text-[var(--ink)] block">{asset.name}</span>
                             {asset.notes && (
-                              <span className="text-[11px] text-[#6B6560] block line-clamp-1">{asset.notes}</span>
+                              <span className="text-[11px] text-[var(--muted)] block line-clamp-1">{asset.notes}</span>
                             )}
                           </td>
-                          <td className="py-3.5 px-4 text-xs text-[#1C1917] font-medium">
+                          <td className="py-3.5 px-4 text-xs text-[var(--ink)] font-medium">
                             {ASSET_CATEGORY_LABELS[asset.category] || asset.category}
                           </td>
                           <td className="py-3.5 px-4">
@@ -993,10 +993,10 @@ export function FinanceClient({
                               {cond.label}
                             </span>
                           </td>
-                          <td className="py-3.5 px-4 text-xs text-[#6B6560]">
+                          <td className="py-3.5 px-4 text-xs text-[var(--muted)]">
                             {asset.location || "-"}
                           </td>
-                          <td className="py-3.5 px-4 text-right text-xs text-[#6B6560]">
+                          <td className="py-3.5 px-4 text-right text-xs text-[var(--muted)]">
                             {formatRupiah(asset.purchaseCost)}
                           </td>
                           <td className="py-3.5 px-4 text-right font-bold text-blue-700">
@@ -1027,9 +1027,9 @@ export function FinanceClient({
           ========================================================================= */}
       {showAssetModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl border border-[#D9D4CB]">
-            <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
-              <h3 className="text-base font-bold text-[#1C1917]">Tambah Aset Peralatan Showroom Baru</h3>
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-xl border border-[var(--line)]">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+              <h3 className="text-base font-bold text-[var(--ink)]">Tambah Aset Peralatan Showroom Baru</h3>
               <button onClick={() => setShowAssetModal(false)} className="text-stone-400 hover:text-stone-700 cursor-pointer">
                 ✕
               </button>
@@ -1037,7 +1037,7 @@ export function FinanceClient({
 
             <form onSubmit={handleAssetSubmit} className="space-y-3.5">
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Nama Aset / Peralatan Kerja
                 </label>
                 <input
@@ -1046,19 +1046,19 @@ export function FinanceClient({
                   placeholder="Misal: Thickness Gauge Digital, Mesin Poles Shinemate"
                   value={assetName}
                   onChange={(e) => setAssetName(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                     Kategori Aset
                   </label>
                   <select
                     value={assetCategory}
                     onChange={(e) => setAssetCategory(e.target.value as any)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs bg-white"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs bg-white"
                   >
                     <option value="INSPECTION_TOOLS">Alat Inspeksi & Uji Mikron</option>
                     <option value="WORKSHOP_EQUIPMENT">Peralatan Salon & Bengkel</option>
@@ -1070,13 +1070,13 @@ export function FinanceClient({
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                     Kondisi Fisik Saat Ini
                   </label>
                   <select
                     value={assetCondition}
                     onChange={(e) => setAssetCondition(e.target.value as any)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs bg-white"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs bg-white"
                   >
                     <option value="EXCELLENT">Sangat Baik / Baru</option>
                     <option value="GOOD">Bagus / Normal</option>
@@ -1088,7 +1088,7 @@ export function FinanceClient({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                     Harga Pembelian Awal (Rp)
                   </label>
                   <input
@@ -1097,12 +1097,12 @@ export function FinanceClient({
                     placeholder="Contoh: 3500000"
                     value={assetPurchaseCost}
                     onChange={(e) => setAssetPurchaseCost(e.target.value)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                     Estimasi Nilai Sekarang (Rp)
                   </label>
                   <input
@@ -1110,14 +1110,14 @@ export function FinanceClient({
                     placeholder="Kosongkan jika sama"
                     value={assetCurrentValue}
                     onChange={(e) => setAssetCurrentValue(e.target.value)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                     Tanggal Beli
                   </label>
                   <input
@@ -1125,12 +1125,12 @@ export function FinanceClient({
                     required
                     value={assetPurchaseDate}
                     onChange={(e) => setAssetPurchaseDate(e.target.value)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                     Lokasi Penyimpanan
                   </label>
                   <input
@@ -1138,13 +1138,13 @@ export function FinanceClient({
                     placeholder="Misal: Koper Inspeksi, Garasi Depan"
                     value={assetLocation}
                     onChange={(e) => setAssetLocation(e.target.value)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Catatan / Spesifikasi
                 </label>
                 <textarea
@@ -1152,7 +1152,7 @@ export function FinanceClient({
                   placeholder="Keterangan kelengkapan alat, garansi, dsb..."
                   value={assetNotes}
                   onChange={(e) => setAssetNotes(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs"
                 />
               </div>
 
@@ -1162,25 +1162,25 @@ export function FinanceClient({
                   id="deductCash"
                   checked={assetDeductCash}
                   onChange={(e) => setAssetDeductCash(e.target.checked)}
-                  className="rounded text-[#D97706] focus:ring-[#D97706]"
+                  className="rounded text-[var(--accent)] focus:ring-[var(--accent)]"
                 />
                 <label htmlFor="deductCash" className="text-xs text-[#92400E] font-medium cursor-pointer">
                   Otomatis potong saldo Kas Rekening BCA saat ini? (Jika baru beli tunai)
                 </label>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-[#EBE7E1]">
+              <div className="flex justify-end gap-2 pt-2 border-t border-[var(--line)]">
                 <button
                   type="button"
                   onClick={() => setShowAssetModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm cursor-pointer"
+                  className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm cursor-pointer"
                 >
                   Simpan Aset ke Inventaris
                 </button>
@@ -1195,9 +1195,9 @@ export function FinanceClient({
           ========================================================================= */}
       {showOpExModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl border border-[#D9D4CB]">
-            <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
-              <h3 className="text-base font-bold text-[#1C1917]">Catat Beban Operasional Showroom</h3>
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl border border-[var(--line)]">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+              <h3 className="text-base font-bold text-[var(--ink)]">Catat Beban Operasional Showroom</h3>
               <button onClick={() => setShowOpExModal(false)} className="text-stone-400 hover:text-stone-700 cursor-pointer">
                 ✕
               </button>
@@ -1205,13 +1205,13 @@ export function FinanceClient({
 
             <form onSubmit={handleOpExSubmit} className="space-y-3.5">
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Kategori Beban Operasional
                 </label>
                 <select
                   value={opExCategory}
                   onChange={(e) => setOpExCategory(e.target.value as any)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm bg-white"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm bg-white"
                 >
                   <option value="RENT_SHOWROOM">Sewa Lahan & Garasi Showroom</option>
                   <option value="UTILITIES_WIFI">Listrik, Air & WiFi Garasi</option>
@@ -1225,7 +1225,7 @@ export function FinanceClient({
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Penerima / Vendor / Toko
                 </label>
                 <input
@@ -1233,13 +1233,13 @@ export function FinanceClient({
                   placeholder="Misal: H. Ridwan, PLN, Toko Barokah"
                   value={opExRecipient}
                   onChange={(e) => setOpExRecipient(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                     Nominal Beban (Rp)
                   </label>
                   <input
@@ -1248,12 +1248,12 @@ export function FinanceClient({
                     placeholder="Contoh: 500000"
                     value={opExAmount}
                     onChange={(e) => setOpExAmount(e.target.value)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                     Tanggal Pengeluaran
                   </label>
                   <input
@@ -1261,13 +1261,13 @@ export function FinanceClient({
                     required
                     value={opExDate}
                     onChange={(e) => setOpExDate(e.target.value)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Catatan Keterangan
                 </label>
                 <textarea
@@ -1275,15 +1275,15 @@ export function FinanceClient({
                   placeholder="Rincian pembayaran operasional..."
                   value={opExNotes}
                   onChange={(e) => setOpExNotes(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-[#EBE7E1]">
+              <div className="flex justify-end gap-2 pt-2 border-t border-[var(--line)]">
                 <button
                   type="button"
                   onClick={() => setShowOpExModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
@@ -1306,24 +1306,24 @@ export function FinanceClient({
       {showOwnerDrawModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl border border-purple-200">
-            <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5 text-purple-600" />
-                <h3 className="text-base font-bold text-[#1C1917]">Catat Penarikan Pribadi (Prive Owner)</h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">Catat Penarikan Pribadi (Prive Owner)</h3>
               </div>
               <button onClick={() => setShowOwnerDrawModal(false)} className="text-stone-400 hover:text-stone-700 cursor-pointer">
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-[#6B6560] leading-relaxed">
+            <p className="text-xs text-[var(--muted)] leading-relaxed">
               Catat setiap uang yang Anda ambil dari rekening BCA untuk keperluan rumah tangga/keluarga.
               <strong> Saldo kas BCA berkurang, namun laba showroom & HPP mobil tetap terjaga 100% akurat.</strong>
             </p>
 
             <form onSubmit={handleOwnerDrawSubmit} className="space-y-3.5">
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Nominal Penarikan (Rp)
                 </label>
                 <input
@@ -1332,12 +1332,12 @@ export function FinanceClient({
                   placeholder="Contoh: 3000000"
                   value={drawAmount}
                   onChange={(e) => setDrawAmount(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm font-bold text-purple-900"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm font-bold text-purple-900"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Tanggal Penarikan dari BCA
                 </label>
                 <input
@@ -1345,12 +1345,12 @@ export function FinanceClient({
                   required
                   value={drawDate}
                   onChange={(e) => setDrawDate(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Keperluan Pribadi / Keterangan Wajib
                 </label>
                 <textarea
@@ -1359,15 +1359,15 @@ export function FinanceClient({
                   placeholder="Misal: Belanja dapur bulanan keluarga, SPP sekolah, transfer cicilan rumah..."
                   value={drawNotes}
                   onChange={(e) => setDrawNotes(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-[#EBE7E1]">
+              <div className="flex justify-end gap-2 pt-2 border-t border-[var(--line)]">
                 <button
                   type="button"
                   onClick={() => setShowOwnerDrawModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
@@ -1390,8 +1390,8 @@ export function FinanceClient({
       {showOwnerEquityModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl border border-emerald-200">
-            <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
-              <h3 className="text-base font-bold text-[#1C1917]">Setor Modal Tambahan Pribadi ke Kas Showroom</h3>
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+              <h3 className="text-base font-bold text-[var(--ink)]">Setor Modal Tambahan Pribadi ke Kas Showroom</h3>
               <button onClick={() => setShowOwnerEquityModal(false)} className="text-stone-400 hover:text-stone-700 cursor-pointer">
                 ✕
               </button>
@@ -1399,7 +1399,7 @@ export function FinanceClient({
 
             <form onSubmit={handleOwnerEquitySubmit} className="space-y-3.5">
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Nominal Setoran Modal (Rp)
                 </label>
                 <input
@@ -1408,12 +1408,12 @@ export function FinanceClient({
                   placeholder="Contoh: 10000000"
                   value={equityAmount}
                   onChange={(e) => setEquityAmount(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm font-bold text-emerald-800"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm font-bold text-emerald-800"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Tanggal Setoran
                 </label>
                 <input
@@ -1421,12 +1421,12 @@ export function FinanceClient({
                   required
                   value={equityDate}
                   onChange={(e) => setEquityDate(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Keterangan Asal Modal
                 </label>
                 <textarea
@@ -1434,15 +1434,15 @@ export function FinanceClient({
                   placeholder="Misal: Tambahan modal kulakan dari tabungan pribadi..."
                   value={equityNotes}
                   onChange={(e) => setEquityNotes(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-xs"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-xs"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-[#EBE7E1]">
+              <div className="flex justify-end gap-2 pt-2 border-t border-[var(--line)]">
                 <button
                   type="button"
                   onClick={() => setShowOwnerEquityModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
@@ -1464,18 +1464,18 @@ export function FinanceClient({
           ========================================================================= */}
       {showManualCashModal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl border border-[#D9D4CB]">
-            <h3 className="text-lg font-bold text-[#1C1917]">Pencatatan Transaksi Kas Manual</h3>
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl border border-[var(--line)]">
+            <h3 className="text-lg font-bold text-[var(--ink)]">Pencatatan Transaksi Kas Manual</h3>
 
             <form onSubmit={handleManualCashSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Jenis Transaksi
                 </label>
                 <select
                   value={cashType}
                   onChange={(e) => setCashType(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm bg-white"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm bg-white"
                 >
                   <option value="IN_CAPITAL_DEPOSIT">Kas Masuk: Suntikan Modal Owner / Investor</option>
                   <option value="OUT_CAPITAL_RETURN">Kas Keluar: Pengembalian / Penarikan Modal</option>
@@ -1484,7 +1484,7 @@ export function FinanceClient({
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Nominal (Rp)
                 </label>
                 <input
@@ -1493,12 +1493,12 @@ export function FinanceClient({
                   placeholder="Contoh: 10000000"
                   value={cashAmount}
                   onChange={(e) => setCashAmount(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                   Keterangan / Notes
                 </label>
                 <textarea
@@ -1507,7 +1507,7 @@ export function FinanceClient({
                   placeholder="Alasan transaksi kas..."
                   value={cashNotes}
                   onChange={(e) => setCashNotes(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm"
                 />
               </div>
 
@@ -1515,14 +1515,14 @@ export function FinanceClient({
                 <button
                   type="button"
                   onClick={() => setShowManualCashModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-sm font-medium hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-sm font-medium hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm cursor-pointer"
+                  className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm cursor-pointer"
                 >
                   Simpan Transaksi Kas
                 </button>

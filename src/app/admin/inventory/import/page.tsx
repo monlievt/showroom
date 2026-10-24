@@ -18,17 +18,17 @@ export default function InventoryImportPage() {
       />
 
       <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl w-full mx-auto space-y-6">
-        <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-4">
+        <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
           <Link
             href="/admin/inventory"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Inventori</span>
           </Link>
         </div>
 
-        <div className="bg-white border border-[#D9D4CB] rounded-3xl p-6 sm:p-8 shadow-xs">
+        <div className="bg-white border border-[var(--line)] rounded-3xl p-6 sm:p-8 shadow-xs">
           <ImportSpreadsheetPanel />
         </div>
       </main>

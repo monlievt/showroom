@@ -268,20 +268,20 @@ export function SaleNewClient({
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/sales"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Penjualan</span>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-[#1C1917]">
+            <h1 className="text-xl font-bold text-[var(--ink)]">
               Input Penjualan Unit Baru
             </h1>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Pencatatan transaksi jual retail langsung atau lempar ke showroom rekanan (tempo 2 minggu).
             </p>
           </div>
@@ -305,10 +305,10 @@ export function SaleNewClient({
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* SECTION 1: Pilih Unit Kendaraan */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Car className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Car className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               1. Pilih Unit Kendaraan Siap Jual
             </h2>
           </div>
@@ -319,7 +319,7 @@ export function SaleNewClient({
             </div>
           ) : (
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Unit Kendaraan *
               </label>
               <select
@@ -334,7 +334,7 @@ export function SaleNewClient({
                     setSellingPrice(found.targetSellingPrice);
                   }
                 }}
-                className="w-full px-3.5 py-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 {availableVehicles.map((v) => (
                   <option key={v.id} value={v.id}>
@@ -348,7 +348,7 @@ export function SaleNewClient({
                 <div className="flex flex-wrap items-center gap-4 text-xs mt-3 p-3 bg-amber-50/70 border border-amber-200 rounded-xl">
                   <span>
                     HPP Berjalan:{" "}
-                    <strong className="text-[#1C1917]">
+                    <strong className="text-[var(--ink)]">
                       {formatRupiah(selectedUnit.totalHpp)}
                     </strong>
                   </span>
@@ -375,17 +375,17 @@ export function SaleNewClient({
         </div>
 
         {/* SECTION 2: Nilai Transaksi & Jalur */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <DollarSign className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <DollarSign className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               2. Harga Kesepakatan & Jalur Penjualan
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Jalur Penjualan *
               </label>
               <select
@@ -394,7 +394,7 @@ export function SaleNewClient({
                   setSaleType(e.target.value);
                   setBuyerIsShowroom(e.target.value === "SHOWROOM");
                 }}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 <option value="DIRECT_CUSTOMER">
                   Konsumen Langsung (Retail)
@@ -403,13 +403,13 @@ export function SaleNewClient({
                   Showroom Rekanan (Wholesale / Tempo)
                 </option>
               </select>
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Showroom tempo biasanya lunas 7-14 hari
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Harga Kesepakatan Jual (Rp) *
               </label>
               <input
@@ -419,12 +419,12 @@ export function SaleNewClient({
                 placeholder="Contoh: 165.000.000"
                 value={sellingPrice !== "" ? formatThousands(sellingPrice) : ""}
                 onChange={(e) => setSellingPrice(parseThousands(e.target.value) || "")}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Tanggal Transaksi / SPK *
               </label>
               <input
@@ -432,24 +432,24 @@ export function SaleNewClient({
                 type="date"
                 value={saleDate}
                 onChange={(e) => setSaleDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
         </div>
 
         {/* SECTION 3: Identitas Pembeli */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <User className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <User className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               3. Identitas Pembeli / Showroom
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Nama Pembeli / Nama Showroom *
               </label>
               <input
@@ -458,12 +458,12 @@ export function SaleNewClient({
                 placeholder="Contoh: Bpk. Haryanto / Showroom Auto Lancar"
                 value={buyerName}
                 onChange={(e) => setBuyerName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Nomor WhatsApp / HP
               </label>
               <input
@@ -471,13 +471,13 @@ export function SaleNewClient({
                 placeholder="Contoh: 081234567890"
                 value={buyerPhone}
                 onChange={(e) => setBuyerPhone(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
               Alamat Lengkap Pembeli (Opsional)
             </label>
             <input
@@ -485,17 +485,17 @@ export function SaleNewClient({
               placeholder="Alamat KTP atau domisili showroom rekanan..."
               value={buyerAddress}
               onChange={(e) => setBuyerAddress(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
             />
           </div>
         </div>
 
         {/* SECTION 4: Pembayaran Awal (DP) & Jatuh Tempo */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[#D97706]" />
-              <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              <Calendar className="w-4 h-4 text-[var(--accent)]" />
+              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
                 4. Pembayaran Awal (DP) & Ketentuan Cash Tempo
               </h2>
             </div>
@@ -506,7 +506,7 @@ export function SaleNewClient({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Nominal DP / Pembayaran Masuk (Rp) *
               </label>
               <input
@@ -515,9 +515,9 @@ export function SaleNewClient({
                 placeholder="Contoh: 105.000.000"
                 value={initialPaymentAmount !== "" ? formatThousands(initialPaymentAmount) : ""}
                 onChange={(e) => setInitialPaymentAmount(parseThousands(e.target.value) || "")}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 {priceNum > 0 && (
                   <>
                     Min. DP 70% Tempo: <strong>{formatRupiah(minDp70)}</strong>
@@ -527,13 +527,13 @@ export function SaleNewClient({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Metode Pembayaran
               </label>
               <select
                 value={initialPaymentMethod}
                 onChange={(e) => setInitialPaymentMethod(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 <option value="TRANSFER">Transfer Bank (BCA Rekening Showroom)</option>
                 <option value="CASH">Uang Tunai (Cash di Garasi)</option>
@@ -542,7 +542,7 @@ export function SaleNewClient({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Target Jatuh Tempo Pelunasan {isTempo && <span className="text-red-500">*</span>}
               </label>
               <input
@@ -551,9 +551,9 @@ export function SaleNewClient({
                 max={maxDueDate}
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Batas maksimal 30 hari (s/d {maxDueDate})
               </span>
             </div>
@@ -590,15 +590,15 @@ export function SaleNewClient({
         </div>
 
         {/* SECTION 4: Serah Terima, Berkas Legalitas & Checklist Keluar */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3 flex-wrap gap-2">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
+          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3 flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <ClipboardCheck className="w-5 h-5 text-[#D97706]" />
+              <ClipboardCheck className="w-5 h-5 text-[var(--accent)]" />
               <div>
-                <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+                <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
                   4. Berkas Legalitas, Dokumen Tanda Tangan & Serah Terima
                 </h2>
-                <p className="text-[11px] text-[#6B6560]">
+                <p className="text-[11px] text-[var(--muted)]">
                   Unggah berkas BAST bermeterai, bukti kuitansi pelunasan, foto serah kunci, dan verifikasi checklist berkas asli.
                 </p>
               </div>
@@ -610,18 +610,18 @@ export function SaleNewClient({
 
           {/* 4A. GRID UPLOAD BERKAS BUKTI & FOTO */}
           <div>
-            <label className="block text-xs font-bold text-[#1C1917] mb-3 flex items-center gap-1.5">
-              <FileUp className="w-4 h-4 text-[#D97706]" />
+            <label className="block text-xs font-bold text-[var(--ink)] mb-3 flex items-center gap-1.5">
+              <FileUp className="w-4 h-4 text-[var(--accent)]" />
               <span>Arsip Dokumen Fisik & Foto Bukti Transaksi</span>
             </label>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* 1. Foto Serah Terima */}
-              <div className="border border-[#D9D4CB] rounded-xl p-3.5 bg-[#FAF9F6] flex flex-col justify-between space-y-3">
+              <div className="border border-[var(--line)] rounded-xl p-3.5 bg-[var(--bg)] flex flex-col justify-between space-y-3">
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
-                      <Camera className="w-3.5 h-3.5 text-[#D97706]" />
+                    <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
+                      <Camera className="w-3.5 h-3.5 text-[var(--accent)]" />
                       <span>Foto Serah Terima</span>
                     </span>
                     {handoverPhotoUrl && (
@@ -630,7 +630,7 @@ export function SaleNewClient({
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-[#6B6560] leading-snug">
+                  <p className="text-[10px] text-[var(--muted)] leading-snug">
                     Foto konsumen & kunci mobil saat serah terima unit di showroom / rumah.
                   </p>
                 </div>
@@ -655,16 +655,16 @@ export function SaleNewClient({
                   </div>
                 ) : (
                   <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
                       {uploadingPhoto ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
                       ) : (
-                        <Upload className="w-4 h-4 text-[#D97706]" />
+                        <Upload className="w-4 h-4 text-[var(--accent)]" />
                       )}
-                      <span className="text-[11px] font-bold text-[#1C1917]">
+                      <span className="text-[11px] font-bold text-[var(--ink)]">
                         {uploadingPhoto ? "Mengunggah..." : "Pilih Foto Unit"}
                       </span>
-                      <span className="text-[9px] text-[#6B6560]">JPG / PNG / WebP</span>
+                      <span className="text-[9px] text-[var(--muted)]">JPG / PNG / WebP</span>
                       <input
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
@@ -691,11 +691,11 @@ export function SaleNewClient({
               </div>
 
               {/* 2. Scan BAST Bertandatangan */}
-              <div className="border border-[#D9D4CB] rounded-xl p-3.5 bg-[#FAF9F6] flex flex-col justify-between space-y-3">
+              <div className="border border-[var(--line)] rounded-xl p-3.5 bg-[var(--bg)] flex flex-col justify-between space-y-3">
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
-                      <FileBadge className="w-3.5 h-3.5 text-[#D97706]" />
+                    <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
+                      <FileBadge className="w-3.5 h-3.5 text-[var(--accent)]" />
                       <span>BAST Bertandatangan</span>
                     </span>
                     {bastDocUrl && (
@@ -704,7 +704,7 @@ export function SaleNewClient({
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-[#6B6560] leading-snug">
+                  <p className="text-[10px] text-[var(--muted)] leading-snug">
                     Scan Berita Acara Serah Terima (BAST) bermeterai 10.000 yang ditandatangani.
                   </p>
                 </div>
@@ -719,7 +719,7 @@ export function SaleNewClient({
                         href={bastDocUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[10px] text-[#D97706] hover:underline inline-flex items-center gap-1 mt-1 font-semibold"
+                        className="text-[10px] text-[var(--accent)] hover:underline inline-flex items-center gap-1 mt-1 font-semibold"
                       >
                         <Eye className="w-3 h-3" />
                         <span>Buka Berkas</span>
@@ -736,16 +736,16 @@ export function SaleNewClient({
                   </div>
                 ) : (
                   <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
                       {uploadingBast ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
                       ) : (
-                        <Upload className="w-4 h-4 text-[#D97706]" />
+                        <Upload className="w-4 h-4 text-[var(--accent)]" />
                       )}
-                      <span className="text-[11px] font-bold text-[#1C1917]">
+                      <span className="text-[11px] font-bold text-[var(--ink)]">
                         {uploadingBast ? "Mengunggah..." : "Upload File BAST"}
                       </span>
-                      <span className="text-[9px] text-[#6B6560]">PDF / JPG / PNG</span>
+                      <span className="text-[9px] text-[var(--muted)]">PDF / JPG / PNG</span>
                       <input
                         type="file"
                         accept="application/pdf,image/jpeg,image/png,image/webp"
@@ -770,11 +770,11 @@ export function SaleNewClient({
               </div>
 
               {/* 3. Kuitansi / Bukti Bayar */}
-              <div className="border border-[#D9D4CB] rounded-xl p-3.5 bg-[#FAF9F6] flex flex-col justify-between space-y-3">
+              <div className="border border-[var(--line)] rounded-xl p-3.5 bg-[var(--bg)] flex flex-col justify-between space-y-3">
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
-                      <Receipt className="w-3.5 h-3.5 text-[#D97706]" />
+                    <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
+                      <Receipt className="w-3.5 h-3.5 text-[var(--accent)]" />
                       <span>Bukti Pelunasan / Kuitansi</span>
                     </span>
                     {paymentReceiptUrl && (
@@ -783,7 +783,7 @@ export function SaleNewClient({
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-[#6B6560] leading-snug">
+                  <p className="text-[10px] text-[var(--muted)] leading-snug">
                     Slip transfer rekening BCA showroom atau kuitansi fisik cap lunas.
                   </p>
                 </div>
@@ -798,7 +798,7 @@ export function SaleNewClient({
                         href={paymentReceiptUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[10px] text-[#D97706] hover:underline inline-flex items-center gap-1 mt-1 font-semibold"
+                        className="text-[10px] text-[var(--accent)] hover:underline inline-flex items-center gap-1 mt-1 font-semibold"
                       >
                         <Eye className="w-3 h-3" />
                         <span>Buka Berkas</span>
@@ -815,16 +815,16 @@ export function SaleNewClient({
                   </div>
                 ) : (
                   <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
                       {uploadingReceipt ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
                       ) : (
-                        <Upload className="w-4 h-4 text-[#D97706]" />
+                        <Upload className="w-4 h-4 text-[var(--accent)]" />
                       )}
-                      <span className="text-[11px] font-bold text-[#1C1917]">
+                      <span className="text-[11px] font-bold text-[var(--ink)]">
                         {uploadingReceipt ? "Mengunggah..." : "Upload Slip / Kuitansi"}
                       </span>
-                      <span className="text-[9px] text-[#6B6560]">PDF / JPG / PNG</span>
+                      <span className="text-[9px] text-[var(--muted)]">PDF / JPG / PNG</span>
                       <input
                         type="file"
                         accept="application/pdf,image/jpeg,image/png,image/webp"
@@ -849,11 +849,11 @@ export function SaleNewClient({
               </div>
 
               {/* 4. Foto KTP Pembeli */}
-              <div className="border border-[#D9D4CB] rounded-xl p-3.5 bg-[#FAF9F6] flex flex-col justify-between space-y-3">
+              <div className="border border-[var(--line)] rounded-xl p-3.5 bg-[var(--bg)] flex flex-col justify-between space-y-3">
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-[#D97706]" />
+                    <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-[var(--accent)]" />
                       <span>Foto KTP Pembeli</span>
                     </span>
                     {buyerIdCardUrl && (
@@ -862,7 +862,7 @@ export function SaleNewClient({
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-[#6B6560] leading-snug">
+                  <p className="text-[10px] text-[var(--muted)] leading-snug">
                     Arsip identitas resmi pembeli untuk lapor jual Samsat & balik nama.
                   </p>
                 </div>
@@ -887,16 +887,16 @@ export function SaleNewClient({
                   </div>
                 ) : (
                   <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
                       {uploadingKtp ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[#D97706]" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
                       ) : (
-                        <Upload className="w-4 h-4 text-[#D97706]" />
+                        <Upload className="w-4 h-4 text-[var(--accent)]" />
                       )}
-                      <span className="text-[11px] font-bold text-[#1C1917]">
+                      <span className="text-[11px] font-bold text-[var(--ink)]">
                         {uploadingKtp ? "Mengunggah..." : "Upload Foto KTP"}
                       </span>
-                      <span className="text-[9px] text-[#6B6560]">JPG / PNG / WebP</span>
+                      <span className="text-[9px] text-[var(--muted)]">JPG / PNG / WebP</span>
                       <input
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
@@ -923,10 +923,10 @@ export function SaleNewClient({
           </div>
 
           {/* 4B. ODOMETER TERAKHIR & CATATAN SERAH TERIMA */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[#EBE7E1]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[var(--line)]">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5 flex items-center gap-1.5">
-                <Gauge className="w-3.5 h-3.5 text-[#D97706]" />
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
+                <Gauge className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Odometer Terakhir Saat Serah Terima (KM)</span>
               </label>
               <input
@@ -935,15 +935,15 @@ export function SaleNewClient({
                 placeholder="Contoh: 19.850"
                 value={handoverOdometer !== "" ? formatThousands(handoverOdometer) : ""}
                 onChange={(e) => setHandoverOdometer(parseThousands(e.target.value) || "")}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Patokan pasti batas klaim garansi toko (misal: 1 bulan / 1.000 KM).
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Catatan Kondisi Unit Saat Keluar Garasi
               </label>
               <input
@@ -951,21 +951,21 @@ export function SaleNewClient({
                 placeholder="Contoh: Bensin terisi 1/2 tangki, sudah salon wax, garansi s/d 20.850 KM."
                 value={handoverNotes}
                 onChange={(e) => setHandoverNotes(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-normal text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-normal text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Catatan khusus penyerahan unit kepada pembeli.
               </span>
             </div>
           </div>
 
           {/* 4C. CHECKLIST KELENGKAPAN BERKAS ASLI & DOKUMEN */}
-          <div className="pt-2 border-t border-[#EBE7E1]">
-            <label className="block text-xs font-bold text-[#1C1917] mb-2 flex items-center gap-1.5">
-              <ClipboardCheck className="w-4 h-4 text-[#D97706]" />
+          <div className="pt-2 border-t border-[var(--line)]">
+            <label className="block text-xs font-bold text-[var(--ink)] mb-2 flex items-center gap-1.5">
+              <ClipboardCheck className="w-4 h-4 text-[var(--accent)]" />
               <span>Checklist Berkas Asli & Kelengkapan yang Diserahkan</span>
             </label>
-            <p className="text-[11px] text-[#6B6560] mb-3">
+            <p className="text-[11px] text-[var(--muted)] mb-3">
               Centang item kelengkapan yang diserahterimakan langsung ke tangan konsumen.
             </p>
 
@@ -981,7 +981,7 @@ export function SaleNewClient({
                       "flex items-center gap-2.5 p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer",
                       isChecked
                         ? "bg-emerald-50 border-emerald-300 text-emerald-950"
-                        : "bg-[#FAF9F6] border-[#D9D4CB] text-[#6B6560] hover:bg-stone-100"
+                        : "bg-[var(--bg)] border-[var(--line)] text-[var(--muted)] hover:bg-stone-100"
                     )}
                   >
                     {isChecked ? (
@@ -997,20 +997,20 @@ export function SaleNewClient({
           </div>
 
           {/* 4D. KOMISI MAKELAR / MEDIATOR (JIKA ADA) */}
-          <div className="pt-2 border-t border-[#EBE7E1] bg-stone-50/70 p-3.5 rounded-xl border border-stone-200">
+          <div className="pt-2 border-t border-[var(--line)] bg-stone-50/70 p-3.5 rounded-xl border border-stone-200">
             <div className="flex items-center gap-2 mb-2">
-              <Users className="w-4 h-4 text-[#D97706]" />
-              <span className="text-xs font-bold text-[#1C1917]">
+              <Users className="w-4 h-4 text-[var(--accent)]" />
+              <span className="text-xs font-bold text-[var(--ink)]">
                 Komisi Makelar / Perantara Penjualan (Opsional)
               </span>
             </div>
-            <p className="text-[11px] text-[#6B6560] mb-3">
+            <p className="text-[11px] text-[var(--muted)] mb-3">
               Jika penjualan melalui perantara, masukkan nama & komisi. Sistem otomatis memotong laba bersih transaksi.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-[11px] font-semibold text-[#1C1917] mb-1">
+                <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">
                   Nama Makelar / Mediator
                 </label>
                 <input
@@ -1018,12 +1018,12 @@ export function SaleNewClient({
                   placeholder="Contoh: Pak Bambang (Mediator Malang)"
                   value={brokerName}
                   onChange={(e) => setBrokerName(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-xl text-xs font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                  className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-xl text-xs font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-[#1C1917] mb-1">
+                <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">
                   Nominal Komisi Makelar (Rp)
                 </label>
                 <input
@@ -1032,10 +1032,10 @@ export function SaleNewClient({
                   placeholder="Contoh: 1.500.000"
                   value={brokerFee !== "" ? formatThousands(brokerFee) : ""}
                   onChange={(e) => setBrokerFee(parseThousands(e.target.value) || "")}
-                  className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-xl text-xs font-bold text-[#D97706] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                  className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-xl text-xs font-bold text-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 />
                 {brokerFeeNum > 0 && (
-                  <span className="text-[10px] text-[#D97706] mt-1 block font-semibold">
+                  <span className="text-[10px] text-[var(--accent)] mt-1 block font-semibold">
                     Komisi: {formatRupiah(brokerFeeNum)} (memotong laba kotor)
                   </span>
                 )}
@@ -1045,14 +1045,14 @@ export function SaleNewClient({
         </div>
 
         {/* Live Transaction Summary Card */}
-        <div className="bg-[#1C1917] text-white rounded-2xl p-5 sm:p-6 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div className="bg-[var(--ink)] text-white rounded-2xl p-5 sm:p-6 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="space-y-1">
             <span className="text-xs uppercase tracking-wider text-white/60 font-semibold block flex items-center gap-1.5">
-              <FileCheck className="w-4 h-4 text-[#D97706]" />
+              <FileCheck className="w-4 h-4 text-[var(--accent)]" />
               <span>Ringkasan Kesepakatan Transaksi</span>
             </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-extrabold text-[#D97706]">
+              <span className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)]">
                 {formatRupiah(priceNum)}
               </span>
               <span className="text-xs text-white/70">total harga jual</span>
@@ -1083,10 +1083,10 @@ export function SaleNewClient({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4">
           <Link
             href="/admin/sales"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
           >
             Batal & Kembali
           </Link>
@@ -1094,7 +1094,7 @@ export function SaleNewClient({
           <button
             type="submit"
             disabled={loading || availableVehicles.length === 0}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

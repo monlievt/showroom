@@ -313,25 +313,25 @@ export function VehicleMediaUploadClient({
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/inventory"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Inventori</span>
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-[#1C1917]">
+              <h1 className="text-xl font-bold text-[var(--ink)]">
                 Media & Standar Dokumentasi Unit
               </h1>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#D97706]/10 text-[#D97706] border border-[#D97706]/30">
+              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/30">
                 Standar Cek Fisik
               </span>
             </div>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               11 Titik Foto Standar Inspeksi, verifikasi nomor rangka fisik, dan kelengkapan dokumen legalitas.
             </p>
           </div>
@@ -339,7 +339,7 @@ export function VehicleMediaUploadClient({
 
         <Link
           href={`/admin/inventory/${vehicle.id}`}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1C1917] hover:bg-[#D97706] text-white font-semibold text-xs transition-colors shadow-xs self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--ink)] hover:bg-[var(--accent)] text-white font-semibold text-xs transition-colors shadow-xs self-start sm:self-auto"
         >
           <span>Detail Unit Kendaraan</span>
           <ExternalLink className="w-3.5 h-3.5" />
@@ -347,31 +347,31 @@ export function VehicleMediaUploadClient({
       </div>
 
       {/* Info Card Unit & ACV Compliance Progress */}
-      <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="p-3 bg-white rounded-xl border border-[#D9D4CB] text-[#D97706]">
+          <div className="p-3 bg-white rounded-xl border border-[var(--line)] text-[var(--accent)]">
             <Car className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-base text-[#1C1917]">
+              <span className="font-extrabold text-base text-[var(--ink)]">
                 {vehicle.brand} {vehicle.model}
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-md bg-white border border-[#D9D4CB] font-bold text-[#1C1917]">
+              <span className="text-xs px-2 py-0.5 rounded-md bg-white border border-[var(--line)] font-bold text-[var(--ink)]">
                 {vehicle.year}
               </span>
             </div>
-            <div className="text-xs font-mono font-bold text-[#D97706] mt-0.5">
+            <div className="text-xs font-mono font-bold text-[var(--accent)] mt-0.5">
               {vehicle.plateNumber}
             </div>
           </div>
         </div>
 
         {/* Progress Tracker */}
-        <div className="bg-white border border-[#D9D4CB] rounded-xl p-3.5 flex flex-col gap-2 min-w-[280px]">
+        <div className="bg-white border border-[var(--line)] rounded-xl p-3.5 flex flex-col gap-2 min-w-[280px]">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-[#1C1917] flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#D97706]" />
+            <span className="font-bold text-[var(--ink)] flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[var(--accent)]" />
               <span>Standar 11 Foto Wajib:</span>
             </span>
             <span
@@ -380,27 +380,27 @@ export function VehicleMediaUploadClient({
                   ? "text-emerald-600"
                   : completionPercentage >= 60
                   ? "text-amber-600"
-                  : "text-[#6B6560]"
+                  : "text-[var(--muted)]"
               }`}
             >
               {completedSlotsCount} / 11 Slot ({completionPercentage}%)
             </span>
           </div>
 
-          <div className="w-full bg-[#EFECE8] h-2 rounded-full overflow-hidden">
+          <div className="w-full bg-[var(--bg)] h-2 rounded-full overflow-hidden">
             <div
               className={`h-full transition-all duration-500 rounded-full ${
                 completionPercentage === 100
                   ? "bg-emerald-500"
                   : completionPercentage >= 60
-                  ? "bg-[#D97706]"
+                  ? "bg-[var(--accent)]"
                   : "bg-stone-400"
               }`}
               style={{ width: `${completionPercentage}%` }}
             />
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-[#6B6560]">
+          <div className="flex items-center justify-between text-[11px] text-[var(--muted)]">
             <span>{vehicle.photos.length} Total Foto Tersimpan</span>
             <span>{vehicle.documents.length} Dokumen Legalitas</span>
           </div>
@@ -434,13 +434,13 @@ export function VehicleMediaUploadClient({
       )}
 
       {/* Main Mode Navigation */}
-      <div className="flex border-b border-[#D9D4CB] gap-3">
+      <div className="flex border-b border-[var(--line)] gap-3">
         <button
           onClick={() => setActiveTab("STANDARD_SLOTS")}
           className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-colors ${
             activeTab === "STANDARD_SLOTS"
-              ? "border-[#D97706] text-[#D97706]"
-              : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-[var(--accent)] text-[var(--accent)]"
+              : "border-transparent text-[var(--muted)] hover:text-[var(--ink)]"
           }`}
         >
           <Camera className="w-4 h-4" />
@@ -449,7 +449,7 @@ export function VehicleMediaUploadClient({
             className={`text-[10px] px-2 py-0.2 rounded-full font-bold ${
               completionPercentage === 100
                 ? "bg-emerald-100 text-emerald-800"
-                : "bg-[#EFECE8] text-[#6B6560]"
+                : "bg-[var(--bg)] text-[var(--muted)]"
             }`}
           >
             {completedSlotsCount}/11
@@ -460,8 +460,8 @@ export function VehicleMediaUploadClient({
           onClick={() => setActiveTab("CUSTOM_UPLOAD")}
           className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-colors ${
             activeTab === "CUSTOM_UPLOAD"
-              ? "border-[#D97706] text-[#D97706]"
-              : "border-transparent text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-[var(--accent)] text-[var(--accent)]"
+              : "border-transparent text-[var(--muted)] hover:text-[var(--ink)]"
           }`}
         >
           <Plus className="w-4 h-4" />
@@ -472,18 +472,18 @@ export function VehicleMediaUploadClient({
       {/* TAB 1: 11 TITIK FOTO STANDAR WAJIB */}
       {activeTab === "STANDARD_SLOTS" && (
         <div className="space-y-8">
-          <div className="bg-[#FAF8F5] border border-[#D9D4CB] rounded-2xl p-4 sm:p-5">
+          <div className="bg-[#FAF8F5] border border-[var(--line)] rounded-2xl p-4 sm:p-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-sm font-bold text-[#1C1917] flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-[#D97706]" />
+                <h2 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[var(--accent)]" />
                   <span>Panduan Pengambilan 11 Sudut Foto Standar</span>
                 </h2>
-                <p className="text-xs text-[#6B6560] mt-1">
+                <p className="text-xs text-[var(--muted)] mt-1">
                   Sesuai format dokumentasi visual resmi. Setiap slot foto mewakili bukti fisik integritas kendaraan sebelum diterbitkan ke katalog publik maupun sertifikat inspeksi.
                 </p>
               </div>
-              <div className="text-[11px] font-semibold text-[#6B6560] bg-white px-3 py-1.5 rounded-lg border border-[#D9D4CB] shrink-0">
+              <div className="text-[11px] font-semibold text-[var(--muted)] bg-white px-3 py-1.5 rounded-lg border border-[var(--line)] shrink-0">
                 Format: JPEG / PNG • Maks 10MB
               </div>
             </div>
@@ -491,8 +491,8 @@ export function VehicleMediaUploadClient({
 
           {groupedSlots.map((group) => (
             <div key={group.groupKey} className="space-y-3">
-              <h3 className="text-xs font-black text-[#1C1917] uppercase tracking-wider flex items-center gap-2 pb-1 border-b border-[#EBE7E1]">
-                <span className="w-2 h-2 rounded-full bg-[#D97706]" />
+              <h3 className="text-xs font-black text-[var(--ink)] uppercase tracking-wider flex items-center gap-2 pb-1 border-b border-[var(--line)]">
+                <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
                 <span>{group.title}</span>
               </h3>
 
@@ -506,27 +506,27 @@ export function VehicleMediaUploadClient({
                       key={slot.id}
                       className={`relative rounded-2xl border transition-all duration-200 overflow-hidden flex flex-col justify-between ${
                         existingPhoto
-                          ? "bg-white border-[#D9D4CB] shadow-xs"
-                          : "bg-[#F7F5F2] border-dashed border-[#D9D4CB] hover:border-[#D97706]/60 hover:bg-[#FAF8F5]"
+                          ? "bg-white border-[var(--line)] shadow-xs"
+                          : "bg-[var(--bg)] border-dashed border-[var(--line)] hover:border-[var(--accent)]/60 hover:bg-[#FAF8F5]"
                       }`}
                     >
                       {/* Slot Header */}
-                      <div className="p-3.5 border-b border-[#EBE7E1] bg-white/70 flex items-start justify-between gap-2">
+                      <div className="p-3.5 border-b border-[var(--line)] bg-white/70 flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2">
                           <div
                             className={`p-1.5 rounded-lg ${
                               existingPhoto
                                 ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                                : "bg-[#EFECE8] text-[#6B6560]"
+                                : "bg-[var(--bg)] text-[var(--muted)]"
                             }`}
                           >
                             {renderSlotIcon(slot.iconName)}
                           </div>
                           <div>
-                            <span className="text-xs font-bold text-[#1C1917] block leading-tight">
+                            <span className="text-xs font-bold text-[var(--ink)] block leading-tight">
                               {slot.badge}
                             </span>
-                            <span className="text-[10px] text-[#6B6560] line-clamp-1">
+                            <span className="text-[10px] text-[var(--muted)] line-clamp-1">
                               {slot.title}
                             </span>
                           </div>
@@ -560,7 +560,7 @@ export function VehicleMediaUploadClient({
                       <div className="p-3.5 flex-1 flex flex-col justify-center">
                         {existingPhoto ? (
                           <div className="space-y-2">
-                            <div className="relative aspect-4/3 w-full rounded-xl overflow-hidden border border-[#D9D4CB] bg-black/5 group">
+                            <div className="relative aspect-4/3 w-full rounded-xl overflow-hidden border border-[var(--line)] bg-black/5 group">
                               <Image
                                 src={existingPhoto.fileUrl}
                                 alt={slot.title}
@@ -576,7 +576,7 @@ export function VehicleMediaUploadClient({
                                       title: slot.title,
                                     })
                                   }
-                                  className="p-2 rounded-lg bg-white/90 hover:bg-white text-[#1C1917] shadow-sm transition-colors cursor-pointer"
+                                  className="p-2 rounded-lg bg-white/90 hover:bg-white text-[var(--ink)] shadow-sm transition-colors cursor-pointer"
                                   title="Lihat Ukuran Penuh"
                                 >
                                   <Eye className="w-4 h-4" />
@@ -596,20 +596,20 @@ export function VehicleMediaUploadClient({
                                 </button>
                               </div>
                             </div>
-                            <p className="text-[10px] text-[#6B6560] line-clamp-2">
+                            <p className="text-[10px] text-[var(--muted)] line-clamp-2">
                               {slot.description}
                             </p>
                           </div>
                         ) : (
                           <div className="py-4 text-center space-y-2">
-                            <div className="w-10 h-10 mx-auto rounded-full bg-[#EFECE8] flex items-center justify-center text-[#6B6560]">
+                            <div className="w-10 h-10 mx-auto rounded-full bg-[var(--bg)] flex items-center justify-center text-[var(--muted)]">
                               {isUploadingThis ? (
-                                <Loader2 className="w-5 h-5 animate-spin text-[#D97706]" />
+                                <Loader2 className="w-5 h-5 animate-spin text-[var(--accent)]" />
                               ) : (
                                 <Camera className="w-5 h-5" />
                               )}
                             </div>
-                            <p className="text-[11px] text-[#6B6560] px-2 leading-relaxed">
+                            <p className="text-[11px] text-[var(--muted)] px-2 leading-relaxed">
                               {slot.description}
                             </p>
                           </div>
@@ -617,7 +617,7 @@ export function VehicleMediaUploadClient({
                       </div>
 
                       {/* Slot Action Footer */}
-                      <div className="p-3 bg-[#FAF8F5] border-t border-[#EBE7E1] flex items-center justify-between">
+                      <div className="p-3 bg-[#FAF8F5] border-t border-[var(--line)] flex items-center justify-between">
                         <input
                           ref={(el) => {
                             slotInputRefs.current[slot.id] = el;
@@ -633,7 +633,7 @@ export function VehicleMediaUploadClient({
                             type="button"
                             disabled={isUploadingThis}
                             onClick={() => slotInputRefs.current[slot.id]?.click()}
-                            className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-white border border-[#D9D4CB] hover:bg-[#EFECE8] text-xs font-semibold text-[#1C1917] transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+                            className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-xs font-semibold text-[var(--ink)] transition-colors cursor-pointer shadow-xs disabled:opacity-50"
                           >
                             {isUploadingThis ? (
                               <>
@@ -642,7 +642,7 @@ export function VehicleMediaUploadClient({
                               </>
                             ) : (
                               <>
-                                <RefreshCw className="w-3.5 h-3.5 text-[#6B6560]" />
+                                <RefreshCw className="w-3.5 h-3.5 text-[var(--muted)]" />
                                 <span>Ganti Foto Slot</span>
                               </>
                             )}
@@ -652,7 +652,7 @@ export function VehicleMediaUploadClient({
                             type="button"
                             disabled={isUploadingThis}
                             onClick={() => slotInputRefs.current[slot.id]?.click()}
-                            className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#1C1917] hover:bg-[#D97706] text-xs font-bold text-white transition-colors cursor-pointer shadow-sm disabled:opacity-50"
+                            className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[var(--ink)] hover:bg-[var(--accent)] text-xs font-bold text-white transition-colors cursor-pointer shadow-sm disabled:opacity-50"
                           >
                             {isUploadingThis ? (
                               <>
@@ -679,20 +679,20 @@ export function VehicleMediaUploadClient({
 
       {/* TAB 2: UNGGAH MANUAL & DOKUMEN */}
       {activeTab === "CUSTOM_UPLOAD" && (
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-6 shadow-xs space-y-5">
-          <div className="border-b border-[#EBE7E1] pb-3">
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider flex items-center gap-2">
-              <Upload className="w-4 h-4 text-[#D97706]" />
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-6 shadow-xs space-y-5">
+          <div className="border-b border-[var(--line)] pb-3">
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider flex items-center gap-2">
+              <Upload className="w-4 h-4 text-[var(--accent)]" />
               <span>Unggah Berkas Tambahan / Dokumen Legalitas</span>
             </h2>
-            <p className="text-xs text-[#6B6560] mt-1">
+            <p className="text-xs text-[var(--muted)] mt-1">
               Gunakan formulir ini untuk menambahkan foto detail baret, hasil perbaikan bodi, atau berkas legalitas (STNK, BPKB, Faktur).
             </p>
           </div>
 
           <form onSubmit={handleCustomUpload} className="space-y-4">
             {/* Switch Type */}
-            <div className="flex rounded-xl bg-[#F7F5F2] border border-[#D9D4CB] p-1 max-w-sm">
+            <div className="flex rounded-xl bg-[var(--bg)] border border-[var(--line)] p-1 max-w-sm">
               <button
                 type="button"
                 onClick={() => {
@@ -702,8 +702,8 @@ export function VehicleMediaUploadClient({
                 }}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer ${
                   uploadType === "PHOTO"
-                    ? "bg-[#1C1917] text-white shadow-xs"
-                    : "text-[#6B6560] hover:text-[#1C1917]"
+                    ? "bg-[var(--ink)] text-white shadow-xs"
+                    : "text-[var(--muted)] hover:text-[var(--ink)]"
                 }`}
               >
                 <Camera className="w-3.5 h-3.5" />
@@ -718,8 +718,8 @@ export function VehicleMediaUploadClient({
                 }}
                 className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer ${
                   uploadType === "DOCUMENT"
-                    ? "bg-[#1C1917] text-white shadow-xs"
-                    : "text-[#6B6560] hover:text-[#1C1917]"
+                    ? "bg-[var(--ink)] text-white shadow-xs"
+                    : "text-[var(--muted)] hover:text-[var(--ink)]"
                 }`}
               >
                 <FileText className="w-3.5 h-3.5" />
@@ -729,14 +729,14 @@ export function VehicleMediaUploadClient({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   {uploadType === "PHOTO" ? "Kategori Siklus Unit" : "Jenis Dokumen Legalitas"}
                 </label>
                 {uploadType === "PHOTO" ? (
                   <select
                     value={photoCategory}
                     onChange={(e) => setPhotoCategory(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                   >
                     {CUSTOM_PHOTO_CATEGORIES.map((c) => (
                       <option key={c.value} value={c.value}>
@@ -748,7 +748,7 @@ export function VehicleMediaUploadClient({
                   <select
                     value={docType}
                     onChange={(e) => setDocType(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                   >
                     {DOC_CATEGORIES.map((c) => (
                       <option key={c.value} value={c.value}>
@@ -760,7 +760,7 @@ export function VehicleMediaUploadClient({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   Pilih Berkas * (Maks 10MB)
                 </label>
                 <input
@@ -778,7 +778,7 @@ export function VehicleMediaUploadClient({
                       }
                     }
                   }}
-                  className="w-full text-xs file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[#1C1917] file:text-white hover:file:bg-[#D97706] file:cursor-pointer"
+                  className="w-full text-xs file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[var(--ink)] file:text-white hover:file:bg-[var(--accent)] file:cursor-pointer"
                 />
               </div>
             </div>
@@ -786,7 +786,7 @@ export function VehicleMediaUploadClient({
             {uploadType === "PHOTO" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                     Judul Foto / Keterangan Panel (Opsional)
                   </label>
                   <input
@@ -794,11 +794,11 @@ export function VehicleMediaUploadClient({
                     placeholder="Contoh: Detail Baret Bumper Kiri Bawah (A2)"
                     value={customTitle}
                     onChange={(e) => setCustomTitle(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-xs font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                    className="w-full px-3.5 py-2 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-xs font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                     Tag Komponen (Opsional)
                   </label>
                   <input
@@ -806,15 +806,15 @@ export function VehicleMediaUploadClient({
                     placeholder="Contoh: DEFECT_BUMPER_FRONT, DOOR_SEALER"
                     value={customTag}
                     onChange={(e) => setCustomTag(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-xs font-mono font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                    className="w-full px-3.5 py-2 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-xs font-mono font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                   />
                 </div>
               </div>
             )}
 
             {previewUrl && (
-              <div className="p-3 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl flex items-center gap-3">
-                <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#D9D4CB] bg-black/5 shrink-0">
+              <div className="p-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl flex items-center gap-3">
+                <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-[var(--line)] bg-black/5 shrink-0">
                   <Image
                     src={previewUrl}
                     alt="Preview"
@@ -823,8 +823,8 @@ export function VehicleMediaUploadClient({
                   />
                 </div>
                 <div className="text-xs">
-                  <span className="font-bold text-[#1C1917] block">Preview Siap Unggah</span>
-                  <span className="text-[#6B6560]">{file?.name}</span>
+                  <span className="font-bold text-[var(--ink)] block">Preview Siap Unggah</span>
+                  <span className="text-[var(--muted)]">{file?.name}</span>
                 </div>
               </div>
             )}
@@ -833,7 +833,7 @@ export function VehicleMediaUploadClient({
               <button
                 type="submit"
                 disabled={uploading || !file}
-                className="flex items-center gap-2 px-6 py-2.5 bg-[#1C1917] hover:bg-[#D97706] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+                className="flex items-center gap-2 px-6 py-2.5 bg-[var(--ink)] hover:bg-[var(--accent)] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
               >
                 {uploading ? (
                   <>
@@ -853,19 +853,19 @@ export function VehicleMediaUploadClient({
       )}
 
       {/* Existing Photos Gallery (All Uploaded Photos) */}
-      <div className="bg-white border border-[#D9D4CB] rounded-2xl p-6 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
-          <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider flex items-center gap-2">
-            <ImageIcon className="w-4 h-4 text-[#D97706]" />
+      <div className="bg-white border border-[var(--line)] rounded-2xl p-6 shadow-xs space-y-4">
+        <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+          <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider flex items-center gap-2">
+            <ImageIcon className="w-4 h-4 text-[var(--accent)]" />
             <span>Seluruh Foto Terarsip ({vehicle.photos.length})</span>
           </h2>
-          <span className="text-xs font-semibold text-[#6B6560]">
+          <span className="text-xs font-semibold text-[var(--muted)]">
             Klik foto untuk memperbesar atau menghapus
           </span>
         </div>
 
         {vehicle.photos.length === 0 ? (
-          <p className="text-xs text-[#6B6560] py-8 text-center bg-[#FAF8F5] rounded-xl border border-dashed border-[#D9D4CB]">
+          <p className="text-xs text-[var(--muted)] py-8 text-center bg-[#FAF8F5] rounded-xl border border-dashed border-[var(--line)]">
             Belum ada foto yang diunggah untuk unit ini. Silakan penuhi 11 slot standar di atas.
           </p>
         ) : (
@@ -873,7 +873,7 @@ export function VehicleMediaUploadClient({
             {vehicle.photos.map((p) => (
               <div
                 key={p.id}
-                className="group relative rounded-xl border border-[#D9D4CB] overflow-hidden bg-[#F7F5F2] flex flex-col justify-between"
+                className="group relative rounded-xl border border-[var(--line)] overflow-hidden bg-[var(--bg)] flex flex-col justify-between"
               >
                 <div className="relative aspect-4/3 w-full bg-black/5">
                   <Image
@@ -891,7 +891,7 @@ export function VehicleMediaUploadClient({
                           title: p.title || p.tag || "Foto Unit",
                         })
                       }
-                      className="p-1.5 rounded-lg bg-white/90 hover:bg-white text-[#1C1917] shadow-sm transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg bg-white/90 hover:bg-white text-[var(--ink)] shadow-sm transition-colors cursor-pointer"
                       title="Perbesar"
                     >
                       <Eye className="w-3.5 h-3.5" />
@@ -912,12 +912,12 @@ export function VehicleMediaUploadClient({
                   </div>
                 </div>
 
-                <div className="p-2.5 bg-white border-t border-[#D9D4CB]">
-                  <span className="text-xs font-bold text-[#1C1917] block truncate">
+                <div className="p-2.5 bg-white border-t border-[var(--line)]">
+                  <span className="text-xs font-bold text-[var(--ink)] block truncate">
                     {p.title || p.tag || p.category || "Foto Unit"}
                   </span>
                   {p.tag && (
-                    <span className="text-[10px] font-mono text-[#D97706] block truncate">
+                    <span className="text-[10px] font-mono text-[var(--accent)] block truncate">
                       {p.tag}
                     </span>
                   )}
@@ -929,14 +929,14 @@ export function VehicleMediaUploadClient({
       </div>
 
       {/* Existing Documents List */}
-      <div className="bg-white border border-[#D9D4CB] rounded-2xl p-6 shadow-xs space-y-4">
-        <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-          <FileText className="w-4 h-4 text-[#D97706]" />
+      <div className="bg-white border border-[var(--line)] rounded-2xl p-6 shadow-xs space-y-4">
+        <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider flex items-center gap-2 border-b border-[var(--line)] pb-3">
+          <FileText className="w-4 h-4 text-[var(--accent)]" />
           <span>Dokumen Legalitas & Scan Berkas ({vehicle.documents.length})</span>
         </h2>
 
         {vehicle.documents.length === 0 ? (
-          <p className="text-xs text-[#6B6560] py-6 text-center bg-[#FAF8F5] rounded-xl border border-dashed border-[#D9D4CB]">
+          <p className="text-xs text-[var(--muted)] py-6 text-center bg-[#FAF8F5] rounded-xl border border-dashed border-[var(--line)]">
             Belum ada scan dokumen legalitas (STNK/BPKB/Faktur) untuk unit ini.
           </p>
         ) : (
@@ -944,17 +944,17 @@ export function VehicleMediaUploadClient({
             {vehicle.documents.map((d) => (
               <div
                 key={d.id}
-                className="flex items-center justify-between p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2]"
+                className="flex items-center justify-between p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)]"
               >
-                <div className="flex items-center gap-2.5 text-xs font-semibold text-[#1C1917] min-w-0 pr-2">
-                  <div className="p-2 bg-white rounded-lg border border-[#D9D4CB] text-[#D97706] shrink-0">
+                <div className="flex items-center gap-2.5 text-xs font-semibold text-[var(--ink)] min-w-0 pr-2">
+                  <div className="p-2 bg-white rounded-lg border border-[var(--line)] text-[var(--accent)] shrink-0">
                     <FileText className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="block truncate font-bold text-[#1C1917]">
+                    <span className="block truncate font-bold text-[var(--ink)]">
                       {(d.docType && DOC_LABEL_MAP[d.docType]) || d.docType || "Dokumen Legalitas"}
                     </span>
-                    <span className="text-[10px] text-[#6B6560] block truncate">
+                    <span className="text-[10px] text-[var(--muted)] block truncate">
                       Arsip Berkas Digital
                     </span>
                   </div>
@@ -965,7 +965,7 @@ export function VehicleMediaUploadClient({
                     href={d.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white border border-[#D9D4CB] text-xs font-semibold text-[#1C1917] hover:bg-[#EFECE8] transition-colors"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-white border border-[var(--line)] text-xs font-semibold text-[var(--ink)] hover:bg-[var(--bg)] transition-colors"
                   >
                     <span>Buka</span>
                     <ExternalLink className="w-3 h-3" />
@@ -1000,7 +1000,7 @@ export function VehicleMediaUploadClient({
             className="relative max-w-4xl w-full max-h-[90vh] bg-white rounded-2xl overflow-hidden shadow-2xl flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-3 bg-[#1C1917] text-white flex items-center justify-between">
+            <div className="p-3 bg-[var(--ink)] text-white flex items-center justify-between">
               <span className="text-xs font-bold truncate pr-4">
                 {lightboxUrl.title}
               </span>

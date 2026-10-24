@@ -109,8 +109,8 @@ export function ProofUploadField({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-semibold text-[#1C1917] flex items-center gap-1.5">
-          <Paperclip className="w-3.5 h-3.5 text-[#D97706]" />
+        <label className="text-xs font-semibold text-[var(--ink)] flex items-center gap-1.5">
+          <Paperclip className="w-3.5 h-3.5 text-[var(--accent)]" />
           <span>{label}</span>
         </label>
         {value.length > 0 && (
@@ -154,13 +154,13 @@ export function ProofUploadField({
             return (
               <div
                 key={`${url}-${idx}`}
-                className="p-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl flex items-center justify-between gap-2.5 shadow-2xs group hover:border-[#D97706]/40 transition-colors"
+                className="p-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl flex items-center justify-between gap-2.5 shadow-2xs group hover:border-[var(--accent)]/40 transition-colors"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   {isImg ? (
                     <div
                       onClick={() => setPreviewItem({ url, name: fileName })}
-                      className="relative w-11 h-11 rounded-lg overflow-hidden border border-[#D9D4CB] bg-white shrink-0 shadow-2xs cursor-pointer group/thumb hover:ring-2 hover:ring-[#D97706]/50 transition-all"
+                      className="relative w-11 h-11 rounded-lg overflow-hidden border border-[var(--line)] bg-white shrink-0 shadow-2xs cursor-pointer group/thumb hover:ring-2 hover:ring-[var(--accent)]/50 transition-all"
                       title="Klik untuk pratinjau foto bukti"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -184,7 +184,7 @@ export function ProofUploadField({
                   <div className="min-w-0">
                     <p
                       onClick={() => setPreviewItem({ url, name: fileName })}
-                      className="text-xs font-bold text-[#1C1917] truncate max-w-[140px] sm:max-w-[130px] cursor-pointer hover:text-[#D97706] hover:underline transition-colors"
+                      className="text-xs font-bold text-[var(--ink)] truncate max-w-[140px] sm:max-w-[130px] cursor-pointer hover:text-[var(--accent)] hover:underline transition-colors"
                     >
                       {fileName}
                     </p>
@@ -198,20 +198,20 @@ export function ProofUploadField({
                   <button
                     type="button"
                     onClick={() => setPreviewItem({ url, name: fileName })}
-                    className="p-1.5 bg-white border border-[#D9D4CB] rounded-lg text-[#1C1917] hover:bg-[#EFECE8] transition-colors shadow-2xs cursor-pointer"
+                    className="p-1.5 bg-white border border-[var(--line)] rounded-lg text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-2xs cursor-pointer"
                     title="Pratinjau bukti"
                   >
-                    <Eye className="w-3.5 h-3.5 text-[#6B6560]" />
+                    <Eye className="w-3.5 h-3.5 text-[var(--muted)]" />
                   </button>
 
                   <a
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-1.5 bg-white border border-[#D9D4CB] rounded-lg text-[#1C1917] hover:bg-[#EFECE8] transition-colors shadow-2xs"
+                    className="p-1.5 bg-white border border-[var(--line)] rounded-lg text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-2xs"
                     title="Buka lampiran di tab baru"
                   >
-                    <ExternalLink className="w-3.5 h-3.5 text-[#6B6560]" />
+                    <ExternalLink className="w-3.5 h-3.5 text-[var(--muted)]" />
                   </a>
 
                   <button
@@ -236,28 +236,28 @@ export function ProofUploadField({
             fileInputRef.current?.click();
           }
         }}
-        className="border-2 border-dashed border-[#D9D4CB] hover:border-[#D97706] bg-[#FAF9F6] hover:bg-[#F7F5F2] rounded-xl p-3.5 sm:p-4 text-center cursor-pointer transition-colors group"
+        className="border-2 border-dashed border-[var(--line)] hover:border-[var(--accent)] bg-[var(--bg)] hover:bg-[var(--bg)] rounded-xl p-3.5 sm:p-4 text-center cursor-pointer transition-colors group"
       >
         {uploading ? (
           <div className="flex flex-col items-center justify-center py-1.5 space-y-1.5">
-            <Loader2 className="w-5 h-5 animate-spin text-[#D97706]" />
-            <span className="text-xs font-bold text-[#1C1917]">
+            <Loader2 className="w-5 h-5 animate-spin text-[var(--accent)]" />
+            <span className="text-xs font-bold text-[var(--ink)]">
               Mengunggah lampiran bukti...
             </span>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center space-y-1.5">
-            <div className="w-8 h-8 rounded-full bg-amber-50 group-hover:bg-amber-100 text-[#D97706] flex items-center justify-center transition-colors">
+            <div className="w-8 h-8 rounded-full bg-amber-50 group-hover:bg-amber-100 text-[var(--accent)] flex items-center justify-center transition-colors">
               <UploadCloud className="w-4 h-4" />
             </div>
-            <div className="text-xs text-[#1C1917]">
-              <span className="font-bold text-[#D97706] underline">
+            <div className="text-xs text-[var(--ink)]">
+              <span className="font-bold text-[var(--accent)] underline">
                 {value.length > 0
                   ? "+ Klik untuk menambah foto / screenshot lainnya"
                   : "Klik untuk memilih foto struk / screenshot transfer / PDF"}
               </span>
             </div>
-            <span className="text-[11px] text-[#6B6560]">{helperText}</span>
+            <span className="text-[11px] text-[var(--muted)]">{helperText}</span>
           </div>
         )}
       </div>
@@ -269,16 +269,16 @@ export function ProofUploadField({
           onClick={() => setPreviewItem(null)}
         >
           <div
-            className="bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-hidden flex flex-col shadow-2xl border border-[#D9D4CB]"
+            className="bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-hidden flex flex-col shadow-2xl border border-[var(--line)]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="px-5 py-3.5 bg-[#FAF9F6] border-b border-[#D9D4CB] flex items-center justify-between gap-3">
+            <div className="px-5 py-3.5 bg-[var(--bg)] border-b border-[var(--line)] flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <h4 className="text-sm font-bold text-[#1C1917] truncate">
+                <h4 className="text-sm font-bold text-[var(--ink)] truncate">
                   {previewItem.name}
                 </h4>
-                <p className="text-[11px] text-[#6B6560]">
+                <p className="text-[11px] text-[var(--muted)]">
                   Pratinjau Lampiran Bukti Transaksi
                 </p>
               </div>
@@ -288,27 +288,27 @@ export function ProofUploadField({
                   href={previewItem.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-2.5 py-1.5 bg-white border border-[#D9D4CB] hover:bg-[#EFECE8] text-[#1C1917] rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
+                  className="px-2.5 py-1.5 bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-[var(--ink)] rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
                   title="Buka ukuran penuh di tab baru"
                 >
-                  <ExternalLink className="w-3.5 h-3.5 text-[#6B6560]" />
+                  <ExternalLink className="w-3.5 h-3.5 text-[var(--muted)]" />
                   <span className="hidden sm:inline">Tab Baru</span>
                 </a>
 
                 <a
                   href={previewItem.url}
                   download
-                  className="px-2.5 py-1.5 bg-white border border-[#D9D4CB] hover:bg-[#EFECE8] text-[#1C1917] rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
+                  className="px-2.5 py-1.5 bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-[var(--ink)] rounded-lg text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
                   title="Unduh file bukti"
                 >
-                  <Download className="w-3.5 h-3.5 text-[#6B6560]" />
+                  <Download className="w-3.5 h-3.5 text-[var(--muted)]" />
                   <span className="hidden sm:inline">Unduh</span>
                 </a>
 
                 <button
                   type="button"
                   onClick={() => setPreviewItem(null)}
-                  className="p-1.5 text-[#6B6560] hover:text-[#1C1917] hover:bg-[#EFECE8] rounded-lg transition-colors cursor-pointer ml-1"
+                  className="p-1.5 text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] rounded-lg transition-colors cursor-pointer ml-1"
                   title="Tutup (Esc)"
                 >
                   <X className="w-5 h-5" />
@@ -317,19 +317,19 @@ export function ProofUploadField({
             </div>
 
             {/* Modal Body */}
-            <div className="p-4 overflow-auto flex-1 flex items-center justify-center bg-[#1C1917]/5 min-h-[300px]">
+            <div className="p-4 overflow-auto flex-1 flex items-center justify-center bg-[var(--ink)]/5 min-h-[300px]">
               {/\.(jpeg|jpg|png|webp)$/i.test(previewItem.url) ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={previewItem.url}
                   alt={previewItem.name}
-                  className="max-h-[72vh] max-w-full object-contain rounded-lg shadow-md border border-[#D9D4CB] bg-white"
+                  className="max-h-[72vh] max-w-full object-contain rounded-lg shadow-md border border-[var(--line)] bg-white"
                 />
               ) : (
                 <iframe
                   src={previewItem.url}
                   title={previewItem.name}
-                  className="w-full h-[72vh] rounded-lg border border-[#D9D4CB] bg-white"
+                  className="w-full h-[72vh] rounded-lg border border-[var(--line)] bg-white"
                 />
               )}
             </div>

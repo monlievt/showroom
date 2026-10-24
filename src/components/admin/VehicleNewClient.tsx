@@ -233,20 +233,20 @@ export function VehicleNewClient() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
       {/* Top Navigation */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/inventory"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Inventori</span>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-[#1C1917]">
+            <h1 className="text-xl font-bold text-[var(--ink)]">
               Intake Kendaraan Baru
             </h1>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Pendaftaran unit masuk dari lelang / pembelian langsung ke garasi.
             </p>
           </div>
@@ -260,7 +260,7 @@ export function VehicleNewClient() {
           <span>Alur Penanganan Unit Showroom Nur Mobil:</span>
         </div>
         <div className="flex flex-wrap items-center gap-2 font-medium">
-          <span className="bg-[#EFECE8] text-[#6B6560] px-3 py-1 rounded-full border border-[#D9D4CB]">
+          <span className="bg-[var(--bg)] text-[var(--muted)] px-3 py-1 rounded-full border border-[var(--line)]">
             1. INTAKE (Unit baru masuk)
           </span>
           <span className="text-amber-600 font-bold">→</span>
@@ -296,17 +296,17 @@ export function VehicleNewClient() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* SECTION 1: Identitas & Sumber */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Car className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Car className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               1. Identitas Unit & Sumber Masuk
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Nomor Plat Polisi *
               </label>
               <input
@@ -320,15 +320,15 @@ export function VehicleNewClient() {
                     plateNumber: e.target.value.toUpperCase(),
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm uppercase font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm uppercase font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Plat unik identifikasi inventori
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Sumber Pembelian *
               </label>
               <select
@@ -336,7 +336,7 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, sourceType: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 <option value="AUCTION">Balai Lelang</option>
                 <option value="BROKER">Makelar / Rekanan</option>
@@ -345,7 +345,7 @@ export function VehicleNewClient() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Tanggal Pembelian / Menang Lelang *
               </label>
               <input
@@ -355,7 +355,7 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, purchaseDate: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
@@ -373,13 +373,13 @@ export function VehicleNewClient() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   Pilihan Balai Lelang
                 </label>
                 <select
                   value={formData.auctionHouse}
                   onChange={(e) => handleAuctionHouseChange(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                  className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   {Object.entries(AUCTION_HOUSE_PRESETS).map(([key, val]) => (
                     <option key={key} value={key}>
@@ -395,7 +395,7 @@ export function VehicleNewClient() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   Tipe Lot Lelang
                 </label>
                 <select
@@ -403,7 +403,7 @@ export function VehicleNewClient() {
                   onChange={(e) =>
                     setFormData({ ...formData, auctionLotType: e.target.value })
                   }
-                  className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                  className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   <option value="EKS_PERUSAHAAN">
                     Eks Perusahaan ✅ (BPKB bersih, 7-14 hari)
@@ -423,7 +423,7 @@ export function VehicleNewClient() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   Status BPKB Saat Ini
                 </label>
                 <select
@@ -431,7 +431,7 @@ export function VehicleNewClient() {
                   onChange={(e) =>
                     setFormData({ ...formData, bpkbStatus: e.target.value })
                   }
-                  className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                  className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   <option value="PROCESS_1_2_WEEKS">
                     Masih Diproses Balai Lelang
@@ -447,7 +447,7 @@ export function VehicleNewClient() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   Estimasi BPKB Tiba (Hari Kerja)
                 </label>
                 <div className="flex items-center gap-2">
@@ -462,7 +462,7 @@ export function VehicleNewClient() {
                         bpkbLeadDays: Number(e.target.value),
                       })
                     }
-                    className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-bold text-amber-950 focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                    className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-bold text-amber-950 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                   />
                   <span className="text-xs text-amber-900 font-semibold whitespace-nowrap">
                     Hari Kerja
@@ -477,11 +477,11 @@ export function VehicleNewClient() {
         )}
 
         {/* SECTION 2B: Legalitas STNK & Alarm Pajak Tahunan PKB */}
-        <div className="bg-[#FAF9F5] border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
+        <div className="bg-[#FAF9F5] border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
-              <CalendarClock className="w-4 h-4 text-[#D97706]" />
-              <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              <CalendarClock className="w-4 h-4 text-[var(--accent)]" />
+              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
                 Dokumen STNK & Radar Pajak Kendaraan (PKB)
               </h2>
             </div>
@@ -492,7 +492,7 @@ export function VehicleNewClient() {
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Jatuh Tempo Pajak Tahunan (PKB)
               </label>
               <input
@@ -501,15 +501,15 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, taxExpiryDate: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Sesuai lembar notice pajak STNK
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Jatuh Tempo Plat / Kaleng (5 Thn)
               </label>
               <input
@@ -518,15 +518,15 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, platExpiryDate: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Bulan & Tahun plat kaleng mobil
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Estimasi Pajak Tahunan (Rp)
               </label>
               <input
@@ -540,15 +540,15 @@ export function VehicleNewClient() {
                     taxNominal: parseThousands(e.target.value),
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Acuan negosiasi / perpanjangan
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Status Fisik STNK
               </label>
               <select
@@ -556,7 +556,7 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, stnkStatus: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 <option value="READY">STNK Asli Ready di Showroom</option>
                 <option value="PROCESS_1_2_WEEKS">Masih Diproses Balai Lelang</option>
@@ -615,17 +615,17 @@ export function VehicleNewClient() {
         </div>
 
         {/* SECTION 3: Spesifikasi Unit */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Car className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Car className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               3. Detail Spesifikasi Kendaraan
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Merk Kendaraan *
               </label>
               <input
@@ -636,12 +636,12 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, brand: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Tipe / Model *
               </label>
               <input
@@ -652,12 +652,12 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, model: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Tahun Pembuatan *
               </label>
               <input
@@ -669,14 +669,14 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, year: Number(e.target.value) })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Transmisi
               </label>
               <select
@@ -684,7 +684,7 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, transmission: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 <option value="AUTOMATIC">Automatic (AT)</option>
                 <option value="MANUAL">Manual (MT)</option>
@@ -694,7 +694,7 @@ export function VehicleNewClient() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Warna Fisik *
               </label>
               <input
@@ -705,12 +705,12 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, color: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Odometer (km)
               </label>
               <input
@@ -724,12 +724,12 @@ export function VehicleNewClient() {
                     odometer: parseThousands(e.target.value),
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Kapasitas Mesin (CC)
               </label>
               <input
@@ -742,24 +742,24 @@ export function VehicleNewClient() {
                     engineCapacity: Number(e.target.value),
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
         </div>
 
         {/* SECTION 4: Keuangan & Harga */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Banknote className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Banknote className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               4. Finansial & Rencana Harga Jual
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Harga Beli / Menang Lelang (Rp) *
               </label>
               <input
@@ -774,15 +774,15 @@ export function VehicleNewClient() {
                     purchasePrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Otomatis dicatat sebagai HPP awal unit
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Target Banderol Jual (Rp)
               </label>
               <input
@@ -796,15 +796,15 @@ export function VehicleNewClient() {
                     targetSellingPrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-emerald-300 rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-emerald-300 rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Harga publish yang tertera di katalog
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Batas Bawah Nego / Net (Rp)
               </label>
               <input
@@ -818,9 +818,9 @@ export function VehicleNewClient() {
                     minSellingPrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-amber-300 rounded-xl text-sm font-medium text-[#92400E] focus:outline-none focus:ring-2 focus:ring-[#92400E]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-amber-300 rounded-xl text-sm font-medium text-[#92400E] focus:outline-none focus:ring-2 focus:ring-[#92400E]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Pedoman batas tawar untuk tim sales
               </span>
             </div>
@@ -828,28 +828,28 @@ export function VehicleNewClient() {
         </div>
 
         {/* SECTION 5: Ceklist Bawaan Fisik Turun Towing */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EBE7E1] pb-3">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-[#D97706]" />
-              <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              <ShieldAlert className="w-4 h-4 text-[var(--accent)]" />
+              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
                 5. Ceklist Bawaan Fisik Turun Towing (Anti-Kehilangan)
               </h2>
             </div>
-            <span className="text-[11px] font-semibold text-[#92400E] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full border border-[#D97706]/30">
+            <span className="text-[11px] font-semibold text-[#92400E] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full border border-[var(--accent)]/30">
               SOP Balai Lelang & Ekspedisi
             </span>
           </div>
 
-          <p className="text-xs text-[#6B6560]">
+          <p className="text-xs text-[var(--muted)]">
             Periksa kelengkapan fisik saat unit dibongkar dari truk towing. Data ini otomatis masuk ke laporan inspeksi, surat jalan bengkel, dan mencegah kebocoran HPP.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
             {/* 1. Ban Serep */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Disc className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Disc className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Ban Cadangan / Serep</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
@@ -860,7 +860,7 @@ export function VehicleNewClient() {
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "ADA_BAGUS"
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Ada (Bagus)
@@ -871,8 +871,8 @@ export function VehicleNewClient() {
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "ADA_AUS"
-                      ? "bg-[#D97706] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      ? "bg-[var(--accent)] text-white shadow-xs"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ⚠️ Ada (Aus)
@@ -884,7 +884,7 @@ export function VehicleNewClient() {
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "TIDAK_ADA"
                       ? "bg-[#DC2626] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Tidak Ada
@@ -893,9 +893,9 @@ export function VehicleNewClient() {
             </div>
 
             {/* 2. Dongkrak & Stang */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Wrench className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Wrench className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Dongkrak & Tuas Stang</span>
               </div>
               <div className="flex gap-2">
@@ -906,7 +906,7 @@ export function VehicleNewClient() {
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.jack
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Ada & Fungsi
@@ -918,7 +918,7 @@ export function VehicleNewClient() {
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.jack
                       ? "bg-[#DC2626] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Tidak Ada
@@ -927,9 +927,9 @@ export function VehicleNewClient() {
             </div>
 
             {/* 3. Kunci Roda & Toolkit */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Wrench className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Wrench className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Kunci Roda & Toolkit</span>
               </div>
               <div className="flex gap-2">
@@ -940,7 +940,7 @@ export function VehicleNewClient() {
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.wheelWrench
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Ada Lengkap
@@ -952,7 +952,7 @@ export function VehicleNewClient() {
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.wheelWrench
                       ? "bg-[#DC2626] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Tidak Ada
@@ -961,9 +961,9 @@ export function VehicleNewClient() {
             </div>
 
             {/* 4. Kunci Kontak & Remote Cadangan */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Key className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Key className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Kunci Kontak & Remote</span>
               </div>
               <div className="flex gap-2">
@@ -974,7 +974,7 @@ export function VehicleNewClient() {
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.keysCount === "2_KEYS"
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Lengkap 2 Kunci
@@ -985,8 +985,8 @@ export function VehicleNewClient() {
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.keysCount === "1_KEY"
-                      ? "bg-[#D97706] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      ? "bg-[var(--accent)] text-white shadow-xs"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ⚠️ Hanya 1 Kunci
@@ -995,9 +995,9 @@ export function VehicleNewClient() {
             </div>
 
             {/* 5. Buku Manual & Servis */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <BookOpen className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <BookOpen className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Buku Manual & Servis</span>
               </div>
               <div className="flex gap-2">
@@ -1008,7 +1008,7 @@ export function VehicleNewClient() {
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.serviceBook
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Ada
@@ -1020,7 +1020,7 @@ export function VehicleNewClient() {
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.serviceBook
                       ? "bg-[#78716C] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Tidak Ada
@@ -1029,9 +1029,9 @@ export function VehicleNewClient() {
             </div>
 
             {/* 6. Head Unit / Audio */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Volume2 className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Volume2 className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Head Unit / Audio</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
@@ -1042,7 +1042,7 @@ export function VehicleNewClient() {
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "ORIGINAL"
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Original
@@ -1054,7 +1054,7 @@ export function VehicleNewClient() {
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "MODIFIED"
                       ? "bg-[#2563EB] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ⚡ Android/Layar
@@ -1066,7 +1066,7 @@ export function VehicleNewClient() {
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "BROKEN_OR_NONE"
                       ? "bg-[#DC2626] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Rusak/Hilang
@@ -1077,17 +1077,17 @@ export function VehicleNewClient() {
         </div>
 
         {/* SECTION 6: Catatan & Lokasi Garasi */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-3">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <FileText className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-3">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <FileText className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               6. Catatan Kondisi & Lokasi Garasi
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Lokasi Parkir Unit Saat Ini
               </label>
               <input
@@ -1096,12 +1096,12 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, currentLocation: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917]"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Catatan Kondisi Khusus / Kelengkapan
               </label>
               <textarea
@@ -1111,17 +1111,17 @@ export function VehicleNewClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, notes: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] resize-none"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] resize-none"
               />
             </div>
           </div>
         </div>
 
         {/* Actions Bar */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4">
           <Link
             href="/admin/inventory"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
           >
             Batal & Kembali
           </Link>
@@ -1129,7 +1129,7 @@ export function VehicleNewClient() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>
@@ -1149,35 +1149,35 @@ export function VehicleNewClient() {
       {/* ── MODAL PANDUAN LANGKAH BERIKUTNYA (NEXT-STEP DIALOG) ── */}
       {createdVehicle && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-[#D9D4CB] space-y-5">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-[var(--line)] space-y-5">
             {/* Header Dialog */}
             <div className="text-center space-y-2">
               <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-xs">
                 <CheckCircle className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-black text-[#1C1917]">
+                <h3 className="text-lg sm:text-xl font-black text-[var(--ink)]">
                   Unit Berhasil Didaftarkan ke Inventori!
                 </h3>
-                <p className="text-xs text-[#6B6560] mt-0.5">
+                <p className="text-xs text-[var(--muted)] mt-0.5">
                   Data intake dan ceklist fisik turun towing telah aman tersimpan di sistem.
                 </p>
               </div>
 
               {/* Unit Tag Highlight */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#F7F5F2] border border-[#D9D4CB]">
-                <span className="font-black text-sm text-[#D97706] tracking-wider">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--bg)] border border-[var(--line)]">
+                <span className="font-black text-sm text-[var(--accent)] tracking-wider">
                   {createdVehicle.plateNumber}
                 </span>
-                <span className="text-xs text-[#6B6560]">•</span>
-                <span className="text-xs font-bold text-[#1C1917]">
+                <span className="text-xs text-[var(--muted)]">•</span>
+                <span className="text-xs font-bold text-[var(--ink)]">
                   {createdVehicle.brand} {createdVehicle.model} ({createdVehicle.year})
                 </span>
               </div>
             </div>
 
             {/* Prompt Heading */}
-            <div className="border-t border-[#EFECE8] pt-3">
+            <div className="border-t border-[var(--bg)] pt-3">
               <span className="text-xs font-bold uppercase tracking-wider text-[#92400E] block mb-3">
                 Langkah Berikutnya yang Direkomendasikan:
               </span>
@@ -1187,18 +1187,18 @@ export function VehicleNewClient() {
                 {/* 1. Ganti Oli Mandiri */}
                 <Link
                   href="/admin/workshop"
-                  className="p-3.5 rounded-2xl border border-[#D9D4CB] bg-[#F7F5F2] hover:bg-[#FEF3C7] hover:border-[#D97706]/50 transition-all group flex flex-col justify-between text-left"
+                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-[var(--bg)] hover:bg-[#FEF3C7] hover:border-[var(--accent)]/50 transition-all group flex flex-col justify-between text-left"
                 >
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-[#D97706]">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--accent)]">
                       <Droplet className="w-4 h-4" />
                       <span>Servis Oli Mandiri</span>
                     </div>
-                    <p className="text-[11px] text-[#6B6560] leading-snug">
+                    <p className="text-[11px] text-[var(--muted)] leading-snug">
                       Ambil oli &amp; filter dari stok garasi, catat HPP servis mandiri (Rp 500rb).
                     </p>
                   </div>
-                  <div className="mt-3 text-[11px] font-bold text-[#D97706] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  <div className="mt-3 text-[11px] font-bold text-[var(--accent)] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                     <span>Buka Gudang Bahan</span>
                     <span>→</span>
                   </div>
@@ -1209,14 +1209,14 @@ export function VehicleNewClient() {
                   href={`/api/pdf/workshop-dispatch/${createdVehicle.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3.5 rounded-2xl border border-[#D9D4CB] bg-[#F7F5F2] hover:bg-[#FEF3C7] hover:border-[#D97706]/50 transition-all group flex flex-col justify-between text-left"
+                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-[var(--bg)] hover:bg-[#FEF3C7] hover:border-[var(--accent)]/50 transition-all group flex flex-col justify-between text-left"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-[#92400E]">
                       <Wrench className="w-4 h-4" />
                       <span>Surat Jalan Bengkel</span>
                     </div>
-                    <p className="text-[11px] text-[#6B6560] leading-snug">
+                    <p className="text-[11px] text-[var(--muted)] leading-snug">
                       Unduh PDF perintah kerja rekondisi resmi sebelum dikirim ke bengkel cat.
                     </p>
                   </div>
@@ -1229,14 +1229,14 @@ export function VehicleNewClient() {
                 {/* 3. Cek Fisik & Inspeksi */}
                 <Link
                   href={`/admin/inspections/${createdVehicle.id}`}
-                  className="p-3.5 rounded-2xl border border-[#D9D4CB] bg-[#F7F5F2] hover:bg-emerald-50 hover:border-emerald-300 transition-all group flex flex-col justify-between text-left"
+                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-[var(--bg)] hover:bg-emerald-50 hover:border-emerald-300 transition-all group flex flex-col justify-between text-left"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
                       <ClipboardCheck className="w-4 h-4 text-emerald-600" />
                       <span>Inspeksi 11 Panel</span>
                     </div>
-                    <p className="text-[11px] text-[#6B6560] leading-snug">
+                    <p className="text-[11px] text-[var(--muted)] leading-snug">
                       Uji mikron cat &amp; verifikasi bodi bebas tabrak dan bebas banjir.
                     </p>
                   </div>
@@ -1249,14 +1249,14 @@ export function VehicleNewClient() {
                 {/* 4. Upload Foto Media */}
                 <Link
                   href={`/admin/inventory/${createdVehicle.id}/media`}
-                  className="p-3.5 rounded-2xl border border-[#D9D4CB] bg-[#F7F5F2] hover:bg-blue-50 hover:border-blue-300 transition-all group flex flex-col justify-between text-left"
+                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-[var(--bg)] hover:bg-blue-50 hover:border-blue-300 transition-all group flex flex-col justify-between text-left"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-1.5 text-xs font-bold text-blue-800">
                       <Camera className="w-4 h-4 text-blue-600" />
                       <span>Upload Media &amp; Berkas</span>
                     </div>
-                    <p className="text-[11px] text-[#6B6560] leading-snug">
+                    <p className="text-[11px] text-[var(--muted)] leading-snug">
                       Unggah foto eksterior, interior, serta scan STNK &amp; kuitansi lelang.
                     </p>
                   </div>
@@ -1269,11 +1269,11 @@ export function VehicleNewClient() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="border-t border-[#EFECE8] pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="border-t border-[var(--bg)] pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={handleResetForm}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#D9D4CB] text-xs font-bold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>+ Input Unit Mobil Lainnya</span>
@@ -1281,7 +1281,7 @@ export function VehicleNewClient() {
 
               <Link
                 href="/admin/inventory"
-                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#1C1917] hover:bg-[#44403C] text-white text-xs font-bold text-center shadow-md transition-all cursor-pointer"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[var(--ink)] hover:bg-[#44403C] text-white text-xs font-bold text-center shadow-md transition-all cursor-pointer"
               >
                 Selesai &amp; Buka Daftar Inventori
               </Link>

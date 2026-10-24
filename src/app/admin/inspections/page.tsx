@@ -34,11 +34,11 @@ export default async function InspectionsIndexPage() {
       />
 
       <main className="p-8 max-w-6xl mx-auto w-full space-y-6">
-        <div className="bg-[#F7F5F2] border border-[#D9D4CB] rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
-                <tr className="bg-[#EFECE8] border-b border-[#D9D4CB] text-xs font-bold uppercase text-[#6B6560]">
+                <tr className="bg-[var(--bg)] border-b border-[var(--line)] text-xs font-bold uppercase text-[var(--muted)]">
                   <th className="py-3.5 px-4">Plat & Unit</th>
                   <th className="py-3.5 px-4">Status Inspeksi</th>
                   <th className="py-3.5 px-4">Nilai 4 Pilar</th>
@@ -46,10 +46,10 @@ export default async function InspectionsIndexPage() {
                   <th className="py-3.5 px-4 text-right">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
+              <tbody className="divide-y divide-[var(--line)]">
                 {vehicles.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-12 text-center text-[#6B6560]">
+                    <td colSpan={5} className="py-12 text-center text-[var(--muted)]">
                       Belum ada unit kendaraan di inventori.
                     </td>
                   </tr>
@@ -58,12 +58,12 @@ export default async function InspectionsIndexPage() {
                     const currentInsp = v.inspections.find((i) => i.isCurrent) || v.inspections[0];
 
                     return (
-                      <tr key={v.id} className="hover:bg-[#EFECE8]/50 transition-colors">
+                      <tr key={v.id} className="hover:bg-[var(--bg)]/50 transition-colors">
                         <td className="py-4 px-4">
-                          <div className="font-bold text-base text-[#1C1917] tracking-tight">
+                          <div className="font-bold text-base text-[var(--ink)] tracking-tight">
                             {v.plateNumber}
                           </div>
-                          <div className="text-xs text-[#6B6560]">
+                          <div className="text-xs text-[var(--muted)]">
                             {v.brand} {v.model} ({v.year}) • {v.color}
                           </div>
                         </td>
@@ -75,7 +75,7 @@ export default async function InspectionsIndexPage() {
                                 <CheckCircle2 className="w-3.5 h-3.5" />
                                 Versi {currentInsp.version} ({currentInsp.stage})
                               </span>
-                              <div className="text-[11px] text-[#6B6560] mt-1">
+                              <div className="text-[11px] text-[var(--muted)] mt-1">
                                 {formatDate(currentInsp.inspectedAt)} • Oleh {currentInsp.inspectedBy}
                               </div>
                             </div>
@@ -104,7 +104,7 @@ export default async function InspectionsIndexPage() {
                               </span>
                             </div>
                           ) : (
-                            <span className="text-xs text-[#6B6560] italic">-</span>
+                            <span className="text-xs text-[var(--muted)] italic">-</span>
                           )}
                         </td>
 
@@ -119,7 +119,7 @@ export default async function InspectionsIndexPage() {
                               </div>
                             </div>
                           ) : (
-                            <span className="text-xs text-[#6B6560] italic">-</span>
+                            <span className="text-xs text-[var(--muted)] italic">-</span>
                           )}
                         </td>
 
@@ -130,7 +130,7 @@ export default async function InspectionsIndexPage() {
                                 href={`/api/pdf/inspection/${currentInsp.id}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2 rounded-lg border border-[#D9D4CB] bg-[#EFECE8] hover:bg-[#16A34A] hover:text-white text-[#1C1917] transition-colors"
+                                className="p-2 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[#16A34A] hover:text-white text-[var(--ink)] transition-colors"
                                 title="Unduh Sertifikat PDF"
                               >
                                 <Printer className="w-4 h-4" />
@@ -138,7 +138,7 @@ export default async function InspectionsIndexPage() {
                             )}
                             <Link
                               href={`/admin/inspections/${v.id}`}
-                              className="px-3 py-1.5 rounded-lg bg-[#D97706] hover:bg-[#92400E] text-white text-xs font-bold transition-colors inline-flex items-center gap-1"
+                              className="px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold transition-colors inline-flex items-center gap-1"
                             >
                               <span>Detail Cek</span>
                               <ArrowRight className="w-3.5 h-3.5" />

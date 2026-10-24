@@ -119,27 +119,27 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
     <div className="p-8 space-y-8">
       {/* ── KPI SUMMARY CARDS ─────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-xl p-5 shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-5 shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-xs font-semibold uppercase tracking-wider">Unit Aktif di Garasi</span>
-            <CarFront className="w-5 h-5 text-[#D97706]" />
+            <CarFront className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-[#1C1917]">{activeUnits.length}</span>
-            <span className="text-xs text-[#6B6560]">unit berjalan</span>
+            <span className="text-3xl font-bold text-[var(--ink)]">{activeUnits.length}</span>
+            <span className="text-xs text-[var(--muted)]">unit berjalan</span>
           </div>
         </div>
 
-        <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-xl p-5 shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-5 shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-xs font-semibold uppercase tracking-wider">Total Modal Terikat (HPP)</span>
             <DollarSign className="w-5 h-5 text-[#16A34A]" />
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-bold text-[#1C1917]">
+            <span className="text-2xl font-bold text-[var(--ink)]">
               {formatRupiah(totalModalTerikat)}
             </span>
-            <div className="text-[11px] text-[#6B6560] mt-0.5">Harga Beli + Total Biaya Unit</div>
+            <div className="text-[11px] text-[var(--muted)] mt-0.5">Harga Beli + Total Biaya Unit</div>
           </div>
         </div>
 
@@ -147,43 +147,43 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           "border rounded-xl p-5 shadow-sm transition-all",
           stagnantUnits.length > 0 
             ? "bg-[#FEE2E2] border-[#DC2626]/30 text-[#DC2626]" 
-            : "bg-[#EFECE8] border-[#D9D4CB]"
+            : "bg-[var(--bg)] border-[var(--line)]"
         )}>
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider">Unit Macet (&gt; 45 Hari)</span>
-            <AlertTriangle className={cn("w-5 h-5", stagnantUnits.length > 0 ? "text-[#DC2626] animate-bounce" : "text-[#6B6560]")} />
+            <AlertTriangle className={cn("w-5 h-5", stagnantUnits.length > 0 ? "text-[#DC2626] animate-bounce" : "text-[var(--muted)]")} />
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className={cn("text-3xl font-bold", stagnantUnits.length > 0 ? "text-[#DC2626]" : "text-[#1C1917]")}>
+            <span className={cn("text-3xl font-bold", stagnantUnits.length > 0 ? "text-[#DC2626]" : "text-[var(--ink)]")}>
               {stagnantUnits.length}
             </span>
-            <span className="text-xs text-[#6B6560]">perlu evaluasi harga</span>
+            <span className="text-xs text-[var(--muted)]">perlu evaluasi harga</span>
           </div>
         </div>
 
-        <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-xl p-5 shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-5 shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-xs font-semibold uppercase tracking-wider">Ready Siap Jual</span>
             <CheckCircle2 className="w-5 h-5 text-[#16A34A]" />
           </div>
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-3xl font-bold text-[#16A34A]">{readyUnits.length}</span>
-            <span className="text-xs text-[#6B6560]">siap tayang katalog</span>
+            <span className="text-xs text-[var(--muted)]">siap tayang katalog</span>
           </div>
         </div>
       </div>
 
       {/* ── TOOLBAR & ACTIONS ─────────────────────────────────── */}
-      <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[#6B6560] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[var(--muted)] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari plat nomor, merk, atau tipe mobil..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-lg text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+            className="w-full pl-9 pr-4 py-2 bg-[var(--bg)] border border-[var(--line)] rounded-lg text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
           />
         </div>
 
@@ -191,17 +191,17 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           {/* Action Button: Gudang Bahan Habis Pakai & Servis Mandiri */}
           <Link
             href="/admin/workshop"
-            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-[#FEF3C7] hover:bg-[#FDE68A] border border-[#D97706]/40 text-[#92400E] rounded-lg text-sm font-semibold shadow-xs transition-colors"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-[#FEF3C7] hover:bg-[#FDE68A] border border-[var(--accent)]/40 text-[#92400E] rounded-lg text-sm font-semibold shadow-xs transition-colors"
             title="Kelola persediaan oli, filter, bohlam, salon & alokasikan servis mandiri"
           >
-            <Droplet className="w-4 h-4 text-[#D97706]" />
+            <Droplet className="w-4 h-4 text-[var(--accent)]" />
             <span>Gudang Bahan &amp; Servis Mandiri</span>
           </Link>
 
           {/* Action Button: Import Spreadsheet */}
           <Link
             href="/admin/inventory/import"
-            className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-[#F7F5F2] border border-[#D9D4CB] text-[#1C1917] rounded-lg text-sm font-semibold shadow-xs transition-colors"
+            className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-lg text-sm font-semibold shadow-xs transition-colors"
             title="Import data mobil lama dari file spreadsheet / Excel / CSV"
           >
             <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
@@ -211,7 +211,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           {/* Action Button: Intake Unit Baru */}
           <Link
             href="/admin/inventory/new"
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-[#D97706] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>Intake Unit Baru</span>
@@ -220,7 +220,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
       </div>
 
       {/* ── STATUS TABS ───────────────────────────────────────── */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[#D9D4CB]">
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[var(--line)]">
         {STATUS_FILTERS.map((tab) => {
           const isSelected = selectedStatus === tab.value;
           const count = tab.value === "ALL" 
@@ -234,14 +234,14 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
               className={cn(
                 "px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors flex items-center gap-1.5 cursor-pointer",
                 isSelected
-                  ? "bg-[#1C1917] text-white shadow-sm"
-                  : "bg-[#EFECE8] text-[#6B6560] hover:text-[#1C1917] border border-[#D9D4CB]"
+                  ? "bg-[var(--ink)] text-white shadow-sm"
+                  : "bg-[var(--bg)] text-[var(--muted)] hover:text-[var(--ink)] border border-[var(--line)]"
               )}
             >
               <span>{tab.label}</span>
               <span className={cn(
                 "px-1.5 py-0.2 rounded-full text-[10px]",
-                isSelected ? "bg-white/20 text-white" : "bg-[#D9D4CB] text-[#1C1917]"
+                isSelected ? "bg-white/20 text-white" : "bg-[var(--line)] text-[var(--ink)]"
               )}>
                 {count}
               </span>
@@ -278,21 +278,21 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                     <tr key={vehicle.id} className="hover:bg-[var(--bg)] transition-colors">
                       {/* Plat & Brand */}
                       <td className="py-4 px-4 align-top">
-                        <div className="font-bold text-base text-[#1C1917] tracking-tight">
+                        <div className="font-bold text-base text-[var(--ink)] tracking-tight">
                           {vehicle.plateNumber}
                         </div>
-                        <div className="text-xs font-medium text-[#6B6560]">
+                        <div className="text-xs font-medium text-[var(--muted)]">
                           {vehicle.brand} {vehicle.model}
                         </div>
-                        <div className="text-[11px] text-[#6B6560]/80 mt-1">
-                          Sumber: <span className="font-semibold text-[#1C1917]">{vehicle.sourceType}</span>
+                        <div className="text-[11px] text-[var(--muted)]/80 mt-1">
+                          Sumber: <span className="font-semibold text-[var(--ink)]">{vehicle.sourceType}</span>
                           {vehicle.auctionHouse && ` (${vehicle.auctionHouse})`}
                         </div>
                         <div className="mt-2">
                           <Link
                             href={`/katalog/${generateVehicleSlug(vehicle)}`}
                             target="_blank"
-                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#D97706] hover:text-[#92400E] hover:underline"
+                            className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--accent)] hover:text-[#92400E] hover:underline"
                             title="Buka tampilan publik unit ini di tab baru"
                           >
                             <ExternalLink className="w-3 h-3 shrink-0" />
@@ -308,12 +308,12 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                       </td>
 
                       {/* Spesifikasi */}
-                      <td className="py-4 px-4 align-top text-xs text-[#1C1917]">
+                      <td className="py-4 px-4 align-top text-xs text-[var(--ink)]">
                         <div>{vehicle.year} • {vehicle.color}</div>
-                        <div className="text-[#6B6560]">
+                        <div className="text-[var(--muted)]">
                           {vehicle.transmission} • {vehicle.engineCapacity} cc
                         </div>
-                        <div className="text-[11px] text-[#6B6560] mt-1">
+                        <div className="text-[11px] text-[var(--muted)] mt-1">
                           Odo: {vehicle.odometer.toLocaleString("id-ID")} km
                         </div>
                       </td>
@@ -321,7 +321,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                       {/* Status */}
                       <td className="py-4 px-4 align-top">
                         <StatusBadge status={vehicle.status} />
-                        <div className="text-[11px] text-[#6B6560] mt-1.5">
+                        <div className="text-[11px] text-[var(--muted)] mt-1.5">
                           Lokasi: {vehicle.currentLocation}
                         </div>
                         {/* Status Pajak STNK */}
@@ -371,20 +371,20 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                         <div className="flex items-center gap-1.5">
                           <AgingBadge days={vehicle.daysInInventory} category={vehicle.agingCategory} />
                         </div>
-                        <div className="text-[11px] text-[#6B6560] mt-1">
+                        <div className="text-[11px] text-[var(--muted)] mt-1">
                           Masuk: {formatDate(vehicle.purchaseDate)}
                         </div>
                       </td>
 
                       {/* HPP & Biaya */}
                       <td className="py-4 px-4 align-top text-xs">
-                        <div className="font-bold text-sm text-[#1C1917]">
+                        <div className="font-bold text-sm text-[var(--ink)]">
                           {formatRupiah(vehicle.totalHpp)}
                         </div>
-                        <div className="text-[11px] text-[#6B6560] mt-0.5">
+                        <div className="text-[11px] text-[var(--muted)] mt-0.5">
                           Beli: {formatRupiah(vehicle.purchasePrice)}
                         </div>
-                        <div className="text-[11px] text-[#D97706] font-medium mt-0.5">
+                        <div className="text-[11px] text-[var(--accent)] font-medium mt-0.5">
                           Biaya: +{formatRupiah(vehicle.totalExpenses)}
                         </div>
                       </td>
@@ -396,7 +396,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                             {formatRupiah(vehicle.targetSellingPrice)}
                           </div>
                         ) : (
-                          <span className="text-[#6B6560] italic text-[11px]">Belum diisi</span>
+                          <span className="text-[var(--muted)] italic text-[11px]">Belum diisi</span>
                         )}
                         {vehicle.minSellingPrice && (
                           <div className="text-[11px] text-[#92400E] font-medium mt-0.5" title="Batas Bawah Nego">
@@ -412,7 +412,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           {vehicle.status === "INTAKE" && (
                             <Link
                               href={`/admin/inspections/${vehicle.id}`}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D97706] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all shrink-0"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all shrink-0"
                               title="Mulai Cek Fisik & Inspeksi 11 Panel"
                             >
                               <ClipboardCheck className="w-3.5 h-3.5" />
@@ -423,7 +423,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           {vehicle.status === "IN_REPAIR" && (
                             <Link
                               href={`/admin/inventory/${vehicle.id}/expenses/new`}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#D97706] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all shrink-0"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all shrink-0"
                               title="Catat Biaya Servis / Sparepart"
                             >
                               <Receipt className="w-3.5 h-3.5" />
@@ -464,10 +464,10 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           {/* Quick Edit Unit & Katalog Button */}
                           <Link
                             href={`/admin/inventory/${vehicle.id}/edit`}
-                            className="p-1.5 rounded-lg border border-[#D9D4CB] bg-[#EFECE8] hover:bg-[#D9D4CB] text-[#1C1917] transition-colors cursor-pointer shrink-0"
+                            className="p-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--line)] text-[var(--ink)] transition-colors cursor-pointer shrink-0"
                             title="Edit Semua Data Unit (Form Lengkap Intake)"
                           >
-                            <Pencil className="w-4 h-4 text-[#D97706]" />
+                            <Pencil className="w-4 h-4 text-[var(--accent)]" />
                           </Link>
 
                           {/* 2. Menu Dropdown [Titik Tiga ...] */}
@@ -479,10 +479,10 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                                 setOpenDropdownId(openDropdownId === vehicle.id ? null : vehicle.id);
                               }}
                               className={cn(
-                                "p-1.5 rounded-lg border border-[#D9D4CB] transition-colors cursor-pointer",
+                                "p-1.5 rounded-lg border border-[var(--line)] transition-colors cursor-pointer",
                                 openDropdownId === vehicle.id
-                                  ? "bg-[#1C1917] text-white"
-                                  : "bg-[#EFECE8] hover:bg-[#D9D4CB] text-[#1C1917]"
+                                  ? "bg-[var(--ink)] text-white"
+                                  : "bg-[var(--bg)] hover:bg-[var(--line)] text-[var(--ink)]"
                               )}
                               title="Menu Opsi Aksi Lengkap"
                             >
@@ -493,28 +493,28 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                             {openDropdownId === vehicle.id && (
                               <div
                                 onClick={(e) => e.stopPropagation()}
-                                className="absolute right-0 top-full mt-1.5 w-56 bg-white border border-[#D9D4CB] rounded-xl shadow-xl z-30 py-1.5 text-left text-xs divide-y divide-[#EFECE8]"
+                                className="absolute right-0 top-full mt-1.5 w-56 bg-white border border-[var(--line)] rounded-xl shadow-xl z-30 py-1.5 text-left text-xs divide-y divide-[var(--bg)]"
                               >
                                 <div className="py-1">
                                   <Link
                                     href={`/admin/inventory/${vehicle.id}/edit`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
-                                    <Pencil className="w-4 h-4 text-[#D97706]" />
+                                    <Pencil className="w-4 h-4 text-[var(--accent)]" />
                                     <span>Edit Semua Data Unit</span>
                                   </Link>
 
                                   <Link
                                     href={`/admin/inspections/${vehicle.id}`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
-                                    <ClipboardCheck className="w-4 h-4 text-[#D97706]" />
+                                    <ClipboardCheck className="w-4 h-4 text-[var(--accent)]" />
                                     <span>Cek Fisik &amp; Inspeksi</span>
                                   </Link>
 
                                   <Link
                                     href={`/admin/inventory/${vehicle.id}/expenses/new`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
                                     <Receipt className="w-4 h-4 text-[#16A34A]" />
                                     <span>Catat Biaya / Servis</span>
@@ -522,7 +522,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
 
                                   <Link
                                     href={`/admin/inventory/${vehicle.id}/media`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
                                     <Camera className="w-4 h-4 text-[#2563EB]" />
                                     <span>Upload Foto &amp; Dokumen</span>
@@ -534,9 +534,9 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                                     href={`/api/pdf/workshop-dispatch/${vehicle.id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
-                                    <Wrench className="w-4 h-4 text-[#D97706]" />
+                                    <Wrench className="w-4 h-4 text-[var(--accent)]" />
                                     <span>Surat Jalan Bengkel (SPK)</span>
                                   </a>
 
@@ -544,7 +544,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                                     href={`/api/pdf/spec-tag/${vehicle.id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
                                     <Tag className="w-4 h-4 text-[#7C3AED]" />
                                     <span>Cetak Tag Spion (QR)</span>
@@ -555,9 +555,9 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                                   <Link
                                     href={`/katalog/${generateVehicleSlug(vehicle)}`}
                                     target="_blank"
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#D97706] hover:bg-[#F7F5F2] font-semibold transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--accent)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
-                                    <ExternalLink className="w-4 h-4 text-[#D97706]" />
+                                    <ExternalLink className="w-4 h-4 text-[var(--accent)]" />
                                     <span>
                                       {vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR"
                                         ? "Lihat Tampilan Segera Hadir"
@@ -567,9 +567,9 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
 
                                   <Link
                                     href={`/admin/inventory/${vehicle.id}/status`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#1C1917] hover:bg-[#F7F5F2] font-semibold transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
-                                    <ArrowRight className="w-4 h-4 text-[#6B6560]" />
+                                    <ArrowRight className="w-4 h-4 text-[var(--muted)]" />
                                     <span>Ubah Status Kendaraan</span>
                                   </Link>
 
@@ -619,17 +619,17 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
       {/* 1.5 Modal Import Spreadsheet */}
       {showImportModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-4xl w-full p-6 space-y-4 shadow-2xl border border-[#D9D4CB] max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-3">
+          <div className="bg-white rounded-3xl max-w-4xl w-full p-6 space-y-4 shadow-2xl border border-[var(--line)] max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
                 <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-bold text-base text-[#1C1917]">
+                <h3 className="font-bold text-base text-[var(--ink)]">
                   Import Data Mobil Lama dari Spreadsheet (Excel / CSV)
                 </h3>
               </div>
               <button
                 onClick={() => setShowImportModal(false)}
-                className="text-[#6B6560] hover:text-[#1C1917] text-lg font-bold cursor-pointer"
+                className="text-[var(--muted)] hover:text-[var(--ink)] text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -696,7 +696,7 @@ function StatusBadge({ status }: { status: string }) {
     case "INTAKE":
       return (
         <div className="flex flex-col gap-1 items-start">
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#EFECE8] text-[#6B6560] border border-[#D9D4CB]">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
             Intake Baru
           </span>
           <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
@@ -708,7 +708,7 @@ function StatusBadge({ status }: { status: string }) {
     case "IN_REPAIR":
       return (
         <div className="flex flex-col gap-1 items-start">
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEF3C7] text-[#92400E] border border-[#D97706]/30">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEF3C7] text-[#92400E] border border-[var(--accent)]/30">
             Bengkel / Salon
           </span>
           <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
@@ -730,19 +730,19 @@ function StatusBadge({ status }: { status: string }) {
       );
     case "BOOKED":
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEF3C7] text-[#D97706] border border-[#D97706] font-bold animate-pulse">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEF3C7] text-[var(--accent)] border border-[var(--accent)] font-bold animate-pulse">
           Booked (DP)
         </span>
       );
     case "AT_SHOWROOM_PENDING":
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#F1F5F9] text-[#64748B] border border-[#D9D4CB]">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#F1F5F9] text-[#64748B] border border-[var(--line)]">
           Titip Showroom
         </span>
       );
     case "SOLD_SETTLED":
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#1C1917] text-white">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--ink)] text-white">
           Terjual Lunas
         </span>
       );
@@ -772,7 +772,7 @@ function AgingBadge({ days, category }: { days: number; category: string }) {
   }
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-[#EFECE8] text-[#6B6560]">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-[var(--bg)] text-[var(--muted)]">
       <Clock className="w-3 h-3" />
       {days} hari
     </span>
@@ -881,16 +881,16 @@ function AddVehicleModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-[#F7F5F2] border border-[#D9D4CB] rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-2xl p-6">
-        <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-4 mb-5">
+      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-2xl p-6">
+        <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-5">
           <div>
-            <h2 className="text-lg font-bold text-[#1C1917]">Intake Kendaraan Baru</h2>
-            <p className="text-xs text-[#6B6560] mt-0.5">
+            <h2 className="text-lg font-bold text-[var(--ink)]">Intake Kendaraan Baru</h2>
+            <p className="text-xs text-[var(--muted)] mt-0.5">
               Unit baru masuk status <strong>INTAKE</strong>. Setelah siap, ubah ke{" "}
               <strong>Ready Jual</strong> agar tampil di katalog publik.
             </p>
           </div>
-          <button onClick={onClose} className="text-[#6B6560] hover:text-[#1C1917] font-bold text-xl cursor-pointer">
+          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] font-bold text-xl cursor-pointer">
             ✕
           </button>
         </div>
@@ -899,7 +899,7 @@ function AddVehicleModal({
         <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
           <strong className="block mb-1.5 text-amber-800">📋 Alur Siklus & Tampilan Publik:</strong>
           <div className="flex flex-wrap items-center gap-1.5 font-medium">
-            <span className="bg-[#EFECE8] text-[#6B6560] px-2 py-0.5 rounded-full border border-[#D9D4CB]">INTAKE (baru masuk)</span>
+            <span className="bg-[var(--bg)] text-[var(--muted)] px-2 py-0.5 rounded-full border border-[var(--line)]">INTAKE (baru masuk)</span>
             <span className="text-amber-600">→</span>
             <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-300">IN_REPAIR (salon/bengkel)</span>
             <span className="text-amber-600">→</span>
@@ -920,23 +920,23 @@ function AddVehicleModal({
           {/* Plat & Sumber */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Nomor Plat *</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Nomor Plat *</label>
               <input
                 required
                 type="text"
                 placeholder="Contoh: B 1234 CD"
                 value={formData.plateNumber}
                 onChange={(e) => setFormData({ ...formData, plateNumber: e.target.value.toUpperCase() })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm uppercase font-bold"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm uppercase font-bold"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Sumber Pembelian *</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Sumber Pembelian *</label>
               <select
                 value={formData.sourceType}
                 onChange={(e) => setFormData({ ...formData, sourceType: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               >
                 <option value="AUCTION">Balai Lelang</option>
                 <option value="BROKER">Makelar / Mediator</option>
@@ -948,33 +948,33 @@ function AddVehicleModal({
           {/* SECTION LELANG */}
           {isAuction && (
             <div className="bg-white border border-amber-200 rounded-xl p-4 space-y-3">
-              <div className="text-xs font-bold text-[#1C1917] border-b border-[#EBE7E1] pb-2">
+              <div className="text-xs font-bold text-[var(--ink)] border-b border-[var(--line)] pb-2">
                 🏛️ Informasi Balai Lelang & Estimasi BPKB
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1C1917] mb-1">Balai Lelang</label>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Balai Lelang</label>
                   <select
                     value={formData.auctionHouse}
                     onChange={(e) => handleAuctionHouseChange(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                    className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
                   >
                     {Object.entries(AUCTION_HOUSE_PRESETS).map(([key, val]) => (
                       <option key={key} value={key}>{val.label}</option>
                     ))}
                   </select>
                   {currentPreset && (
-                    <p className="text-[10px] text-[#6B6560] mt-1">📋 {currentPreset.notes}</p>
+                    <p className="text-[10px] text-[var(--muted)] mt-1">📋 {currentPreset.notes}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1C1917] mb-1">Tipe Lot Lelang</label>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Tipe Lot Lelang</label>
                   <select
                     value={formData.auctionLotType}
                     onChange={(e) => setFormData({ ...formData, auctionLotType: e.target.value })}
-                    className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                    className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
                   >
                     <option value="EKS_PERUSAHAAN">Eks Perusahaan ✅ (BPKB bersih, 7-14 hari)</option>
                     <option value="EKS_TARIKAN_LEASING">Eks Tarikan Leasing ⚠️ (BPKB 14-28 hari)</option>
@@ -990,11 +990,11 @@ function AddVehicleModal({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1C1917] mb-1">Status BPKB Saat Ini</label>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Status BPKB Saat Ini</label>
                   <select
                     value={formData.bpkbStatus}
                     onChange={(e) => setFormData({ ...formData, bpkbStatus: e.target.value })}
-                    className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                    className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
                   >
                     <option value="PROCESS_1_2_WEEKS">Masih Diproses Balai Lelang</option>
                     <option value="READY">BPKB Sudah di Tangan</option>
@@ -1004,9 +1004,9 @@ function AddVehicleModal({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1C1917] mb-1">
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
                     Estimasi BPKB Tiba{" "}
-                    <span className="font-normal text-[#6B6560]">(hari kerja: otomatis dari balai)</span>
+                    <span className="font-normal text-[var(--muted)]">(hari kerja: otomatis dari balai)</span>
                   </label>
                   <div className="flex items-center gap-2">
                     <input
@@ -1017,9 +1017,9 @@ function AddVehicleModal({
                       onChange={(e) => setFormData({ ...formData, bpkbLeadDays: Number(e.target.value) })}
                       className="w-full px-3 py-2 bg-white border border-amber-300 rounded-lg text-sm font-bold text-amber-900"
                     />
-                    <span className="text-xs text-[#6B6560] whitespace-nowrap">hari kerja</span>
+                    <span className="text-xs text-[var(--muted)] whitespace-nowrap">hari kerja</span>
                   </div>
-                  <p className="text-[10px] text-[#6B6560] mt-1">
+                  <p className="text-[10px] text-[var(--muted)] mt-1">
                     Dashboard hitung countdown BPKB dari tanggal beli.
                   </p>
                 </div>
@@ -1029,48 +1029,48 @@ function AddVehicleModal({
 
           {/* Tanggal Beli */}
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1">Tanggal Pembelian / Menang Lelang *</label>
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Tanggal Pembelian / Menang Lelang *</label>
             <input
               required
               type="date"
               value={formData.purchaseDate}
               onChange={(e) => setFormData({ ...formData, purchaseDate: e.target.value })}
-              className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
             />
           </div>
 
           {/* Merk Model Tahun */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Merk *</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Merk *</label>
               <input
                 required
                 type="text"
                 placeholder="Toyota, Honda, dll"
                 value={formData.brand}
                 onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Tipe / Model *</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Tipe / Model *</label>
               <input
                 required
                 type="text"
                 placeholder="Avanza Veloz 1.5, dll"
                 value={formData.model}
                 onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Tahun *</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Tahun *</label>
               <input
                 required
                 type="number"
                 value={formData.year}
                 onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               />
             </div>
           </div>
@@ -1078,11 +1078,11 @@ function AddVehicleModal({
           {/* Spesifikasi */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Transmisi</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Transmisi</label>
               <select
                 value={formData.transmission}
                 onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               >
                 <option value="AUTOMATIC">Automatic (AT)</option>
                 <option value="MANUAL">Manual (MT)</option>
@@ -1091,42 +1091,42 @@ function AddVehicleModal({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Warna *</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Warna *</label>
               <input
                 required
                 type="text"
                 placeholder="Hitam Metalik, Putih..."
                 value={formData.color}
                 onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Odometer (km)</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Odometer (km)</label>
               <input
                 type="text"
                 inputMode="numeric"
                 value={formatThousands(formData.odometer)}
                 onChange={(e) => setFormData({ ...formData, odometer: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">CC Mesin</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">CC Mesin</label>
               <input
                 type="text"
                 inputMode="numeric"
                 value={formatThousands(formData.engineCapacity)}
                 onChange={(e) => setFormData({ ...formData, engineCapacity: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               />
             </div>
           </div>
 
           {/* Harga */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-[#D9D4CB] pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-[var(--line)] pt-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Harga Beli (Rp) *</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Harga Beli (Rp) *</label>
               <input
                 required
                 type="text"
@@ -1134,57 +1134,57 @@ function AddVehicleModal({
                 placeholder="150.000.000"
                 value={formData.purchasePrice ? formatThousands(formData.purchasePrice) : ""}
                 onChange={(e) => setFormData({ ...formData, purchasePrice: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm font-bold text-[#1C1917]"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[var(--ink)]"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Target Banderol Jual</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Target Banderol Jual</label>
               <input
                 type="text"
                 inputMode="numeric"
                 placeholder="165.000.000"
                 value={formData.targetSellingPrice ? formatThousands(formData.targetSellingPrice) : ""}
                 onChange={(e) => setFormData({ ...formData, targetSellingPrice: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm text-[#16A34A] font-bold"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm text-[#16A34A] font-bold"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Batas Bawah Nego (Net)</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Batas Bawah Nego (Net)</label>
               <input
                 type="text"
                 inputMode="numeric"
                 placeholder="158.000.000"
                 value={formData.minSellingPrice ? formatThousands(formData.minSellingPrice) : ""}
                 onChange={(e) => setFormData({ ...formData, minSellingPrice: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm text-[#92400E] font-medium"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm text-[#92400E] font-medium"
               />
             </div>
           </div>
 
           {/* Catatan */}
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1">Catatan Kondisi Unit</label>
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Catatan Kondisi Unit</label>
             <textarea
               rows={2}
               placeholder="Kondisi fisik, kelengkapan, hal penting lain saat ambil dari lelang..."
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm resize-none"
+              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm resize-none"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#D9D4CB]">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--line)]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-[#6B6560] hover:text-[#1C1917] cursor-pointer"
+              className="px-4 py-2 text-sm text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 bg-[#D97706] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
+              className="px-5 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
             >
               {loading ? "Menyimpan..." : "Simpan & Masukkan ke Garasi (INTAKE)"}
             </button>
@@ -1270,15 +1270,15 @@ function AddExpenseModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-[#F7F5F2] border border-[#D9D4CB] rounded-2xl w-full max-w-md shadow-2xl p-6">
-        <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-4 mb-4">
+      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl w-full max-w-md shadow-2xl p-6">
+        <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-4">
           <div>
-            <h2 className="text-base font-bold text-[#1C1917]">Catat Biaya Unit & HPP</h2>
-            <div className="text-xs text-[#6B6560] font-semibold">
+            <h2 className="text-base font-bold text-[var(--ink)]">Catat Biaya Unit & HPP</h2>
+            <div className="text-xs text-[var(--muted)] font-semibold">
               {vehicle.brand} {vehicle.model} ({vehicle.plateNumber})
             </div>
           </div>
-          <button onClick={onClose} className="text-[#6B6560] hover:text-[#1C1917] font-bold text-xl cursor-pointer">
+          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] font-bold text-xl cursor-pointer">
             ✕
           </button>
         </div>
@@ -1291,11 +1291,11 @@ function AddExpenseModal({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1">Kategori Biaya</label>
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Kategori Biaya</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
             >
               <option value="AUCTION_ADMIN_FEE">Biaya Admin Lelang Resmi</option>
               <option value="BROKER_COMMISSION">Komisi Makelar / Mediator</option>
@@ -1310,7 +1310,7 @@ function AddExpenseModal({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1">Nominal Biaya (Rp)</label>
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Nominal Biaya (Rp)</label>
             <input
               required
               type="text"
@@ -1318,41 +1318,41 @@ function AddExpenseModal({
               placeholder="Contoh: 1.500.000"
               value={amount !== "" ? formatThousands(amount) : ""}
               onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
-              className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm font-bold text-[#1C1917]"
+              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[var(--ink)]"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1">Nama Bengkel / Toko / Penerima</label>
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Nama Bengkel / Toko / Penerima</label>
             <input
               type="text"
               placeholder="Contoh: Bengkel Cat Barokah / Toko Sparepart Jaya"
               value={vendorName}
               onChange={(e) => setVendorName(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1">Keterangan / Rincian Pengerjaan</label>
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Keterangan / Rincian Pengerjaan</label>
             <textarea
               rows={2}
               placeholder="Contoh: Poles bodi + ganti oli transmisi matik"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
             />
           </div>
 
           {/* Upload Bukti Nota / Kuitansi Fisik */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-semibold text-[#1C1917]">
+              <label className="text-xs font-semibold text-[var(--ink)]">
                 Bukti Dukung / Foto Nota Fisik (Dianjurkan)
               </label>
-              <span className="text-[10px] text-[#6B6560]">Struk / Kuitansi / Bon</span>
+              <span className="text-[10px] text-[var(--muted)]">Struk / Kuitansi / Bon</span>
             </div>
-            <div className="border border-dashed border-[#D9D4CB] rounded-lg p-3 bg-white text-center hover:bg-[#FAF9F6] transition-colors">
+            <div className="border border-dashed border-[var(--line)] rounded-lg p-3 bg-white text-center hover:bg-[var(--bg)] transition-colors">
               <input
                 type="file"
                 accept="image/*,application/pdf"
@@ -1361,7 +1361,7 @@ function AddExpenseModal({
                 onChange={handleFileChange}
               />
               {uploadingReceipt ? (
-                <div className="text-xs text-[#D97706] font-semibold py-1">
+                <div className="text-xs text-[var(--accent)] font-semibold py-1">
                   Mengunggah bukti nota ke server...
                 </div>
               ) : receiptUrl ? (
@@ -1372,15 +1372,15 @@ function AddExpenseModal({
                   </span>
                   <label
                     htmlFor="receiptUpload"
-                    className="text-[11px] text-[#D97706] underline cursor-pointer shrink-0 ml-2"
+                    className="text-[11px] text-[var(--accent)] underline cursor-pointer shrink-0 ml-2"
                   >
                     Ganti
                   </label>
                 </div>
               ) : (
                 <label htmlFor="receiptUpload" className="cursor-pointer block py-1">
-                  <div className="text-xs text-[#6B6560]">
-                    <span className="font-bold text-[#D97706] underline">Pilih foto/scan nota</span> atau seret file ke sini
+                  <div className="text-xs text-[var(--muted)]">
+                    <span className="font-bold text-[var(--accent)] underline">Pilih foto/scan nota</span> atau seret file ke sini
                   </div>
                   <div className="text-[10px] text-[#A8A29E] mt-0.5">JPG, PNG, atau PDF max 10MB</div>
                 </label>
@@ -1394,14 +1394,14 @@ function AddExpenseModal({
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#D9D4CB]">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-[#6B6560]">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--line)]">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-[var(--muted)]">
               Batal
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 bg-[#D97706] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer"
+              className="px-5 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer"
             >
               {loading ? "Menyimpan..." : "Catat Biaya & Update HPP"}
             </button>
@@ -1460,10 +1460,10 @@ function UpdateStatusModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-[#F7F5F2] border border-[#D9D4CB] rounded-2xl w-full max-w-sm shadow-2xl p-6">
-        <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-4 mb-4">
-          <h2 className="text-base font-bold text-[#1C1917]">Ubah Status Unit</h2>
-          <button onClick={onClose} className="text-[#6B6560] hover:text-[#1C1917] font-bold text-xl cursor-pointer">
+      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl w-full max-w-sm shadow-2xl p-6">
+        <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-4">
+          <h2 className="text-base font-bold text-[var(--ink)]">Ubah Status Unit</h2>
+          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] font-bold text-xl cursor-pointer">
             ✕
           </button>
         </div>
@@ -1476,8 +1476,8 @@ function UpdateStatusModal({
 
         <div className="space-y-4">
           <div>
-            <div className="text-xs text-[#6B6560]">Unit:</div>
-            <div className="font-bold text-sm text-[#1C1917]">
+            <div className="text-xs text-[var(--muted)]">Unit:</div>
+            <div className="font-bold text-sm text-[var(--ink)]">
               {vehicle.brand} {vehicle.model} ({vehicle.plateNumber})
             </div>
             <div className="text-xs mt-1">
@@ -1486,18 +1486,18 @@ function UpdateStatusModal({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1">
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
               Pilih Status Baru (Sesuai Aturan Sistem):
             </label>
             {validTransitions.length === 0 ? (
-              <div className="p-3 bg-[#EFECE8] rounded-lg text-xs text-[#6B6560]">
+              <div className="p-3 bg-[var(--bg)] rounded-lg text-xs text-[var(--muted)]">
                 Unit berstatus <strong>{currentStatus}</strong> dan tidak memiliki rute transisi langsung berikutnya.
               </div>
             ) : (
               <select
                 value={targetStatus}
                 onChange={(e) => setTargetStatus(e.target.value as VehicleStatus)}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm font-semibold"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-semibold"
               >
                 {validTransitions.map((s) => (
                   <option key={s} value={s}>
@@ -1523,15 +1523,15 @@ function UpdateStatusModal({
             )}
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#D9D4CB]">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-[#6B6560]">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--line)]">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-[var(--muted)]">
               Batal
             </button>
             <button
               type="button"
               disabled={loading || validTransitions.length === 0}
               onClick={handleUpdate}
-              className="px-5 py-2 bg-[#1C1917] hover:bg-[#D97706] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
+              className="px-5 py-2 bg-[var(--ink)] hover:bg-[var(--accent)] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
             >
               {loading ? "Menyimpan..." : "Update Status"}
             </button>
@@ -1596,15 +1596,15 @@ function MediaUploadModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-[#F7F5F2] border border-[#D9D4CB] rounded-2xl w-full max-w-md shadow-2xl p-6">
-        <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-4 mb-4">
+      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl w-full max-w-md shadow-2xl p-6">
+        <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-4">
           <div>
-            <h2 className="text-base font-bold text-[#1C1917]">Upload Media & Dokumen</h2>
-            <div className="text-xs text-[#6B6560] font-semibold">
+            <h2 className="text-base font-bold text-[var(--ink)]">Upload Media & Dokumen</h2>
+            <div className="text-xs text-[var(--muted)] font-semibold">
               {vehicle.brand} {vehicle.model} ({vehicle.plateNumber})
             </div>
           </div>
-          <button onClick={onClose} className="text-[#6B6560] hover:text-[#1C1917] font-bold text-xl cursor-pointer">
+          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] font-bold text-xl cursor-pointer">
             ✕
           </button>
         </div>
@@ -1623,13 +1623,13 @@ function MediaUploadModal({
         )}
 
         {/* Tipe Upload Tab */}
-        <div className="flex gap-2 p-1 bg-[#EFECE8] rounded-lg mb-4">
+        <div className="flex gap-2 p-1 bg-[var(--bg)] rounded-lg mb-4">
           <button
             type="button"
             onClick={() => setUploadType("PHOTO")}
             className={cn(
               "flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer",
-              uploadType === "PHOTO" ? "bg-white text-[#1C1917] shadow-sm" : "text-[#6B6560]"
+              uploadType === "PHOTO" ? "bg-white text-[var(--ink)] shadow-sm" : "text-[var(--muted)]"
             )}
           >
             <Camera className="w-3.5 h-3.5" />
@@ -1640,7 +1640,7 @@ function MediaUploadModal({
             onClick={() => setUploadType("DOCUMENT")}
             className={cn(
               "flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer",
-              uploadType === "DOCUMENT" ? "bg-white text-[#1C1917] shadow-sm" : "text-[#6B6560]"
+              uploadType === "DOCUMENT" ? "bg-white text-[var(--ink)] shadow-sm" : "text-[var(--muted)]"
             )}
           >
             <FileText className="w-3.5 h-3.5" />
@@ -1651,11 +1651,11 @@ function MediaUploadModal({
         <form onSubmit={handleUpload} className="space-y-4">
           {uploadType === "PHOTO" ? (
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Kategori Foto</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Kategori Foto</label>
               <select
                 value={photoCategory}
                 onChange={(e) => setPhotoCategory(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               >
                 <option value="CONDITION_INTAKE">Kondisi Saat Intake (Baru Datang)</option>
                 <option value="CONDITION_BEFORE_REPAIR">Sebelum Perbaikan / Baret</option>
@@ -1666,11 +1666,11 @@ function MediaUploadModal({
             </div>
           ) : (
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1">Jenis Dokumen</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Jenis Dokumen</label>
               <select
                 value={docType}
                 onChange={(e) => setDocType(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-[#D9D4CB] rounded-lg text-sm"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
               >
                 <option value="STNK_SCAN">Scan STNK (Pajak)</option>
                 <option value="BPKB_SCAN">Scan BPKB</option>
@@ -1684,24 +1684,24 @@ function MediaUploadModal({
 
           {/* File Picker */}
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1">Pilih File</label>
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Pilih File</label>
             <input
               required
               type="file"
               accept={uploadType === "PHOTO" ? "image/*" : "image/*,application/pdf"}
               onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="w-full text-xs text-[#6B6560] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#1C1917] file:text-white hover:file:bg-[#D97706] cursor-pointer"
+              className="w-full text-xs text-[var(--muted)] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[var(--ink)] file:text-white hover:file:bg-[var(--accent)] cursor-pointer"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#D9D4CB]">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-[#6B6560]">
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--line)]">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-[var(--muted)]">
               Tutup
             </button>
             <button
               type="submit"
               disabled={uploading || !file}
-              className="flex items-center gap-1.5 px-5 py-2 bg-[#D97706] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-1.5 px-5 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
             >
               <UploadCloud className="w-4 h-4" />
               <span>{uploading ? "Mengunggah..." : "Upload Sekarang"}</span>

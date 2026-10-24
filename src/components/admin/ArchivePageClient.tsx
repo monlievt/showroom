@@ -292,17 +292,17 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
       )}
 
       {/* 1. Header Banner & Info */}
-      <div className="bg-gradient-to-r from-[#1C1917] via-[#292524] to-[#1C1917] text-white p-6 sm:p-8 rounded-2xl shadow-xl relative overflow-hidden border border-[#D97706]/30">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[#D97706]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-gradient-to-r from-[var(--ink)] via-[#292524] to-[var(--ink)] text-white p-6 sm:p-8 rounded-2xl shadow-xl relative overflow-hidden border border-[var(--accent)]/30">
+        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[var(--accent)]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-4xl space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D97706]/20 border border-[#D97706]/40 text-[#F59E0B] text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent)]/20 border border-[var(--accent)]/40 text-[#F59E0B] text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
             Buku Besar Toko Lama &amp; Benchmark Harga
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
             Arsip Penjualan &amp; Referensi Pasaran
           </h1>
-          <p className="text-sm sm:text-base text-[#D9D4CB] leading-relaxed">
+          <p className="text-sm sm:text-base text-[var(--line)] leading-relaxed">
             Data rekam jejak riil seluruh mobil &amp; motor yang telah laku sejak 2021 hingga unit terkini.
             Didesain khusus sebagai mesin referensi harga kulakan vs harga jual pasar, tanpa mengotori arus kas aktif showroom saat ini.
           </p>
@@ -311,41 +311,41 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
 
       {/* 2. Statistik Akumulasi Historis (5 KPI Termasuk Total Rugi) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560] text-xs font-semibold uppercase tracking-wider mb-2">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Total Unit Terjual</span>
-            <Car className="w-4 h-4 text-[#D97706]" />
+            <Car className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917]">
-            {currentSummary.totalCount} <span className="text-sm font-medium text-[#6B6560]">Unit</span>
+          <div className="text-2xl font-black text-[var(--ink)]">
+            {currentSummary.totalCount} <span className="text-sm font-medium text-[var(--muted)]">Unit</span>
           </div>
-          <div className="text-[11px] text-[#6B6560] mt-1">
+          <div className="text-[11px] text-[var(--muted)] mt-1">
             {currentSummary.profitCount || 0} untung • {currentSummary.lossCount || 0} rugi
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560] text-xs font-semibold uppercase tracking-wider mb-2">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Total Omzet Historis</span>
             <DollarSign className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-emerald-600">
             {formatRupiah(currentSummary.totalOmzet)}
           </div>
-          <div className="text-[11px] text-[#6B6560] mt-1">
+          <div className="text-[11px] text-[var(--muted)] mt-1">
             Akumulasi transaksi bruto
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560] text-xs font-semibold uppercase tracking-wider mb-2">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Total Laba Bersih</span>
             <TrendingUp className="w-4 h-4 text-amber-600" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-amber-600">
             {formatRupiah(currentSummary.totalProfit)}
           </div>
-          <div className="text-[11px] text-[#6B6560] mt-1">
+          <div className="text-[11px] text-[var(--muted)] mt-1">
             Untung kotor: {formatRupiah(currentSummary.totalGain || 0)}
           </div>
         </div>
@@ -364,7 +364,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             "bg-white p-4 sm:p-5 rounded-xl border shadow-sm cursor-pointer transition-all hover:shadow-md select-none",
             profitStatusFilter === "LOSS" 
               ? "border-rose-400 ring-2 ring-rose-200 bg-rose-50/40" 
-              : "border-[#D9D4CB] hover:border-rose-300"
+              : "border-[var(--line)] hover:border-rose-300"
           )}
           title="Klik untuk menyaring hanya unit yang mengalami rugi"
         >
@@ -383,32 +383,32 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#D9D4CB] shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560] text-xs font-semibold uppercase tracking-wider mb-2">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Rata-Rata Margin / Unit</span>
             <Receipt className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-xl sm:text-2xl font-black text-blue-600">
             {formatRupiah(currentSummary.avgProfitPerUnit)}
           </div>
-          <div className="text-[11px] text-[#6B6560] mt-1">
+          <div className="text-[11px] text-[var(--muted)] mt-1">
             Rata-rata: {currentSummary.avgMarginPercent}% per unit
           </div>
         </div>
       </div>
 
       {/* 3. Bar Pencarian & Filter */}
-      <div className="bg-white p-4 rounded-xl border border-[#D9D4CB] shadow-sm space-y-3">
+      <div className="bg-white p-4 rounded-xl border border-[var(--line)] shadow-sm space-y-3">
         {/* Quick Filter Tabs: Semua / Untung / Rugi */}
         <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-[#E7E2DA]">
-          <div className="flex items-center gap-1.5 p-1 bg-[#F5F2EB] rounded-xl border border-[#D9D4CB] text-xs font-bold">
+          <div className="flex items-center gap-1.5 p-1 bg-[#F5F2EB] rounded-xl border border-[var(--line)] text-xs font-bold">
             <button
               onClick={() => setProfitStatusFilter("ALL")}
               className={cn(
                 "px-3 py-1.5 rounded-lg transition-all",
                 profitStatusFilter === "ALL"
-                  ? "bg-white text-[#1C1917] shadow-sm font-black"
-                  : "text-[#6B6560] hover:text-[#1C1917]"
+                  ? "bg-white text-[var(--ink)] shadow-sm font-black"
+                  : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
               Semua ({items.length})
@@ -453,13 +453,13 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Input Search */}
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#6B6560]" />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
             <input
               type="text"
               placeholder="Cari plat nomor atau tipe mobil..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-10 pl-9 pr-4 py-2 border border-[#D9D4CB] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706] focus:border-transparent bg-[#FAFAF9]"
+              className="w-full h-10 pl-9 pr-4 py-2 border border-[var(--line)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent bg-[#FAFAF9]"
             />
           </div>
 
@@ -468,7 +468,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <select
               value={selectedBrand}
               onChange={(e) => setSelectedBrand(e.target.value)}
-              className="w-full h-10 px-3 py-2 border border-[#D9D4CB] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+              className="w-full h-10 px-3 py-2 border border-[var(--line)] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
             >
               <option value="ALL">Semua Merk Mobil/Motor</option>
               {brands.filter((b) => b !== "ALL").map((b) => (
@@ -482,7 +482,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="w-full h-10 px-3 py-2 border border-[#D9D4CB] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+              className="w-full h-10 px-3 py-2 border border-[var(--line)] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
             >
               <option value="ALL">Semua Tahun Perakitan</option>
               {years.filter((y) => y !== "ALL").map((y) => (
@@ -496,7 +496,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full h-10 px-3 py-2 border border-[#D9D4CB] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+              className="w-full h-10 px-3 py-2 border border-[var(--line)] rounded-lg text-sm bg-[#FAFAF9] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
             >
               <option value="NEWEST">Terbaru Terjual</option>
               <option value="PROFIT_DESC">Keuntungan Tertinggi</option>
@@ -507,7 +507,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-xs text-[#6B6560] pt-1">
+        <div className="flex items-center justify-between text-xs text-[var(--muted)] pt-1">
           <span>Menampilkan <strong>{filteredItems.length}</strong> dari total {items.length} unit historis</span>
           {(search || selectedBrand !== "ALL" || selectedYear !== "ALL" || profitStatusFilter !== "ALL") && (
             <button
@@ -518,7 +518,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                 setProfitStatusFilter("ALL");
                 setSortBy("NEWEST");
               }}
-              className="text-[#D97706] hover:underline font-semibold"
+              className="text-[var(--accent)] hover:underline font-semibold"
             >
               Reset Filter
             </button>
@@ -527,11 +527,11 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
       </div>
 
       {/* 4. Tabel Daftar Penjualan Historis */}
-      <div className="bg-white rounded-xl border border-[#D9D4CB] shadow-sm overflow-hidden">
+      <div className="bg-white rounded-xl border border-[var(--line)] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-sm">
             <thead>
-              <tr className="bg-[#F5F2EB] border-b border-[#D9D4CB] text-[#6B6560] text-xs font-bold uppercase tracking-wider">
+              <tr className="bg-[#F5F2EB] border-b border-[var(--line)] text-[var(--muted)] text-xs font-bold uppercase tracking-wider">
                 <th className="py-3 px-4">Plat &amp; Unit</th>
                 <th className="py-3 px-4">Tahun / Transmisi</th>
                 <th className="py-3 px-4">Sumber / Balai</th>
@@ -545,7 +545,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <tbody className="divide-y divide-[#E7E2DA]">
               {filteredItems.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-[#6B6560]">
+                  <td colSpan={8} className="py-12 text-center text-[var(--muted)]">
                     Tidak ditemukan data unit historis yang cocok dengan pencarian Anda.
                   </td>
                 </tr>
@@ -558,21 +558,21 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                   >
                     <td className="py-3.5 px-4 font-medium">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold bg-[#E7E2DA] px-2 py-0.5 rounded text-xs text-[#1C1917]">
+                        <span className="font-mono font-bold bg-[#E7E2DA] px-2 py-0.5 rounded text-xs text-[var(--ink)]">
                           {item.plateNumber}
                         </span>
-                        <span className="text-[#1C1917] font-semibold block truncate max-w-[200px] sm:max-w-[300px]">
+                        <span className="text-[var(--ink)] font-semibold block truncate max-w-[200px] sm:max-w-[300px]">
                           {item.model}
                         </span>
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-[#6B6560]">
+                    <td className="py-3.5 px-4 text-[var(--muted)]">
                       {item.year} • {item.transmission || "MANUAL"}
                     </td>
-                    <td className="py-3.5 px-4 text-[#6B6560] text-xs">
+                    <td className="py-3.5 px-4 text-[var(--muted)] text-xs">
                       {item.auctionHouse || item.sourceType || "LELANG"}
                     </td>
-                    <td className="py-3.5 px-4 text-right font-medium text-[#1C1917]">
+                    <td className="py-3.5 px-4 text-right font-medium text-[var(--ink)]">
                       {formatRupiah(item.totalHpp)}
                     </td>
                     <td className="py-3.5 px-4 text-right font-bold text-emerald-700">
@@ -595,14 +595,14 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                         )}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 text-center text-[#6B6560] text-xs">
+                    <td className="py-3.5 px-4 text-center text-[var(--muted)] text-xs">
                       {item.saleDate ? formatDate(item.saleDate) : "-"}
                     </td>
                     <td className="py-3.5 px-4 text-center" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-center gap-1">
                         <button
                           onClick={() => openDetail(item)}
-                          className="px-2.5 py-1 text-xs font-semibold text-[#D97706] hover:bg-[#D97706]/10 rounded-lg transition-colors inline-flex items-center gap-1"
+                          className="px-2.5 py-1 text-xs font-semibold text-[var(--accent)] hover:bg-[var(--accent)]/10 rounded-lg transition-colors inline-flex items-center gap-1"
                         >
                           <span>Detail</span>
                           <ChevronRight className="w-3.5 h-3.5" />
@@ -627,23 +627,23 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
       {/* 5. Modal Rincian & Edit Unit Historis */}
       {selectedItem && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-xl w-full border border-[#D9D4CB] shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-2xl max-w-xl w-full border border-[var(--line)] shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
-            <div className="p-5 bg-[#F5F2EB] border-b border-[#D9D4CB] flex items-center justify-between">
+            <div className="p-5 bg-[#F5F2EB] border-b border-[var(--line)] flex items-center justify-between">
               <div>
-                <span className="font-mono text-xs font-bold bg-[#D97706]/10 text-[#D97706] px-2 py-0.5 rounded border border-[#D97706]/30">
+                <span className="font-mono text-xs font-bold bg-[var(--accent)]/10 text-[var(--accent)] px-2 py-0.5 rounded border border-[var(--accent)]/30">
                   {selectedItem.plateNumber}
                 </span>
-                <h3 className="font-black text-lg text-[#1C1917] mt-1">
+                <h3 className="font-black text-lg text-[var(--ink)] mt-1">
                   {selectedItem.model}
                 </h3>
-                <p className="text-xs text-[#6B6560]">
+                <p className="text-xs text-[var(--muted)]">
                   Tahun {selectedItem.year} • {selectedItem.color || "HITAM"} • Sumber: {selectedItem.sourceFile || selectedItem.auctionHouse || "Lelang"}
                 </p>
               </div>
               <button
                 onClick={() => setSelectedItem(null)}
-                className="p-1.5 rounded-lg text-[#6B6560] hover:text-[#1C1917] hover:bg-[#E7E2DA] transition-colors"
+                className="p-1.5 rounded-lg text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[#E7E2DA] transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -653,17 +653,17 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             <div className="p-6 space-y-5 max-h-[75vh] overflow-y-auto custom-scrollbar">
               {/* Financial Box */}
               {!isEditing ? (
-                <div className="grid grid-cols-3 gap-3 p-4 bg-[#FAFAF9] rounded-xl border border-[#D9D4CB]">
+                <div className="grid grid-cols-3 gap-3 p-4 bg-[#FAFAF9] rounded-xl border border-[var(--line)]">
                   <div>
-                    <span className="text-[11px] font-semibold text-[#6B6560] block uppercase">
+                    <span className="text-[11px] font-semibold text-[var(--muted)] block uppercase">
                       Modal HPP
                     </span>
-                    <span className="font-bold text-[#1C1917] text-sm sm:text-base">
+                    <span className="font-bold text-[var(--ink)] text-sm sm:text-base">
                       {formatRupiah(selectedItem.totalHpp)}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[11px] font-semibold text-[#6B6560] block uppercase">
+                    <span className="text-[11px] font-semibold text-[var(--muted)] block uppercase">
                       Harga Laku
                     </span>
                     <span className="font-bold text-emerald-700 text-sm sm:text-base">
@@ -671,7 +671,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                     </span>
                   </div>
                   <div>
-                    <span className="text-[11px] font-semibold text-[#6B6560] block uppercase">
+                    <span className="text-[11px] font-semibold text-[var(--muted)] block uppercase">
                       Laba Kotor
                     </span>
                     <span
@@ -701,7 +701,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                         type="number"
                         value={editTotalHpp}
                         onChange={(e) => setEditTotalHpp(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                       />
                     </div>
                     <div>
@@ -712,7 +712,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                         type="number"
                         value={editSellingPrice}
                         onChange={(e) => setEditSellingPrice(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                       />
                     </div>
                   </div>
@@ -728,7 +728,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                         type="date"
                         value={editPurchaseDate}
                         onChange={(e) => setEditPurchaseDate(e.target.value)}
-                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                       />
                     </div>
                     <div>
@@ -740,7 +740,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                         type="date"
                         value={editSaleDate}
                         onChange={(e) => setEditSaleDate(e.target.value)}
-                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                       />
                     </div>
                   </div>
@@ -755,7 +755,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                       onChange={(e) => setEditNotes(e.target.value)}
                       rows={3}
                       placeholder="Masukkan catatan khusus untuk unit ini..."
-                      className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                      className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                     />
                   </div>
                 </div>
@@ -764,22 +764,22 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
               {/* Rincian Komponen Biaya (Jika ada di File 2) */}
               {selectedItem.expenseDetails && selectedItem.expenseDetails.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="font-bold text-xs uppercase tracking-wider text-[#6B6560] flex items-center gap-1.5">
-                    <Wrench className="w-3.5 h-3.5 text-[#D97706]" />
+                  <h4 className="font-bold text-xs uppercase tracking-wider text-[var(--muted)] flex items-center gap-1.5">
+                    <Wrench className="w-3.5 h-3.5 text-[var(--accent)]" />
                     Rincian Komponen Biaya Unit ({selectedItem.expenseDetails.length} item)
                   </h4>
-                  <div className="bg-[#FAFAF9] rounded-xl border border-[#D9D4CB] divide-y divide-[#E7E2DA] max-h-48 overflow-y-auto custom-scrollbar">
+                  <div className="bg-[#FAFAF9] rounded-xl border border-[var(--line)] divide-y divide-[#E7E2DA] max-h-48 overflow-y-auto custom-scrollbar">
                     {selectedItem.expenseDetails.map((exp, idx) => (
                       <div key={idx} className="p-2.5 flex items-center justify-between text-xs">
                         <div>
-                          <span className="font-semibold text-[#1C1917] block">
+                          <span className="font-semibold text-[var(--ink)] block">
                             {exp.notes || exp.category}
                           </span>
-                          <span className="text-[10px] text-[#6B6560] uppercase">
+                          <span className="text-[10px] text-[var(--muted)] uppercase">
                             {exp.category}
                           </span>
                         </div>
-                        <span className="font-mono font-bold text-[#1C1917]">
+                        <span className="font-mono font-bold text-[var(--ink)]">
                           {formatRupiah(exp.amount)}
                         </span>
                       </div>
@@ -789,7 +789,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
               )}
 
               {/* Info Tambahan */}
-              <div className="text-xs text-[#6B6560] space-y-1 bg-[#F5F2EB] p-3 rounded-lg border border-[#D9D4CB]">
+              <div className="text-xs text-[var(--muted)] space-y-1 bg-[#F5F2EB] p-3 rounded-lg border border-[var(--line)]">
                 <div>
                   <strong>Tanggal Beli:</strong> {selectedItem.purchaseDate ? formatDate(selectedItem.purchaseDate) : "-"}
                 </div>
@@ -805,15 +805,15 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 bg-[#F5F2EB] border-t border-[#D9D4CB] flex items-center justify-between">
+            <div className="p-4 bg-[#F5F2EB] border-t border-[var(--line)] flex items-center justify-between">
               {!isEditing ? (
                 <>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="px-3.5 py-1.5 rounded-lg border border-[#D9D4CB] text-xs font-semibold text-[#1C1917] hover:bg-white transition-colors flex items-center gap-1.5"
+                      className="px-3.5 py-1.5 rounded-lg border border-[var(--line)] text-xs font-semibold text-[var(--ink)] hover:bg-white transition-colors flex items-center gap-1.5"
                     >
-                      <Edit2 className="w-3.5 h-3.5 text-[#6B6560]" />
+                      <Edit2 className="w-3.5 h-3.5 text-[var(--muted)]" />
                       Edit Data
                     </button>
                     <button
@@ -826,7 +826,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                   </div>
                   <button
                     onClick={() => setSelectedItem(null)}
-                    className="px-4 py-1.5 rounded-lg bg-[#D97706] text-white text-xs font-bold hover:bg-[#B45309] transition-colors"
+                    className="px-4 py-1.5 rounded-lg bg-[var(--accent)] text-white text-xs font-bold hover:bg-[var(--accent-hover)] transition-colors"
                   >
                     Tutup
                   </button>
@@ -835,7 +835,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                 <>
                   <button
                     onClick={() => setIsEditing(false)}
-                    className="px-3.5 py-1.5 rounded-lg border border-[#D9D4CB] text-xs font-semibold text-[#6B6560] hover:bg-white transition-colors"
+                    className="px-3.5 py-1.5 rounded-lg border border-[var(--line)] text-xs font-semibold text-[var(--muted)] hover:bg-white transition-colors"
                   >
                     Batal
                   </button>

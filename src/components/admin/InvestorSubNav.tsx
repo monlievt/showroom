@@ -34,7 +34,7 @@ export function InvestorSubNav({
       exact: false,
       icon: Users,
       badge: investorsCount !== undefined ? `${investorsCount}` : null,
-      badgeColor: "bg-[#EFECE8] text-[#1C1917]",
+      badgeColor: "bg-[var(--bg)] text-[var(--ink)]",
     },
     {
       label: "Riwayat Distribusi Laba",
@@ -55,7 +55,7 @@ export function InvestorSubNav({
   ];
 
   return (
-    <div className="flex border-b border-[#D9D4CB] gap-2 sm:gap-4 overflow-x-auto pb-px">
+    <div className="flex border-b border-[var(--line)] gap-2 sm:gap-4 overflow-x-auto pb-px">
       {links.map((link) => {
         const Icon = link.icon;
         const isActive = link.exact
@@ -69,11 +69,11 @@ export function InvestorSubNav({
             className={cn(
               "flex items-center gap-2 px-3.5 py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold transition-all -mb-px shrink-0",
               isActive
-                ? "border-b-2 border-[#D97706] text-[#D97706] bg-white shadow-xs font-bold"
-                : "text-[#6B6560] hover:text-[#1C1917] hover:bg-white/60"
+                ? "border-b-2 border-[var(--accent)] text-[var(--accent)] bg-white shadow-xs font-bold"
+                : "text-[var(--muted)] hover:text-[var(--ink)] hover:bg-white/60"
             )}
           >
-            <Icon className={cn("w-4 h-4", isActive ? "text-[#D97706]" : "text-[#6B6560]")} />
+            <Icon className={cn("w-4 h-4", isActive ? "text-[var(--accent)]" : "text-[var(--muted)]")} />
             <span>{link.label}</span>
             {link.badge && (
               <span

@@ -234,17 +234,17 @@ export function WhatsAppContactsSettingsClient({
       )}
 
       {/* Header Info Card */}
-      <div className="bg-white p-6 rounded-2xl border border-[#D9D4CB] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-6 rounded-2xl border border-[var(--line)] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
               <Phone className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-[#1C1917]">
+              <h2 className="text-lg font-bold text-[var(--ink)]">
                 Manajemen Kontak WhatsApp Admin Publik
               </h2>
-              <p className="text-xs text-[#6B6560]">
+              <p className="text-xs text-[var(--muted)]">
                 Nomor-nomor ini akan muncul pada tombol <strong>Hubungi Admin</strong> di pojok kanan atas website publik.
               </p>
             </div>
@@ -255,7 +255,7 @@ export function WhatsAppContactsSettingsClient({
           <button
             type="button"
             onClick={handleResetDefaults}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[#6B6560] hover:text-[#1C1917] bg-[#F5F2EB] hover:bg-[#EAE5DC] rounded-xl transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-[var(--muted)] hover:text-[var(--ink)] bg-[#F5F2EB] hover:bg-[#EAE5DC] rounded-xl transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Bawaan</span>
@@ -263,7 +263,7 @@ export function WhatsAppContactsSettingsClient({
           <button
             type="button"
             onClick={handleOpenAddModal}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white bg-[#D97706] hover:bg-[#B45309] rounded-xl shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-white bg-[var(--accent)] hover:bg-[var(--accent-hover)] rounded-xl shadow-xs transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Tambah Kontak Admin</span>
@@ -286,17 +286,17 @@ export function WhatsAppContactsSettingsClient({
       </div>
 
       {/* Contacts List */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] shadow-sm overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#D9D4CB] flex items-center justify-between">
-          <div className="text-sm font-bold text-[#1C1917]">
+      <div className="bg-white rounded-2xl border border-[var(--line)] shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-[var(--line)] flex items-center justify-between">
+          <div className="text-sm font-bold text-[var(--ink)]">
             Daftar Kontak ({contacts.length})
           </div>
-          <span className="text-xs text-[#6B6560]">
+          <span className="text-xs text-[var(--muted)]">
             {activeCount} Aktif di Website Publik
           </span>
         </div>
 
-        <div className="divide-y divide-[#D9D4CB]">
+        <div className="divide-y divide-[var(--line)]">
           {contacts.map((contact, idx) => {
             const waTestLink = generateDirectWhatsAppLink(
               contact.phone,
@@ -325,7 +325,7 @@ export function WhatsAppContactsSettingsClient({
 
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-bold text-[#1C1917]">
+                      <span className="text-sm font-bold text-[var(--ink)]">
                         {contact.name}
                       </span>
                       {contact.isPrimary && (
@@ -346,10 +346,10 @@ export function WhatsAppContactsSettingsClient({
                       </span>
                     </div>
 
-                    <p className="text-xs text-[#6B6560]">{contact.role}</p>
+                    <p className="text-xs text-[var(--muted)]">{contact.role}</p>
 
                     <div className="flex items-center gap-2 pt-1 text-xs">
-                      <span className="font-mono font-semibold text-[#1C1917]">
+                      <span className="font-mono font-semibold text-[var(--ink)]">
                         {contact.phone}
                       </span>
                       <a
@@ -371,7 +371,7 @@ export function WhatsAppContactsSettingsClient({
                     <button
                       type="button"
                       onClick={() => handleSetPrimary(contact.id)}
-                      className="px-2.5 py-1.5 text-xs font-semibold text-[#6B6560] hover:text-[#1C1917] bg-[#F5F2EB] hover:bg-[#EAE5DC] rounded-lg transition-colors cursor-pointer"
+                      className="px-2.5 py-1.5 text-xs font-semibold text-[var(--muted)] hover:text-[var(--ink)] bg-[#F5F2EB] hover:bg-[#EAE5DC] rounded-lg transition-colors cursor-pointer"
                       title="Jadikan kontak default"
                     >
                       Jadikan Utama
@@ -417,8 +417,8 @@ export function WhatsAppContactsSettingsClient({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-5 bg-[#FAF7F2] border-t border-[#D9D4CB] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <p className="text-xs text-[#6B6560]">
+        <div className="p-5 bg-[var(--bg)] border-t border-[var(--line)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <p className="text-xs text-[var(--muted)]">
             Pastikan mengklik tombol di sebelah kanan agar perubahan langsung live di website publik.
           </p>
           <button
@@ -436,9 +436,9 @@ export function WhatsAppContactsSettingsClient({
       {/* Modal Tambah / Edit Kontak */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-[#D9D4CB] overflow-hidden">
-            <div className="px-6 py-4 border-b border-[#D9D4CB] flex items-center justify-between bg-[#FAF7F2]">
-              <h3 className="text-base font-bold text-[#1C1917]">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-[var(--line)] overflow-hidden">
+            <div className="px-6 py-4 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)]">
+              <h3 className="text-base font-bold text-[var(--ink)]">
                 {editingContact ? "Edit Kontak Admin" : "Tambah Kontak Admin Baru"}
               </h3>
               <button
@@ -459,7 +459,7 @@ export function WhatsAppContactsSettingsClient({
               )}
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] mb-1">
                   Nama Petugas / Label Kontak <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -467,13 +467,13 @@ export function WhatsAppContactsSettingsClient({
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="Contoh: Rio / Admin Garasi / Showroom"
-                  className="w-full px-3 py-2 text-sm rounded-xl border border-[#D9D4CB] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-[var(--line)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] mb-1">
                   Peran / Deskripsi Singkat <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -481,16 +481,16 @@ export function WhatsAppContactsSettingsClient({
                   value={formRole}
                   onChange={(e) => setFormRole(e.target.value)}
                   placeholder="Contoh: Konsultasi & Negosiasi Unit"
-                  className="w-full px-3 py-2 text-sm rounded-xl border border-[#D9D4CB] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-[var(--line)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                   required
                 />
-                <p className="text-[11px] text-[#6B6560] mt-1">
+                <p className="text-[11px] text-[var(--muted)] mt-1">
                   Akan muncul sebagai keterangan kecil di dropdown kontak untuk calon pembeli.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] mb-1">
+                <label className="block text-xs font-bold text-[var(--ink)] mb-1">
                   Nomor WhatsApp / HP <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -498,15 +498,15 @@ export function WhatsAppContactsSettingsClient({
                   value={formPhone}
                   onChange={(e) => setFormPhone(e.target.value)}
                   placeholder="Contoh: 081234567890 atau 6281234567890"
-                  className="w-full px-3 py-2 text-sm font-mono rounded-xl border border-[#D9D4CB] focus:outline-none focus:ring-2 focus:ring-[#D97706]"
+                  className="w-full px-3 py-2 text-sm font-mono rounded-xl border border-[var(--line)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                   required
                 />
-                <p className="text-[11px] text-[#6B6560] mt-1">
+                <p className="text-[11px] text-[var(--muted)] mt-1">
                   Otomatis dikonversi ke format internasional (62xxx).
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-[#D9D4CB] space-y-2.5">
+              <div className="pt-2 border-t border-[var(--line)] space-y-2.5">
                 <label className="flex items-center gap-2.5 cursor-pointer">
                   <input
                     type="checkbox"
@@ -514,7 +514,7 @@ export function WhatsAppContactsSettingsClient({
                     onChange={(e) => setFormIsPrimary(e.target.checked)}
                     className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500"
                   />
-                  <span className="text-xs font-semibold text-[#1C1917]">
+                  <span className="text-xs font-semibold text-[var(--ink)]">
                     Jadikan sebagai Kontak Utama (Default)
                   </span>
                 </label>
@@ -526,13 +526,13 @@ export function WhatsAppContactsSettingsClient({
                     onChange={(e) => setFormIsActive(e.target.checked)}
                     className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
                   />
-                  <span className="text-xs font-semibold text-[#1C1917]">
+                  <span className="text-xs font-semibold text-[var(--ink)]">
                     Status Aktif (Tampilkan di website publik)
                   </span>
                 </label>
               </div>
 
-              <div className="pt-4 flex items-center justify-end gap-2 border-t border-[#D9D4CB]">
+              <div className="pt-4 flex items-center justify-end gap-2 border-t border-[var(--line)]">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
@@ -542,7 +542,7 @@ export function WhatsAppContactsSettingsClient({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 text-xs font-bold text-white bg-[#D97706] hover:bg-[#B45309] rounded-xl shadow-xs"
+                  className="px-4 py-2 text-xs font-bold text-white bg-[var(--accent)] hover:bg-[var(--accent-hover)] rounded-xl shadow-xs"
                 >
                   {editingContact ? "Simpan Perubahan" : "Tambahkan ke Daftar"}
                 </button>

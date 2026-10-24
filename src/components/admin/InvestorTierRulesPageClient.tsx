@@ -314,7 +314,7 @@ export function InvestorTierRulesPageClient({
 
       {/* Penjelasan Transparansi Modal Keluarga */}
       <div className="bg-[#FFFBEB] border border-[#FDE68A] p-4 rounded-2xl flex items-start gap-3 shadow-xs">
-        <Info className="w-5 h-5 text-[#D97706] shrink-0 mt-0.5" />
+        <Info className="w-5 h-5 text-[var(--accent)] shrink-0 mt-0.5" />
         <div className="space-y-1 text-xs text-[#92400E]">
           <p className="font-bold text-sm text-[#78350F]">
             Skema Bagi Hasil Khusus Modal Ibu Nurdiah (Alokasi 4 Penerima)
@@ -326,16 +326,16 @@ export function InvestorTierRulesPageClient({
       </div>
 
       {/* Interactive Profit Simulator Card */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-xs space-y-4">
+      <div className="bg-white rounded-2xl border border-[var(--line)] p-6 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Calculator className="w-5 h-5 text-[#D97706]" />
-            <h3 className="font-bold text-base text-[#1C1917]">
+            <Calculator className="w-5 h-5 text-[var(--accent)]" />
+            <h3 className="font-bold text-base text-[var(--ink)]">
               Simulasi Interaktif Pembagian Laba Unit (Aturan 4 Saudara)
             </h3>
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-[#6B6560]">
+          <div className="flex items-center gap-1.5 text-xs text-[var(--muted)]">
             <span className="hidden sm:inline">Coba nilai minus untuk uji skenario rugi:</span>
             <button
               onClick={() => setSimulationProfit("-2000000")}
@@ -352,14 +352,14 @@ export function InvestorTierRulesPageClient({
           </div>
         </div>
 
-        <p className="text-xs text-[#6B6560]">
+        <p className="text-xs text-[var(--muted)]">
           Masukkan estimasi keuntungan kotor mobil (positif atau negatif jika rugi) untuk melihat bagaimana algoritma membagi porsi keluarga dan risiko showroom.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
           {/* Input Laba Kotor */}
           <div>
-            <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1.5">
               Simulasi Laba Kotor Unit (Rp)
             </label>
             <input
@@ -370,7 +370,7 @@ export function InvestorTierRulesPageClient({
                 "w-full p-3 border rounded-xl text-base font-black focus:outline-none focus:ring-2 transition-all",
                 isLoss
                   ? "border-rose-300 bg-rose-50/50 text-rose-900 focus:ring-rose-200"
-                  : "border-[#D9D4CB] bg-[#F7F5F2] text-[#1C1917] focus:ring-[#D97706]/20"
+                  : "border-[var(--line)] bg-[var(--bg)] text-[var(--ink)] focus:ring-[var(--accent)]/20"
               )}
               placeholder="Contoh: 15000000 atau -2000000"
             />
@@ -380,7 +380,7 @@ export function InvestorTierRulesPageClient({
                 <span>Unit Mengalami Kerugian Operasional</span>
               </span>
             ) : matchedRule ? (
-              <span className="inline-block mt-2 text-xs font-bold text-[#D97706] bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+              <span className="inline-block mt-2 text-xs font-bold text-[var(--accent)] bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
                 Masuk ke: {matchedRule.name}
               </span>
             ) : null}
@@ -450,11 +450,11 @@ export function InvestorTierRulesPageClient({
       </div>
 
       {/* Tabel Konfigurasi Aturan Tier */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-xs space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EBE7E1] pb-4">
+      <div className="bg-white rounded-2xl border border-[var(--line)] p-6 shadow-xs space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-[#1C1917] text-base">
+              <h3 className="font-bold text-[var(--ink)] text-base">
                 Konfigurasi Aturan Bertingkat Modal Ibu (4 Saudara)
               </h3>
               {isEditing ? (
@@ -467,7 +467,7 @@ export function InvestorTierRulesPageClient({
                 </span>
               )}
             </div>
-            <p className="text-xs text-[#6B6560] mt-0.5">
+            <p className="text-xs text-[var(--muted)] mt-0.5">
               Skema bertingkat (*contiguous*): setiap tingkat terhubung tanpa celah (*gap*) atau tumpang tindih (*overlap*).
             </p>
           </div>
@@ -480,7 +480,7 @@ export function InvestorTierRulesPageClient({
                   setIsEditing(true);
                   setRuleError(null);
                 }}
-                className="flex items-center gap-1.5 bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-xs cursor-pointer"
+                className="flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-xs cursor-pointer"
               >
                 <Edit3 className="w-3.5 h-3.5" />
                 <span>Ubah Konfigurasi Aturan</span>
@@ -490,17 +490,17 @@ export function InvestorTierRulesPageClient({
                 <button
                   type="button"
                   onClick={handleAddNewTier}
-                  className="flex items-center gap-1 bg-[#FEF3C7] hover:bg-[#FDE68A] border border-[#D97706]/40 text-[#92400E] px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                  className="flex items-center gap-1 bg-[#FEF3C7] hover:bg-[#FDE68A] border border-[var(--accent)]/40 text-[#92400E] px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer"
                   title="Tambah baris tingkatan baru"
                 >
-                  <Plus className="w-3.5 h-3.5 text-[#D97706]" />
+                  <Plus className="w-3.5 h-3.5 text-[var(--accent)]" />
                   <span>+ Tambah Tier</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleResetToStandard}
-                  className="flex items-center gap-1 bg-[#F7F5F2] hover:bg-[#EFECE8] border border-[#D9D4CB] text-[#6B6560] hover:text-[#1C1917] px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+                  className="flex items-center gap-1 bg-[var(--bg)] hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
                   title="Kembalikan ke 7 aturan standar keluarga"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -510,7 +510,7 @@ export function InvestorTierRulesPageClient({
                 <button
                   type="button"
                   onClick={handleCancelEdit}
-                  className="flex items-center gap-1 bg-white hover:bg-red-50 border border-[#D9D4CB] text-red-600 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+                  className="flex items-center gap-1 bg-white hover:bg-red-50 border border-[var(--line)] text-red-600 px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                   <span>Batal</span>
@@ -547,7 +547,7 @@ export function InvestorTierRulesPageClient({
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[#D9D4CB]">
+            <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[var(--line)]">
               <tr>
                 <th className="py-3 px-4">Nama Tier</th>
                 <th className="py-3 px-4">Rentang Laba Kotor (Min - Max)</th>
@@ -557,7 +557,7 @@ export function InvestorTierRulesPageClient({
                 {isEditing && <th className="py-3 px-4 text-center w-16">Hapus</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#D9D4CB]">
+            <tbody className="divide-y divide-[var(--line)]">
               {editableRules.map((r, idx) => {
                 const totalTierAlokasi = Number(r.amountPerPerson) * Number(r.numberOfPeople);
                 const isLast = idx === editableRules.length - 1;
@@ -571,7 +571,7 @@ export function InvestorTierRulesPageClient({
                           type="text"
                           value={r.name}
                           onChange={(e) => handleRuleChange(idx, "name", e.target.value)}
-                          className="w-full p-2 border border-[#D9D4CB] rounded-lg text-xs font-bold text-[#1C1917] bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/30"
+                          className="w-full p-2 border border-[var(--line)] rounded-lg text-xs font-bold text-[var(--ink)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                         />
                       </td>
 
@@ -583,12 +583,12 @@ export function InvestorTierRulesPageClient({
                             value={r.minProfit}
                             disabled={idx > 0} // Tier > 0 otomatis tersinkron dari maxProfit tier sebelumnya
                             onChange={(e) => handleRuleChange(idx, "minProfit", Number(e.target.value))}
-                            className="w-28 p-1.5 border border-[#D9D4CB] rounded-lg text-xs font-semibold bg-white disabled:bg-gray-100 disabled:text-gray-500"
+                            className="w-28 p-1.5 border border-[var(--line)] rounded-lg text-xs font-semibold bg-white disabled:bg-gray-100 disabled:text-gray-500"
                             placeholder="Min"
                           />
-                          <span className="text-[#6B6560] font-medium">s/d</span>
+                          <span className="text-[var(--muted)] font-medium">s/d</span>
                           {isLast ? (
-                            <span className="text-xs font-bold text-[#6B6560] bg-gray-100 px-3 py-1.5 rounded-lg border border-[#D9D4CB]">
+                            <span className="text-xs font-bold text-[var(--muted)] bg-gray-100 px-3 py-1.5 rounded-lg border border-[var(--line)]">
                               Tak Terbatas
                             </span>
                           ) : (
@@ -596,7 +596,7 @@ export function InvestorTierRulesPageClient({
                               type="number"
                               value={r.maxProfit ?? ""}
                               onChange={(e) => handleRuleChange(idx, "maxProfit", Number(e.target.value))}
-                              className="w-28 p-1.5 border border-[#D9D4CB] rounded-lg text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/30"
+                              className="w-28 p-1.5 border border-[var(--line)] rounded-lg text-xs font-semibold bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                               placeholder="Max"
                             />
                           )}
@@ -606,12 +606,12 @@ export function InvestorTierRulesPageClient({
                       {/* Nominal per Orang */}
                       <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <span className="text-xs text-[#6B6560] font-bold">Rp</span>
+                          <span className="text-xs text-[var(--muted)] font-bold">Rp</span>
                           <input
                             type="number"
                             value={r.amountPerPerson}
                             onChange={(e) => handleRuleChange(idx, "amountPerPerson", Number(e.target.value))}
-                            className="w-28 p-1.5 border border-[#D9D4CB] rounded-lg text-xs font-bold text-emerald-700 bg-white text-right focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                            className="w-28 p-1.5 border border-[var(--line)] rounded-lg text-xs font-bold text-emerald-700 bg-white text-right focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
                           />
                         </div>
                       </td>
@@ -624,12 +624,12 @@ export function InvestorTierRulesPageClient({
                           min={1}
                           max={10}
                           onChange={(e) => handleRuleChange(idx, "numberOfPeople", Number(e.target.value))}
-                          className="w-16 p-1.5 border border-[#D9D4CB] rounded-lg text-xs font-bold text-center bg-white"
+                          className="w-16 p-1.5 border border-[var(--line)] rounded-lg text-xs font-bold text-center bg-white"
                         />
                       </td>
 
                       {/* Total Alokasi */}
-                      <td className="py-3 px-4 text-right font-black text-[#1C1917]">
+                      <td className="py-3 px-4 text-right font-black text-[var(--ink)]">
                         {formatRupiah(totalTierAlokasi)}
                       </td>
 
@@ -639,7 +639,7 @@ export function InvestorTierRulesPageClient({
                           type="button"
                           disabled={editableRules.length <= 1}
                           onClick={() => handleDeleteTier(idx)}
-                          className="p-1.5 rounded-lg text-[#6B6560] hover:text-red-600 hover:bg-red-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-[var(--muted)] hover:text-red-600 hover:bg-red-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
                           title="Hapus baris tingkatan ini"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -658,18 +658,18 @@ export function InvestorTierRulesPageClient({
                     : `${formatRupiah(r.minProfit)} s/d < ${formatRupiah(r.maxProfit)}`;
 
                 return (
-                  <tr key={idx} className="hover:bg-[#F7F5F2] transition-colors">
-                    <td className="py-3.5 px-4 font-bold text-[#1C1917]">{r.name}</td>
-                    <td className="py-3.5 px-4 text-[#6B6560] font-medium font-mono text-xs">
+                  <tr key={idx} className="hover:bg-[var(--bg)] transition-colors">
+                    <td className="py-3.5 px-4 font-bold text-[var(--ink)]">{r.name}</td>
+                    <td className="py-3.5 px-4 text-[var(--muted)] font-medium font-mono text-xs">
                       {rangeLabel}
                     </td>
                     <td className="py-3.5 px-4 text-right font-bold text-emerald-700">
-                      {formatRupiah(r.amountPerPerson)} <span className="text-[11px] text-[#6B6560] font-normal">/ orang</span>
+                      {formatRupiah(r.amountPerPerson)} <span className="text-[11px] text-[var(--muted)] font-normal">/ orang</span>
                     </td>
-                    <td className="py-3.5 px-4 text-center font-medium text-[#1C1917]">
-                      {r.numberOfPeople} orang <span className="text-[10px] text-[#6B6560] block">(1 Ibu + 3 Saudara)</span>
+                    <td className="py-3.5 px-4 text-center font-medium text-[var(--ink)]">
+                      {r.numberOfPeople} orang <span className="text-[10px] text-[var(--muted)] block">(1 Ibu + 3 Saudara)</span>
                     </td>
-                    <td className="py-3.5 px-4 text-right font-black text-[#1C1917]">
+                    <td className="py-3.5 px-4 text-right font-black text-[var(--ink)]">
                       {formatRupiah(totalTierAlokasi)}
                     </td>
                   </tr>
@@ -681,15 +681,15 @@ export function InvestorTierRulesPageClient({
       </div>
 
       {/* Bagian Penjelasan Proteksi Risiko Jika Mobil Rugi */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-xs space-y-4">
+      <div className="bg-white rounded-2xl border border-[var(--line)] p-6 shadow-xs space-y-4">
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-5 h-5 text-emerald-600" />
-          <h3 className="font-bold text-base text-[#1C1917]">
+          <h3 className="font-bold text-base text-[var(--ink)]">
             Kebijakan &amp; Algoritma Back-End Jika Unit Mengalami Kerugian (Loss Protection)
           </h3>
         </div>
 
-        <p className="text-xs text-[#6B6560] leading-relaxed">
+        <p className="text-xs text-[var(--muted)] leading-relaxed">
           Algoritma pembagian laba sistem Nur Mobil pada file backend (<code>src/lib/calculations/profit-share.ts</code>) telah memiliki aturan deterministik yang mengamankan dana keluarga dan investor jika mobil lelang atau tukar tambah terjual di bawah HPP (rugi):
         </p>
 

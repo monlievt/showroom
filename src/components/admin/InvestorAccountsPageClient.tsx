@@ -388,51 +388,51 @@ export function InvestorAccountsPageClient({
 
       {/* 3 KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Akun Investor</span>
-            <Users className="w-5 h-5 text-[#D97706]" />
+            <Users className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917] tracking-tight">
-            {investors.length} <span className="text-xs font-semibold text-[#6B6560]">Mitra</span>
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
+            {investors.length} <span className="text-xs font-semibold text-[var(--muted)]">Mitra</span>
           </div>
-          <p className="text-xs text-[#6B6560]">Owner, modal Ibu/saudara &amp; pihak ketiga</p>
+          <p className="text-xs text-[var(--muted)]">Owner, modal Ibu/saudara &amp; pihak ketiga</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Saldo Modal Bebas</span>
             <Coins className="w-5 h-5 text-blue-600" />
           </div>
           <div className="text-2xl font-black text-blue-700 tracking-tight">
             {formatRupiah(totalCapitalInPool)}
           </div>
-          <p className="text-xs text-[#6B6560]">Modal mengendap siap dialokasikan ke unit</p>
+          <p className="text-xs text-[var(--muted)]">Modal mengendap siap dialokasikan ke unit</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Laba yang Dibagikan</span>
             <TrendingUp className="w-5 h-5 text-emerald-600" />
           </div>
           <div className="text-2xl font-black text-emerald-700 tracking-tight">
             {formatRupiah(totalProfitGiven)}
           </div>
-          <p className="text-xs text-[#6B6560]">Akumulasi pencairan profit sharing</p>
+          <p className="text-xs text-[var(--muted)]">Akumulasi pencairan profit sharing</p>
         </div>
       </div>
 
       {/* Action Bar & Search */}
-      <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[#6B6560] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari nama investor, nomor HP, bank, atau rekening..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-[#D9D4CB] rounded-xl text-xs sm:text-sm bg-[#F7F5F2] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/20 transition-all"
+            className="w-full pl-10 pr-4 py-2 border border-[var(--line)] rounded-xl text-xs sm:text-sm bg-[var(--bg)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 transition-all"
           />
         </div>
 
@@ -440,7 +440,7 @@ export function InvestorAccountsPageClient({
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="p-2 border border-[#D9D4CB] rounded-xl text-xs bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+            className="p-2 border border-[var(--line)] rounded-xl text-xs bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
           >
             <option value="ALL">Semua Kategori ({investors.length})</option>
             <option value="MOTHER_SIBLING">Ibu / 4 Saudara</option>
@@ -450,15 +450,15 @@ export function InvestorAccountsPageClient({
 
           <Link
             href="/admin/investors/new"
-            className="flex items-center gap-1.5 bg-white hover:bg-[#F7F5F2] border border-[#D9D4CB] text-[#1C1917] px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
+            className="flex items-center gap-1.5 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
           >
-            <Users className="w-3.5 h-3.5 text-[#D97706]" />
+            <Users className="w-3.5 h-3.5 text-[var(--accent)]" />
             <span>+ Investor Baru</span>
           </Link>
 
           <Link
             href="/admin/investors/deposit/new"
-            className="flex items-center gap-1.5 bg-[#D97706] hover:bg-[#B45309] text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
+            className="flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Setor Modal Investor</span>
@@ -469,19 +469,19 @@ export function InvestorAccountsPageClient({
       {/* Grid Kartu Akun Investor */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {filteredInvestors.length === 0 ? (
-          <div className="col-span-full py-12 text-center text-[#6B6560] bg-white rounded-2xl border border-[#D9D4CB]">
+          <div className="col-span-full py-12 text-center text-[var(--muted)] bg-white rounded-2xl border border-[var(--line)]">
             Tidak ada akun investor yang cocok dengan pencarian atau filter.
           </div>
         ) : (
           filteredInvestors.map((inv) => (
-            <div key={inv.id} className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-xs space-y-4 hover:border-[#D97706]/50 transition-colors">
+            <div key={inv.id} className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-4 hover:border-[var(--accent)]/50 transition-colors">
               {/* Header Kartu */}
               <div className="flex items-start justify-between gap-2">
                 <div className="space-y-0.5">
-                  <h4 className="font-bold text-base text-[#1C1917] flex items-center gap-2">
+                  <h4 className="font-bold text-base text-[var(--ink)] flex items-center gap-2">
                     <span>{inv.name}</span>
                   </h4>
-                  <div className="flex items-center gap-1.5 text-xs text-[#6B6560]">
+                  <div className="flex items-center gap-1.5 text-xs text-[var(--muted)]">
                     <Phone className="w-3.5 h-3.5 text-[#92400E]" />
                     <span>{inv.phone || "Tanpa No HP"}</span>
                   </div>
@@ -503,7 +503,7 @@ export function InvestorAccountsPageClient({
 
                   <button
                     onClick={() => openEditModal(inv)}
-                    className="p-1 rounded-lg border border-[#D9D4CB] bg-[#F7F5F2] hover:bg-[#EFECE8] text-[#1C1917] hover:text-[#D97706] transition-colors cursor-pointer"
+                    className="p-1 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--bg)] text-[var(--ink)] hover:text-[var(--accent)] transition-colors cursor-pointer"
                     title="Edit Profil & Rekening Investor"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
@@ -520,10 +520,10 @@ export function InvestorAccountsPageClient({
               </div>
 
               {/* Data Rekening Bank & Kesepakatan Bagi Hasil */}
-              <div className="p-3 bg-[#F7F5F2] border border-[#EBE7E1] rounded-xl space-y-1.5 text-xs">
+              <div className="p-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl space-y-1.5 text-xs">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 font-bold text-[#1C1917]">
-                    <CreditCard className="w-3.5 h-3.5 text-[#D97706]" />
+                  <div className="flex items-center gap-1.5 font-bold text-[var(--ink)]">
+                    <CreditCard className="w-3.5 h-3.5 text-[var(--accent)]" />
                     <span>{inv.bankName || "Rekening Bank"}</span>
                   </div>
                   {inv.type === "THIRD_PARTY" && (
@@ -540,19 +540,19 @@ export function InvestorAccountsPageClient({
 
                 {inv.bankAccountNumber ? (
                   <div className="text-[#44403C] space-y-0.5">
-                    <p className="font-mono font-bold text-sm text-[#1C1917]">
+                    <p className="font-mono font-bold text-sm text-[var(--ink)]">
                       {inv.bankAccountNumber}
                     </p>
                     {inv.bankAccountName && (
-                      <p className="text-[11px] text-[#6B6560]">
-                        a.n. <strong className="text-[#1C1917]">{inv.bankAccountName}</strong>
+                      <p className="text-[11px] text-[var(--muted)]">
+                        a.n. <strong className="text-[var(--ink)]">{inv.bankAccountName}</strong>
                       </p>
                     )}
                   </div>
                 ) : (
                   <button
                     onClick={() => openEditModal(inv)}
-                    className="text-[11px] text-[#D97706] hover:underline font-semibold block"
+                    className="text-[11px] text-[var(--accent)] hover:underline font-semibold block"
                   >
                     + Tambah info rekening bank
                   </button>
@@ -560,16 +560,16 @@ export function InvestorAccountsPageClient({
               </div>
 
               {/* Rincian Finansial */}
-              <div className="space-y-2 pt-2 border-t border-[#EBE7E1] text-xs">
-                <div className="flex justify-between text-[#6B6560]">
+              <div className="space-y-2 pt-2 border-t border-[var(--line)] text-xs">
+                <div className="flex justify-between text-[var(--muted)]">
                   <span>Saldo Modal Bebas di Kas:</span>
-                  <span className="font-bold text-[#1C1917]">{formatRupiah(inv.currentBalance)}</span>
+                  <span className="font-bold text-[var(--ink)]">{formatRupiah(inv.currentBalance)}</span>
                 </div>
-                <div className="flex justify-between text-[#6B6560]">
+                <div className="flex justify-between text-[var(--muted)]">
                   <span>Unit Sedang Didanai:</span>
-                  <span className="font-semibold text-[#1C1917]">{inv.investmentsCount} Mobil</span>
+                  <span className="font-semibold text-[var(--ink)]">{inv.investmentsCount} Mobil</span>
                 </div>
-                <div className="flex justify-between text-[#6B6560]">
+                <div className="flex justify-between text-[var(--muted)]">
                   <span>Total Laba Diterima:</span>
                   <span className="font-bold text-emerald-700">{formatRupiah(inv.totalProfitDistributed)}</span>
                 </div>
@@ -578,14 +578,14 @@ export function InvestorAccountsPageClient({
               {/* Alokasi Unit Aktif */}
               {inv.investments.length > 0 && (
                 <div className="pt-2 border-t border-[#F2EFE9] space-y-1.5">
-                  <span className="text-[10px] font-bold uppercase text-[#6B6560] block">Alokasi Unit Aktif:</span>
+                  <span className="text-[10px] font-bold uppercase text-[var(--muted)] block">Alokasi Unit Aktif:</span>
                   {inv.investments.slice(0, 3).map((vInv) => (
-                    <div key={vInv.id} className="text-xs flex justify-between bg-[#F7F5F2] p-2 rounded-xl">
+                    <div key={vInv.id} className="text-xs flex justify-between bg-[var(--bg)] p-2 rounded-xl">
                       <div className="flex items-center gap-1.5">
-                        <Car className="w-3.5 h-3.5 text-[#D97706]" />
-                        <span className="font-bold text-[#1C1917]">{vInv.vehiclePlate}</span>
+                        <Car className="w-3.5 h-3.5 text-[var(--accent)]" />
+                        <span className="font-bold text-[var(--ink)]">{vInv.vehiclePlate}</span>
                       </div>
-                      <span className="font-bold text-[#D97706]">{formatRupiah(vInv.capitalShare)}</span>
+                      <span className="font-bold text-[var(--accent)]">{formatRupiah(vInv.capitalShare)}</span>
                     </div>
                   ))}
                   {inv.investments.length > 3 && (
@@ -603,12 +603,12 @@ export function InvestorAccountsPageClient({
       {/* Modal: Setor Modal Investor */}
       {showDepositModal && (
         <div className="fixed inset-0 bg-black/50 z-50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-[#D9D4CB] animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-3">
-              <h3 className="text-base font-bold text-[#1C1917]">Setor Modal Investor</h3>
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-[var(--line)] animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+              <h3 className="text-base font-bold text-[var(--ink)]">Setor Modal Investor</h3>
               <button
                 onClick={() => setShowDepositModal(false)}
-                className="text-[#6B6560] hover:text-[#1C1917] text-lg font-bold cursor-pointer"
+                className="text-[var(--muted)] hover:text-[var(--ink)] text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -616,14 +616,14 @@ export function InvestorAccountsPageClient({
 
             <form onSubmit={handleDepositSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
                   Pilih Akun Investor
                 </label>
                 <select
                   required
                   value={selectedInvestorId}
                   onChange={(e) => setSelectedInvestorId(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2.5 text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2.5 text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 >
                   <option value="">-- Pilih Akun Investor --</option>
                   {investors.map((inv) => (
@@ -635,7 +635,7 @@ export function InvestorAccountsPageClient({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
                   Tanggal Setoran *
                 </label>
                 <input
@@ -643,12 +643,12 @@ export function InvestorAccountsPageClient({
                   required
                   value={depositDate}
                   onChange={(e) => setDepositDate(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
                   Nominal Setoran (Rp) *
                 </label>
                 <input
@@ -658,14 +658,14 @@ export function InvestorAccountsPageClient({
                   placeholder="Contoh: 50000000"
                   value={depositAmount}
                   onChange={(e) => setDepositAmount(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
               {/* Upload Bukti Transfer */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block">
+                  <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block">
                     Lampiran Bukti Transfer (Bisa Beberapa Foto / PDF)
                   </label>
                   {depositProofs.length > 0 && (
@@ -684,11 +684,11 @@ export function InvestorAccountsPageClient({
                     {depositProofs.map((p, idx) => (
                       <div
                         key={p.id}
-                        className="flex items-center justify-between p-2 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-xs"
+                        className="flex items-center justify-between p-2 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-xs"
                       >
                         <div className="flex items-center gap-2 truncate">
                           <FileText className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span className="truncate max-w-[180px] font-medium text-[#1C1917]">
+                          <span className="truncate max-w-[180px] font-medium text-[var(--ink)]">
                             #{idx + 1} {p.name || "Bukti Transfer"}
                           </span>
                         </div>
@@ -697,7 +697,7 @@ export function InvestorAccountsPageClient({
                             href={p.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-2 py-0.5 bg-white border border-[#D9D4CB] rounded-lg text-[10px] font-semibold text-[#1C1917] hover:bg-[#EFECE8]"
+                            className="px-2 py-0.5 bg-white border border-[var(--line)] rounded-lg text-[10px] font-semibold text-[var(--ink)] hover:bg-[var(--bg)]"
                           >
                             Lihat
                           </a>
@@ -716,7 +716,7 @@ export function InvestorAccountsPageClient({
                   </div>
                 )}
 
-                <label className="border border-dashed border-[#D9D4CB] hover:border-[#D97706] rounded-xl p-2.5 flex flex-col items-center justify-center cursor-pointer bg-[#FAF9F6] hover:bg-[#F7F5F2] transition-colors">
+                <label className="border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl p-2.5 flex flex-col items-center justify-center cursor-pointer bg-[var(--bg)] hover:bg-[var(--bg)] transition-colors">
                   <input
                     type="file"
                     multiple
@@ -731,13 +731,13 @@ export function InvestorAccountsPageClient({
                     }}
                   />
                   {uploadingDepositProof ? (
-                    <div className="flex items-center gap-2 text-xs font-semibold text-[#D97706]">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-[var(--accent)]">
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       <span>Mengunggah file...</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1.5 text-xs text-[#6B6560]">
-                      <UploadCloud className="w-4 h-4 text-[#D97706]" />
+                    <div className="flex items-center gap-1.5 text-xs text-[var(--muted)]">
+                      <UploadCloud className="w-4 h-4 text-[var(--accent)]" />
                       <span>
                         {depositProofs.length > 0
                           ? "+ Tambah foto / screenshot bukti lagi"
@@ -749,7 +749,7 @@ export function InvestorAccountsPageClient({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
                   Catatan / Keterangan Transfer
                 </label>
                 <textarea
@@ -757,7 +757,7 @@ export function InvestorAccountsPageClient({
                   placeholder="Keterangan setoran modal..."
                   value={depositNotes}
                   onChange={(e) => setDepositNotes(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -765,14 +765,14 @@ export function InvestorAccountsPageClient({
                 <button
                   type="button"
                   onClick={() => setShowDepositModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading || uploadingDepositProof}
-                  className="px-5 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Menyimpan..." : "Simpan Setoran Modal"}
                 </button>
@@ -785,15 +785,15 @@ export function InvestorAccountsPageClient({
       {/* Modal: Edit Profil & Rekening Investor */}
       {editingInvestor && (
         <div className="fixed inset-0 bg-black/50 z-50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-[#D9D4CB] animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-3">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-[var(--line)] animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <Edit3 className="w-5 h-5 text-[#D97706]" />
-                <h3 className="text-base font-bold text-[#1C1917]">Edit Data &amp; Rekening Investor</h3>
+                <Edit3 className="w-5 h-5 text-[var(--accent)]" />
+                <h3 className="text-base font-bold text-[var(--ink)]">Edit Data &amp; Rekening Investor</h3>
               </div>
               <button
                 onClick={() => setEditingInvestor(null)}
-                className="text-[#6B6560] hover:text-[#1C1917] text-lg font-bold cursor-pointer"
+                className="text-[var(--muted)] hover:text-[var(--ink)] text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -801,7 +801,7 @@ export function InvestorAccountsPageClient({
 
             <form onSubmit={handleEditSubmit} className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
+                <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
                   Nama Lengkap Investor *
                 </label>
                 <input
@@ -809,13 +809,13 @@ export function InvestorAccountsPageClient({
                   required
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
-                  className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2.5 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
                     Nomor WhatsApp / HP
                   </label>
                   <input
@@ -823,18 +823,18 @@ export function InvestorAccountsPageClient({
                     placeholder="08123456789"
                     value={editPhone}
                     onChange={(e) => setEditPhone(e.target.value)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-[#1C1917] uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
                     Tipe Hubungan Investor
                   </label>
                   <select
                     value={editType}
                     onChange={(e: any) => setEditType(e.target.value)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2.5 text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2.5 text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                   >
                     <option value="THIRD_PARTY">Mitra Pihak Ketiga</option>
                     <option value="MOTHER_SIBLING">Ibu / 4 Saudara</option>
@@ -868,20 +868,20 @@ export function InvestorAccountsPageClient({
               )}
 
               {/* Bagian Rekening Bank */}
-              <div className="border-t border-[#EBE7E1] pt-3 space-y-3">
+              <div className="border-t border-[var(--line)] pt-3 space-y-3">
                 <span className="text-xs font-bold text-[#92400E] uppercase tracking-wider block">
                   Rekening Bank Tujuan Transfer Bagi Hasil:
                 </span>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                    <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                       Nama Bank
                     </label>
                     <select
                       value={editBankName}
                       onChange={(e) => setEditBankName(e.target.value)}
-                      className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                      className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                     >
                       <option value="BCA">BCA</option>
                       <option value="Mandiri">Bank Mandiri</option>
@@ -898,13 +898,13 @@ export function InvestorAccountsPageClient({
                         placeholder="Nama bank..."
                         value={editCustomBankName}
                         onChange={(e) => setEditCustomBankName(e.target.value)}
-                        className="mt-1.5 w-full border border-[#D9D4CB] rounded-xl px-3 py-1.5 text-xs bg-white"
+                        className="mt-1.5 w-full border border-[var(--line)] rounded-xl px-3 py-1.5 text-xs bg-white"
                       />
                     )}
                   </div>
 
                   <div>
-                    <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                    <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                       Nomor Rekening
                     </label>
                     <input
@@ -912,13 +912,13 @@ export function InvestorAccountsPageClient({
                       placeholder="Contoh: 0123456789"
                       value={editBankAccountNumber}
                       onChange={(e) => setEditBankAccountNumber(e.target.value)}
-                      className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm font-mono font-bold focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                      className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm font-mono font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-[#1C1917] block mb-1">
+                  <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                     Nama Pemilik Rekening (a.n)
                   </label>
                   <input
@@ -926,23 +926,23 @@ export function InvestorAccountsPageClient({
                     placeholder="Contoh: Ahmad Fauzi"
                     value={editBankAccountName}
                     onChange={(e) => setEditBankAccountName(e.target.value)}
-                    className="w-full border border-[#D9D4CB] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#EBE7E1]">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--line)]">
                 <button
                   type="button"
                   onClick={() => setEditingInvestor(null)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading || !editName.trim()}
-                  className="px-5 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Menyimpan..." : "Simpan Perubahan"}
                 </button>
@@ -961,8 +961,8 @@ export function InvestorAccountsPageClient({
                 <Trash2 className="w-6 h-6 text-red-600" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-[#1C1917]">Hapus Akun Investor?</h3>
-                <p className="text-xs text-[#6B6560]">Tindakan ini permanen dan menghapus akun mitra ini.</p>
+                <h3 className="text-base font-bold text-[var(--ink)]">Hapus Akun Investor?</h3>
+                <p className="text-xs text-[var(--muted)]">Tindakan ini permanen dan menghapus akun mitra ini.</p>
               </div>
             </div>
 
@@ -985,12 +985,12 @@ export function InvestorAccountsPageClient({
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#EBE7E1]">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--line)]">
               <button
                 type="button"
                 disabled={isDeleting}
                 onClick={() => setDeletingInvestor(null)}
-                className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
               >
                 Batal
               </button>

@@ -251,17 +251,17 @@ export function ImportSpreadsheetPanel() {
   return (
     <div className="space-y-6">
       {/* ── HEADER & TEMPLATE DOWNLOADS ── */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-xs space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#EBE7E1] pb-4">
+      <div className="bg-white rounded-2xl border border-[var(--line)] p-6 shadow-xs space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-[#D97706]/10 text-[#D97706] flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0">
               <FileSpreadsheet className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-[#1C1917] tracking-tight">
+              <h3 className="font-extrabold text-base text-[var(--ink)] tracking-tight">
                 Import & Migrasi Data Spreadsheet Lama
               </h3>
-              <p className="text-xs text-[#6B6560] mt-0.5">
+              <p className="text-xs text-[var(--muted)] mt-0.5">
                 Migrasikan ribuan baris data mobil, harga beli, dan catatan servis dari Microsoft Excel atau Google Sheets.
               </p>
             </div>
@@ -290,34 +290,34 @@ export function ImportSpreadsheetPanel() {
                   EXPENSE_IMPORT_TEMPLATE_CSV
                 )
               }
-              className="flex items-center gap-1.5 bg-white hover:bg-[#F7F5F2] border border-[#D9D4CB] text-[#1C1917] px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer"
+              className="flex items-center gap-1.5 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer"
               title="Download template biaya servis/salon"
             >
-              <Download className="w-3.5 h-3.5 text-[#D97706]" />
+              <Download className="w-3.5 h-3.5 text-[var(--accent)]" />
               <span>Template Biaya Servis</span>
             </button>
           </div>
         </div>
 
         {/* Step Guide */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#6B6560]">
-          <div className="p-3 bg-[#F7F5F2] rounded-xl border border-[#EBE7E1] space-y-1">
-            <strong className="text-[#1C1917] font-bold block">1. Download Template</strong>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[var(--muted)]">
+          <div className="p-3 bg-[var(--bg)] rounded-xl border border-[var(--line)] space-y-1">
+            <strong className="text-[var(--ink)] font-bold block">1. Download Template</strong>
             <p>Klik tombol download di atas untuk mendapatkan contoh template dengan judul kolom standar.</p>
           </div>
-          <div className="p-3 bg-[#F7F5F2] rounded-xl border border-[#EBE7E1] space-y-1">
-            <strong className="text-[#1C1917] font-bold block">2. Buka di Excel / Google Sheets</strong>
+          <div className="p-3 bg-[var(--bg)] rounded-xl border border-[var(--line)] space-y-1">
+            <strong className="text-[var(--ink)] font-bold block">2. Buka di Excel / Google Sheets</strong>
             <p>Buka file CSV, salin (copy) baris-baris data mobil lama Anda, lalu paste ke kotak di bawah.</p>
           </div>
-          <div className="p-3 bg-[#F7F5F2] rounded-xl border border-[#EBE7E1] space-y-1">
-            <strong className="text-[#1C1917] font-bold block">3. Pratinjau & Simpan</strong>
+          <div className="p-3 bg-[var(--bg)] rounded-xl border border-[var(--line)] space-y-1">
+            <strong className="text-[var(--ink)] font-bold block">3. Pratinjau & Simpan</strong>
             <p>Sistem akan memvalidasi format angka, plat, dan tanggal secara otomatis sebelum dimasukkan.</p>
           </div>
         </div>
       </div>
 
       {/* ── TABS PEMILIHAN DATA ── */}
-      <div className="flex border-b border-[#D9D4CB] gap-4 text-sm font-semibold">
+      <div className="flex border-b border-[var(--line)] gap-4 text-sm font-semibold">
         <button
           onClick={() => {
             setActiveImportType("VEHICLES");
@@ -327,8 +327,8 @@ export function ImportSpreadsheetPanel() {
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer flex items-center gap-2",
             activeImportType === "VEHICLES"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           <Car className="w-4 h-4" />
@@ -344,8 +344,8 @@ export function ImportSpreadsheetPanel() {
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer flex items-center gap-2",
             activeImportType === "EXPENSES"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           <Wrench className="w-4 h-4" />
@@ -354,23 +354,23 @@ export function ImportSpreadsheetPanel() {
       </div>
 
       {/* ── UPLOAD FILE & COPY-PASTE BOX ── */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-xs space-y-4">
+      <div className="bg-white rounded-2xl border border-[var(--line)] p-6 shadow-xs space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h4 className="font-bold text-sm text-[#1C1917]">
+            <h4 className="font-bold text-sm text-[var(--ink)]">
               {activeImportType === "VEHICLES"
                 ? "Masukkan Data Mobil (Upload File atau Paste Teks)"
                 : "Masukkan Data Biaya Perbaikan (Upload File atau Paste Teks)"}
             </h4>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Anda dapat mengunggah file <code>.csv</code> atau langsung menempelkan (*Ctrl+V*) baris dari Excel.
             </p>
           </div>
 
           {/* File Picker */}
           <div>
-            <label className="flex items-center gap-2 bg-[#F7F5F2] hover:bg-[#EFECE8] border border-[#D9D4CB] text-[#1C1917] px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer">
-              <Upload className="w-3.5 h-3.5 text-[#D97706]" />
+            <label className="flex items-center gap-2 bg-[var(--bg)] hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer">
+              <Upload className="w-3.5 h-3.5 text-[var(--accent)]" />
               <span>Pilih File CSV...</span>
               <input
                 type="file"
@@ -392,7 +392,7 @@ export function ImportSpreadsheetPanel() {
           }
           value={pastedText}
           onChange={handleTextChange}
-          className="w-full p-3.5 border border-[#D9D4CB] rounded-xl text-xs font-mono bg-[#F7F5F2] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/20 transition-all leading-relaxed"
+          className="w-full p-3.5 border border-[var(--line)] rounded-xl text-xs font-mono bg-[var(--bg)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 transition-all leading-relaxed"
         />
 
         {parsingError && (
@@ -423,16 +423,16 @@ export function ImportSpreadsheetPanel() {
 
       {/* ── LIVE PREVIEW TABLE ── */}
       {parsedRows.length > 0 && (
-        <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-xs space-y-4 p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EBE7E1] pb-4">
+        <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-xs space-y-4 p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--line)] pb-4">
             <div>
-              <h4 className="font-extrabold text-sm text-[#1C1917] flex items-center gap-2">
+              <h4 className="font-extrabold text-sm text-[var(--ink)] flex items-center gap-2">
                 <span>Pratinjau Data yang Siap Diimpor</span>
                 <span className="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold">
                   {parsedRows.length} Baris Terbaca
                 </span>
               </h4>
-              <p className="text-xs text-[#6B6560] mt-0.5">
+              <p className="text-xs text-[var(--muted)] mt-0.5">
                 Periksa kembali data di bawah sebelum dieksekusi ke database.
               </p>
             </div>
@@ -440,9 +440,9 @@ export function ImportSpreadsheetPanel() {
             {/* Import Options for Vehicles */}
             {activeImportType === "VEHICLES" && (
               <div className="flex flex-wrap items-center gap-4 text-xs">
-                <div className="flex items-center gap-2 bg-[#F7F5F2] px-3 py-1.5 rounded-xl border border-[#D9D4CB]">
-                  <span className="text-[#6B6560] font-semibold">Jika Plat Sama:</span>
-                  <label className="flex items-center gap-1 cursor-pointer font-bold text-[#1C1917]">
+                <div className="flex items-center gap-2 bg-[var(--bg)] px-3 py-1.5 rounded-xl border border-[var(--line)]">
+                  <span className="text-[var(--muted)] font-semibold">Jika Plat Sama:</span>
+                  <label className="flex items-center gap-1 cursor-pointer font-bold text-[var(--ink)]">
                     <input
                       type="radio"
                       name="onDuplicate"
@@ -451,7 +451,7 @@ export function ImportSpreadsheetPanel() {
                     />
                     <span>Lewati (Skip)</span>
                   </label>
-                  <label className="flex items-center gap-1 cursor-pointer font-bold text-[#1C1917]">
+                  <label className="flex items-center gap-1 cursor-pointer font-bold text-[var(--ink)]">
                     <input
                       type="radio"
                       name="onDuplicate"
@@ -462,12 +462,12 @@ export function ImportSpreadsheetPanel() {
                   </label>
                 </div>
 
-                <label className="flex items-center gap-2 cursor-pointer font-medium text-[#1C1917]">
+                <label className="flex items-center gap-2 cursor-pointer font-medium text-[var(--ink)]">
                   <input
                     type="checkbox"
                     checked={recordCashExpense}
                     onChange={(e) => setRecordCashExpense(e.target.checked)}
-                    className="rounded text-[#D97706]"
+                    className="rounded text-[var(--accent)]"
                   />
                   <span>Potong Kas Rekening BCA</span>
                 </label>
@@ -476,10 +476,10 @@ export function ImportSpreadsheetPanel() {
           </div>
 
           {/* Table Preview */}
-          <div className="overflow-x-auto max-h-96 border border-[#EBE7E1] rounded-xl">
+          <div className="overflow-x-auto max-h-96 border border-[var(--line)] rounded-xl">
             {activeImportType === "VEHICLES" ? (
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] font-bold tracking-wider sticky top-0 border-b border-[#D9D4CB]">
+                <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] font-bold tracking-wider sticky top-0 border-b border-[var(--line)]">
                   <tr>
                     <th className="py-2.5 px-3">Plat Nomor</th>
                     <th className="py-2.5 px-3">Merk & Model</th>
@@ -491,10 +491,10 @@ export function ImportSpreadsheetPanel() {
                     <th className="py-2.5 px-3">Status Unit</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EBE7E1]">
+                <tbody className="divide-y divide-[var(--line)]">
                   {parsedRows.map((row: ParsedVehicleRow, idx) => (
-                    <tr key={idx} className="hover:bg-[#F7F5F2]">
-                      <td className="py-2.5 px-3 font-bold text-[#1C1917] whitespace-nowrap">{row.plateNumber}</td>
+                    <tr key={idx} className="hover:bg-[var(--bg)]">
+                      <td className="py-2.5 px-3 font-bold text-[var(--ink)] whitespace-nowrap">{row.plateNumber}</td>
                       <td className="py-2.5 px-3 whitespace-nowrap">{row.brand} {row.model}</td>
                       <td className="py-2.5 px-3">{row.year}</td>
                       <td className="py-2.5 px-3">
@@ -523,7 +523,7 @@ export function ImportSpreadsheetPanel() {
               </table>
             ) : (
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] font-bold tracking-wider sticky top-0 border-b border-[#D9D4CB]">
+                <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] font-bold tracking-wider sticky top-0 border-b border-[var(--line)]">
                   <tr>
                     <th className="py-2.5 px-3">Plat Mobil</th>
                     <th className="py-2.5 px-3">Kategori Biaya</th>
@@ -533,10 +533,10 @@ export function ImportSpreadsheetPanel() {
                     <th className="py-2.5 px-3">Bengkel / Vendor</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EBE7E1]">
+                <tbody className="divide-y divide-[var(--line)]">
                   {parsedRows.map((row: ParsedExpenseRow, idx) => (
-                    <tr key={idx} className="hover:bg-[#F7F5F2]">
-                      <td className="py-2.5 px-3 font-bold text-[#1C1917] whitespace-nowrap">{row.plateNumber}</td>
+                    <tr key={idx} className="hover:bg-[var(--bg)]">
+                      <td className="py-2.5 px-3 font-bold text-[var(--ink)] whitespace-nowrap">{row.plateNumber}</td>
                       <td className="py-2.5 px-3 whitespace-nowrap">
                         <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded-full font-bold">
                           {row.category}
@@ -545,7 +545,7 @@ export function ImportSpreadsheetPanel() {
                       <td className="py-2.5 px-3">{row.description}</td>
                       <td className="py-2.5 px-3 text-right font-bold text-rose-700">{formatRupiah(row.amount)}</td>
                       <td className="py-2.5 px-3">{row.date}</td>
-                      <td className="py-2.5 px-3 text-[#6B6560]">{row.vendorName || "-"}</td>
+                      <td className="py-2.5 px-3 text-[var(--muted)]">{row.vendorName || "-"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -555,14 +555,14 @@ export function ImportSpreadsheetPanel() {
 
           {/* Action Button */}
           <div className="flex items-center justify-between pt-2">
-            <span className="text-xs text-[#6B6560]">
+            <span className="text-xs text-[var(--muted)]">
               Periksa kecocokan kolom. Jika sudah pas, klik tombol di sebelah kanan.
             </span>
 
             <button
               onClick={handleExecuteImport}
               disabled={loading}
-              className="flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
+              className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
             >
               <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
               <span>

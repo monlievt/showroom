@@ -157,76 +157,76 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
       {/* KPI Cards Header */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Saldo Kas BCA */}
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Kas Rekening BCA</span>
-            <Wallet className="w-4 h-4 text-[#D97706]" />
+            <Wallet className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917] tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.cashBalance)}
           </div>
-          <p className="text-xs text-[#6B6560]">Saldo berjalan on-hand di rekening</p>
+          <p className="text-xs text-[var(--muted)]">Saldo berjalan on-hand di rekening</p>
         </div>
 
         {/* Total Kas Masuk */}
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Kas Masuk</span>
             <ArrowDownLeft className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-black text-emerald-700 tracking-tight">
             {formatRupiah(totalIn)}
           </div>
-          <p className="text-xs text-[#6B6560]">Penjualan mobil & setoran modal</p>
+          <p className="text-xs text-[var(--muted)]">Penjualan mobil & setoran modal</p>
         </div>
 
         {/* Total Kas Keluar */}
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Kas Keluar</span>
             <ArrowUpRight className="w-4 h-4 text-rose-600" />
           </div>
           <div className="text-2xl font-black text-rose-700 tracking-tight">
             {formatRupiah(totalOut)}
           </div>
-          <p className="text-xs text-[#6B6560]">Kulakan, perbaikan, OPEX & prive</p>
+          <p className="text-xs text-[var(--muted)]">Kulakan, perbaikan, OPEX & prive</p>
         </div>
 
         {/* Rekonsiliasi Bank */}
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Status Mutasi</span>
             <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917] tracking-tight">
-            {cashTransactions.length} <span className="text-xs font-semibold text-[#6B6560]">Mutasi</span>
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
+            {cashTransactions.length} <span className="text-xs font-semibold text-[var(--muted)]">Mutasi</span>
           </div>
           <p className="text-xs text-[#16A34A] font-semibold">Tersinkronisasi dengan Buku Kas</p>
         </div>
       </div>
 
       {/* Action Bar & Filters */}
-      <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[#6B6560] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari keterangan, plat nomor, atau tipe kas..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-[#D9D4CB] rounded-xl text-xs sm:text-sm bg-[#F7F5F2] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/20 transition-all"
+            className="w-full pl-10 pr-4 py-2 border border-[var(--line)] rounded-xl text-xs sm:text-sm bg-[var(--bg)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 transition-all"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Quick Filter Buttons */}
-          <div className="flex items-center gap-1 bg-[#F7F5F2] p-1 rounded-xl border border-[#D9D4CB]">
+          <div className="flex items-center gap-1 bg-[var(--bg)] p-1 rounded-xl border border-[var(--line)]">
             <button
               onClick={() => setCashFilter("ALL")}
               className={cn(
                 "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all",
-                cashFilter === "ALL" ? "bg-white text-[#1C1917] shadow-xs" : "text-[#6B6560] hover:text-[#1C1917]"
+                cashFilter === "ALL" ? "bg-white text-[var(--ink)] shadow-xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
               Semua
@@ -235,7 +235,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
               onClick={() => setCashFilter("IN")}
               className={cn(
                 "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all",
-                cashFilter === "IN" ? "bg-emerald-600 text-white shadow-xs" : "text-[#6B6560] hover:text-emerald-700"
+                cashFilter === "IN" ? "bg-emerald-600 text-white shadow-xs" : "text-[var(--muted)] hover:text-emerald-700"
               )}
             >
               Kas Masuk
@@ -244,7 +244,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
               onClick={() => setCashFilter("OUT")}
               className={cn(
                 "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all",
-                cashFilter === "OUT" ? "bg-rose-600 text-white shadow-xs" : "text-[#6B6560] hover:text-rose-700"
+                cashFilter === "OUT" ? "bg-rose-600 text-white shadow-xs" : "text-[var(--muted)] hover:text-rose-700"
               )}
             >
               Kas Keluar
@@ -254,7 +254,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
           {/* Add Manual Cash Button */}
           <Link
             href="/admin/finance/cash/new"
-            className="flex items-center gap-1.5 bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
+            className="flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
           >
             <Plus className="w-4 h-4" />
             <span>+ Kas Masuk / Keluar Manual</span>
@@ -263,22 +263,22 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
       </div>
 
       {/* Tabel Mutasi Kas Rekening BCA */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] shadow-xs overflow-hidden">
-        <div className="p-4 border-b border-[#D9D4CB] flex items-center justify-between bg-[#F7F5F2]">
+      <div className="bg-white rounded-2xl border border-[var(--line)] shadow-xs overflow-hidden">
+        <div className="p-4 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)]">
           <div className="flex items-center gap-2">
-            <Receipt className="w-4 h-4 text-[#D97706]" />
-            <h3 className="font-bold text-sm text-[#1C1917]">
+            <Receipt className="w-4 h-4 text-[var(--accent)]" />
+            <h3 className="font-bold text-sm text-[var(--ink)]">
               Buku Mutasi Kas Rekening BCA
             </h3>
           </div>
-          <span className="text-xs font-semibold text-[#6B6560]">
+          <span className="text-xs font-semibold text-[var(--muted)]">
             Menampilkan {filteredCashList.length} dari {cashTransactions.length} transaksi
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[#D9D4CB]">
+            <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[var(--line)]">
               <tr>
                 <th className="py-3 px-4">Tanggal & Waktu</th>
                 <th className="py-3 px-4">Jenis Transaksi</th>
@@ -287,10 +287,10 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
                 <th className="py-3 px-4 text-right">Saldo Berjalan</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#D9D4CB]">
+            <tbody className="divide-y divide-[var(--line)]">
               {filteredCashList.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-[#6B6560]">
+                  <td colSpan={5} className="py-12 text-center text-[var(--muted)]">
                     Tidak ada mutasi kas yang sesuai dengan filter.
                   </td>
                 </tr>
@@ -298,9 +298,9 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
                 filteredCashList.map((tx) => {
                   const isIncoming = tx.type.startsWith("IN_");
                   return (
-                    <tr key={tx.id} className="hover:bg-[#F7F5F2] transition-colors">
-                      <td className="py-3.5 px-4 whitespace-nowrap text-[#6B6560]">
-                        <div className="font-medium text-[#1C1917]">{formatDate(tx.createdAt)}</div>
+                    <tr key={tx.id} className="hover:bg-[var(--bg)] transition-colors">
+                      <td className="py-3.5 px-4 whitespace-nowrap text-[var(--muted)]">
+                        <div className="font-medium text-[var(--ink)]">{formatDate(tx.createdAt)}</div>
                         <div className="text-[10px] text-[#A8A29E]">Oleh {tx.createdBy}</div>
                       </td>
 
@@ -323,13 +323,13 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <div className="font-medium text-[#1C1917]">
+                        <div className="font-medium text-[var(--ink)]">
                           {tx.notes || "-"}
                         </div>
                         {tx.vehiclePlate && (
-                          <div className="text-[11px] text-[#6B6560] flex items-center gap-1 mt-0.5">
-                            <Car className="w-3 h-3 text-[#D97706]" />
-                            <span className="font-bold text-[#D97706]">{tx.vehiclePlate}</span>
+                          <div className="text-[11px] text-[var(--muted)] flex items-center gap-1 mt-0.5">
+                            <Car className="w-3 h-3 text-[var(--accent)]" />
+                            <span className="font-bold text-[var(--accent)]">{tx.vehiclePlate}</span>
                             {tx.vehicleName && <span>({tx.vehicleName})</span>}
                           </div>
                         )}
@@ -341,7 +341,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-black text-[#1C1917]">
+                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-black text-[var(--ink)]">
                         {formatRupiah(tx.runningBalance)}
                       </td>
                     </tr>
@@ -356,17 +356,17 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
       {/* Modal: Tambah Transaksi Kas Manual */}
       {showManualCashModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-[#D9D4CB] shadow-2xl max-w-md w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between border-b border-[#D9D4CB] pb-3">
+          <div className="bg-white rounded-3xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <Receipt className="w-5 h-5 text-[#D97706]" />
-                <h3 className="font-bold text-base text-[#1C1917]">
+                <Receipt className="w-5 h-5 text-[var(--accent)]" />
+                <h3 className="font-bold text-base text-[var(--ink)]">
                   Catat Kas Masuk / Keluar
                 </h3>
               </div>
               <button
                 onClick={() => setShowManualCashModal(false)}
-                className="text-[#6B6560] hover:text-[#1C1917] text-lg font-bold cursor-pointer"
+                className="text-[var(--muted)] hover:text-[var(--ink)] text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -374,13 +374,13 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
 
             <form onSubmit={handleManualCashSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1.5">
                   Tipe Transaksi
                 </label>
                 <select
                   value={cashType}
                   onChange={(e) => setCashType(e.target.value)}
-                  className="w-full p-3 border border-[#D9D4CB] rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/20 font-medium"
+                  className="w-full p-3 border border-[var(--line)] rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 font-medium"
                 >
                   <optgroup label="Kas Masuk (Uang Masuk ke BCA)">
                     <option value="IN_CAPITAL_DEPOSIT">Setor Modal Umum</option>
@@ -395,7 +395,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1.5">
                   Nominal (Rp)
                 </label>
                 <input
@@ -405,12 +405,12 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
                   placeholder="Contoh: 5000000"
                   value={cashAmount}
                   onChange={(e) => setCashAmount(e.target.value)}
-                  className="w-full p-3 border border-[#D9D4CB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706]/20 font-bold"
+                  className="w-full p-3 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 font-bold"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[#1C1917] uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-[var(--ink)] uppercase tracking-wider mb-1.5">
                   Keterangan Transaksi
                 </label>
                 <textarea
@@ -418,7 +418,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
                   placeholder="Keterangan transaksi untuk buku kas..."
                   value={cashNotes}
                   onChange={(e) => setCashNotes(e.target.value)}
-                  className="w-full p-3 border border-[#D9D4CB] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
+                  className="w-full p-3 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -426,14 +426,14 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
                 <button
                   type="button"
                   onClick={() => setShowManualCashModal(false)}
-                  className="px-4 py-2 border border-[#D9D4CB] rounded-xl text-xs font-semibold text-[#6B6560] hover:bg-[#F7F5F2] cursor-pointer"
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 bg-[#D97706] hover:bg-[#B45309] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Menyimpan..." : "Simpan Transaksi"}
                 </button>

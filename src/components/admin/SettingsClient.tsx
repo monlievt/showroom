@@ -166,10 +166,10 @@ export function SettingsClient({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#1C1917] tracking-tight">
+          <h1 className="text-2xl font-bold text-[var(--ink)] tracking-tight">
             Sistem, Notifikasi & Audit
           </h1>
-          <p className="text-sm text-[#6B6560] mt-1">
+          <p className="text-sm text-[var(--muted)] mt-1">
             Log audit notifikasi WhatsApp Gateway, mekanisme retry manual, jejak audit finansial, dan backup database.
           </p>
         </div>
@@ -177,7 +177,7 @@ export function SettingsClient({
         <button
           disabled={cronLoading}
           onClick={handleTriggerCronManual}
-          className="flex items-center gap-2 bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors cursor-pointer"
+          className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors cursor-pointer"
         >
           <RefreshCw className={cn("w-4 h-4", cronLoading && "animate-spin")} />
           <span>Jalankan Cron Pengingat Sekarang</span>
@@ -186,46 +186,46 @@ export function SettingsClient({
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560] mb-2">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)] mb-2">
             <span className="text-xs font-semibold uppercase">Berhasil Terkirim</span>
             <CheckCircle2 className="w-5 h-5 text-emerald-600" />
           </div>
           <div className="text-2xl font-bold text-emerald-600">{totalSent}</div>
-          <div className="text-xs text-[#6B6560] mt-1">Pesan terkirim ke WhatsApp</div>
+          <div className="text-xs text-[var(--muted)] mt-1">Pesan terkirim ke WhatsApp</div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560] mb-2">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)] mb-2">
             <span className="text-xs font-semibold uppercase">Gagal (Perlu Retry)</span>
             <AlertCircle className="w-5 h-5 text-red-600" />
           </div>
           <div className="text-2xl font-bold text-red-600">{totalFailed}</div>
-          <div className="text-xs text-[#6B6560] mt-1">Siap dipicu ulang secara manual</div>
+          <div className="text-xs text-[var(--muted)] mt-1">Siap dipicu ulang secara manual</div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-sm">
-          <div className="flex items-center justify-between text-[#6B6560] mb-2">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm">
+          <div className="flex items-center justify-between text-[var(--muted)] mb-2">
             <span className="text-xs font-semibold uppercase">Jejak Audit Finansial</span>
-            <ShieldCheck className="w-5 h-5 text-[#D97706]" />
+            <ShieldCheck className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-bold text-[#1C1917]">{auditLogs.length}</div>
-          <div className="text-xs text-[#6B6560] mt-1">Mutasi immutable tercatat</div>
+          <div className="text-2xl font-bold text-[var(--ink)]">{auditLogs.length}</div>
+          <div className="text-xs text-[var(--muted)] mt-1">Mutasi immutable tercatat</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-[#D9D4CB] gap-4 sm:gap-6 text-sm font-medium overflow-x-auto pb-px">
+      <div className="flex border-b border-[var(--line)] gap-4 sm:gap-6 text-sm font-medium overflow-x-auto pb-px">
         <button
           onClick={() => setActiveTab("api_keys")}
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
             activeTab === "api_keys"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
-          <KeyRound className="w-4 h-4 text-[#D97706]" />
+          <KeyRound className="w-4 h-4 text-[var(--accent)]" />
           <span>Kunci API & Integrasi Layanan</span>
         </button>
         <button
@@ -233,11 +233,11 @@ export function SettingsClient({
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
             activeTab === "whatsapp_contacts"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
-          <Phone className="w-4 h-4 text-[#D97706]" />
+          <Phone className="w-4 h-4 text-[var(--accent)]" />
           <span>Kontak WhatsApp Admin</span>
         </button>
         <button
@@ -245,8 +245,8 @@ export function SettingsClient({
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0",
             activeTab === "notifications"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           Audit Log Notifikasi WhatsApp ({logs.length})
@@ -256,8 +256,8 @@ export function SettingsClient({
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0",
             activeTab === "audit"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           Jejak Audit Transaksi Finansial ({auditLogs.length})
@@ -267,8 +267,8 @@ export function SettingsClient({
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0",
             activeTab === "backup"
-              ? "border-b-2 border-[#D97706] text-[#D97706] font-bold"
-              : "text-[#6B6560] hover:text-[#1C1917]"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
           Status Backup & Ketentuan Pajak
@@ -289,15 +289,15 @@ export function SettingsClient({
       {activeTab === "notifications" && (
         <div className="space-y-6">
           {/* WAHA Gateway Control Hub */}
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-sm space-y-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#EBE7E1]">
+          <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-sm space-y-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[var(--line)]">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
                   <Smartphone className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-extrabold text-[#1C1917] text-base">
+                    <h3 className="font-extrabold text-[var(--ink)] text-base">
                       WhatsApp Gateway (WAHA Engine)
                     </h3>
                     <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2 py-0.5 rounded-full">
@@ -305,8 +305,8 @@ export function SettingsClient({
                       Port 2026 Ready
                     </span>
                   </div>
-                  <p className="text-xs text-[#6B6560] mt-0.5">
-                    Self-hosted gateway via Docker (<code className="bg-[#FAF9F6] px-1 py-0.5 rounded text-[11px]">docker-compose.waha.yml</code>).
+                  <p className="text-xs text-[var(--muted)] mt-0.5">
+                    Self-hosted gateway via Docker (<code className="bg-[var(--bg)] px-1 py-0.5 rounded text-[11px]">docker-compose.waha.yml</code>).
                     Kirim notifikasi unit laku, rincian bagi hasil, invoice PDF, dan pengingat piutang otomatis.
                   </p>
                 </div>
@@ -317,23 +317,23 @@ export function SettingsClient({
                   href="http://localhost:2026/dashboard"
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#D9D4CB] bg-[#FAF9F6] hover:bg-[#EFECE8] text-xs font-bold text-[#1C1917] transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--bg)] text-xs font-bold text-[var(--ink)] transition-colors"
                 >
-                  <ExternalLink className="w-3.5 h-3.5 text-[#D97706]" />
+                  <ExternalLink className="w-3.5 h-3.5 text-[var(--accent)]" />
                   <span>Dashboard WAHA / Scan QR</span>
                 </a>
               </div>
             </div>
 
             {/* Form Uji Coba Pengiriman Pesan */}
-            <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#EBE7E1] space-y-3">
-              <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
-                <MessageSquare className="w-4 h-4 text-[#D97706]" />
+            <div className="bg-[var(--bg)] p-4 rounded-xl border border-[var(--line)] space-y-3">
+              <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
+                <MessageSquare className="w-4 h-4 text-[var(--accent)]" />
                 <span>Simulasi & Uji Coba Pengiriman WhatsApp:</span>
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
                 <div className="sm:col-span-5">
-                  <label className="block text-[11px] font-semibold text-[#6B6560] mb-1">
+                  <label className="block text-[11px] font-semibold text-[var(--muted)] mb-1">
                     Nomor WhatsApp Penerima
                   </label>
                   <input
@@ -341,18 +341,18 @@ export function SettingsClient({
                     value={testPhone}
                     onChange={(e) => setTestPhone(e.target.value)}
                     placeholder="Contoh: 081234567890"
-                    className="w-full px-3 py-1.5 bg-white border border-[#D9D4CB] rounded-lg text-xs font-semibold text-[#1C1917]"
+                    className="w-full px-3 py-1.5 bg-white border border-[var(--line)] rounded-lg text-xs font-semibold text-[var(--ink)]"
                   />
                 </div>
 
                 <div className="sm:col-span-4">
-                  <label className="block text-[11px] font-semibold text-[#6B6560] mb-1">
+                  <label className="block text-[11px] font-semibold text-[var(--muted)] mb-1">
                     Jenis Template Notifikasi
                   </label>
                   <select
                     value={testType}
                     onChange={(e) => setTestType(e.target.value)}
-                    className="w-full px-3 py-1.5 bg-white border border-[#D9D4CB] rounded-lg text-xs font-semibold text-[#1C1917]"
+                    className="w-full px-3 py-1.5 bg-white border border-[var(--line)] rounded-lg text-xs font-semibold text-[var(--ink)]"
                   >
                     <option value="UNIT_SOLD">🚗 Unit Terjual (Ke Owner/Investor)</option>
                     <option value="PROFIT_DISTRIBUTION">💰 Rincian Bagi Hasil (Ke Investor)</option>
@@ -367,7 +367,7 @@ export function SettingsClient({
                     type="button"
                     disabled={testLoading}
                     onClick={handleSendTest}
-                    className="w-full flex items-center justify-center gap-1.5 bg-[#1C1917] hover:bg-[#44403C] text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-xs"
+                    className="w-full flex items-center justify-center gap-1.5 bg-[var(--ink)] hover:bg-[#44403C] text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-xs"
                   >
                     <Send className={cn("w-3.5 h-3.5", testLoading && "animate-spin")} />
                     <span>{testLoading ? "Mengirim..." : "Kirim Uji Coba"}</span>
@@ -378,21 +378,21 @@ export function SettingsClient({
           </div>
 
           {/* Tabel Log Audit Notifikasi */}
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm space-y-4">
-            <div className="p-5 border-b border-[#D9D4CB] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[#FBF9F6]">
+          <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-sm space-y-4">
+            <div className="p-5 border-b border-[var(--line)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[#FBF9F6]">
               <div>
-                <h3 className="font-bold text-[#1C1917]">Log Audit WhatsApp Gateway (Bukan Fire-and-Forget)</h3>
-                <p className="text-xs text-[#6B6560] mt-0.5">
+                <h3 className="font-bold text-[var(--ink)]">Log Audit WhatsApp Gateway (Bukan Fire-and-Forget)</h3>
+                <p className="text-xs text-[var(--muted)] mt-0.5">
                   Setiap pesan dicatat PENDING sebelum dikirim. Status SENT/FAILED tervalidasi dengan retry manual.
                 </p>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-semibold text-[#6B6560]">Filter Tipe:</span>
+                <span className="text-xs font-semibold text-[var(--muted)]">Filter Tipe:</span>
                 <select
                   value={typeFilter}
                   onChange={(e) => setTypeFilter(e.target.value)}
-                  className="bg-white border border-[#D9D4CB] rounded-lg px-2.5 py-1 text-xs font-semibold"
+                  className="bg-white border border-[var(--line)] rounded-lg px-2.5 py-1 text-xs font-semibold"
                 >
                   <option value="ALL">Semua Jenis Pesan</option>
                   <option value="UNIT_SOLD">Unit Terjual</option>
@@ -405,7 +405,7 @@ export function SettingsClient({
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="bg-white border border-[#D9D4CB] rounded-lg px-2.5 py-1 text-xs font-semibold"
+                  className="bg-white border border-[var(--line)] rounded-lg px-2.5 py-1 text-xs font-semibold"
                 >
                   <option value="ALL">Semua Status</option>
                   <option value="FAILED">Hanya Gagal (FAILED)</option>
@@ -417,7 +417,7 @@ export function SettingsClient({
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold">
+                <thead className="bg-[var(--bg)] text-xs uppercase text-[var(--muted)] font-semibold">
                   <tr>
                     <th className="py-3 px-4">Waktu</th>
                     <th className="py-3 px-4">Tipe Pesan</th>
@@ -427,10 +427,10 @@ export function SettingsClient({
                     <th className="py-3 px-4 text-center">Aksi Retry</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#D9D4CB]">
+                <tbody className="divide-y divide-[var(--line)]">
                   {filteredLogs.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-xs text-[#6B6560]">
+                      <td colSpan={6} className="py-8 text-center text-xs text-[var(--muted)]">
                         Belum ada catatan notifikasi pada filter ini.
                       </td>
                     </tr>
@@ -471,8 +471,8 @@ export function SettingsClient({
                       };
 
                       return (
-                        <tr key={log.id} className="hover:bg-[#FAF9F6]">
-                          <td className="py-3 px-4 text-xs text-[#6B6560] whitespace-nowrap">
+                        <tr key={log.id} className="hover:bg-[var(--bg)]">
+                          <td className="py-3 px-4 text-xs text-[var(--muted)] whitespace-nowrap">
                             {formatDate(log.createdAt)}
                           </td>
                           <td className="py-3 px-4 text-xs font-semibold whitespace-nowrap">
@@ -481,12 +481,12 @@ export function SettingsClient({
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            <span className="font-bold text-xs text-[#1C1917] block">
+                            <span className="font-bold text-xs text-[var(--ink)] block">
                               {log.recipientName || "Tanpa Nama"}
                             </span>
-                            <span className="text-[11px] text-[#6B6560]">{log.recipientPhone}</span>
+                            <span className="text-[11px] text-[var(--muted)]">{log.recipientPhone}</span>
                           </td>
-                          <td className="py-3 px-4 text-xs text-[#1C1917] max-w-xs truncate">
+                          <td className="py-3 px-4 text-xs text-[var(--ink)] max-w-xs truncate">
                             {log.messageBody}
                           </td>
                           <td className="py-3 px-4 whitespace-nowrap">
@@ -519,7 +519,7 @@ export function SettingsClient({
                                 <span>Retry</span>
                               </button>
                             ) : (
-                              <span className="text-xs text-[#6B6560]">-</span>
+                              <span className="text-xs text-[var(--muted)]">-</span>
                             )}
                           </td>
                         </tr>
@@ -542,15 +542,15 @@ export function SettingsClient({
       {activeTab === "backup" && (
         <div className="space-y-6">
           {/* Header & Instant Download Action */}
-          <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent rounded-2xl border border-[#D97706]/30 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent rounded-2xl border border-[var(--accent)]/30 p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <Database className="w-5 h-5 text-[#D97706]" />
-                <h3 className="font-extrabold text-base text-[#1C1917]">
+                <Database className="w-5 h-5 text-[var(--accent)]" />
+                <h3 className="font-extrabold text-base text-[var(--ink)]">
                   Strategi Multi-Layer Backup (VPS Mandiri 100% Bebas Biaya)
                 </h3>
               </div>
-              <p className="text-xs text-[#6B6560] max-w-2xl leading-relaxed">
+              <p className="text-xs text-[var(--muted)] max-w-2xl leading-relaxed">
                 Menjamin keamanan data transaksi & foto mobil garasi tanpa biaya bulanan AWS/S3. Menggunakan 4 lapis perlindungan: lokal VPS, Telegram Bot Cloud, Google Drive Rclone, dan Git.
               </p>
             </div>
@@ -558,7 +558,7 @@ export function SettingsClient({
             <a
               href="/api/backup/download"
               download
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#D97706] hover:bg-[#B45309] text-white font-bold text-xs rounded-xl shadow-sm transition-all shrink-0 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-bold text-xs rounded-xl shadow-sm transition-all shrink-0 cursor-pointer"
             >
               <Download className="w-4 h-4" />
               <span>Download Snapshot JSON Instan</span>
@@ -568,103 +568,103 @@ export function SettingsClient({
           {/* 4 Lapisan Backup Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Lapis 1: Lokal VPS */}
-            <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-xs space-y-3">
+            <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
                     L1
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-[#1C1917]">Snapshot Lokal VPS</h4>
+                    <h4 className="font-bold text-sm text-[var(--ink)]">Snapshot Lokal VPS</h4>
                     <span className="text-[11px] text-emerald-700 font-semibold">Rotasi Otomatis 7 Hari</span>
                   </div>
                 </div>
                 <HardDrive className="w-4 h-4 text-emerald-600" />
               </div>
-              <p className="text-xs text-[#6B6560] leading-relaxed">
+              <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Dump database <code>.sql.gz</code> dan arsip foto mobil <code>.tar.gz</code> otomatis setiap malam. Backup lama &gt; 7 hari otomatis dibersihkan agar kapasitas disk VPS tetap lega.
               </p>
-              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[#EBE7E1] text-[11px] font-mono text-stone-700">
+              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-stone-700">
                 Lokasi: <code>/backups/db/</code> &amp; <code>/backups/media/</code>
               </div>
             </div>
 
             {/* Lapis 2: Telegram Bot Cloud */}
-            <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-xs space-y-3">
+            <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs">
                     L2
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-[#1C1917]">Off-Site Telegram Bot</h4>
+                    <h4 className="font-bold text-sm text-[var(--ink)]">Off-Site Telegram Bot</h4>
                     <span className="text-[11px] text-blue-700 font-semibold">100% Gratis &amp; Unlimited Storage</span>
                   </div>
                 </div>
                 <Cloud className="w-4 h-4 text-blue-600" />
               </div>
-              <p className="text-xs text-[#6B6560] leading-relaxed">
+              <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Setiap malam database terkompresi dikirim langsung ke chat Telegram pribadi Owner. Jika VPS terbakar/rusak fatal, file cadangan tetap utuh dan aman di server cloud Telegram.
               </p>
-              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[#EBE7E1] text-[11px] font-mono text-stone-700">
+              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-stone-700">
                 Setup: <code>TELEGRAM_BOT_TOKEN</code> &amp; <code>TELEGRAM_CHAT_ID</code>
               </div>
             </div>
 
             {/* Lapis 3: Google Drive via Rclone */}
-            <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-xs space-y-3">
+            <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
                     L3
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-[#1C1917]">Google Drive Rclone Sync</h4>
+                    <h4 className="font-bold text-sm text-[var(--ink)]">Google Drive Rclone Sync</h4>
                     <span className="text-[11px] text-amber-800 font-semibold">Gratis Kuota Akun Google 15 GB</span>
                   </div>
                 </div>
                 <Cloud className="w-4 h-4 text-amber-600" />
               </div>
-              <p className="text-xs text-[#6B6560] leading-relaxed">
+              <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Menggunakan utility open-source <code>rclone</code> untuk menyinkronkan seluruh folder foto mobil garasi ke Google Drive secara otomatis tanpa intervensi manual.
               </p>
-              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[#EBE7E1] text-[11px] font-mono text-stone-700">
+              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-stone-700">
                 Folder: <code>gdrive:nur_mobil_backups/</code>
               </div>
             </div>
 
             {/* Lapis 4: GitHub Repository */}
-            <div className="bg-white rounded-2xl border border-[#D9D4CB] p-5 shadow-xs space-y-3">
+            <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-lg bg-stone-200 text-stone-800 flex items-center justify-center font-bold text-xs">
                     L4
                   </div>
                   <div>
-                    <h4 className="font-bold text-sm text-[#1C1917]">GitHub Repository</h4>
+                    <h4 className="font-bold text-sm text-[var(--ink)]">GitHub Repository</h4>
                     <span className="text-[11px] text-stone-700 font-semibold">Source Code &amp; Skema DB</span>
                   </div>
                 </div>
                 <Database className="w-4 h-4 text-stone-700" />
               </div>
-              <p className="text-xs text-[#6B6560] leading-relaxed">
+              <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Seluruh kode program aplikasi, skema Prisma, dan dokumentasi operasional ter-commit aman di repositori GitHub. Memungkinkan deploy ulang ke VPS baru dalam hitungan menit.
               </p>
-              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[#EBE7E1] text-[11px] font-mono text-stone-700 truncate">
+              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-stone-700 truncate">
                 Repo: <code>monlievt/showroom.git</code>
               </div>
             </div>
           </div>
 
           {/* Panduan Setup Cron Job VPS (1 Baris) */}
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-sm space-y-3">
+          <div className="bg-white rounded-2xl border border-[var(--line)] p-6 shadow-sm space-y-3">
             <div className="flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-[#D97706]" />
-              <h4 className="font-bold text-sm text-[#1C1917]">
+              <Terminal className="w-4 h-4 text-[var(--accent)]" />
+              <h4 className="font-bold text-sm text-[var(--ink)]">
                 Konfigurasi Penjadwalan Otomatis di VPS (Cron Job)
               </h4>
             </div>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Jalankan perintah berikut di terminal SSH VPS Anda untuk mengaktifkan backup otomatis setiap malam pukul 02:00 WIB:
             </p>
             <div className="bg-stone-900 text-stone-100 p-3.5 rounded-xl font-mono text-xs overflow-x-auto">
@@ -673,14 +673,14 @@ export function SettingsClient({
           </div>
 
           {/* Panduan Disaster Recovery (Restore Cepat) */}
-          <div className="bg-white rounded-2xl border border-[#D9D4CB] p-6 shadow-sm space-y-3">
+          <div className="bg-white rounded-2xl border border-[var(--line)] p-6 shadow-sm space-y-3">
             <div className="flex items-center gap-2">
               <RotateCcw className="w-4 h-4 text-red-600" />
-              <h4 className="font-bold text-sm text-[#1C1917]">
+              <h4 className="font-bold text-sm text-[var(--ink)]">
                 Pemulihan Bencana (Disaster Recovery Restore)
               </h4>
             </div>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Bila server mengalami kendala atau database rusak, jalankan script restore 1 klik untuk memulihkan seluruh data dari snapshot terakhir:
             </p>
             <div className="bg-stone-900 text-stone-100 p-3 rounded-xl font-mono text-xs">
@@ -783,15 +783,15 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
 
   return (
     <div className="space-y-4">
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-sm">
         {/* Header */}
-        <div className="p-5 border-b border-[#D9D4CB] bg-[#FBF9F6] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-5 border-b border-[var(--line)] bg-[#FBF9F6] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h3 className="font-bold text-[#1C1917] flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-[#D97706]" />
+            <h3 className="font-bold text-[var(--ink)] flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-[var(--accent)]" />
               Jejak Audit Finansial &amp; Operasional
             </h3>
-            <p className="text-xs text-[#6B6560] mt-0.5">
+            <p className="text-xs text-[var(--muted)] mt-0.5">
               {auditLogs.length} entri tercatat &middot; Klik <strong>Lihat</strong> pada baris untuk membuka detail perubahan data
             </p>
           </div>
@@ -801,21 +801,21 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
         </div>
 
         {/* Filter Bar */}
-        <div className="px-4 py-3 border-b border-[#D9D4CB] bg-[#FAF9F6] flex flex-wrap gap-3 items-center">
+        <div className="px-4 py-3 border-b border-[var(--line)] bg-[var(--bg)] flex flex-wrap gap-3 items-center">
           <div className="flex items-center gap-2">
-            <Search className="w-3.5 h-3.5 text-[#6B6560]" />
+            <Search className="w-3.5 h-3.5 text-[var(--muted)]" />
             <input
               type="text"
               placeholder="Cari ID Referensi..."
               value={searchId}
               onChange={(e) => setSearchId(e.target.value)}
-              className="border border-[#D9D4CB] rounded-lg px-3 py-1.5 bg-white text-xs w-48 focus:outline-none focus:ring-1 focus:ring-[#D97706]"
+              className="border border-[var(--line)] rounded-lg px-3 py-1.5 bg-white text-xs w-48 focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
             />
           </div>
           <select
             value={filterAction}
             onChange={(e) => setFilterAction(e.target.value)}
-            className="border border-[#D9D4CB] rounded-lg px-3 py-1.5 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-[#D97706]"
+            className="border border-[var(--line)] rounded-lg px-3 py-1.5 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
           >
             {uniqueActions.map((a) => (
               <option key={a} value={a}>{a === "ALL" ? "Semua Aksi" : a}</option>
@@ -824,7 +824,7 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
           <select
             value={filterEntity}
             onChange={(e) => setFilterEntity(e.target.value)}
-            className="border border-[#D9D4CB] rounded-lg px-3 py-1.5 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-[#D97706]"
+            className="border border-[var(--line)] rounded-lg px-3 py-1.5 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
           >
             {uniqueEntities.map((e) => (
               <option key={e} value={e}>
@@ -835,22 +835,22 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
           {(filterAction !== "ALL" || filterEntity !== "ALL" || searchId) && (
             <button
               onClick={() => { setFilterAction("ALL"); setFilterEntity("ALL"); setSearchId(""); }}
-              className="text-xs text-[#6B6560] hover:text-[#1C1917] underline"
+              className="text-xs text-[var(--muted)] hover:text-[var(--ink)] underline"
             >
               Reset filter
             </button>
           )}
-          <span className="ml-auto text-xs text-[#6B6560] whitespace-nowrap">{filtered.length} ditampilkan</span>
+          <span className="ml-auto text-xs text-[var(--muted)] whitespace-nowrap">{filtered.length} ditampilkan</span>
         </div>
 
         {/* Empty state */}
         {filtered.length === 0 ? (
           <div className="py-16 flex flex-col items-center gap-3 text-center px-4">
-            <ShieldCheck className="w-10 h-10 text-[#D9D4CB]" />
-            <p className="text-sm font-semibold text-[#1C1917]">
+            <ShieldCheck className="w-10 h-10 text-[var(--line)]" />
+            <p className="text-sm font-semibold text-[var(--ink)]">
               {auditLogs.length === 0 ? "Belum ada jejak audit" : "Tidak ada hasil filter"}
             </p>
-            <p className="text-xs text-[#6B6560] max-w-xs">
+            <p className="text-xs text-[var(--muted)] max-w-xs">
               {auditLogs.length === 0
                 ? "Jejak audit muncul otomatis saat ada transaksi: pembuatan unit, catat biaya, penjualan, dll."
                 : "Coba ubah filter atau reset untuk melihat semua entri."}
@@ -859,7 +859,7 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-[#F7F5F2] text-xs uppercase text-[#6B6560] font-semibold border-b border-[#D9D4CB]">
+              <thead className="bg-[var(--bg)] text-xs uppercase text-[var(--muted)] font-semibold border-b border-[var(--line)]">
                 <tr>
                   <th className="py-3 px-4 w-40">Waktu</th>
                   <th className="py-3 px-4 w-28">Aksi</th>
@@ -869,7 +869,7 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                   <th className="py-3 px-4 w-16 text-center">Detail</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
+              <tbody className="divide-y divide-[var(--line)]">
                 {filtered.map((log) => {
                   const actionStyle = ACTION_COLORS[log.action] ?? {
                     bg: "bg-stone-50", text: "text-stone-700", border: "border-stone-200", label: log.action,
@@ -883,9 +883,9 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
 
                   return (
                     <React.Fragment key={log.id}>
-                      <tr className={cn("transition-colors", isExpanded ? "bg-amber-50/40" : "hover:bg-[#FAF9F6]")}>
+                      <tr className={cn("transition-colors", isExpanded ? "bg-amber-50/40" : "hover:bg-[var(--bg)]")}>
                         {/* Waktu */}
-                        <td className="py-3 px-4 text-xs text-[#6B6560] whitespace-nowrap">
+                        <td className="py-3 px-4 text-xs text-[var(--muted)] whitespace-nowrap">
                           {formatDateTime(log.createdAt)}
                         </td>
                         {/* Aksi */}
@@ -895,14 +895,14 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                           </span>
                         </td>
                         {/* Entitas */}
-                        <td className="py-3 px-4 text-xs font-semibold text-[#D97706]">
+                        <td className="py-3 px-4 text-xs font-semibold text-[var(--accent)]">
                           {ENTITY_LABELS[log.entityType] ?? log.entityType}
                         </td>
                         {/* ID Referensi */}
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-1.5">
                             <span
-                              className="text-xs text-[#6B6560] font-mono truncate max-w-[160px]"
+                              className="text-xs text-[var(--muted)] font-mono truncate max-w-[160px]"
                               title={log.entityId}
                             >
                               {log.entityId.length > 20
@@ -912,7 +912,7 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                             {entityLink && (
                               <a
                                 href={entityLink}
-                                className="text-[#D97706] hover:text-amber-700 shrink-0"
+                                className="text-[var(--accent)] hover:text-amber-700 shrink-0"
                                 title="Buka halaman terkait"
                               >
                                 <ExternalLink className="w-3 h-3" />
@@ -921,9 +921,9 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                           </div>
                         </td>
                         {/* Pelaku */}
-                        <td className="py-3 px-4 text-xs text-[#1C1917] font-medium">
+                        <td className="py-3 px-4 text-xs text-[var(--ink)] font-medium">
                           {log.actorUserId === "SYSTEM" ? (
-                            <span className="text-[#6B6560] italic">Sistem</span>
+                            <span className="text-[var(--muted)] italic">Sistem</span>
                           ) : (
                             <span title={log.actorUserId}>
                               {log.actorUserId.length > 20
@@ -941,13 +941,13 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                                 "text-xs px-2.5 py-1 rounded-lg border transition-colors font-medium",
                                 isExpanded
                                   ? "bg-amber-100 border-amber-300 text-amber-700"
-                                  : "bg-white border-[#D9D4CB] text-[#6B6560] hover:border-amber-300 hover:text-amber-700"
+                                  : "bg-white border-[var(--line)] text-[var(--muted)] hover:border-amber-300 hover:text-amber-700"
                               )}
                             >
                               {isExpanded ? "Tutup" : "Lihat"}
                             </button>
                           ) : (
-                            <span className="text-xs text-[#D9D4CB]">–</span>
+                            <span className="text-xs text-[var(--line)]">–</span>
                           )}
                         </td>
                       </tr>
@@ -957,11 +957,11 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                         <tr className="bg-amber-50/20">
                           <td colSpan={6} className="px-6 pb-5 pt-2">
                             <div className="bg-white border border-amber-200 rounded-xl p-4">
-                              <p className="text-xs font-bold text-[#1C1917] mb-3 flex items-center gap-1.5">
+                              <p className="text-xs font-bold text-[var(--ink)] mb-3 flex items-center gap-1.5">
                                 <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
                                 Data setelah perubahan (afterData)
                               </p>
-                              <pre className="text-xs text-[#6B6560] whitespace-pre-wrap break-all leading-relaxed font-mono bg-stone-50 rounded-lg p-3 border border-stone-200 max-h-72 overflow-y-auto">
+                              <pre className="text-xs text-[var(--muted)] whitespace-pre-wrap break-all leading-relaxed font-mono bg-stone-50 rounded-lg p-3 border border-stone-200 max-h-72 overflow-y-auto">
                                 {JSON.stringify(log.afterData, null, 2)}
                               </pre>
                             </div>

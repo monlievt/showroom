@@ -107,34 +107,34 @@ export function InvestorHistoryPageClient({
 
       {/* 3 KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Eksekusi Bagi Hasil</span>
-            <Clock className="w-5 h-5 text-[#D97706]" />
+            <Clock className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917] tracking-tight">
-            {distributions.length} <span className="text-xs font-semibold text-[#6B6560]">Transaksi</span>
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
+            {distributions.length} <span className="text-xs font-semibold text-[var(--muted)]">Transaksi</span>
           </div>
-          <p className="text-xs text-[#6B6560]">Riwayat snapshot permanen bagi hasil</p>
+          <p className="text-xs text-[var(--muted)]">Riwayat snapshot permanen bagi hasil</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Dana Dibagikan</span>
             <Coins className="w-5 h-5 text-emerald-600" />
           </div>
           <div className="text-2xl font-black text-emerald-700 tracking-tight">
             {formatRupiah(totalDistributed)}
           </div>
-          <p className="text-xs text-[#6B6560]">Total transfer bagi hasil yang valid</p>
+          <p className="text-xs text-[var(--muted)]">Total transfer bagi hasil yang valid</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Integritas Ledger</span>
             <CheckCircle2 className="w-5 h-5 text-[#16A34A]" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917] tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             100% Audit Trail
           </div>
           <p className="text-xs text-[#16A34A] font-semibold">Tercatat permanen & reversible</p>
@@ -142,41 +142,41 @@ export function InvestorHistoryPageClient({
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-[#D9D4CB] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-4 rounded-2xl border border-[var(--line)] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[#6B6560] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari plat nomor, nama penerima, atau tipe investor..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-[#D9D4CB] rounded-xl text-xs sm:text-sm bg-[#F7F5F2] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#D97706]/20 transition-all"
+            className="w-full pl-10 pr-4 py-2 border border-[var(--line)] rounded-xl text-xs sm:text-sm bg-[var(--bg)] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 transition-all"
           />
         </div>
-        <span className="text-xs font-semibold text-[#6B6560]">
+        <span className="text-xs font-semibold text-[var(--muted)]">
           Menampilkan {filteredDistributions.length} dari {distributions.length} riwayat
         </span>
       </div>
 
       {/* Tabel Riwayat Distribusi */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-xs">
-        <div className="p-4 sm:p-5 border-b border-[#D9D4CB] flex items-center justify-between bg-[#F7F5F2]">
+      <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-xs">
+        <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)]">
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[#D97706]" />
-            <h3 className="font-bold text-sm text-[#1C1917]">
+            <Clock className="w-4 h-4 text-[var(--accent)]" />
+            <h3 className="font-bold text-sm text-[var(--ink)]">
               Riwayat Pembagian Laba Penjualan Unit
             </h3>
           </div>
         </div>
 
         {distributions.length === 0 ? (
-          <div className="p-12 text-center text-[#6B6560]">
+          <div className="p-12 text-center text-[var(--muted)]">
             Belum ada riwayat pembagian laba yang dicatat.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[#D9D4CB]">
+              <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[var(--line)]">
                 <tr>
                   <th className="py-3 px-4">Tanggal Eksekusi</th>
                   <th className="py-3 px-4">Unit Mobil</th>
@@ -187,23 +187,23 @@ export function InvestorHistoryPageClient({
                   <th className="py-3 px-4 text-right">Aksi Audit</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
+              <tbody className="divide-y divide-[var(--line)]">
                 {filteredDistributions.map((d) => {
                   const isReversed = d.notes?.includes("[REVERSED]");
                   return (
-                    <tr key={d.id} className={cn("hover:bg-[#F7F5F2] transition-colors", isReversed && "opacity-60 bg-red-50/30")}>
-                      <td className="py-3.5 px-4 whitespace-nowrap text-[#6B6560]">
+                    <tr key={d.id} className={cn("hover:bg-[var(--bg)] transition-colors", isReversed && "opacity-60 bg-red-50/30")}>
+                      <td className="py-3.5 px-4 whitespace-nowrap text-[var(--muted)]">
                         {formatDate(d.calculatedAt)}
                       </td>
                       <td className="py-3.5 px-4">
-                        <span className="font-bold text-sm text-[#1C1917] block">{d.vehiclePlate}</span>
-                        <span className="text-xs text-[#6B6560]">{d.vehicleName}</span>
+                        <span className="font-bold text-sm text-[var(--ink)] block">{d.vehiclePlate}</span>
+                        <span className="text-xs text-[var(--muted)]">{d.vehicleName}</span>
                       </td>
                       <td className="py-3.5 px-4">
-                        <span className="font-semibold text-[#1C1917] block">{d.beneficiaryName}</span>
-                        <span className="text-[11px] text-[#6B6560]">({d.beneficiaryType})</span>
+                        <span className="font-semibold text-[var(--ink)] block">{d.beneficiaryName}</span>
+                        <span className="text-[11px] text-[var(--muted)]">({d.beneficiaryType})</span>
                       </td>
-                      <td className="py-3.5 px-4 text-right text-[#6B6560]">
+                      <td className="py-3.5 px-4 text-right text-[var(--muted)]">
                         {formatRupiah(d.grossProfitAtCalc)}
                       </td>
                       <td className="py-3.5 px-4 text-right font-black">
@@ -227,7 +227,7 @@ export function InvestorHistoryPageClient({
                           <button
                             disabled={loading}
                             onClick={() => handleReverseDistribution(d.saleId)}
-                            className="inline-flex items-center gap-1 text-[11px] text-[#6B6560] hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded-lg transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1 text-[11px] text-[var(--muted)] hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded-lg transition-colors cursor-pointer"
                             title="Reversal akuntansi jika ada koreksi data penjualan"
                           >
                             <RotateCcw className="w-3.5 h-3.5 text-red-500" />

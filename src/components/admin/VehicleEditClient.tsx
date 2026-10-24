@@ -308,20 +308,20 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
       {/* Top Navigation */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/inventory"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Inventori</span>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-[#1C1917]">
+            <h1 className="text-xl font-bold text-[var(--ink)]">
               Edit Lengkap Data Unit &amp; Katalog
             </h1>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Perbarui seluruh parameter data intake, lelang, legalitas, spesifikasi, dan ceklist fisik.
             </p>
           </div>
@@ -333,7 +333,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             target="_blank"
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 hover:bg-amber-100 font-bold text-xs transition-colors shadow-xs"
           >
-            <ExternalLink className="w-4 h-4 text-[#D97706]" />
+            <ExternalLink className="w-4 h-4 text-[var(--accent)]" />
             <span>Buka di Katalog Publik</span>
           </Link>
         </div>
@@ -364,17 +364,17 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* SECTION 1: Identitas & Sumber */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Car className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Car className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               1. Identitas Unit &amp; Sumber Masuk
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Nomor Plat Polisi *
               </label>
               <input
@@ -388,15 +388,15 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     plateNumber: e.target.value.toUpperCase(),
                   })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm uppercase font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm uppercase font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Plat unik identifikasi inventori
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Sumber Pembelian *
               </label>
               <select
@@ -404,7 +404,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, sourceType: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 <option value="AUCTION">Balai Lelang</option>
                 <option value="BROKER">Makelar / Rekanan</option>
@@ -413,7 +413,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Tanggal Pembelian / Menang Lelang *
               </label>
               <input
@@ -423,7 +423,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, purchaseDate: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
@@ -441,13 +441,13 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   Pilihan Balai Lelang
                 </label>
                 <select
                   value={formData.auctionHouse}
                   onChange={(e) => handleAuctionHouseChange(e.target.value)}
-                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   {Object.entries(AUCTION_HOUSE_PRESETS).map(([key, val]) => (
                     <option key={key} value={key}>
@@ -463,7 +463,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   Tipe Lot Lelang
                 </label>
                 <select
@@ -471,7 +471,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   onChange={(e) =>
                     setFormData({ ...formData, auctionLotType: e.target.value })
                   }
-                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   <option value="EKS_PERUSAHAAN">
                     Eks Perusahaan ✅ (BPKB bersih, 7-14 hari)
@@ -489,7 +489,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   Status BPKB Saat Ini
                 </label>
                 <select
@@ -497,7 +497,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   onChange={(e) =>
                     setFormData({ ...formData, bpkbStatus: e.target.value })
                   }
-                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   <option value="PROCESS_1_2_WEEKS">
                     Masih Diproses Balai Lelang
@@ -513,7 +513,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                   Estimasi BPKB Tiba (Hari Kerja)
                 </label>
                 <div className="flex items-center gap-2">
@@ -528,7 +528,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                         bpkbLeadDays: Number(e.target.value),
                       })
                     }
-                    className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-bold text-amber-900 focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                    className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-bold text-amber-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                   />
                   <span className="text-xs text-amber-900 font-semibold whitespace-nowrap">
                     Hari Kerja
@@ -540,11 +540,11 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
         )}
 
         {/* SECTION 2B: Legalitas STNK & Alarm Pajak Tahunan PKB */}
-        <div className="bg-[#FAF9F5] border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-[#EBE7E1] pb-3">
+        <div className="bg-[#FAF9F5] border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
-              <CalendarClock className="w-4 h-4 text-[#D97706]" />
-              <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              <CalendarClock className="w-4 h-4 text-[var(--accent)]" />
+              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
                 Dokumen STNK &amp; Radar Pajak Kendaraan (PKB)
               </h2>
             </div>
@@ -555,7 +555,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
 
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Jatuh Tempo Pajak Tahunan (PKB)
               </label>
               <input
@@ -564,15 +564,15 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, taxExpiryDate: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Sesuai lembar notice pajak STNK
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Jatuh Tempo Plat / Kaleng (5 Thn)
               </label>
               <input
@@ -581,15 +581,15 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, platExpiryDate: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Bulan &amp; Tahun plat kaleng mobil
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Estimasi Pajak Tahunan (Rp)
               </label>
               <input
@@ -603,15 +603,15 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     taxNominal: parseThousands(e.target.value),
                   })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Acuan negosiasi / perpanjangan
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Status Fisik STNK
               </label>
               <select
@@ -619,7 +619,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, stnkStatus: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[#D9D4CB] rounded-xl text-sm font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 <option value="READY">STNK Asli Ready di Showroom</option>
                 <option value="PROCESS_1_2_WEEKS">Masih Diproses Balai Lelang</option>
@@ -684,17 +684,17 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
         </div>
 
         {/* SECTION 3: Spesifikasi Unit */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Car className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Car className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               3. Detail Spesifikasi Kendaraan
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Merk Kendaraan *
               </label>
               <input
@@ -705,12 +705,12 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, brand: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Tipe / Model *
               </label>
               <input
@@ -721,12 +721,12 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, model: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Tahun Pembuatan *
               </label>
               <input
@@ -738,14 +738,14 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, year: Number(e.target.value) })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Transmisi *
               </label>
               <select
@@ -753,7 +753,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, transmission: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-medium text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
                 <option value="AUTOMATIC">Automatic (AT)</option>
                 <option value="MANUAL">Manual (MT)</option>
@@ -763,7 +763,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Warna Kendaraan *
               </label>
               <input
@@ -774,12 +774,12 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, color: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Kapasitas Mesin (CC) *
               </label>
               <input
@@ -794,12 +794,12 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     engineCapacity: Number(e.target.value),
                   })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Odometer (KM)
               </label>
               <input
@@ -810,13 +810,13 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, odometer: parseThousands(e.target.value) })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
               YouTube Video Walkaround (Opsional)
             </label>
             <div className="flex items-center gap-2">
@@ -837,27 +837,27 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   }
                   setFormData({ ...formData, youtubeVideoId: val });
                 }}
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
-            <span className="text-[10px] text-[#6B6560] mt-1 block">
+            <span className="text-[10px] text-[var(--muted)] mt-1 block">
               Video walkaround unit akan langsung tampil tertanam (embedded) pada halaman katalog pembeli.
             </span>
           </div>
         </div>
 
         {/* SECTION 4: Keuangan & Harga */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <Banknote className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <Banknote className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               4. Finansial &amp; Rencana Harga Jual
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Harga Beli / Menang Lelang (Rp) *
               </label>
               <input
@@ -872,15 +872,15 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     purchasePrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Otomatis dicatat sebagai HPP awal unit
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Target Banderol Jual (Rp)
               </label>
               <input
@@ -894,15 +894,15 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     targetSellingPrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-emerald-300 rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-emerald-300 rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Harga publish yang tertera di katalog publik
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Batas Bawah Nego / Net (Rp)
               </label>
               <input
@@ -916,9 +916,9 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     minSellingPrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-amber-300 rounded-xl text-sm font-medium text-[#92400E] focus:outline-none focus:ring-2 focus:ring-[#92400E]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-amber-300 rounded-xl text-sm font-medium text-[#92400E] focus:outline-none focus:ring-2 focus:ring-[#92400E]/40"
               />
-              <span className="text-[10px] text-[#6B6560] mt-1 block">
+              <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Pedoman batas tawar untuk tim sales internal
               </span>
             </div>
@@ -926,11 +926,11 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
         </div>
 
         {/* SECTION 5: Sumber Modal & Pendanaan Unit */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EBE7E1] pb-3">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
-              <Wallet className="w-4 h-4 text-[#D97706]" />
-              <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              <Wallet className="w-4 h-4 text-[var(--accent)]" />
+              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
                 5. Sumber Modal &amp; Pendanaan Unit (Alokasi Modal)
               </h2>
             </div>
@@ -939,7 +939,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             </span>
           </div>
 
-          <p className="text-xs text-[#6B6560]">
+          <p className="text-xs text-[var(--muted)]">
             Tentukan dari mana sumber modal untuk pembelian unit ini. Jika menggunakan modal investor (misal Ibu Nurdiah / Rio Hatta Prayogi / Pemodal 50:50), modal akan otomatis terikat ke mobil ini dan saat mobil terjual lunas, pokok modal dan bagi hasilnya otomatis terkalkulasi.
           </p>
 
@@ -951,19 +951,19 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
               className={cn(
                 "p-4 rounded-xl border text-left transition-all cursor-pointer",
                 fundingMode === "SHOWROOM"
-                  ? "border-[#D97706] bg-[#FEF3C7]/40 ring-2 ring-[#D97706]/20 shadow-xs"
-                  : "border-[#D9D4CB] bg-[#F7F5F2] hover:bg-white text-[#6B6560]"
+                  ? "border-[var(--accent)] bg-[#FEF3C7]/40 ring-2 ring-[var(--accent)]/20 shadow-xs"
+                  : "border-[var(--line)] bg-[var(--bg)] hover:bg-white text-[var(--muted)]"
               )}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#1C1917] block">
+                <span className="text-xs font-bold text-[var(--ink)] block">
                   100% Modal Kas Showroom
                 </span>
                 {fundingMode === "SHOWROOM" && (
-                  <CheckCircle className="w-4 h-4 text-[#D97706]" />
+                  <CheckCircle className="w-4 h-4 text-[var(--accent)]" />
                 )}
               </div>
-              <p className="text-[11px] text-[#6B6560] mt-1 leading-relaxed">
+              <p className="text-[11px] text-[var(--muted)] mt-1 leading-relaxed">
                 Didanai murni dari kas internal showroom / modal pribadi tanpa bagi hasil dengan investor luar.
               </p>
             </button>
@@ -974,19 +974,19 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
               className={cn(
                 "p-4 rounded-xl border text-left transition-all cursor-pointer",
                 fundingMode === "INVESTOR"
-                  ? "border-[#D97706] bg-[#FEF3C7]/40 ring-2 ring-[#D97706]/20 shadow-xs"
-                  : "border-[#D9D4CB] bg-[#F7F5F2] hover:bg-white text-[#6B6560]"
+                  ? "border-[var(--accent)] bg-[#FEF3C7]/40 ring-2 ring-[var(--accent)]/20 shadow-xs"
+                  : "border-[var(--line)] bg-[var(--bg)] hover:bg-white text-[var(--muted)]"
               )}
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#1C1917] block">
+                <span className="text-xs font-bold text-[var(--ink)] block">
                   Didanai Mitra Pemodal / Investor
                 </span>
                 {fundingMode === "INVESTOR" && (
-                  <CheckCircle className="w-4 h-4 text-[#D97706]" />
+                  <CheckCircle className="w-4 h-4 text-[var(--accent)]" />
                 )}
               </div>
-              <p className="text-[11px] text-[#6B6560] mt-1 leading-relaxed">
+              <p className="text-[11px] text-[var(--muted)] mt-1 leading-relaxed">
                 Unit didanai penuh atau sebagian oleh investor (Ibu Nurdiah, Rio 50:50, atau mitra pemodal lain).
               </p>
             </button>
@@ -994,7 +994,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
 
           {/* Investor Detail Form */}
           {fundingMode === "INVESTOR" && (
-            <div className="space-y-4 pt-2 border-t border-[#EBE7E1]">
+            <div className="space-y-4 pt-2 border-t border-[var(--line)]">
               {availableInvestors.length === 0 ? (
                 <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs">
                   Belum ada data investor yang terdaftar. Tambahkan akun investor terlebih dahulu di menu <strong>Investor &amp; Bagi Hasil</strong>.
@@ -1005,11 +1005,11 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     {investorFundingList.map((row, idx) => (
                       <div
                         key={idx}
-                        className="p-4 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl space-y-3"
+                        className="p-4 bg-[var(--bg)] border border-[var(--line)] rounded-xl space-y-3"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-[#1C1917] flex items-center gap-1.5">
-                            <Users className="w-3.5 h-3.5 text-[#D97706]" />
+                          <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
+                            <Users className="w-3.5 h-3.5 text-[var(--accent)]" />
                             Pemodal #{idx + 1}
                           </span>
                           {investorFundingList.length > 1 && (
@@ -1026,7 +1026,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
 
                         <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
                           <div className="sm:col-span-5">
-                            <label className="block text-[11px] font-semibold text-[#1C1917] mb-1">
+                            <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">
                               Pilih Investor / Pemodal *
                             </label>
                             <select
@@ -1034,7 +1034,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                               onChange={(e) =>
                                 handleUpdateInvestorRow(idx, "investorId", e.target.value)
                               }
-                              className="w-full h-10 px-3 bg-white border border-[#D9D4CB] rounded-lg text-xs font-semibold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                              className="w-full h-10 px-3 bg-white border border-[var(--line)] rounded-lg text-xs font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                             >
                               {availableInvestors.map((inv) => (
                                 <option key={inv.id} value={inv.id}>
@@ -1057,7 +1057,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                               return (
                                 <>
                                   <div className="flex items-center justify-between mb-1">
-                                    <label className="block text-[11px] font-semibold text-[#1C1917]">
+                                    <label className="block text-[11px] font-semibold text-[var(--ink)]">
                                       Modal Yang Disetor (Rp) *
                                     </label>
                                     <button
@@ -1069,7 +1069,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                                           Math.min(purchasePriceNum, maxAllowed)
                                         )
                                       }
-                                      className="text-[10px] font-bold text-[#D97706] hover:underline cursor-pointer"
+                                      className="text-[10px] font-bold text-[var(--accent)] hover:underline cursor-pointer"
                                     >
                                       {maxAllowed < purchasePriceNum
                                         ? `Isi Maks Saldo (${formatThousands(maxAllowed)})`
@@ -1089,10 +1089,10 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                                       )
                                     }
                                     className={cn(
-                                      "w-full h-10 px-3 bg-white border rounded-lg text-xs font-bold text-[#1C1917] focus:outline-none focus:ring-2",
+                                      "w-full h-10 px-3 bg-white border rounded-lg text-xs font-bold text-[var(--ink)] focus:outline-none focus:ring-2",
                                       Number(row.capitalShare) > maxAllowed
                                         ? "border-red-400 focus:ring-red-400/40 text-red-700 bg-red-50/20"
-                                        : "border-[#D9D4CB] focus:ring-[#D97706]/40"
+                                        : "border-[var(--line)] focus:ring-[var(--accent)]/40"
                                     )}
                                   />
                                 </>
@@ -1101,7 +1101,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                           </div>
 
                           <div className="sm:col-span-3">
-                            <label className="block text-[11px] font-semibold text-[#1C1917] mb-1">
+                            <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">
                               Porsi Laba (%) *
                             </label>
                             <div className="relative">
@@ -1119,9 +1119,9 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                                     Number(e.target.value)
                                   )
                                 }
-                                className="w-full h-10 px-3 pr-7 bg-white border border-[#D9D4CB] rounded-lg text-xs font-bold text-[#1C1917] focus:outline-none focus:ring-2 focus:ring-[#D97706]/40"
+                                className="w-full h-10 px-3 pr-7 bg-white border border-[var(--line)] rounded-lg text-xs font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                               />
-                              <span className="absolute right-2.5 top-2.5 text-xs font-bold text-[#6B6560]">
+                              <span className="absolute right-2.5 top-2.5 text-xs font-bold text-[var(--muted)]">
                                 %
                               </span>
                             </div>
@@ -1177,9 +1177,9 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     <button
                       type="button"
                       onClick={handleAddInvestorRow}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D9D4CB] bg-white hover:bg-[#F7F5F2] text-xs font-semibold text-[#1C1917] shadow-2xs cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--bg)] text-xs font-semibold text-[var(--ink)] shadow-2xs cursor-pointer"
                     >
-                      <Plus className="w-3.5 h-3.5 text-[#D97706]" />
+                      <Plus className="w-3.5 h-3.5 text-[var(--accent)]" />
                       Tambah Investor Lain (Jika Patungan)
                     </button>
                   )}
@@ -1207,21 +1207,21 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
                           <div className="p-2.5 bg-white rounded-lg border border-amber-100">
-                            <span className="text-[10px] text-[#6B6560] block">Harga Beli Unit</span>
-                            <span className="font-bold text-[#1C1917]">
+                            <span className="text-[10px] text-[var(--muted)] block">Harga Beli Unit</span>
+                            <span className="font-bold text-[var(--ink)]">
                               {formatRupiah(purchasePriceNum)}
                             </span>
                           </div>
                           <div className="p-2.5 bg-white rounded-lg border border-amber-100">
-                            <span className="text-[10px] text-[#6B6560] block">
+                            <span className="text-[10px] text-[var(--muted)] block">
                               Total Modal Investor ({invPercent}%)
                             </span>
-                            <span className="font-bold text-[#D97706]">
+                            <span className="font-bold text-[var(--accent)]">
                               {formatRupiah(totalInvCap)}
                             </span>
                           </div>
                           <div className="p-2.5 bg-white rounded-lg border border-amber-100">
-                            <span className="text-[10px] text-[#6B6560] block">
+                            <span className="text-[10px] text-[var(--muted)] block">
                               Didanai Kas Showroom ({100 - invPercent}%)
                             </span>
                             <span className="font-bold text-[#16A34A]">
@@ -1251,28 +1251,28 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
         </div>
 
         {/* SECTION 6: Ceklist Bawaan Fisik Turun Towing */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#EBE7E1] pb-3">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-[#D97706]" />
-              <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+              <ShieldAlert className="w-4 h-4 text-[var(--accent)]" />
+              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
                 6. Ceklist Bawaan Fisik Turun Towing (Anti-Kehilangan)
               </h2>
             </div>
-            <span className="text-[11px] font-semibold text-[#92400E] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full border border-[#D97706]/30">
+            <span className="text-[11px] font-semibold text-[#92400E] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full border border-[var(--accent)]/30">
               SOP Balai Lelang &amp; Ekspedisi
             </span>
           </div>
 
-          <p className="text-xs text-[#6B6560]">
+          <p className="text-xs text-[var(--muted)]">
             Periksa kelengkapan fisik saat unit dibongkar dari truk towing. Data ini otomatis masuk ke laporan inspeksi, surat jalan bengkel, dan mencegah kebocoran HPP.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
             {/* 1. Ban Serep */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Disc className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Disc className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Ban Cadangan / Serep</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
@@ -1283,7 +1283,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "ADA_BAGUS"
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Ada (Bagus)
@@ -1294,8 +1294,8 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "ADA_AUS"
-                      ? "bg-[#D97706] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      ? "bg-[var(--accent)] text-white shadow-xs"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ⚠️ Ada (Aus)
@@ -1307,7 +1307,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "TIDAK_ADA"
                       ? "bg-[#DC2626] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Tidak Ada
@@ -1316,9 +1316,9 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             </div>
 
             {/* 2. Dongkrak & Stang */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Wrench className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Wrench className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Dongkrak &amp; Tuas Stang</span>
               </div>
               <div className="flex gap-2">
@@ -1329,7 +1329,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.jack
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Ada &amp; Fungsi
@@ -1341,7 +1341,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.jack
                       ? "bg-[#DC2626] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Tidak Ada
@@ -1350,9 +1350,9 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             </div>
 
             {/* 3. Kunci Roda & Toolkit */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Wrench className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Wrench className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Kunci Roda &amp; Toolkit</span>
               </div>
               <div className="flex gap-2">
@@ -1363,7 +1363,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.wheelWrench
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Ada Lengkap
@@ -1375,7 +1375,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.wheelWrench
                       ? "bg-[#DC2626] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Tidak Ada
@@ -1384,9 +1384,9 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             </div>
 
             {/* 4. Kunci Kontak & Remote Cadangan */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Key className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Key className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Kunci Kontak &amp; Remote</span>
               </div>
               <div className="flex gap-2">
@@ -1397,7 +1397,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.keysCount === "2_KEYS"
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Lengkap 2 Kunci
@@ -1408,8 +1408,8 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.keysCount === "1_KEY"
-                      ? "bg-[#D97706] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      ? "bg-[var(--accent)] text-white shadow-xs"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ⚠️ Hanya 1 Kunci
@@ -1418,9 +1418,9 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             </div>
 
             {/* 5. Buku Manual & Servis */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <BookOpen className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <BookOpen className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Buku Manual &amp; Servis</span>
               </div>
               <div className="flex gap-2">
@@ -1431,7 +1431,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.serviceBook
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Ada
@@ -1443,7 +1443,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.serviceBook
                       ? "bg-[#78716C] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Tidak Ada
@@ -1452,9 +1452,9 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
             </div>
 
             {/* 6. Head Unit / Audio */}
-            <div className="p-3.5 rounded-xl border border-[#D9D4CB] bg-[#F7F5F2] space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1917]">
-                <Volume2 className="w-3.5 h-3.5 text-[#D97706]" />
+            <div className="p-3.5 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                <Volume2 className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Head Unit / Audio</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
@@ -1465,7 +1465,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "ORIGINAL"
                       ? "bg-[#16A34A] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✓ Original
@@ -1477,7 +1477,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "MODIFIED"
                       ? "bg-[#2563EB] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ⚡ Android/Layar
@@ -1489,7 +1489,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "BROKEN_OR_NONE"
                       ? "bg-[#DC2626] text-white shadow-xs"
-                      : "bg-white text-[#6B6560] border border-[#D9D4CB]"
+                      : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
                   ✕ Rusak/Hilang
@@ -1500,17 +1500,17 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
         </div>
 
         {/* SECTION 7: Catatan & Lokasi Garasi */}
-        <div className="bg-white border border-[#D9D4CB] rounded-2xl p-5 sm:p-6 shadow-xs space-y-3">
-          <div className="flex items-center gap-2 border-b border-[#EBE7E1] pb-3">
-            <FileText className="w-4 h-4 text-[#D97706]" />
-            <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-3">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+            <FileText className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               7. Catatan Kondisi &amp; Lokasi Garasi
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Lokasi Parkir Unit Saat Ini
               </label>
               <input
@@ -1519,12 +1519,12 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, currentLocation: e.target.value })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917]"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#1C1917] mb-1.5">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
                 Catatan Kondisi Khusus / Kelengkapan
               </label>
               <textarea
@@ -1534,17 +1534,17 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 onChange={(e) =>
                   setFormData({ ...formData, notes: e.target.value })
                 }
-                className="w-full px-3.5 py-2.5 bg-[#F7F5F2] border border-[#D9D4CB] rounded-xl text-sm text-[#1C1917] resize-none"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] resize-none"
               />
             </div>
           </div>
         </div>
 
         {/* Actions Bar */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4 sticky bottom-4 shadow-lg z-20">
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4 sticky bottom-4 shadow-lg z-20">
           <Link
             href="/admin/inventory"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
           >
             Batal &amp; Kembali
           </Link>
@@ -1552,7 +1552,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-2.5 bg-[#D97706] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

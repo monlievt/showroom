@@ -100,59 +100,59 @@ export function InvestorPendingPageClient({
 
       {/* 4 KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Unit Siap Dibagi Laba</span>
             <HeartHandshake className="w-4 h-4 text-amber-600" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917] tracking-tight">
-            {pendingSales.length} <span className="text-xs font-semibold text-[#6B6560]">Unit</span>
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
+            {pendingSales.length} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
           </div>
           <p className="text-xs text-amber-700 font-medium">Lunas 100% & menunggu eksekusi</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Modal Investor Terikat</span>
-            <Coins className="w-4 h-4 text-[#D97706]" />
+            <Coins className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-[#1C1917] tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.activeAllocatedCapital)}
           </div>
-          <p className="text-xs text-[#6B6560]">Dana berputar di unit mobil aktif</p>
+          <p className="text-xs text-[var(--muted)]">Dana berputar di unit mobil aktif</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Laba Investor</span>
             <TrendingUp className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-black text-emerald-700 tracking-tight">
             {formatRupiah(summary.totalInvestorProfit)}
           </div>
-          <p className="text-xs text-[#6B6560]">Total dibagikan ke mitra & keluarga</p>
+          <p className="text-xs text-[var(--muted)]">Total dibagikan ke mitra & keluarga</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[#D9D4CB] shadow-xs space-y-1">
-          <div className="flex items-center justify-between text-[#6B6560]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Laba Owner</span>
             <Building className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-2xl font-black text-blue-700 tracking-tight">
             {formatRupiah(summary.totalOwnerProfit)}
           </div>
-          <p className="text-xs text-[#6B6560]">Bagian hasil bersih pengelola showroom</p>
+          <p className="text-xs text-[var(--muted)]">Bagian hasil bersih pengelola showroom</p>
         </div>
       </div>
 
       {/* Tabel Unit Siap Bagi Hasil */}
-      <div className="bg-white rounded-2xl border border-[#D9D4CB] overflow-hidden shadow-xs">
-        <div className="p-4 sm:p-5 border-b border-[#D9D4CB] flex items-center justify-between bg-[#F7F5F2]">
+      <div className="bg-white rounded-2xl border border-[var(--line)] overflow-hidden shadow-xs">
+        <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)]">
           <div>
-            <h3 className="font-bold text-sm text-[#1C1917]">
+            <h3 className="font-bold text-sm text-[var(--ink)]">
               Daftar Penjualan Mobil Lunas — Menunggu Distribusi Laba
             </h3>
-            <p className="text-xs text-[#6B6560] mt-0.5">
+            <p className="text-xs text-[var(--muted)] mt-0.5">
               Sesuai SOP, bagi hasil hanya dieksekusi setelah pembayaran pembeli <strong>lunas 100%</strong>.
             </p>
           </div>
@@ -162,15 +162,15 @@ export function InvestorPendingPageClient({
         </div>
 
         {pendingSales.length === 0 ? (
-          <div className="p-12 text-center text-[#6B6560] space-y-2">
+          <div className="p-12 text-center text-[var(--muted)] space-y-2">
             <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto opacity-80" />
-            <p className="text-sm font-bold text-[#1C1917]">Semua unit terjual sudah didistribusikan labanya</p>
-            <p className="text-xs text-[#6B6560]">Tidak ada antrean pembagian laba yang tertunda saat ini.</p>
+            <p className="text-sm font-bold text-[var(--ink)]">Semua unit terjual sudah didistribusikan labanya</p>
+            <p className="text-xs text-[var(--muted)]">Tidak ada antrean pembagian laba yang tertunda saat ini.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-[#EFECE8] text-[#6B6560] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[#D9D4CB]">
+              <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[var(--line)]">
                 <tr>
                   <th className="py-3 px-4">Unit Mobil & Plat</th>
                   <th className="py-3 px-4">Pembeli</th>
@@ -180,18 +180,18 @@ export function InvestorPendingPageClient({
                   <th className="py-3 px-4 text-center">Aksi Distribusi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#D9D4CB]">
+              <tbody className="divide-y divide-[var(--line)]">
                 {pendingSales.map((s) => (
-                  <tr key={s.id} className="hover:bg-[#F7F5F2] transition-colors">
+                  <tr key={s.id} className="hover:bg-[var(--bg)] transition-colors">
                     <td className="py-4 px-4">
-                      <span className="font-bold text-sm text-[#1C1917] block">{s.vehiclePlate}</span>
-                      <span className="text-xs text-[#6B6560]">{s.vehicleName}</span>
+                      <span className="font-bold text-sm text-[var(--ink)] block">{s.vehiclePlate}</span>
+                      <span className="text-xs text-[var(--muted)]">{s.vehicleName}</span>
                     </td>
-                    <td className="py-4 px-4 text-[#1C1917] font-medium">{s.buyerName}</td>
-                    <td className="py-4 px-4 text-right font-semibold text-[#1C1917]">
+                    <td className="py-4 px-4 text-[var(--ink)] font-medium">{s.buyerName}</td>
+                    <td className="py-4 px-4 text-right font-semibold text-[var(--ink)]">
                       {formatRupiah(s.sellingPrice)}
                     </td>
-                    <td className="py-4 px-4 text-right text-[#6B6560]">
+                    <td className="py-4 px-4 text-right text-[var(--muted)]">
                       {formatRupiah(s.hpp)}
                     </td>
                     <td className="py-4 px-4 text-right">
@@ -208,7 +208,7 @@ export function InvestorPendingPageClient({
                       <button
                         disabled={loading}
                         onClick={() => handleExecuteDistribution(s.id)}
-                        className="bg-[#D97706] hover:bg-[#B45309] text-white px-4 py-2 rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                        className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
                       >
                         {loading ? "Memproses..." : "Eksekusi Bagi Hasil"}
                       </button>

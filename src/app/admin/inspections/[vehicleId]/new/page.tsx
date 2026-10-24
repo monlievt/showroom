@@ -33,7 +33,7 @@ export default async function NewInspectionPage({
         title="Formulir Cek Fisik & Transparansi"
         subtitle={`Input hasil uji 11 panel logam dan penilaian 4 pilar unit ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber}).`}
       />
-      <main className="flex-1 bg-[#F7F5F2]">
+      <main className="flex-1 bg-[var(--bg)]">
         <InspectionFormClient vehicle={vehicle} />
       </main>
     </div>

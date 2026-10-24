@@ -32,7 +32,7 @@ const STATUS_DESCRIPTIONS: Record<
   INTAKE: {
     label: "Intake Baru",
     desc: "Unit baru saja didapat/menang lelang, parkir di garasi dan belum siap display.",
-    badgeClass: "bg-[#EFECE8] text-[#6B6560] border-[#D9D4CB]",
+    badgeClass: "bg-[var(--bg)] text-[var(--muted)] border-[var(--line)]",
   },
   IN_REPAIR: {
     label: "Bengkel / Salon (In Repair)",
@@ -57,7 +57,7 @@ const STATUS_DESCRIPTIONS: Record<
   SOLD_SETTLED: {
     label: "Terjual Lunas (Settled)",
     desc: "Pembayaran 100% lunas, siap cetak kuitansi resmi dan bagi hasil investor.",
-    badgeClass: "bg-[#1C1917] text-white border-black",
+    badgeClass: "bg-[var(--ink)] text-white border-black",
   },
 };
 
@@ -116,20 +116,20 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto space-y-6">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#D9D4CB] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/inventory"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[#D9D4CB] text-[#1C1917] hover:bg-[#EFECE8] font-semibold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6B6560]" />
+            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
             <span>Kembali ke Inventori</span>
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-[#1C1917]">
+            <h1 className="text-xl font-bold text-[var(--ink)]">
               Ubah Status Unit Kendaraan
             </h1>
-            <p className="text-xs text-[#6B6560]">
+            <p className="text-xs text-[var(--muted)]">
               Pengaturan siklus unit dari Intake lelang hingga Ready Jual.
             </p>
           </div>
@@ -137,28 +137,28 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
       </div>
 
       {/* Info Unit */}
-      <div className="bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-5 shadow-xs flex items-center justify-between">
+      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-5 shadow-xs flex items-center justify-between">
         <div className="flex items-center gap-3.5">
-          <div className="p-3 bg-white rounded-xl border border-[#D9D4CB] text-[#D97706]">
+          <div className="p-3 bg-white rounded-xl border border-[var(--line)] text-[var(--accent)]">
             <Car className="w-6 h-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-base text-[#1C1917]">
+              <span className="font-extrabold text-base text-[var(--ink)]">
                 {vehicle.brand} {vehicle.model}
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-md bg-white border border-[#D9D4CB] font-bold text-[#1C1917]">
+              <span className="text-xs px-2 py-0.5 rounded-md bg-white border border-[var(--line)] font-bold text-[var(--ink)]">
                 {vehicle.year}
               </span>
             </div>
-            <div className="text-xs font-mono font-bold text-[#D97706] mt-0.5">
+            <div className="text-xs font-mono font-bold text-[var(--accent)] mt-0.5">
               {vehicle.plateNumber}
             </div>
           </div>
         </div>
 
         <div className="text-right">
-          <span className="text-[10px] text-[#6B6560] block font-medium">Status Saat Ini</span>
+          <span className="text-[10px] text-[var(--muted)] block font-medium">Status Saat Ini</span>
           <span
             className={`inline-block px-3 py-1 rounded-full text-xs font-bold border mt-1 ${currInfo.badgeClass}`}
           >
@@ -183,13 +183,13 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
       )}
 
       {/* Status Selection Card */}
-      <div className="bg-white border border-[#D9D4CB] rounded-2xl p-6 shadow-xs space-y-5">
+      <div className="bg-white border border-[var(--line)] rounded-2xl p-6 shadow-xs space-y-5">
         <div>
-          <h2 className="text-sm font-bold text-[#1C1917] uppercase tracking-wider mb-1 flex items-center gap-2">
-            <ArrowRight className="w-4 h-4 text-[#D97706]" />
+          <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider mb-1 flex items-center gap-2">
+            <ArrowRight className="w-4 h-4 text-[var(--accent)]" />
             <span>Pilih Status Tujuan yang Sah</span>
           </h2>
-          <p className="text-xs text-[#6B6560]">
+          <p className="text-xs text-[var(--muted)]">
             Sistem menerapkan aturan State Machine untuk menjaga konsistensi data operasional showroom.
           </p>
         </div>
@@ -216,8 +216,8 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
                   onClick={() => setTargetStatus(statusKey)}
                   className={`flex items-start gap-3 p-4 rounded-xl border transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-amber-50/60 border-[#D97706] ring-2 ring-[#D97706]/20"
-                      : "bg-[#F7F5F2] border-[#D9D4CB] hover:bg-[#EFECE8]"
+                      ? "bg-amber-50/60 border-[var(--accent)] ring-2 ring-[var(--accent)]/20"
+                      : "bg-[var(--bg)] border-[var(--line)] hover:bg-[var(--bg)]"
                   }`}
                 >
                   <input
@@ -225,11 +225,11 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
                     name="targetStatus"
                     checked={isSelected}
                     onChange={() => setTargetStatus(statusKey)}
-                    className="mt-1 accent-[#D97706]"
+                    className="mt-1 accent-[var(--accent)]"
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[#1C1917]">
+                      <span className="text-sm font-bold text-[var(--ink)]">
                         {info.label}
                       </span>
                       <span
@@ -238,7 +238,7 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
                         {statusKey}
                       </span>
                     </div>
-                    <p className="text-xs text-[#6B6560] mt-1">{info.desc}</p>
+                    <p className="text-xs text-[var(--muted)] mt-1">{info.desc}</p>
                   </div>
                 </label>
               );
@@ -246,8 +246,8 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
           </div>
         )}
 
-        <div className="p-3.5 rounded-xl bg-[#F7F5F2] border border-[#D9D4CB] text-[11px] text-[#6B6560] flex items-center gap-2">
-          <Info className="w-4 h-4 shrink-0 text-[#D97706]" />
+        <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[11px] text-[var(--muted)] flex items-center gap-2">
+          <Info className="w-4 h-4 shrink-0 text-[var(--accent)]" />
           <span>
             Unit berstatus <strong>Ready Jual</strong> otomatis muncul di website publik dan katalog digital WhatsApp pelanggan.
           </span>
@@ -255,10 +255,10 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
       </div>
 
       {/* Bottom Bar */}
-      <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[#EFECE8] border border-[#D9D4CB] rounded-2xl p-4">
+      <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4">
         <Link
           href="/admin/inventory"
-          className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[#D9D4CB] bg-white text-center text-sm font-semibold text-[#6B6560] hover:text-[#1C1917] hover:bg-[#F7F5F2] transition-colors shadow-xs"
+          className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
         >
           Batal & Kembali
         </Link>
@@ -267,7 +267,7 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
           type="button"
           onClick={handleUpdate}
           disabled={loading || validTransitions.length === 0}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[#1C1917] hover:bg-[#D97706] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--ink)] hover:bg-[var(--accent)] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
         >
           {loading ? (
             <>
