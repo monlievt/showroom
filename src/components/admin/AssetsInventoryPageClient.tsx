@@ -387,57 +387,57 @@ export function AssetsInventoryPageClient({
       {/* ── 4 KPI CARDS: LENGKAP DENGAN STOK HABIS PAKAI & MARGIN JASA ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* 1. Stok Mobil (Dagangan) */}
-        <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-xs space-y-1 bg-emerald-50/20">
-          <div className="flex items-center justify-between text-emerald-800">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">1. Stok Mobil (Dagangan)</span>
-            <Car className="w-5 h-5 text-emerald-600" />
+            <Car className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-emerald-800 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalInventoryValue || 0)}
           </div>
-          <p className="text-xs text-emerald-700">
+          <p className="text-xs text-[var(--muted)]">
             {summary.activeVehiclesCount || 0} unit aktif (perputaran cepat)
           </p>
         </div>
 
         {/* 2. Stok Barang Habis Pakai (Gudang Bahan) */}
-        <div className="bg-white p-5 rounded-2xl border border-amber-200 shadow-xs space-y-1 bg-amber-50/20">
-          <div className="flex items-center justify-between text-amber-800">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">2. Stok Bahan Habis Pakai</span>
-            <Droplet className="w-5 h-5 text-amber-600" />
+            <Droplet className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-amber-900 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(supplies.totalStockValue)}
           </div>
-          <p className="text-xs text-amber-700">
+          <p className="text-xs text-[var(--muted)]">
             {supplies.totalItemsInStock} item fisik oli, filter &amp; salon di garasi
           </p>
         </div>
 
         {/* 3. Aset Tetap Showroom (Alat) */}
-        <div className="bg-white p-5 rounded-2xl border border-blue-200 shadow-xs space-y-1 bg-blue-50/20">
-          <div className="flex items-center justify-between text-blue-800">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">3. Aset Tetap (Peralatan)</span>
-            <Wrench className="w-5 h-5 text-blue-600" />
+            <Wrench className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-blue-800 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(assets.totalCurrentValue)}
           </div>
-          <p className="text-xs text-blue-700">
+          <p className="text-xs text-[var(--muted)]">
             {assets.totalItems} alat kerja permanen (mesin poles, scanner, dll)
           </p>
         </div>
 
         {/* 4. Laba Keringat Jasa Mandiri Showroom */}
-        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1 bg-[var(--bg)]">
-          <div className="flex items-center justify-between text-[#92400E]">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">4. Laba Jasa Garasi Mandiri</span>
             <Coins className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div className="text-2xl font-black text-[var(--accent)] tracking-tight">
             +{formatRupiah(supplies.summary.totalWorkshopMarginEarned)}
           </div>
-          <p className="text-xs text-[#92400E] font-medium">
+          <p className="text-xs text-[var(--muted)] font-medium">
             Keringat jasa sendiri (masuk kantong showroom)
           </p>
         </div>
@@ -445,9 +445,9 @@ export function AssetsInventoryPageClient({
 
       {/* ── EDUKASI 3 PILAR KEKAYAAN SHOWROOM ── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 rounded-2xl bg-white border border-emerald-200 shadow-xs space-y-2">
-          <div className="flex items-center gap-2 font-bold text-sm text-emerald-800">
-            <Car className="w-4 h-4 text-emerald-600" />
+        <div className="p-4 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-2">
+          <div className="flex items-center gap-2 font-bold text-sm text-[var(--ink)]">
+            <Car className="w-4 h-4 text-[var(--accent)]" />
             <span>Stok Mobil (Aset Lancar)</span>
           </div>
           <p className="text-xs text-[var(--muted)] leading-relaxed">
@@ -455,9 +455,9 @@ export function AssetsInventoryPageClient({
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white border border-amber-200 shadow-xs space-y-2 bg-amber-50/10">
-          <div className="flex items-center gap-2 font-bold text-sm text-amber-800">
-            <Droplet className="w-4 h-4 text-amber-600" />
+        <div className="p-4 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-2">
+          <div className="flex items-center gap-2 font-bold text-sm text-[var(--ink)]">
+            <Droplet className="w-4 h-4 text-[var(--accent)]" />
             <span>Bahan Habis Pakai (Supplies)</span>
           </div>
           <p className="text-xs text-[var(--muted)] leading-relaxed">
@@ -465,9 +465,9 @@ export function AssetsInventoryPageClient({
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white border border-blue-200 shadow-xs space-y-2">
-          <div className="flex items-center gap-2 font-bold text-sm text-blue-800">
-            <Wrench className="w-4 h-4 text-blue-600" />
+        <div className="p-4 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-2">
+          <div className="flex items-center gap-2 font-bold text-sm text-[var(--ink)]">
+            <Wrench className="w-4 h-4 text-[var(--accent)]" />
             <span>Aset Tetap (Peralatan Kerja)</span>
           </div>
           <p className="text-xs text-[var(--muted)] leading-relaxed">
@@ -486,7 +486,7 @@ export function AssetsInventoryPageClient({
           className={cn(
             "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2",
             activeMainTab === "SUPPLIES"
-              ? "bg-[var(--accent)] text-white shadow-sm"
+              ? "bg-[var(--accent)] text-white shadow-xs"
               : "bg-[var(--bg)] text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
@@ -507,7 +507,7 @@ export function AssetsInventoryPageClient({
           className={cn(
             "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2",
             activeMainTab === "ASSETS"
-              ? "bg-[var(--ink)] text-white shadow-sm"
+              ? "bg-[var(--accent)] text-white shadow-xs"
               : "bg-[var(--bg)] text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >
@@ -523,7 +523,7 @@ export function AssetsInventoryPageClient({
           className={cn(
             "px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2",
             activeMainTab === "HISTORY"
-              ? "bg-[#16A34A] text-white shadow-sm"
+              ? "bg-[var(--accent)] text-white shadow-xs"
               : "bg-[var(--bg)] text-[var(--muted)] hover:text-[var(--ink)]"
           )}
         >

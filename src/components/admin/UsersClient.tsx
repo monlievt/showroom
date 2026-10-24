@@ -237,35 +237,35 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
       case "OWNER":
       case "ADMIN":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
-            <Crown className="w-3.5 h-3.5 text-amber-700" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-[var(--ink)] text-white shadow-xs">
+            <Crown className="w-3.5 h-3.5" />
             Owner / Direksi
           </span>
         );
       case "STAFF_ADMIN":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-900 border border-blue-300">
-            <Wrench className="w-3.5 h-3.5 text-blue-700" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
+            <Wrench className="w-3.5 h-3.5 text-[var(--muted)]" />
             Staff Garasi & Kasir
           </span>
         );
       case "SALES":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
-            <Target className="w-3.5 h-3.5 text-emerald-700" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
+            <Target className="w-3.5 h-3.5 text-[var(--muted)]" />
             Tim Sales / Marketing
           </span>
         );
       case "INVESTOR":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 text-purple-900 border border-purple-300">
-            <Handshake className="w-3.5 h-3.5 text-purple-700" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/25">
+            <Handshake className="w-3.5 h-3.5" />
             Mitra Investor
           </span>
         );
       default:
         return (
-          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-stone-100 text-stone-800">
+          <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
             {role}
           </span>
         );
@@ -302,15 +302,15 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
       )}
 
       {/* Header & Action Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-[var(--line)] shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[var(--line)] shadow-xs">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-[var(--accent)]">
+            <div className="w-10 h-10 rounded-xl bg-[var(--bg)] border border-[var(--line)] flex items-center justify-center text-[var(--accent)]">
               <Users className="w-5 h-5" />
             </div>
             <div>
               <h1 className="text-xl sm:text-2xl font-black text-[var(--ink)] tracking-tight">
-                Kelola Pengguna & Hak Akses
+                Kelola Pengguna &amp; Hak Akses
               </h1>
               <p className="text-xs sm:text-sm text-[var(--muted)]">
                 Manajemen akun staf showroom, pengaturan peran RBAC, dan pengelolaan kata sandi aman.
@@ -321,7 +321,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-5 py-3 rounded-2xl font-bold text-sm shadow-sm transition-all hover:shadow cursor-pointer shrink-0"
+          className="flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-xs transition-all cursor-pointer shrink-0"
         >
           <UserPlus className="w-4 h-4" />
           <span>Tambah Pengguna Baru</span>
@@ -330,35 +330,35 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
 
       {/* Ringkasan Statistik */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm">
+        <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-[var(--line)] shadow-xs">
           <span className="text-xs font-semibold text-[var(--muted)] block">Total Pengguna</span>
           <span className="text-xl sm:text-2xl font-black text-[var(--ink)] mt-1 block">{stats.total}</span>
-          <span className="text-[11px] text-emerald-700 font-bold mt-1 block">
+          <span className="text-[11px] text-[var(--muted)] font-medium mt-1 block">
             {stats.active} akun aktif
           </span>
         </div>
 
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm">
-          <span className="text-xs font-semibold text-[var(--muted)] block">Direksi & Owner</span>
-          <span className="text-xl sm:text-2xl font-black text-amber-700 mt-1 block">{stats.ownerAdmin}</span>
+        <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-[var(--line)] shadow-xs">
+          <span className="text-xs font-semibold text-[var(--muted)] block">Direksi &amp; Owner</span>
+          <span className="text-xl sm:text-2xl font-black text-[var(--ink)] mt-1 block">{stats.ownerAdmin}</span>
           <span className="text-[11px] text-[var(--muted)] mt-1 block">Akses penuh</span>
         </div>
 
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm">
+        <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-[var(--line)] shadow-xs">
           <span className="text-xs font-semibold text-[var(--muted)] block">Staff Garasi</span>
-          <span className="text-xl sm:text-2xl font-black text-blue-700 mt-1 block">{stats.staff}</span>
-          <span className="text-[11px] text-[var(--muted)] mt-1 block">Unit & kasir SPK</span>
+          <span className="text-xl sm:text-2xl font-black text-[var(--ink)] mt-1 block">{stats.staff}</span>
+          <span className="text-[11px] text-[var(--muted)] mt-1 block">Unit &amp; kasir SPK</span>
         </div>
 
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm">
+        <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-[var(--line)] shadow-xs">
           <span className="text-xs font-semibold text-[var(--muted)] block">Tim Sales</span>
-          <span className="text-xl sm:text-2xl font-black text-emerald-700 mt-1 block">{stats.sales}</span>
+          <span className="text-xl sm:text-2xl font-black text-[var(--ink)] mt-1 block">{stats.sales}</span>
           <span className="text-[11px] text-[var(--muted)] mt-1 block">Katalog siap jual</span>
         </div>
 
-        <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-[var(--line)] shadow-sm col-span-2 sm:col-span-1">
+        <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-[var(--line)] shadow-xs col-span-2 sm:col-span-1">
           <span className="text-xs font-semibold text-[var(--muted)] block">Mitra Investor</span>
-          <span className="text-xl sm:text-2xl font-black text-purple-700 mt-1 block">{stats.investor}</span>
+          <span className="text-xl sm:text-2xl font-black text-[var(--ink)] mt-1 block">{stats.investor}</span>
           <span className="text-[11px] text-[var(--muted)] mt-1 block">Portal bagi hasil</span>
         </div>
       </div>
@@ -436,14 +436,14 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                       {/* Identitas Pengguna */}
                       <td className="py-3.5 px-4 sm:px-6">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-[var(--accent)] font-bold flex items-center justify-center shrink-0 uppercase text-xs">
+                          <div className="w-9 h-9 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] font-bold flex items-center justify-center shrink-0 uppercase text-xs">
                             {user.fullName.slice(0, 2)}
                           </div>
                           <div>
                             <span className="font-bold text-[var(--ink)] block text-sm">
                               {user.fullName}
                               {isCurrent && (
-                                <span className="ml-2 text-[10px] font-bold bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded">
+                                <span className="ml-2 text-[10px] font-bold bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] px-1.5 py-0.5 rounded">
                                   Anda
                                 </span>
                               )}

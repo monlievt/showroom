@@ -130,10 +130,10 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           </div>
         </div>
 
-        <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-5 shadow-sm">
+        <div className="bg-white border border-[var(--line)] rounded-xl p-5 shadow-xs">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-xs font-semibold uppercase tracking-wider">Total Modal Terikat (HPP)</span>
-            <DollarSign className="w-5 h-5 text-[#16A34A]" />
+            <DollarSign className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div className="mt-3">
             <span className="text-2xl font-bold text-[var(--ink)]">
@@ -144,37 +144,37 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
         </div>
 
         <div className={cn(
-          "border rounded-xl p-5 shadow-sm transition-all",
+          "border rounded-xl p-5 shadow-xs transition-all",
           stagnantUnits.length > 0 
-            ? "bg-[#FEE2E2] border-[#DC2626]/30 text-[#DC2626]" 
-            : "bg-[var(--bg)] border-[var(--line)]"
+            ? "bg-rose-50/40 border-rose-200 text-rose-700" 
+            : "bg-white border-[var(--line)]"
         )}>
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider">Unit Macet (&gt; 45 Hari)</span>
-            <AlertTriangle className={cn("w-5 h-5", stagnantUnits.length > 0 ? "text-[#DC2626] animate-bounce" : "text-[var(--muted)]")} />
+            <AlertTriangle className={cn("w-5 h-5", stagnantUnits.length > 0 ? "text-rose-600 animate-bounce" : "text-[var(--muted)]")} />
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className={cn("text-3xl font-bold", stagnantUnits.length > 0 ? "text-[#DC2626]" : "text-[var(--ink)]")}>
+            <span className={cn("text-3xl font-bold", stagnantUnits.length > 0 ? "text-rose-600" : "text-[var(--ink)]")}>
               {stagnantUnits.length}
             </span>
             <span className="text-xs text-[var(--muted)]">perlu evaluasi harga</span>
           </div>
         </div>
 
-        <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-5 shadow-sm">
+        <div className="bg-white border border-[var(--line)] rounded-xl p-5 shadow-xs">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-xs font-semibold uppercase tracking-wider">Ready Siap Jual</span>
-            <CheckCircle2 className="w-5 h-5 text-[#16A34A]" />
+            <CheckCircle2 className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-[#16A34A]">{readyUnits.length}</span>
+            <span className="text-3xl font-bold text-[var(--ink)]">{readyUnits.length}</span>
             <span className="text-xs text-[var(--muted)]">siap tayang katalog</span>
           </div>
         </div>
       </div>
 
       {/* ── TOOLBAR & ACTIONS ─────────────────────────────────── */}
-      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white border border-[var(--line)] rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
           <Search className="w-4 h-4 text-[var(--muted)] absolute left-3 top-1/2 -translate-y-1/2" />
@@ -191,7 +191,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           {/* Action Button: Gudang Bahan Habis Pakai & Servis Mandiri */}
           <Link
             href="/admin/workshop"
-            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-[#FEF3C7] hover:bg-[#FDE68A] border border-[var(--accent)]/40 text-[#92400E] rounded-lg text-sm font-semibold shadow-xs transition-colors"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-lg text-sm font-semibold shadow-xs transition-colors"
             title="Kelola persediaan oli, filter, bohlam, salon & alokasikan servis mandiri"
           >
             <Droplet className="w-4 h-4 text-[var(--accent)]" />
@@ -204,14 +204,14 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
             className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-lg text-sm font-semibold shadow-xs transition-colors"
             title="Import data mobil lama dari file spreadsheet / Excel / CSV"
           >
-            <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+            <FileSpreadsheet className="w-4 h-4 text-[var(--muted)]" />
             <span>Import Spreadsheet</span>
           </Link>
 
           {/* Action Button: Intake Unit Baru */}
           <Link
             href="/admin/inventory/new"
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-lg text-sm font-semibold shadow-xs transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>Intake Unit Baru</span>
@@ -392,14 +392,14 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                       {/* Target & Min Price */}
                       <td className="py-4 px-4 align-top text-xs">
                         {vehicle.targetSellingPrice ? (
-                          <div className="font-bold text-[#16A34A]">
+                          <div className="font-bold text-[var(--ink)]">
                             {formatRupiah(vehicle.targetSellingPrice)}
                           </div>
                         ) : (
                           <span className="text-[var(--muted)] italic text-[11px]">Belum diisi</span>
                         )}
                         {vehicle.minSellingPrice && (
-                          <div className="text-[11px] text-[#92400E] font-medium mt-0.5" title="Batas Bawah Nego">
+                          <div className="text-[11px] text-[var(--muted)] font-medium mt-0.5" title="Batas Bawah Nego">
                             Bawah: {formatRupiah(vehicle.minSellingPrice)}
                           </div>
                         )}
@@ -412,7 +412,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           {vehicle.status === "INTAKE" && (
                             <Link
                               href={`/admin/inspections/${vehicle.id}`}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all shrink-0"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0"
                               title="Mulai Cek Fisik & Inspeksi 11 Panel"
                             >
                               <ClipboardCheck className="w-3.5 h-3.5" />
@@ -423,7 +423,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           {vehicle.status === "IN_REPAIR" && (
                             <Link
                               href={`/admin/inventory/${vehicle.id}/expenses/new`}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all shrink-0"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0"
                               title="Catat Biaya Servis / Sparepart"
                             >
                               <Receipt className="w-3.5 h-3.5" />
@@ -436,7 +436,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                               href={`/api/pdf/spec-tag/${vehicle.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold shadow-xs transition-all shrink-0"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0"
                               title="Cetak Tag Gantung Spion Ber-QR Code"
                             >
                               <Tag className="w-3.5 h-3.5" />
@@ -447,7 +447,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           {(vehicle.status === "BOOKED" || vehicle.status === "AT_SHOWROOM_PENDING") && (
                             <Link
                               href={`/admin/inventory/${vehicle.id}/status`}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-xs transition-all shrink-0"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--ink)] hover:bg-[#2c3746] text-white text-xs font-bold shadow-xs transition-all shrink-0"
                               title="Ubah Status Kendaraan"
                             >
                               <ArrowRight className="w-3.5 h-3.5" />
@@ -516,7 +516,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                                     href={`/admin/inventory/${vehicle.id}/expenses/new`}
                                     className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
-                                    <Receipt className="w-4 h-4 text-[#16A34A]" />
+                                    <Receipt className="w-4 h-4 text-[var(--accent)]" />
                                     <span>Catat Biaya / Servis</span>
                                   </Link>
 
@@ -524,7 +524,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                                     href={`/admin/inventory/${vehicle.id}/media`}
                                     className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
-                                    <Camera className="w-4 h-4 text-[#2563EB]" />
+                                    <Camera className="w-4 h-4 text-[var(--accent)]" />
                                     <span>Upload Foto &amp; Dokumen</span>
                                   </Link>
                                 </div>

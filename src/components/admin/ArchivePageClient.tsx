@@ -292,17 +292,16 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
       )}
 
       {/* 1. Header Banner & Info */}
-      <div className="bg-gradient-to-r from-[var(--ink)] via-[#292524] to-[var(--ink)] text-white p-6 sm:p-8 rounded-2xl shadow-xl relative overflow-hidden border border-[var(--accent)]/30">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-[var(--accent)]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 max-w-4xl space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--accent)]/20 border border-[var(--accent)]/40 text-[#F59E0B] text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" />
-            Buku Besar Toko Lama &amp; Benchmark Harga
+      <div className="bg-white p-6 sm:p-7 rounded-2xl border border-[var(--line)] shadow-xs relative overflow-hidden">
+        <div className="max-w-4xl space-y-1.5">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] text-[11px] font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-[var(--accent)]" />
+            <span>Buku Besar Toko Lama &amp; Benchmark Harga</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+          <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[var(--ink)]">
             Arsip Penjualan &amp; Referensi Pasaran
           </h1>
-          <p className="text-sm sm:text-base text-[var(--line)] leading-relaxed">
+          <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
             Data rekam jejak riil seluruh mobil &amp; motor yang telah laku sejak 2021 hingga unit terkini.
             Didesain khusus sebagai mesin referensi harga kulakan vs harga jual pasar, tanpa mengotori arus kas aktif showroom saat ini.
           </p>
@@ -311,7 +310,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
 
       {/* 2. Statistik Akumulasi Historis (5 KPI Termasuk Total Rugi) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-sm">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-xs">
           <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Total Unit Terjual</span>
             <Car className="w-4 h-4 text-[var(--accent)]" />
@@ -324,12 +323,12 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-sm">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-xs">
           <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Total Omzet Historis</span>
-            <DollarSign className="w-4 h-4 text-emerald-600" />
+            <DollarSign className="w-4 h-4 text-[var(--muted)]" />
           </div>
-          <div className="text-xl sm:text-2xl font-black text-emerald-600">
+          <div className="text-xl sm:text-2xl font-black text-[var(--ink)]">
             {formatRupiah(currentSummary.totalOmzet)}
           </div>
           <div className="text-[11px] text-[var(--muted)] mt-1">
@@ -337,12 +336,12 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-sm">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-xs">
           <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Total Laba Bersih</span>
-            <TrendingUp className="w-4 h-4 text-amber-600" />
+            <TrendingUp className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-xl sm:text-2xl font-black text-amber-600">
+          <div className="text-xl sm:text-2xl font-black text-[var(--ink)]">
             {formatRupiah(currentSummary.totalProfit)}
           </div>
           <div className="text-[11px] text-[var(--muted)] mt-1">
@@ -361,9 +360,9 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
             }
           }}
           className={cn(
-            "bg-white p-4 sm:p-5 rounded-xl border shadow-sm cursor-pointer transition-all hover:shadow-md select-none",
+            "bg-white p-4 sm:p-5 rounded-xl border shadow-xs cursor-pointer transition-all hover:shadow-sm select-none",
             profitStatusFilter === "LOSS" 
-              ? "border-rose-400 ring-2 ring-rose-200 bg-rose-50/40" 
+              ? "border-rose-400 ring-2 ring-rose-200 bg-rose-50/30" 
               : "border-[var(--line)] hover:border-rose-300"
           )}
           title="Klik untuk menyaring hanya unit yang mengalami rugi"
@@ -383,12 +382,12 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
           </div>
         </div>
 
-        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-sm">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-[var(--line)] shadow-xs">
           <div className="flex items-center justify-between text-[var(--muted)] text-xs font-semibold uppercase tracking-wider mb-2">
             <span>Rata-Rata Margin / Unit</span>
-            <Receipt className="w-4 h-4 text-blue-600" />
+            <Receipt className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-xl sm:text-2xl font-black text-blue-600">
+          <div className="text-xl sm:text-2xl font-black text-[var(--ink)]">
             {formatRupiah(currentSummary.avgProfitPerUnit)}
           </div>
           <div className="text-[11px] text-[var(--muted)] mt-1">
@@ -398,16 +397,16 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
       </div>
 
       {/* 3. Bar Pencarian & Filter */}
-      <div className="bg-white p-4 rounded-xl border border-[var(--line)] shadow-sm space-y-3">
+      <div className="bg-white p-4 rounded-xl border border-[var(--line)] shadow-xs space-y-3">
         {/* Quick Filter Tabs: Semua / Untung / Rugi */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-[#E7E2DA]">
-          <div className="flex items-center gap-1.5 p-1 bg-[#F5F2EB] rounded-xl border border-[var(--line)] text-xs font-bold">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-[var(--line)]">
+          <div className="flex items-center gap-1.5 p-1 bg-[var(--bg)] rounded-xl border border-[var(--line)] text-xs font-semibold">
             <button
               onClick={() => setProfitStatusFilter("ALL")}
               className={cn(
                 "px-3 py-1.5 rounded-lg transition-all",
                 profitStatusFilter === "ALL"
-                  ? "bg-white text-[var(--ink)] shadow-sm font-black"
+                  ? "bg-white text-[var(--ink)] shadow-xs font-bold"
                   : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
@@ -418,11 +417,11 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
               className={cn(
                 "px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5",
                 profitStatusFilter === "PROFIT"
-                  ? "bg-emerald-600 text-white shadow-sm font-black"
-                  : "text-emerald-700 hover:bg-emerald-50"
+                  ? "bg-[var(--ink)] text-white shadow-xs font-bold"
+                  : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
-              <TrendingUp className="w-3.5 h-3.5" />
+              <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
               <span>Untung ({currentSummary.profitCount || 0})</span>
             </button>
             <button
@@ -433,7 +432,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
               className={cn(
                 "px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5",
                 profitStatusFilter === "LOSS"
-                  ? "bg-rose-600 text-white shadow-sm font-black"
+                  ? "bg-rose-600 text-white shadow-xs font-bold"
                   : "text-rose-700 hover:bg-rose-50"
               )}
             >
@@ -553,12 +552,12 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                 filteredItems.map((item) => (
                   <tr
                     key={item.id}
-                    className="hover:bg-[#F9F8F6] transition-colors cursor-pointer group"
+                    className="hover:bg-[var(--bg)] transition-colors cursor-pointer group"
                     onClick={() => openDetail(item)}
                   >
                     <td className="py-3.5 px-4 font-medium">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold bg-[#E7E2DA] px-2 py-0.5 rounded text-xs text-[var(--ink)]">
+                        <span className="font-mono font-bold bg-[var(--bg)] border border-[var(--line)] px-2 py-0.5 rounded text-xs text-[var(--ink)]">
                           {item.plateNumber}
                         </span>
                         <span className="text-[var(--ink)] font-semibold block truncate max-w-[200px] sm:max-w-[300px]">
@@ -575,7 +574,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                     <td className="py-3.5 px-4 text-right font-medium text-[var(--ink)]">
                       {formatRupiah(item.totalHpp)}
                     </td>
-                    <td className="py-3.5 px-4 text-right font-bold text-emerald-700">
+                    <td className="py-3.5 px-4 text-right font-bold text-[var(--ink)]">
                       {formatRupiah(item.sellingPrice)}
                     </td>
                     <td className="py-3.5 px-4 text-right">
