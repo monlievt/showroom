@@ -10,9 +10,9 @@ import { Check, X, Phone, Users, MapPin } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Nur Mobil | Showroom Mobil Bekas Apa Adanya & Bergaransi Cek Fisik",
+  title: "Nur Mobil | Showroom Mobil Bekas Bergaransi Cek Fisik",
   description:
-    "Showroom jual-beli mobil bekas transparan di Jawa Timur. Rusak dibilang rusak, eks laka dibilang eks laka. Setiap unit disertai lembar uji mikron cat 34 titik dan garansi bebas banjir.",
+    "Showroom jual-beli mobil bekas transparan di Jawa Timur. Setiap unit disertai lembar uji mikron cat 34 titik, garansi bebas tabrak, dan bebas banjir.",
 };
 
 export default async function HomePage() {
@@ -78,10 +78,10 @@ export default async function HomePage() {
           <div className="max-w-[var(--container)] mx-auto px-5 space-y-6">
             <div className="space-y-4 max-w-[760px]">
               <h1 className="text-[clamp(28px,3.6vw,42px)] font-bold text-[var(--ink)] leading-[1.15] tracking-[-0.015em]">
-                Beli Mobil Bekas Tanpa Was-Was. Rusak Dibilang Rusak, Eks Laka Dibilang Eks Laka.
+                Beli Mobil Bekas Tanpa Was-Was.
               </h1>
               <p className="text-[15px] sm:text-[16px] text-[var(--muted)] leading-[1.55] max-w-[640px]">
-                Kami bukan dealer yang sekadar menjual polesan mengkilap. Kami menyajikan fakta apa adanya lewat alat uji mikron ketebalan cat di 34 titik bodi, uji mesin, keabsahan surat, dan garansi resmi bebas tabrak &amp; bebas banjir.
+                Semua catatan bodi, mesin, dan surat kami sediakan transparan. Pelajari lembar uji 34 titik secara online atau ajak mekanik kepercayaan Anda untuk cek langsung di garasi.
               </p>
             </div>
 

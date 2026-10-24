@@ -10,9 +10,9 @@ const publicSans = Public_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Nur Mobil | Showroom Mobil Bekas Apa Adanya & Bergaransi Cek Fisik",
+  title: "Nur Mobil | Showroom Mobil Bekas Bergaransi Cek Fisik",
   description:
-    "Showroom jual-beli mobil bekas transparan di Jawa Timur. Rusak dibilang rusak, eks laka dibilang eks laka. Setiap unit disertai lembar uji mikron cat 34 titik dan garansi bebas banjir.",
+    "Showroom jual-beli mobil bekas transparan di Jawa Timur. Setiap unit disertai lembar uji mikron cat 34 titik, garansi bebas tabrak, dan bebas banjir.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -303,7 +303,7 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
             </h2>
             <p className="text-[13px] text-[var(--muted)] mt-0.5">
               {vehicle.inspection
-                ? `Tanggal inspeksi: ${formatDate(vehicle.inspection.inspectedAt)}. Apa adanya: rusak dibilang rusak.`
+                ? `Tanggal inspeksi: ${formatDate(vehicle.inspection.inspectedAt)}. Hasil cek fisik transparan terverifikasi.`
                 : "Inspeksi digital mandiri dapat dijadwalkan saat cek fisik langsung di garasi."}
             </p>
           </div>
