@@ -116,9 +116,9 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
   const readyUnits = activeUnits.filter((v) => v.status === "READY_FOR_SALE");
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
       {/* ── KPI SUMMARY CARDS ─────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
         <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-5 shadow-sm">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-xs font-semibold uppercase tracking-wider">Unit Aktif di Garasi</span>
