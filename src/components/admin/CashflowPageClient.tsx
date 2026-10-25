@@ -137,8 +137,8 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <span>{feedback.message}</span>
@@ -172,36 +172,36 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Kas Masuk</span>
-            <ArrowDownLeft className="w-4 h-4 text-emerald-600" />
+            <ArrowDownLeft className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-emerald-700 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(totalIn)}
           </div>
-          <p className="text-xs text-[var(--muted)]">Penjualan mobil & setoran modal</p>
+          <p className="text-xs text-[var(--muted)]">Penjualan mobil &amp; setoran modal</p>
         </div>
 
         {/* Total Kas Keluar */}
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Kas Keluar</span>
-            <ArrowUpRight className="w-4 h-4 text-rose-600" />
+            <ArrowUpRight className="w-4 h-4 text-[var(--muted)]" />
           </div>
-          <div className="text-2xl font-black text-rose-700 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(totalOut)}
           </div>
-          <p className="text-xs text-[var(--muted)]">Kulakan, perbaikan, OPEX & prive</p>
+          <p className="text-xs text-[var(--muted)]">Kulakan, perbaikan, OPEX &amp; prive</p>
         </div>
 
         {/* Rekonsiliasi Bank */}
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Status Mutasi</span>
-            <CheckCircle2 className="w-4 h-4 text-[#16A34A]" />
+            <CheckCircle2 className="w-4 h-4 text-[var(--accent)]" />
           </div>
           <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {cashTransactions.length} <span className="text-xs font-semibold text-[var(--muted)]">Mutasi</span>
           </div>
-          <p className="text-xs text-[#16A34A] font-semibold">Tersinkronisasi dengan Buku Kas</p>
+          <p className="text-xs text-[var(--muted)] font-medium">Tersinkronisasi dengan Buku Kas</p>
         </div>
       </div>
 
@@ -235,7 +235,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
               onClick={() => setCashFilter("IN")}
               className={cn(
                 "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all",
-                cashFilter === "IN" ? "bg-emerald-600 text-white shadow-xs" : "text-[var(--muted)] hover:text-emerald-700"
+                cashFilter === "IN" ? "bg-[var(--ink)] text-white shadow-xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
               Kas Masuk
@@ -244,7 +244,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
               onClick={() => setCashFilter("OUT")}
               className={cn(
                 "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all",
-                cashFilter === "OUT" ? "bg-rose-600 text-white shadow-xs" : "text-[var(--muted)] hover:text-rose-700"
+                cashFilter === "OUT" ? "bg-[var(--ink)] text-white shadow-xs" : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
               Kas Keluar
@@ -309,14 +309,14 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
                           className={cn(
                             "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold border",
                             isIncoming
-                              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                              : "bg-rose-50 text-rose-800 border-rose-200"
+                              ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
+                              : "bg-[var(--bg)] text-[var(--bad)] border-[var(--bad)]/30"
                           )}
                         >
                           {isIncoming ? (
-                            <ArrowDownLeft className="w-3 h-3 text-emerald-600" />
+                            <ArrowDownLeft className="w-3 h-3 text-[var(--ok)]" />
                           ) : (
-                            <ArrowUpRight className="w-3 h-3 text-rose-600" />
+                            <ArrowUpRight className="w-3 h-3 text-[var(--bad)]" />
                           )}
                           {CASH_TYPE_LABELS[tx.type] || tx.type}
                         </span>
@@ -336,7 +336,7 @@ export function CashflowPageClient({ summary, cashTransactions }: CashflowPagePr
                       </td>
 
                       <td className="py-3.5 px-4 text-right whitespace-nowrap font-bold">
-                        <span className={isIncoming ? "text-emerald-700" : "text-rose-700"}>
+                        <span className={isIncoming ? "text-[var(--ink)]" : "text-[var(--bad)]"}>
                           {isIncoming ? "+" : "-"} {formatRupiah(tx.amount)}
                         </span>
                       </td>

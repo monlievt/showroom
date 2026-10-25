@@ -97,8 +97,8 @@ export function CashTransactionNewClient() {
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--ok)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -145,11 +145,7 @@ export function CashTransactionNewClient() {
               placeholder="Contoh: 5.000.000"
               value={amount !== "" ? formatThousands(amount) : ""}
               onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
-              className={`w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 ${
-                isIncome
-                  ? "text-emerald-700 focus:ring-emerald-500/20"
-                  : "text-red-700 focus:ring-red-500/20"
-              }`}
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
             />
           </div>
 
@@ -177,18 +173,12 @@ export function CashTransactionNewClient() {
         </div>
 
         {/* Live Card Preview */}
-        <div
-          className={`p-4 rounded-2xl border text-xs flex items-center justify-between ${
-            isIncome
-              ? "bg-emerald-50 border-emerald-200 text-emerald-900"
-              : "bg-red-50 border-red-200 text-red-900"
-          }`}
-        >
+        <div className="p-4 rounded-xl border border-[var(--line)] bg-white text-xs text-[var(--ink)] shadow-xs flex items-center justify-between">
           <div className="flex items-center gap-2">
             {isIncome ? (
-              <TrendingUp className="w-4 h-4 text-emerald-600" />
+              <TrendingUp className="w-4 h-4 text-[var(--accent)]" />
             ) : (
-              <TrendingDown className="w-4 h-4 text-red-600" />
+              <TrendingDown className="w-4 h-4 text-[var(--muted)]" />
             )}
             <span className="font-semibold">
               Efek pada Buku Kas: {isIncome ? "Saldo BCA Bertambah (+)" : "Saldo BCA Berkurang (-)"}

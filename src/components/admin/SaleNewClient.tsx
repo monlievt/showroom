@@ -297,8 +297,8 @@ export function SaleNewClient({
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--accent)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -345,7 +345,7 @@ export function SaleNewClient({
               </select>
 
               {selectedUnit && (
-                <div className="flex flex-wrap items-center gap-4 text-xs mt-3 p-3 bg-amber-50/70 border border-amber-200 rounded-xl">
+                <div className="flex flex-wrap items-center gap-4 text-xs mt-3 p-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-[var(--muted)]">
                   <span>
                     HPP Berjalan:{" "}
                     <strong className="text-[var(--ink)]">
@@ -355,7 +355,7 @@ export function SaleNewClient({
                   {selectedUnit.targetSellingPrice && (
                     <span>
                       Target Banderol:{" "}
-                      <strong className="text-[#16A34A]">
+                      <strong className="text-[var(--ink)]">
                         {formatRupiah(selectedUnit.targetSellingPrice)}
                       </strong>
                     </span>
@@ -363,7 +363,7 @@ export function SaleNewClient({
                   {selectedUnit.minSellingPrice && (
                     <span>
                       Batas Nego Net:{" "}
-                      <strong className="text-[#92400E]">
+                      <strong className="text-[var(--ink)]">
                         {formatRupiah(selectedUnit.minSellingPrice)}
                       </strong>
                     </span>
@@ -499,7 +499,7 @@ export function SaleNewClient({
                 4. Pembayaran Awal (DP) & Ketentuan Cash Tempo
               </h2>
             </div>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-stone-100 text-stone-700">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
               100% Cash / Tempo Internal Garasi (Non-Leasing)
             </span>
           </div>
@@ -515,7 +515,7 @@ export function SaleNewClient({
                 placeholder="Contoh: 105.000.000"
                 value={initialPaymentAmount !== "" ? formatThousands(initialPaymentAmount) : ""}
                 onChange={(e) => setInitialPaymentAmount(parseThousands(e.target.value) || "")}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
               <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 {priceNum > 0 && (
@@ -573,13 +573,13 @@ export function SaleNewClient({
                   </div>
                 </div>
               ) : (
-                <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-950 text-xs flex items-start gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="font-bold text-[#78350F] block">
+                    <strong className="font-bold block">
                       Ketentuan Jaminan Dokumen Cash Tempo Nur Mobil
                     </strong>
-                    <p className="mt-0.5 text-[11px] text-[#92400E] leading-relaxed">
+                    <p className="mt-0.5 text-[11px] text-[var(--muted)] leading-relaxed">
                       Asli BPKB dan Asli STNK <strong>wajib ditahan di brankas showroom</strong> sampai sisa pelunasan 100% diterima. Konsumen hanya memegang Surat Jalan resmi sementara.
                     </p>
                   </div>
@@ -603,7 +603,7 @@ export function SaleNewClient({
                 </p>
               </div>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
               SOP Serah Terima Nur Mobil
             </span>
           </div>
@@ -625,7 +625,7 @@ export function SaleNewClient({
                       <span>Foto Serah Terima</span>
                     </span>
                     {handoverPhotoUrl && (
-                      <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                      <span className="text-[9px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full">
                         ✓ Terunggah
                       </span>
                     )}
@@ -637,7 +637,7 @@ export function SaleNewClient({
 
                 {handoverPhotoUrl ? (
                   <div className="space-y-2">
-                    <div className="h-24 w-full rounded-lg overflow-hidden border border-emerald-300 relative bg-black/5">
+                    <div className="h-24 w-full rounded-lg overflow-hidden border border-[var(--line)] relative bg-black/5">
                       <img
                         src={handoverPhotoUrl}
                         alt="Serah Terima"
@@ -655,7 +655,7 @@ export function SaleNewClient({
                   </div>
                 ) : (
                   <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-[var(--bg)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
                       {uploadingPhoto ? (
                         <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
                       ) : (
@@ -699,7 +699,7 @@ export function SaleNewClient({
                       <span>BAST Bertandatangan</span>
                     </span>
                     {bastDocUrl && (
-                      <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                      <span className="text-[9px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full">
                         ✓ Terunggah
                       </span>
                     )}
@@ -711,8 +711,8 @@ export function SaleNewClient({
 
                 {bastDocUrl ? (
                   <div className="space-y-2">
-                    <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-center">
-                      <span className="text-[11px] font-bold text-emerald-800 block truncate">
+                    <div className="p-2 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-center">
+                      <span className="text-[11px] font-bold text-[var(--ink)] block truncate">
                         BAST Tersimpan
                       </span>
                       <a
@@ -736,7 +736,7 @@ export function SaleNewClient({
                   </div>
                 ) : (
                   <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-[var(--bg)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
                       {uploadingBast ? (
                         <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
                       ) : (
@@ -778,7 +778,7 @@ export function SaleNewClient({
                       <span>Bukti Pelunasan / Kuitansi</span>
                     </span>
                     {paymentReceiptUrl && (
-                      <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                      <span className="text-[9px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full">
                         ✓ Terunggah
                       </span>
                     )}
@@ -790,8 +790,8 @@ export function SaleNewClient({
 
                 {paymentReceiptUrl ? (
                   <div className="space-y-2">
-                    <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-center">
-                      <span className="text-[11px] font-bold text-emerald-800 block truncate">
+                    <div className="p-2 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-center">
+                      <span className="text-[11px] font-bold text-[var(--ink)] block truncate">
                         Bukti Bayar Tersimpan
                       </span>
                       <a
@@ -815,7 +815,7 @@ export function SaleNewClient({
                   </div>
                 ) : (
                   <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-[var(--bg)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
                       {uploadingReceipt ? (
                         <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
                       ) : (
@@ -857,7 +857,7 @@ export function SaleNewClient({
                       <span>Foto KTP Pembeli</span>
                     </span>
                     {buyerIdCardUrl && (
-                      <span className="text-[9px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                      <span className="text-[9px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full">
                         ✓ Terunggah
                       </span>
                     )}
@@ -869,7 +869,7 @@ export function SaleNewClient({
 
                 {buyerIdCardUrl ? (
                   <div className="space-y-2">
-                    <div className="h-24 w-full rounded-lg overflow-hidden border border-emerald-300 relative bg-black/5">
+                    <div className="h-24 w-full rounded-lg overflow-hidden border border-[var(--line)] relative bg-black/5">
                       <img
                         src={buyerIdCardUrl}
                         alt="KTP Pembeli"
@@ -887,7 +887,7 @@ export function SaleNewClient({
                   </div>
                 ) : (
                   <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-amber-50/50 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
+                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-[var(--bg)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
                       {uploadingKtp ? (
                         <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
                       ) : (
@@ -980,14 +980,14 @@ export function SaleNewClient({
                     className={cn(
                       "flex items-center gap-2.5 p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer",
                       isChecked
-                        ? "bg-emerald-50 border-emerald-300 text-emerald-950"
-                        : "bg-[var(--bg)] border-[var(--line)] text-[var(--muted)] hover:bg-stone-100"
+                        ? "bg-white border-[var(--accent)] text-[var(--ink)] shadow-xs"
+                        : "bg-[var(--bg)] border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)]"
                     )}
                   >
                     {isChecked ? (
-                      <CheckSquare className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <CheckSquare className="w-4 h-4 text-[var(--accent)] shrink-0" />
                     ) : (
-                      <Square className="w-4 h-4 text-[#A8A29E] shrink-0" />
+                      <Square className="w-4 h-4 text-[var(--muted)] shrink-0" />
                     )}
                     <span>{item.label}</span>
                   </button>
@@ -997,7 +997,7 @@ export function SaleNewClient({
           </div>
 
           {/* 4D. KOMISI MAKELAR / MEDIATOR (JIKA ADA) */}
-          <div className="pt-2 border-t border-[var(--line)] bg-stone-50/70 p-3.5 rounded-xl border border-stone-200">
+          <div className="pt-2 border-t border-[var(--line)] bg-[var(--bg)] p-3.5 rounded-xl border border-[var(--line)]">
             <div className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4 text-[var(--accent)]" />
               <span className="text-xs font-bold text-[var(--ink)]">
@@ -1045,14 +1045,14 @@ export function SaleNewClient({
         </div>
 
         {/* Live Transaction Summary Card */}
-        <div className="bg-[var(--ink)] text-white rounded-2xl p-5 sm:p-6 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div className="bg-[var(--ink)] text-white rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5">
           <div className="space-y-1">
             <span className="text-xs uppercase tracking-wider text-white/60 font-semibold block flex items-center gap-1.5">
-              <FileCheck className="w-4 h-4 text-[var(--accent)]" />
+              <FileCheck className="w-4 h-4 text-white/80" />
               <span>Ringkasan Kesepakatan Transaksi</span>
             </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-extrabold text-[var(--accent)]">
+              <span className="text-2xl sm:text-3xl font-extrabold text-white">
                 {formatRupiah(priceNum)}
               </span>
               <span className="text-xs text-white/70">total harga jual</span>
@@ -1062,20 +1062,20 @@ export function SaleNewClient({
           <div className="grid grid-cols-3 gap-4 border-t md:border-t-0 md:border-l border-white/20 pt-4 md:pt-0 md:pl-6 text-right">
             <div>
               <span className="text-[10px] text-white/60 block">DP Masuk</span>
-              <span className="text-xs font-bold text-emerald-400">
+              <span className="text-xs font-bold text-white">
                 {formatRupiah(initialNum)}
               </span>
             </div>
             <div>
               <span className="text-[10px] text-white/60 block">Sisa Piutang</span>
-              <span className="text-xs font-bold text-amber-400">
+              <span className="text-xs font-bold text-white/90">
                 {formatRupiah(remainingPiutang)}
               </span>
             </div>
             <div>
               <span className="text-[10px] text-white/60 block">Estimasi Gross Profit</span>
               <span className="text-xs font-bold text-white flex items-center justify-end gap-1">
-                <TrendingUp className="w-3 h-3 text-emerald-400" />
+                <TrendingUp className="w-3 h-3 text-white/70" />
                 {formatRupiah(estimatedGrossProfit)}
               </span>
             </div>
@@ -1094,7 +1094,7 @@ export function SaleNewClient({
           <button
             type="submit"
             disabled={loading || availableVehicles.length === 0}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

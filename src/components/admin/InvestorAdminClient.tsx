@@ -221,8 +221,8 @@ export function InvestorAdminClient({
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <span>{feedback.message}</span>
@@ -278,34 +278,34 @@ export function InvestorAdminClient({
           <p className="text-xs text-[var(--muted)]">Dana berputar di unit mobil aktif</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm space-y-1">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Unit Siap Dibagi Laba</span>
-            <HeartHandshake className="w-4 h-4 text-amber-600" />
+            <HeartHandshake className="w-4 h-4 text-[var(--accent)]" />
           </div>
           <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {summary.pendingDistributionsCount} <span className="text-sm font-medium text-[var(--muted)]">Unit</span>
           </div>
-          <p className="text-xs text-amber-700 font-medium">Lunas 100% & menunggu eksekusi</p>
+          <p className="text-xs text-[var(--muted)] font-medium">Lunas 100% &amp; menunggu eksekusi</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm space-y-1">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Laba Investor</span>
-            <TrendingUp className="w-4 h-4 text-emerald-600" />
+            <TrendingUp className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-emerald-700 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalInvestorProfit)}
           </div>
-          <p className="text-xs text-[var(--muted)]">Pencairan laba ke mitra & keluarga</p>
+          <p className="text-xs text-[var(--muted)]">Pencairan laba ke mitra &amp; keluarga</p>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm space-y-1">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Laba Owner</span>
-            <Building className="w-4 h-4 text-blue-600" />
+            <Building className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-blue-700 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalOwnerProfit)}
           </div>
           <p className="text-xs text-[var(--muted)]">Bagian hasil bersih pengelola showroom</p>
@@ -325,7 +325,7 @@ export function InvestorAdminClient({
         >
           <span>Unit Siap Bagi Hasil</span>
           {pendingSales.length > 0 && (
-            <span className="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">
+            <span className="bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] text-[10px] px-2 py-0.5 rounded-full font-bold">
               {pendingSales.length}
             </span>
           )}
@@ -380,14 +380,14 @@ export function InvestorAdminClient({
                 Distribusi hanya dieksekusi saat pembayaran lunas 100% (SUM(payments) ≥ Harga Jual).
               </p>
             </div>
-            <span className="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-full font-bold">
+            <span className="bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] text-xs px-2.5 py-1 rounded-full font-bold">
               {pendingSales.length} Unit Siap
             </span>
           </div>
 
           {pendingSales.length === 0 ? (
             <div className="p-8 text-center text-[var(--muted)]">
-              <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2 opacity-80" />
+              <CheckCircle2 className="w-10 h-10 text-[var(--accent)] mx-auto mb-2 opacity-80" />
               <p className="text-sm font-medium">Semua unit yang lunas sudah didistribusikan labanya.</p>
               <p className="text-xs mt-1">Tidak ada antrean pembagian laba yang tertunda.</p>
             </div>
@@ -422,7 +422,7 @@ export function InvestorAdminClient({
                         <span
                           className={cn(
                             "font-bold",
-                            s.grossProfit >= 0 ? "text-emerald-600" : "text-red-600"
+                            s.grossProfit >= 0 ? "text-[var(--ink)]" : "text-[var(--bad)]"
                           )}
                         >
                           {formatRupiah(s.grossProfit)}
@@ -432,7 +432,7 @@ export function InvestorAdminClient({
                         <button
                           disabled={loading}
                           onClick={() => handleExecuteDistribution(s.id)}
-                          className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-colors cursor-pointer"
+                          className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
                         >
                           Eksekusi Bagi Hasil
                         </button>
@@ -453,21 +453,14 @@ export function InvestorAdminClient({
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {investors.map((inv) => (
-              <div key={inv.id} className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-sm space-y-4">
+              <div key={inv.id} className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-4">
                 <div className="flex items-start justify-between">
                   <div>
                     <h4 className="font-bold text-base text-[var(--ink)]">{inv.name}</h4>
                     <span className="text-xs text-[var(--muted)]">{inv.phone || "Tanpa No HP"}</span>
                   </div>
                   <span
-                    className={cn(
-                      "text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider",
-                      inv.type === "MOTHER_SIBLING"
-                        ? "bg-purple-100 text-purple-800"
-                        : inv.type === "OWNER_EQUITY"
-                        ? "bg-emerald-100 text-emerald-800"
-                        : "bg-blue-100 text-blue-800"
-                    )}
+                    className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]"
                   >
                     {inv.type === "MOTHER_SIBLING" ? "Ibu / 4 Saudara" : inv.type === "OWNER_EQUITY" ? "Owner Equity" : "Pihak Ketiga"}
                   </span>
@@ -484,7 +477,7 @@ export function InvestorAdminClient({
                   </div>
                   <div className="flex justify-between text-[var(--muted)]">
                     <span>Total Laba Diterima:</span>
-                    <span className="font-bold text-emerald-600">{formatRupiah(inv.totalProfitDistributed)}</span>
+                    <span className="font-bold text-[var(--ink)]">{formatRupiah(inv.totalProfitDistributed)}</span>
                   </div>
                 </div>
 
@@ -556,11 +549,11 @@ export function InvestorAdminClient({
                       <td className="py-3 px-4 text-right text-xs text-[var(--muted)]">
                         {formatRupiah(d.grossProfitAtCalc)}
                       </td>
-                      <td className="py-3 px-4 text-right font-bold text-emerald-600">
+                      <td className="py-3 px-4 text-right font-bold text-[var(--ink)]">
                         {formatRupiah(d.calculatedAmount)}
                       </td>
                       <td className="py-3 px-4 text-center">
-                        <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">
+                        <span className="bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] text-[10px] font-bold px-2 py-0.5 rounded">
                           LUNAS
                         </span>
                       </td>
@@ -620,7 +613,7 @@ export function InvestorAdminClient({
                     <td className="py-3.5 px-4 text-xs text-[var(--muted)]">
                       {formatRupiah(r.minProfit)} s/d {r.maxProfit ? formatRupiah(r.maxProfit) : "Tak Terbatas"}
                     </td>
-                    <td className="py-3.5 px-4 text-right font-bold text-xs text-emerald-600">
+                    <td className="py-3.5 px-4 text-right font-bold text-xs text-[var(--ink)]">
                       {formatRupiah(r.amountPerPerson)}
                     </td>
                     <td className="py-3.5 px-4 text-center text-xs font-medium text-[var(--ink)]">

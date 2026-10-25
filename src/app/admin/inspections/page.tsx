@@ -71,7 +71,7 @@ export default async function InspectionsIndexPage() {
                         <td className="py-4 px-4">
                           {currentInsp ? (
                             <div>
-                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#DCFCE7] text-[#16A34A] border border-[#16A34A]/30">
+                              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--bg)] text-[var(--ok)] border border-[var(--ok)]/30">
                                 <CheckCircle2 className="w-3.5 h-3.5" />
                                 Versi {currentInsp.version} ({currentInsp.stage})
                               </span>
@@ -80,7 +80,7 @@ export default async function InspectionsIndexPage() {
                               </div>
                             </div>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEE2E2] text-[#DC2626] border border-[#DC2626]/30">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30">
                               <AlertTriangle className="w-3.5 h-3.5" />
                               Belum Diinspeksi
                             </span>
@@ -90,16 +90,16 @@ export default async function InspectionsIndexPage() {
                         <td className="py-4 px-4">
                           {currentInsp ? (
                             <div className="flex items-center gap-1.5 font-bold text-xs">
-                              <span className="px-2 py-0.5 bg-[#FEF3C7] text-[#92400E] rounded" title="Mesin">
+                              <span className="px-2 py-0.5 bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] rounded" title="Mesin">
                                 M: {currentInsp.engineGrade}
                               </span>
-                              <span className="px-2 py-0.5 bg-[#FEF3C7] text-[#92400E] rounded" title="Interior">
+                              <span className="px-2 py-0.5 bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] rounded" title="Interior">
                                 I: {currentInsp.interiorGrade}
                               </span>
-                              <span className="px-2 py-0.5 bg-[#FEF3C7] text-[#92400E] rounded" title="Eksterior">
+                              <span className="px-2 py-0.5 bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] rounded" title="Eksterior">
                                 E: {currentInsp.exteriorGrade}
                               </span>
-                              <span className="px-2 py-0.5 bg-[#FEF3C7] text-[#92400E] rounded" title="Rangka">
+                              <span className="px-2 py-0.5 bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] rounded" title="Rangka">
                                 R: {currentInsp.frameGrade}
                               </span>
                             </div>
@@ -111,10 +111,10 @@ export default async function InspectionsIndexPage() {
                         <td className="py-4 px-4">
                           {currentInsp ? (
                             <div className="text-xs space-y-0.5">
-                              <div className={cn("font-semibold", currentInsp.accidentHistory ? "text-[#DC2626]" : "text-[#16A34A]")}>
+                              <div className={cn("font-semibold", currentInsp.accidentHistory ? "text-[var(--bad)]" : "text-[var(--ok)]")}>
                                 {currentInsp.accidentHistory ? "⚠️ Riwayat Laka" : "✓ Bebas Laka"}
                               </div>
-                              <div className={cn("font-semibold", currentInsp.floodHistory ? "text-[#DC2626]" : "text-[#16A34A]")}>
+                              <div className={cn("font-semibold", currentInsp.floodHistory ? "text-[var(--bad)]" : "text-[var(--ok)]")}>
                                 {currentInsp.floodHistory ? "⚠️ Riwayat Banjir" : "✓ Bebas Banjir"}
                               </div>
                             </div>
@@ -130,15 +130,15 @@ export default async function InspectionsIndexPage() {
                                 href={`/api/pdf/inspection/${currentInsp.id}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[#16A34A] hover:text-white text-[var(--ink)] transition-colors"
+                                className="p-2 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-white text-[var(--ink)] transition-colors shadow-2xs"
                                 title="Unduh Sertifikat PDF"
                               >
-                                <Printer className="w-4 h-4" />
+                                <Printer className="w-4 h-4 text-[var(--accent)]" />
                               </a>
                             )}
                             <Link
                               href={`/admin/inspections/${v.id}`}
-                              className="px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold transition-colors inline-flex items-center gap-1"
+                              className="px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold transition-colors inline-flex items-center gap-1 shadow-xs"
                             >
                               <span>Detail Cek</span>
                               <ArrowRight className="w-3.5 h-3.5" />

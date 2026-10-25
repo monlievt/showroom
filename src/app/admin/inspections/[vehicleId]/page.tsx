@@ -104,7 +104,7 @@ export default async function VehicleInspectionsPage({
                 >
                   <span>Versi {insp.version} ({insp.stage})</span>
                   {insp.isCurrent && (
-                    <span className="px-1.5 py-0.5 rounded text-[10px] bg-[#16A34A] text-white font-bold">
+                    <span className="px-1.5 py-0.5 rounded text-[10px] bg-[var(--ok)] text-white font-bold">
                       Aktif
                     </span>
                   )}
@@ -122,7 +122,7 @@ export default async function VehicleInspectionsPage({
                       <h2 className="text-xl font-bold text-[var(--ink)]">
                         Laporan Inspeksi Versi {currentInspection.version}
                       </h2>
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#92400E] border border-[var(--accent)]/30">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
                         {currentInspection.stage}
                       </span>
                     </div>
@@ -135,7 +135,7 @@ export default async function VehicleInspectionsPage({
                     <Link
                       href={`/inspeksi/${currentInspection.id}`}
                       target="_blank"
-                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--ink)] hover:bg-[var(--accent)] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--ink)] hover:bg-[var(--accent)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
                     >
                       <Eye className="w-4 h-4" />
                       <span>Preview Sertifikat Web (Mobile Friendly)</span>
@@ -144,9 +144,9 @@ export default async function VehicleInspectionsPage({
                       href={`/api/pdf/inspection/${currentInspection.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-[var(--ink)] rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
                     >
-                      <Printer className="w-4 h-4" />
+                      <Printer className="w-4 h-4 text-[var(--accent)]" />
                       <span>Cetak PDF</span>
                     </a>
                   </div>
@@ -154,9 +154,9 @@ export default async function VehicleInspectionsPage({
 
                 {/* Total Grade & 4 Pilar Grades */}
                 <div className="space-y-3">
-                  <div className="p-4 rounded-xl bg-white border border-[var(--line)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="p-4 rounded-xl bg-white border border-[var(--line)] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
                     <div className="flex items-center gap-3">
-                      <div className="p-2.5 rounded-lg bg-[#FEF3C7] text-[var(--accent)] border border-[var(--accent)]/30">
+                      <div className="p-2.5 rounded-lg bg-[var(--bg)] text-[var(--accent)] border border-[var(--line)]">
                         <Sparkles className="w-6 h-6" />
                       </div>
                       <div>
@@ -168,7 +168,7 @@ export default async function VehicleInspectionsPage({
                             Grade {currentInspection.totalGrade || "A"}
                           </span>
                           <span className="text-xs font-semibold text-[var(--muted)]">
-                            • Skor Gabungan Mesin, Interior, Eksterior & Rangka
+                            • Skor Gabungan Mesin, Interior, Eksterior &amp; Rangka
                           </span>
                         </div>
                       </div>
@@ -178,16 +178,16 @@ export default async function VehicleInspectionsPage({
                       <span className={cn(
                         "px-2.5 py-1 rounded-full border",
                         currentInspection.hasServiceBook !== false
-                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                          : "bg-stone-100 text-stone-600 border-stone-200"
+                          ? "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
+                          : "bg-[var(--bg)] text-[var(--muted)] border-[var(--line)]"
                       )}>
                         {currentInspection.hasServiceBook !== false ? "✓ Buku Servis Ada" : "Buku Servis Nihil"}
                       </span>
                       <span className={cn(
                         "px-2.5 py-1 rounded-full border",
                         currentInspection.hasSpareKey !== false
-                          ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                          : "bg-stone-100 text-stone-600 border-stone-200"
+                          ? "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
+                          : "bg-[var(--bg)] text-[var(--muted)] border-[var(--line)]"
                       )}>
                         {currentInspection.hasSpareKey !== false ? "✓ Kunci Cadangan Ada" : "1 Kunci"}
                       </span>
@@ -219,8 +219,8 @@ export default async function VehicleInspectionsPage({
                   <div className={cn(
                     "p-4 rounded-xl border flex items-center gap-3",
                     currentInspection.accidentHistory 
-                      ? "bg-[#FEE2E2] border-[#DC2626] text-[#DC2626]" 
-                      : "bg-[#DCFCE7] border-[#16A34A] text-[#16A34A]"
+                      ? "bg-[var(--bg)] border-[var(--bad)] text-[var(--bad)]" 
+                      : "bg-[var(--bg)] border-[var(--ok)] text-[var(--ok)]"
                   )}>
                     {currentInspection.accidentHistory ? <AlertTriangle className="w-5 h-5 shrink-0" /> : <CheckCircle2 className="w-5 h-5 shrink-0" />}
                     <div>
@@ -236,8 +236,8 @@ export default async function VehicleInspectionsPage({
                   <div className={cn(
                     "p-4 rounded-xl border flex items-center gap-3",
                     currentInspection.floodHistory 
-                      ? "bg-[#FEE2E2] border-[#DC2626] text-[#DC2626]" 
-                      : "bg-[#DCFCE7] border-[#16A34A] text-[#16A34A]"
+                      ? "bg-[var(--bg)] border-[var(--bad)] text-[var(--bad)]" 
+                      : "bg-[var(--bg)] border-[var(--ok)] text-[var(--ok)]"
                   )}>
                     {currentInspection.floodHistory ? <AlertTriangle className="w-5 h-5 shrink-0" /> : <CheckCircle2 className="w-5 h-5 shrink-0" />}
                     <div>
@@ -254,9 +254,9 @@ export default async function VehicleInspectionsPage({
                 {/* 15 Panel Table */}
                 <div className="bg-white border border-[var(--line)] rounded-2xl overflow-hidden shadow-sm">
                   <div className="p-4 bg-[var(--bg)] border-b border-[var(--line)] font-bold text-sm text-[var(--ink)] flex items-center justify-between">
-                    <span>Hasil Pengukuran 15 Titik Panel Bodi & Bumper (Standar Inspeksi)</span>
+                    <span>Hasil Pengukuran 15 Titik Panel Bodi &amp; Bumper (Standar Inspeksi)</span>
                     <span className="text-xs font-normal text-[var(--muted)]">
-                      Termasuk Rocker Panel & Bumper Plastik Non-Mikron
+                      Termasuk Rocker Panel &amp; Bumper Plastik Non-Mikron
                     </span>
                   </div>
                   <div className="overflow-x-auto">
@@ -283,11 +283,11 @@ export default async function VehicleInspectionsPage({
                               </td>
                               <td className="py-3 px-4 text-xs">
                                 {isPlasticBumper ? (
-                                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--bg)] text-[var(--accent)] border border-[var(--line)]">
                                     Plastik ABS
                                   </span>
                                 ) : (
-                                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-stone-100 text-stone-700">
+                                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
                                     Bodi Logam
                                   </span>
                                 )}
@@ -303,9 +303,9 @@ export default async function VehicleInspectionsPage({
                                     {category && (
                                       <span className={cn(
                                         "ml-2 text-[11px] font-semibold",
-                                        category === "ORIGINAL" && "text-[#16A34A]",
-                                        category === "REPAINT" && "text-[#CA8A04]",
-                                        category === "THICK_FILLER" && "text-[#DC2626]"
+                                        category === "ORIGINAL" && "text-[var(--ok)]",
+                                        category === "REPAINT" && "text-[var(--warn)]",
+                                        category === "THICK_FILLER" && "text-[var(--bad)]"
                                       )}>
                                         ({category === "ORIGINAL" ? "Original" : category === "REPAINT" ? "Repaint" : "Dempul"})
                                       </span>
@@ -315,7 +315,7 @@ export default async function VehicleInspectionsPage({
                               </td>
                               <td className="py-3 px-4 text-xs">
                                 {panel.defectCode ? (
-                                  <span className="font-mono font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 text-xs">
+                                  <span className="font-mono font-bold px-1.5 py-0.5 rounded bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] text-xs">
                                     {panel.defectCode}
                                   </span>
                                 ) : (

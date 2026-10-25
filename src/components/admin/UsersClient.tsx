@@ -278,23 +278,23 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
       {feedback && (
         <div
           className={cn(
-            "p-4 rounded-2xl flex items-center justify-between gap-3 shadow-md border animate-in fade-in slide-in-from-top-2",
+            "p-4 rounded-2xl flex items-center justify-between gap-3 shadow-xs border animate-in fade-in slide-in-from-top-2",
             feedback.type === "success"
-              ? "bg-emerald-50 text-emerald-900 border-emerald-200"
-              : "bg-red-50 text-red-900 border-red-200"
+              ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--line)]"
+              : "bg-[var(--bg)] text-[var(--bad)] border-[var(--bad)]/30"
           )}
         >
           <div className="flex items-center gap-2.5 text-sm font-semibold">
             {feedback.type === "success" ? (
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[var(--bad)] shrink-0" />
             )}
             <span>{feedback.message}</span>
           </div>
           <button
             onClick={() => setFeedback(null)}
-            className="p-1 rounded-lg hover:bg-black/5 cursor-pointer text-stone-500"
+            className="p-1 rounded-lg hover:bg-black/5 cursor-pointer text-[var(--muted)]"
           >
             <X className="w-4 h-4" />
           </button>
@@ -419,9 +419,9 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
               {filteredUsers.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-[var(--muted)]">
-                    <Users className="w-8 h-8 mx-auto text-stone-400 mb-2" />
-                    <p className="font-bold text-sm">Tidak ada pengguna yang cocok</p>
-                    <p className="text-xs text-stone-500 mt-0.5">
+                    <Users className="w-8 h-8 mx-auto text-[var(--muted)] mb-2" />
+                    <p className="font-bold text-sm text-[var(--ink)]">Tidak ada pengguna yang cocok</p>
+                    <p className="text-xs text-[var(--muted)] mt-0.5">
                       Coba ubah kata kunci pencarian atau filter peran.
                     </p>
                   </td>
@@ -470,12 +470,12 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                       {/* Status */}
                       <td className="py-3.5 px-4 text-center">
                         {user.isActive ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[var(--bg)] text-[var(--ok)] border border-[var(--ok)]/30">
                             <CheckCircle2 className="w-3 h-3" />
                             Aktif
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-stone-100 text-stone-600 border border-stone-200">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
                             <XCircle className="w-3 h-3" />
                             Nonaktif
                           </span>
@@ -485,13 +485,13 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                       {/* Kata Sandi Status */}
                       <td className="py-3.5 px-4 text-center">
                         {user.hasPassword ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700">
-                            <KeyRound className="w-3.5 h-3.5 text-emerald-600" />
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--ok)]">
+                            <KeyRound className="w-3.5 h-3.5 text-[var(--ok)]" />
                             Tersimpan (Hash)
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-stone-500">
-                            <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--muted)]">
+                            <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
                             Default (.env)
                           </span>
                         )}
@@ -503,7 +503,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                           {/* Tombol Edit */}
                           <button
                             onClick={() => openEditModal(user)}
-                            className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-stone-50 text-[var(--ink)] transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--bg)] text-[var(--ink)] transition-colors cursor-pointer"
                             title="Edit data / ganti password"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -520,7 +520,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                               className={cn(
                                 "p-1.5 rounded-lg border transition-colors",
                                 isCurrent
-                                  ? "border-stone-200 text-stone-300 cursor-not-allowed"
+                                  ? "border-[var(--line)] text-[var(--muted)]/40 cursor-not-allowed"
                                   : "border-red-200 bg-red-50 hover:bg-red-100 text-red-700 cursor-pointer"
                               )}
                               title={
@@ -557,14 +557,14 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
           >
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[var(--accent)] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shadow-2xs">
                   <UserPlus className="w-4 h-4" />
                 </div>
                 <h3 className="font-bold text-base text-[var(--ink)]">Tambah Pengguna Baru</h3>
               </div>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-stone-400 hover:text-stone-700 cursor-pointer"
+                className="text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -590,7 +590,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   Username Login <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 font-mono text-sm">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)] font-mono text-sm">
                     @
                   </span>
                   <input
@@ -686,7 +686,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   Kata Sandi Baru <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+                  <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
                   <input
                     type={showAddPassword ? "text" : "password"}
                     required
@@ -699,7 +699,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   <button
                     type="button"
                     onClick={() => setShowAddPassword(!showAddPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 cursor-pointer p-1"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer p-1"
                   >
                     {showAddPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -713,7 +713,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--ink)] hover:bg-stone-50 cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--ink)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
@@ -745,7 +745,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
           >
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[var(--accent)] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shadow-2xs">
                   <Edit2 className="w-4 h-4" />
                 </div>
                 <div>
@@ -755,7 +755,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
               </div>
               <button
                 onClick={() => setEditingUser(null)}
-                className="text-stone-400 hover:text-stone-700 cursor-pointer"
+                className="text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -803,7 +803,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   <option value="OWNER">👑 Owner / Direksi (Akses Penuh Semua Menu)</option>
                 </select>
                 {editingUser.authUserId === "owner" && (
-                  <span className="text-[10px] text-amber-700 mt-1 block">
+                  <span className="text-[10px] text-[var(--muted)] mt-1 block">
                     Peran akun Owner Utama tidak dapat diubah demi keamanan sistem.
                   </span>
                 )}
@@ -853,7 +853,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                     />
                     <span>Aktif (Dapat Login)</span>
                   </label>
-                  <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-stone-500">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-[var(--muted)]">
                     <input
                       type="radio"
                       name="isActive"
@@ -873,7 +873,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   Reset Kata Sandi Baru (Opsional)
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+                  <Lock className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)]" />
                   <input
                     type={showEditPassword ? "text" : "password"}
                     placeholder="Kosongkan jika sandi tidak diubah"
@@ -884,7 +884,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   <button
                     type="button"
                     onClick={() => setShowEditPassword(!showEditPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 cursor-pointer p-1"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer p-1"
                   >
                     {showEditPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -898,7 +898,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                 <button
                   type="button"
                   onClick={() => setEditingUser(null)}
-                  className="px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--ink)] hover:bg-stone-50 cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--ink)] hover:bg-[var(--bg)] cursor-pointer"
                 >
                   Batal
                 </button>
@@ -939,7 +939,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                 setDeletingUser(null);
                 setDeleteModalError(null);
               }}
-              className="absolute right-4 top-4 p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer disabled:opacity-50"
+              className="absolute right-4 top-4 p-1 rounded-full text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors cursor-pointer disabled:opacity-50"
               aria-label="Tutup modal"
             >
               <X className="w-5 h-5" />
@@ -962,7 +962,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                 <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <p className="font-semibold">Tidak dapat menghapus:</p>
-                  <p className="mt-0.5 text-stone-600">{deleteModalError}</p>
+                  <p className="mt-0.5 text-[var(--muted)]">{deleteModalError}</p>
                 </div>
               </div>
             )}
@@ -975,7 +975,7 @@ export function UsersClient({ initialUsers, currentUserId, investors = [] }: Use
                   setDeleteModalError(null);
                 }}
                 disabled={loading}
-                className="px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--ink)] hover:bg-stone-50 cursor-pointer flex-1 disabled:opacity-50"
+                className="px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--ink)] hover:bg-[var(--bg)] cursor-pointer flex-1 disabled:opacity-50"
               >
                 Batal
               </button>

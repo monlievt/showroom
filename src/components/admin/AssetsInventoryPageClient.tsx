@@ -115,17 +115,17 @@ const ASSET_CATEGORY_LABELS: Record<string, string> = {
 };
 
 const ASSET_CONDITION_LABELS: Record<string, { label: string; color: string }> = {
-  EXCELLENT: { label: "Sangat Baik (Prima)", color: "bg-emerald-100 text-emerald-800 border-emerald-200" },
-  GOOD: { label: "Baik (Normal)", color: "bg-blue-100 text-blue-800 border-blue-200" },
-  FAIR: { label: "Cukup (Butuh Servis)", color: "bg-amber-100 text-amber-800 border-amber-200" },
-  DAMAGED: { label: "Rusak / Afkir", color: "bg-rose-100 text-rose-800 border-rose-200" },
+  EXCELLENT: { label: "Sangat Baik (Prima)", color: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]" },
+  GOOD: { label: "Baik (Normal)", color: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]" },
+  FAIR: { label: "Cukup (Butuh Servis)", color: "bg-[var(--bg)] text-[var(--muted)] border-[var(--line)]" },
+  DAMAGED: { label: "Rusak / Afkir", color: "bg-rose-50 text-rose-800 border-rose-200" },
 };
 
 const SUPPLY_CATEGORY_LABELS: Record<string, { label: string; color: string }> = {
-  OIL_AND_FLUIDS: { label: "Pelumas & Oli", color: "bg-amber-100 text-amber-800 border-amber-200" },
-  FAST_MOVING_PARTS: { label: "Filter & Bohlam Lampu", color: "bg-blue-100 text-blue-800 border-blue-200" },
-  DETAILING_CHEMICALS: { label: "Chemical Salon & Poles", color: "bg-purple-100 text-purple-800 border-purple-200" },
-  OTHER_SUPPLIES: { label: "Perlengkapan Lainnya", color: "bg-stone-100 text-stone-800 border-stone-200" },
+  OIL_AND_FLUIDS: { label: "Pelumas & Oli", color: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]" },
+  FAST_MOVING_PARTS: { label: "Filter & Bohlam Lampu", color: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]" },
+  DETAILING_CHEMICALS: { label: "Chemical Salon & Poles", color: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]" },
+  OTHER_SUPPLIES: { label: "Perlengkapan Lainnya", color: "bg-[var(--bg)] text-[var(--muted)] border-[var(--line)]" },
 };
 
 export function AssetsInventoryPageClient({
@@ -368,8 +368,8 @@ export function AssetsInventoryPageClient({
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <span>{feedback.message}</span>
@@ -618,7 +618,7 @@ export function AssetsInventoryPageClient({
                         <span
                           className={cn(
                             "inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border",
-                            SUPPLY_CATEGORY_LABELS[item.category]?.color || "bg-stone-100 text-stone-800"
+                            SUPPLY_CATEGORY_LABELS[item.category]?.color || "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
                           )}
                         >
                           {SUPPLY_CATEGORY_LABELS[item.category]?.label || item.category}
@@ -647,7 +647,7 @@ export function AssetsInventoryPageClient({
                       {/* Standar HPP Alokasi ke Mobil */}
                       <td className="py-3.5 px-4 align-top text-right font-bold text-[var(--accent)]">
                         {formatRupiah(item.standardHppCharge)}
-                        <div className="text-[10px] text-[#16A34A] font-semibold mt-0.5">
+                        <div className="text-[10px] text-[var(--accent)] font-semibold mt-0.5">
                           Jasa: +{formatRupiah(item.standardHppCharge - item.costPerUnit)}
                         </div>
                       </td>
@@ -729,7 +729,7 @@ export function AssetsInventoryPageClient({
                         <span
                           className={cn(
                             "inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border",
-                            ASSET_CONDITION_LABELS[item.condition]?.color || "bg-stone-100 text-stone-800"
+                            ASSET_CONDITION_LABELS[item.condition]?.color || "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
                           )}
                         >
                           {ASSET_CONDITION_LABELS[item.condition]?.label || item.condition}
@@ -738,7 +738,7 @@ export function AssetsInventoryPageClient({
                       <td className="py-3.5 px-4 align-top text-right text-xs text-[var(--muted)]">
                         {formatRupiah(item.purchaseCost)}
                       </td>
-                      <td className="py-3.5 px-4 align-top text-right font-black text-blue-700">
+                      <td className="py-3.5 px-4 align-top text-right font-black text-[var(--ink)]">
                         {formatRupiah(item.currentValue)}
                       </td>
                       <td className="py-3.5 px-4 align-top text-center">
@@ -762,16 +762,16 @@ export function AssetsInventoryPageClient({
       {/* ── TAB 3: RIWAYAT PEMAKAIAN KE MOBIL & LABA JASA GARASI ── */}
       {activeMainTab === "HISTORY" && (
         <div className="space-y-4">
-          <div className="bg-[#FEF3C7] border border-[var(--accent)]/40 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[#92400E]">
+          <div className="bg-white border border-[var(--line)] rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[var(--muted)]">
             <div>
-              <span className="font-bold block text-sm mb-0.5">Ringkasan Laba Efisiensi Servis Mandiri Garasi</span>
+              <span className="font-bold block text-sm mb-0.5 text-[var(--ink)]">Ringkasan Laba Efisiensi Servis Mandiri Garasi</span>
               <span>
-                Total bahan fisik terpakai: <strong>{formatRupiah(supplies.summary.totalSuppliesCostUsed)}</strong>.
-                Total HPP yang dibebankan ke mobil: <strong>{formatRupiah(supplies.summary.totalHppChargedToVehicles)}</strong>.
+                Total bahan fisik terpakai: <strong className="text-[var(--ink)]">{formatRupiah(supplies.summary.totalSuppliesCostUsed)}</strong>.
+                Total HPP yang dibebankan ke mobil: <strong className="text-[var(--ink)]">{formatRupiah(supplies.summary.totalHppChargedToVehicles)}</strong>.
               </span>
             </div>
             <div className="sm:text-right">
-              <span className="text-[11px] uppercase tracking-wider block font-semibold">Total Laba Jasa Showroom</span>
+              <span className="text-[11px] uppercase tracking-wider block font-semibold text-[var(--muted)]">Total Laba Jasa Showroom</span>
               <span className="text-xl font-black text-[var(--accent)]">
                 +{formatRupiah(supplies.summary.totalWorkshopMarginEarned)}
               </span>
@@ -830,7 +830,7 @@ export function AssetsInventoryPageClient({
                           {formatRupiah(usage.chargedHppAmount)}
                         </td>
 
-                        <td className="py-3.5 px-4 align-top text-right font-black text-[#16A34A]">
+                        <td className="py-3.5 px-4 align-top text-right font-black text-[var(--accent)]">
                           +{formatRupiah(usage.workshopMargin)}
                         </td>
 
@@ -940,20 +940,20 @@ export function AssetsInventoryPageClient({
               </div>
 
               {/* ── LIVE PREVIEW SELISIH KEUNTUNGAN SHOWROOM ── */}
-              <div className="p-3.5 rounded-xl bg-[#FEF3C7] border border-[var(--accent)]/40 space-y-1.5 text-xs text-[#92400E]">
+              <div className="p-3.5 rounded-xl bg-white border border-[var(--line)] shadow-xs space-y-1.5 text-xs text-[var(--muted)]">
                 <div className="flex justify-between items-center">
                   <span>Modal Fisik Bahan Terpakai:</span>
-                  <span className="font-semibold">{formatRupiah(modalCostTotal)}</span>
+                  <span className="font-semibold text-[var(--ink)]">{formatRupiah(modalCostTotal)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Nilai HPP Masuk ke Mobil:</span>
                   <span className="font-bold text-[var(--ink)]">{formatRupiah(modalHppNum)}</span>
                 </div>
-                <div className="border-t border-[var(--accent)]/30 pt-1.5 flex justify-between items-center font-bold text-sm">
-                  <span>Upah Jasa Mandiri Showroom:</span>
-                  <span className="text-[#16A34A] font-black">+{formatRupiah(modalMarginNum)}</span>
+                <div className="border-t border-[var(--line)] pt-1.5 flex justify-between items-center font-bold text-sm">
+                  <span className="text-[var(--ink)]">Upah Jasa Mandiri Showroom:</span>
+                  <span className="text-[var(--accent)] font-black">+{formatRupiah(modalMarginNum)}</span>
                 </div>
-                <p className="text-[10px] text-[#78350F] pt-0.5">
+                <p className="text-[10px] text-[var(--muted)] pt-0.5">
                   💡 Selisih Rp {modalMarginNum.toLocaleString("id-ID")} ini adalah upah keringat kerja mandiri Anda yang murni menjadi keuntungan showroom (tidak dibagi ke investor)!
                 </p>
               </div>

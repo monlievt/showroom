@@ -35,16 +35,16 @@ export default async function UsersPage() {
 
       <main className="flex-1 p-4 sm:p-8 space-y-6 max-w-7xl w-full mx-auto">
         {!usersRes.success && (
-          <div className="p-4 rounded-xl border border-amber-300 bg-amber-50 text-amber-900 flex items-start gap-3">
+          <div className="p-4 rounded-xl border border-[var(--line)] bg-[var(--bg)] text-[var(--ink)] flex items-start gap-3">
             <span className="text-xl">⚠️</span>
             <div className="text-sm">
               <p className="font-semibold">Sinkronisasi Database Diperlukan:</p>
               <p>{usersRes.error || "Gagal memuat daftar pengguna dari database."}</p>
-              <p className="mt-1 text-xs text-amber-700">
+              <p className="mt-1 text-xs text-[var(--muted)]">
                 Pastikan Anda telah menjalankan perintah berikut di terminal VPS:
-                <code className="mx-1 px-1.5 py-0.5 rounded bg-amber-200/80 font-mono">npx prisma db push</code>
+                <code className="mx-1 px-1.5 py-0.5 rounded bg-white border border-[var(--line)] font-mono text-[var(--ink)]">npx prisma db push</code>
                 dan
-                <code className="mx-1 px-1.5 py-0.5 rounded bg-amber-200/80 font-mono">npm run db:seed-users</code>
+                <code className="mx-1 px-1.5 py-0.5 rounded bg-white border border-[var(--line)] font-mono text-[var(--ink)]">npm run db:seed-users</code>
               </p>
             </div>
           </div>

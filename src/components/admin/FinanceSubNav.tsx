@@ -27,7 +27,7 @@ export function FinanceSubNav(_props?: FinanceSubNavProps) {
       exact: false,
       icon: Split,
       badge: "Pemisah Kas",
-      badgeColor: "bg-purple-100 text-purple-800",
+      badgeColor: "bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]",
     },
   ];
 
@@ -55,8 +55,8 @@ export function FinanceSubNav(_props?: FinanceSubNavProps) {
             {link.badge && (
               <span
                 className={cn(
-                  "text-[10px] px-2 py-0.5 rounded-full font-bold",
-                  link.badgeColor || "bg-amber-100 text-amber-800"
+                  "text-[10px] px-2 py-0.5 rounded-md font-semibold",
+                  link.badgeColor || "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]"
                 )}
               >
                 {link.badge}

@@ -26,7 +26,7 @@ export function InvestorSubNav({
       exact: true,
       icon: HeartHandshake,
       badge: pendingCount > 0 ? `${pendingCount}` : null,
-      badgeColor: "bg-amber-100 text-amber-800",
+      badgeColor: "bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]",
     },
     {
       label: "Daftar Akun Investor",
@@ -34,7 +34,7 @@ export function InvestorSubNav({
       exact: false,
       icon: Users,
       badge: investorsCount !== undefined ? `${investorsCount}` : null,
-      badgeColor: "bg-[var(--bg)] text-[var(--ink)]",
+      badgeColor: "bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]",
     },
     {
       label: "Riwayat Distribusi Laba",
@@ -42,7 +42,7 @@ export function InvestorSubNav({
       exact: false,
       icon: Clock,
       badge: historyCount !== undefined ? `${historyCount}` : null,
-      badgeColor: "bg-emerald-100 text-emerald-800",
+      badgeColor: "bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]",
     },
     {
       label: "Aturan Tier 4 Saudara",
@@ -50,7 +50,7 @@ export function InvestorSubNav({
       exact: false,
       icon: Sliders,
       badge: "Skema Laba",
-      badgeColor: "bg-purple-100 text-purple-800",
+      badgeColor: "bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]",
     },
   ];
 
@@ -79,7 +79,7 @@ export function InvestorSubNav({
               <span
                 className={cn(
                   "text-[10px] px-2 py-0.5 rounded-full font-bold",
-                  link.badgeColor || "bg-amber-100 text-amber-800"
+                  link.badgeColor || "bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]"
                 )}
               >
                 {link.badge}

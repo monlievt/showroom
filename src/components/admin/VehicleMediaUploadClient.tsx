@@ -377,9 +377,9 @@ export function VehicleMediaUploadClient({
             <span
               className={`font-black ${
                 completionPercentage === 100
-                  ? "text-emerald-600"
+                  ? "text-[var(--ok)]"
                   : completionPercentage >= 60
-                  ? "text-amber-600"
+                  ? "text-[var(--accent)]"
                   : "text-[var(--muted)]"
               }`}
             >
@@ -391,10 +391,10 @@ export function VehicleMediaUploadClient({
             <div
               className={`h-full transition-all duration-500 rounded-full ${
                 completionPercentage === 100
-                  ? "bg-emerald-500"
+                  ? "bg-[var(--ok)]"
                   : completionPercentage >= 60
                   ? "bg-[var(--accent)]"
-                  : "bg-stone-400"
+                  : "bg-[var(--line)]"
               }`}
               style={{ width: `${completionPercentage}%` }}
             />
@@ -412,13 +412,13 @@ export function VehicleMediaUploadClient({
         <div
           className={`p-4 rounded-xl text-xs font-semibold flex items-center justify-between gap-2 animate-in fade-in duration-200 ${
             msg.type === "success"
-              ? "bg-emerald-50 border border-emerald-200 text-emerald-800"
+              ? "bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)]"
               : "bg-red-50 border border-red-200 text-red-700"
           }`}
         >
           <div className="flex items-center gap-2">
             {msg.type === "success" ? (
-              <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+              <CheckCircle className="w-4 h-4 shrink-0 text-[var(--ok)]" />
             ) : (
               <AlertTriangle className="w-4 h-4 shrink-0 text-red-600" />
             )}
@@ -426,7 +426,7 @@ export function VehicleMediaUploadClient({
           </div>
           <button
             onClick={() => setMsg(null)}
-            className="text-stone-400 hover:text-stone-600 p-1"
+            className="text-[var(--muted)] hover:text-[var(--ink)] p-1 cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -437,7 +437,7 @@ export function VehicleMediaUploadClient({
       <div className="flex border-b border-[var(--line)] gap-3">
         <button
           onClick={() => setActiveTab("STANDARD_SLOTS")}
-          className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-colors ${
+          className={`pb-3 text-xs sm:text-sm font-bold flex items-center gap-2 border-b-2 transition-colors cursor-pointer ${
             activeTab === "STANDARD_SLOTS"
               ? "border-[var(--accent)] text-[var(--accent)]"
               : "border-transparent text-[var(--muted)] hover:text-[var(--ink)]"
@@ -448,7 +448,7 @@ export function VehicleMediaUploadClient({
           <span
             className={`text-[10px] px-2 py-0.2 rounded-full font-bold ${
               completionPercentage === 100
-                ? "bg-emerald-100 text-emerald-800"
+                ? "bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]"
                 : "bg-[var(--bg)] text-[var(--muted)]"
             }`}
           >
@@ -472,7 +472,7 @@ export function VehicleMediaUploadClient({
       {/* TAB 1: 11 TITIK FOTO STANDAR WAJIB */}
       {activeTab === "STANDARD_SLOTS" && (
         <div className="space-y-8">
-          <div className="bg-[#FAF8F5] border border-[var(--line)] rounded-2xl p-4 sm:p-5">
+          <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4 sm:p-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
@@ -507,7 +507,7 @@ export function VehicleMediaUploadClient({
                       className={`relative rounded-2xl border transition-all duration-200 overflow-hidden flex flex-col justify-between ${
                         existingPhoto
                           ? "bg-white border-[var(--line)] shadow-xs"
-                          : "bg-[var(--bg)] border-dashed border-[var(--line)] hover:border-[var(--accent)]/60 hover:bg-[#FAF8F5]"
+                          : "bg-[var(--bg)] border-dashed border-[var(--line)] hover:border-[var(--accent)]/60 hover:bg-white"
                       }`}
                     >
                       {/* Slot Header */}
@@ -516,7 +516,7 @@ export function VehicleMediaUploadClient({
                           <div
                             className={`p-1.5 rounded-lg ${
                               existingPhoto
-                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                ? "bg-[var(--bg)] text-[var(--ok)] border border-[var(--line)]"
                                 : "bg-[var(--bg)] text-[var(--muted)]"
                             }`}
                           >
@@ -534,22 +534,22 @@ export function VehicleMediaUploadClient({
 
                         <div className="flex flex-col items-end gap-1 shrink-0">
                           {existingPhoto ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
-                              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
+                              <CheckCircle2 className="w-3 h-3 text-[var(--ok)]" />
                               <span>Terisi</span>
                             </span>
                           ) : (
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
                               Wajib
                             </span>
                           )}
 
                           {slot.id === "EXT_FRONT_RIGHT" && (
                             <span
-                              className="inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded bg-amber-500 text-stone-950 shadow-xs"
+                              className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] shadow-2xs"
                               title="Foto sudut ini otomatis dijadikan foto teaser sampul di katalog publik saat unit berstatus Intake / Salon"
                             >
-                              <Sparkles className="w-2.5 h-2.5" />
+                              <Sparkles className="w-2.5 h-2.5 text-[var(--accent)]" />
                               <span>Teaser Segera Hadir</span>
                             </span>
                           )}
@@ -617,7 +617,7 @@ export function VehicleMediaUploadClient({
                       </div>
 
                       {/* Slot Action Footer */}
-                      <div className="p-3 bg-[#FAF8F5] border-t border-[var(--line)] flex items-center justify-between">
+                      <div className="p-3 bg-[var(--bg)] border-t border-[var(--line)] flex items-center justify-between">
                         <input
                           ref={(el) => {
                             slotInputRefs.current[slot.id] = el;
@@ -865,7 +865,7 @@ export function VehicleMediaUploadClient({
         </div>
 
         {vehicle.photos.length === 0 ? (
-          <p className="text-xs text-[var(--muted)] py-8 text-center bg-[#FAF8F5] rounded-xl border border-dashed border-[var(--line)]">
+          <p className="text-xs text-[var(--muted)] py-8 text-center bg-[var(--bg)] rounded-xl border border-dashed border-[var(--line)]">
             Belum ada foto yang diunggah untuk unit ini. Silakan penuhi 11 slot standar di atas.
           </p>
         ) : (
@@ -936,7 +936,7 @@ export function VehicleMediaUploadClient({
         </h2>
 
         {vehicle.documents.length === 0 ? (
-          <p className="text-xs text-[var(--muted)] py-6 text-center bg-[#FAF8F5] rounded-xl border border-dashed border-[var(--line)]">
+          <p className="text-xs text-[var(--muted)] py-6 text-center bg-[var(--bg)] rounded-xl border border-dashed border-[var(--line)]">
             Belum ada scan dokumen legalitas (STNK/BPKB/Faktur) untuk unit ini.
           </p>
         ) : (
@@ -1006,7 +1006,7 @@ export function VehicleMediaUploadClient({
               </span>
               <button
                 onClick={() => setLightboxUrl(null)}
-                className="text-stone-300 hover:text-white p-1 cursor-pointer"
+                className="text-white/70 hover:text-white p-1 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>

@@ -215,15 +215,15 @@ export function WhatsAppContactsSettingsClient({
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <div className="flex items-center gap-2">
             {feedback.type === "success" ? (
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+              <AlertCircle className="w-5 h-5 text-[var(--bad)] shrink-0" />
             )}
             <span>{feedback.message}</span>
           </div>
@@ -237,7 +237,7 @@ export function WhatsAppContactsSettingsClient({
       <div className="bg-white p-6 rounded-2xl border border-[var(--line)] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+            <div className="w-9 h-9 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center font-bold shadow-2xs">
               <Phone className="w-5 h-5" />
             </div>
             <div>
@@ -272,8 +272,8 @@ export function WhatsAppContactsSettingsClient({
       </div>
 
       {/* Behavior Info Box */}
-      <div className="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4 text-xs text-amber-900 flex items-start gap-3">
-        <MessageSquare className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-4 text-xs text-[var(--ink)] flex items-start gap-3">
+        <MessageSquare className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
         <div className="space-y-1">
           <p className="font-semibold">Perilaku Tombol di Website Publik:</p>
           <p>
@@ -308,7 +308,7 @@ export function WhatsAppContactsSettingsClient({
                 key={contact.id}
                 className={cn(
                   "p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors",
-                  !contact.isActive && "bg-stone-50/70 opacity-75"
+                  !contact.isActive && "bg-[var(--bg)]/50 opacity-75"
                 )}
               >
                 <div className="flex items-start gap-4">
@@ -316,8 +316,8 @@ export function WhatsAppContactsSettingsClient({
                     className={cn(
                       "w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 mt-0.5",
                       contact.isActive
-                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                        : "bg-stone-200 text-stone-500"
+                        ? "bg-[var(--bg)] text-[var(--ok)] border border-[var(--ok)]/30"
+                        : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]"
                     )}
                   >
                     {idx + 1}
@@ -329,17 +329,17 @@ export function WhatsAppContactsSettingsClient({
                         {contact.name}
                       </span>
                       {contact.isPrimary && (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-full">
-                          <Star className="w-3 h-3 fill-amber-500 text-amber-600" />
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--ink)] bg-[var(--bg)] border border-[var(--line)] px-2 py-0.5 rounded-full shadow-2xs">
+                          <Star className="w-3 h-3 fill-[var(--warn)] text-[var(--warn)]" />
                           Kontak Utama
                         </span>
                       )}
                       <span
                         className={cn(
-                          "text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider",
+                          "text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border",
                           contact.isActive
-                            ? "bg-emerald-100 text-emerald-800"
-                            : "bg-stone-200 text-stone-600"
+                            ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
+                            : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]"
                         )}
                       >
                         {contact.isActive ? "Aktif" : "Nonaktif"}
@@ -356,7 +356,7 @@ export function WhatsAppContactsSettingsClient({
                         href={waTestLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-800 hover:underline font-medium"
+                        className="inline-flex items-center gap-1 text-[var(--accent)] hover:text-[var(--accent-hover)] hover:underline font-medium"
                       >
                         <span>Uji Chat</span>
                         <ExternalLink className="w-3 h-3" />
@@ -371,7 +371,7 @@ export function WhatsAppContactsSettingsClient({
                     <button
                       type="button"
                       onClick={() => handleSetPrimary(contact.id)}
-                      className="px-2.5 py-1.5 text-xs font-semibold text-[var(--muted)] hover:text-[var(--ink)] bg-[#F5F2EB] hover:bg-[#EAE5DC] rounded-lg transition-colors cursor-pointer"
+                      className="px-2.5 py-1.5 text-xs font-semibold text-[var(--muted)] hover:text-[var(--ink)] bg-[var(--bg)] hover:bg-white border border-[var(--line)] rounded-lg transition-colors cursor-pointer shadow-2xs"
                       title="Jadikan kontak default"
                     >
                       Jadikan Utama
@@ -382,10 +382,10 @@ export function WhatsAppContactsSettingsClient({
                     type="button"
                     onClick={() => handleToggleActive(contact.id)}
                     className={cn(
-                      "inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer",
+                      "inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer border",
                       contact.isActive
-                        ? "text-stone-600 bg-stone-100 hover:bg-stone-200"
-                        : "text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300"
+                        ? "text-[var(--muted)] bg-white border-[var(--line)] hover:bg-[var(--bg)]"
+                        : "text-[var(--ok)] bg-white border-[var(--ok)]/30 hover:bg-[var(--bg)]"
                     )}
                     title={contact.isActive ? "Nonaktifkan sementara" : "Aktifkan kontak"}
                   >
@@ -396,7 +396,7 @@ export function WhatsAppContactsSettingsClient({
                   <button
                     type="button"
                     onClick={() => handleOpenEditModal(contact)}
-                    className="p-1.5 text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 rounded-lg transition-colors cursor-pointer"
+                    className="p-1.5 text-[var(--muted)] hover:text-[var(--ink)] bg-white border border-[var(--line)] hover:bg-[var(--bg)] rounded-lg transition-colors cursor-pointer shadow-2xs"
                     title="Edit kontak"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -405,7 +405,7 @@ export function WhatsAppContactsSettingsClient({
                   <button
                     type="button"
                     onClick={() => handleDelete(contact.id)}
-                    className="p-1.5 text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 rounded-lg transition-colors cursor-pointer"
+                    className="p-1.5 text-[var(--bad)] hover:text-red-800 bg-white border border-[var(--bad)]/30 hover:bg-[var(--bg)] rounded-lg transition-colors cursor-pointer shadow-2xs"
                     title="Hapus kontak"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -425,7 +425,7 @@ export function WhatsAppContactsSettingsClient({
             type="button"
             disabled={isSaving}
             onClick={handleSaveToDatabase}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 shadow-sm transition-colors cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-[var(--accent)] hover:bg-[var(--accent-hover)] disabled:opacity-50 shadow-xs transition-colors cursor-pointer"
           >
             <Save className="w-4 h-4" />
             <span>{isSaving ? "Menyimpan..." : "Simpan Perubahan ke Database"}</span>
@@ -444,7 +444,7 @@ export function WhatsAppContactsSettingsClient({
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
-                className="text-stone-400 hover:text-stone-700 p-1 rounded-lg"
+                className="text-[var(--muted)] hover:text-[var(--ink)] p-1 rounded-lg"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -512,7 +512,7 @@ export function WhatsAppContactsSettingsClient({
                     type="checkbox"
                     checked={formIsPrimary}
                     onChange={(e) => setFormIsPrimary(e.target.checked)}
-                    className="w-4 h-4 rounded text-amber-600 focus:ring-amber-500"
+                    className="w-4 h-4 rounded text-[var(--accent)] focus:ring-[var(--accent)]"
                   />
                   <span className="text-xs font-semibold text-[var(--ink)]">
                     Jadikan sebagai Kontak Utama (Default)
@@ -524,7 +524,7 @@ export function WhatsAppContactsSettingsClient({
                     type="checkbox"
                     checked={formIsActive}
                     onChange={(e) => setFormIsActive(e.target.checked)}
-                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                    className="w-4 h-4 rounded text-[var(--accent)] focus:ring-[var(--accent)]"
                   />
                   <span className="text-xs font-semibold text-[var(--ink)]">
                     Status Aktif (Tampilkan di website publik)
@@ -536,7 +536,7 @@ export function WhatsAppContactsSettingsClient({
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold text-stone-600 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 rounded-xl"
+                  className="px-4 py-2 text-xs font-semibold text-[var(--ink)] hover:bg-[var(--bg)] bg-white border border-[var(--line)] rounded-xl transition-colors shadow-2xs"
                 >
                   Batal
                 </button>

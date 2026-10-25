@@ -254,25 +254,25 @@ export function VehicleNewClient() {
       </div>
 
       {/* FLOW GUIDE */}
-      <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 shadow-xs">
-        <div className="flex items-center gap-2 font-bold text-amber-900 mb-2">
-          <ShieldCheck className="w-4 h-4 text-amber-600" />
+      <div className="p-4 rounded-2xl bg-[var(--bg)] border border-[var(--line)] text-xs text-[var(--ink)] shadow-xs">
+        <div className="flex items-center gap-2 font-bold text-[var(--ink)] mb-2">
+          <ShieldCheck className="w-4 h-4 text-[var(--accent)]" />
           <span>Alur Penanganan Unit Showroom Nur Mobil:</span>
         </div>
         <div className="flex flex-wrap items-center gap-2 font-medium">
-          <span className="bg-[var(--bg)] text-[var(--muted)] px-3 py-1 rounded-full border border-[var(--line)]">
+          <span className="bg-white text-[var(--muted)] px-3 py-1 rounded-full border border-[var(--line)]">
             1. INTAKE (Unit baru masuk)
           </span>
-          <span className="text-amber-600 font-bold">→</span>
-          <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full border border-amber-300">
+          <span className="text-[var(--accent)] font-bold">→</span>
+          <span className="bg-white text-[var(--ink)] px-3 py-1 rounded-full border border-[var(--line)]">
             2. IN_REPAIR (Jika butuh salon/bengkel)
           </span>
-          <span className="text-amber-600 font-bold">→</span>
-          <span className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full border border-emerald-300">
+          <span className="text-[var(--accent)] font-bold">→</span>
+          <span className="bg-[var(--ink)] text-white px-3 py-1 rounded-full border border-[var(--ink)]">
             3. READY JUAL ✅ (Tampil di website publik)
           </span>
         </div>
-        <p className="mt-2 text-amber-800 text-[11px]">
+        <p className="mt-2 text-[var(--muted)] text-[11px]">
           💡 <em>Tip Praktis:</em> Jika unit lelang kondisinya mulus dan siap
           dijual, Anda dapat langsung menggeser status dari INTAKE ke Ready Jual
           kapan saja.
@@ -288,8 +288,8 @@ export function VehicleNewClient() {
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--accent)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -363,10 +363,10 @@ export function VehicleNewClient() {
 
         {/* SECTION 2: Jika Sumber Balai Lelang */}
         {isAuction && (
-          <div className="bg-amber-50/50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-            <div className="flex items-center gap-2 border-b border-amber-200 pb-3">
-              <Gavel className="w-4 h-4 text-amber-700" />
-              <h2 className="text-sm font-bold text-amber-950 uppercase tracking-wider">
+          <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+            <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+              <Gavel className="w-4 h-4 text-[var(--accent)]" />
+              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
                 2. Balai Lelang & BPKB Tracker Lead Time
               </h2>
             </div>
@@ -379,7 +379,7 @@ export function VehicleNewClient() {
                 <select
                   value={formData.auctionHouse}
                   onChange={(e) => handleAuctionHouseChange(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   {Object.entries(AUCTION_HOUSE_PRESETS).map(([key, val]) => (
                     <option key={key} value={key}>
@@ -388,7 +388,7 @@ export function VehicleNewClient() {
                   ))}
                 </select>
                 {currentPreset && (
-                  <p className="text-[11px] text-amber-800 mt-1.5 font-medium">
+                  <p className="text-[11px] text-[var(--muted)] mt-1.5 font-medium">
                     📌 {currentPreset.notes}
                   </p>
                 )}
@@ -403,7 +403,7 @@ export function VehicleNewClient() {
                   onChange={(e) =>
                     setFormData({ ...formData, auctionLotType: e.target.value })
                   }
-                  className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   <option value="EKS_PERUSAHAAN">
                     Eks Perusahaan ✅ (BPKB bersih, 7-14 hari)
@@ -416,7 +416,7 @@ export function VehicleNewClient() {
                   </option>
                 </select>
                 {formData.auctionLotType === "EKS_TARIKAN_LEASING" && (
-                  <p className="text-[11px] text-orange-800 mt-1.5 font-semibold">
+                  <p className="text-[11px] text-[var(--muted)] mt-1.5 font-semibold">
                     ⚠️ Eks Leasing: Pastikan STNK & surat pelepasan hak lengkap.
                   </p>
                 )}
@@ -431,7 +431,7 @@ export function VehicleNewClient() {
                   onChange={(e) =>
                     setFormData({ ...formData, bpkbStatus: e.target.value })
                   }
-                  className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                  className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   <option value="PROCESS_1_2_WEEKS">
                     Masih Diproses Balai Lelang
@@ -462,13 +462,13 @@ export function VehicleNewClient() {
                         bpkbLeadDays: Number(e.target.value),
                       })
                     }
-                    className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-bold text-amber-950 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                    className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                   />
-                  <span className="text-xs text-amber-900 font-semibold whitespace-nowrap">
+                  <span className="text-xs text-[var(--muted)] font-semibold whitespace-nowrap">
                     Hari Kerja
                   </span>
                 </div>
-                <p className="text-[10px] text-amber-800 mt-1">
+                <p className="text-[10px] text-[var(--muted)] mt-1">
                   Otomatis terisi berdasarkan balai lelang yang Anda pilih.
                 </p>
               </div>
@@ -477,7 +477,7 @@ export function VehicleNewClient() {
         )}
 
         {/* SECTION 2B: Legalitas STNK & Alarm Pajak Tahunan PKB */}
-        <div className="bg-[#FAF9F5] border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
               <CalendarClock className="w-4 h-4 text-[var(--accent)]" />
@@ -485,7 +485,7 @@ export function VehicleNewClient() {
                 Dokumen STNK & Radar Pajak Kendaraan (PKB)
               </h2>
             </div>
-            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
               Alarm H-30 Hari Showroom
             </span>
           </div>
@@ -588,11 +588,11 @@ export function VehicleNewClient() {
               );
             } else if (diffDays <= 30) {
               return (
-                <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-start gap-2.5">
-                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs flex items-start gap-2.5">
+                  <AlertTriangle className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="font-bold text-[#78350F] block">Pajak Akan Jatuh Tempo Dalam {diffDays} Hari!</strong>
-                    <p className="mt-0.5 text-[11px] text-[#92400E] leading-relaxed">
+                    <strong className="font-bold block">Pajak Akan Jatuh Tempo Dalam {diffDays} Hari!</strong>
+                    <p className="mt-0.5 text-[11px] text-[var(--muted)] leading-relaxed">
                       Unit masuk dalam Radar Alarm H-30 Dashboard. Siapkan alokasi dana perpanjangan atau informasikan pada kesepakatan jual-beli.
                     </p>
                   </div>
@@ -600,11 +600,11 @@ export function VehicleNewClient() {
               );
             } else {
               return (
-                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-start gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="font-bold text-emerald-950 block">Pajak Hidup & Aman (Sisa {diffDays} Hari)</strong>
-                    <p className="mt-0.5 text-[11px] text-emerald-800 leading-relaxed">
+                    <strong className="font-bold block">Pajak Hidup & Aman (Sisa {diffDays} Hari)</strong>
+                    <p className="mt-0.5 text-[11px] text-[var(--muted)] leading-relaxed">
                       Masa berlaku pajak STNK masih panjang dan siap untuk dipajang serta uji jalan tanpa kendala razia.
                     </p>
                   </div>
@@ -796,7 +796,7 @@ export function VehicleNewClient() {
                     targetSellingPrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-emerald-300 rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
               <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Harga publish yang tertera di katalog
@@ -818,7 +818,7 @@ export function VehicleNewClient() {
                     minSellingPrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-amber-300 rounded-xl text-sm font-medium text-[#92400E] focus:outline-none focus:ring-2 focus:ring-[#92400E]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
               <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Pedoman batas tawar untuk tim sales
@@ -836,7 +836,7 @@ export function VehicleNewClient() {
                 5. Ceklist Bawaan Fisik Turun Towing (Anti-Kehilangan)
               </h2>
             </div>
-            <span className="text-[11px] font-semibold text-[#92400E] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full border border-[var(--accent)]/30">
+            <span className="text-[11px] font-semibold text-[var(--ink)] bg-[var(--bg)] px-2.5 py-0.5 rounded-full border border-[var(--line)]">
               SOP Balai Lelang & Ekspedisi
             </span>
           </div>
@@ -859,7 +859,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "ADA_BAGUS"
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -883,7 +883,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "TIDAK_ADA"
-                      ? "bg-[#DC2626] text-white shadow-xs"
+                      ? "bg-[var(--bad)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -905,7 +905,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.jack
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -917,7 +917,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.jack
-                      ? "bg-[#DC2626] text-white shadow-xs"
+                      ? "bg-[var(--bad)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -939,7 +939,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.wheelWrench
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -951,7 +951,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.wheelWrench
-                      ? "bg-[#DC2626] text-white shadow-xs"
+                      ? "bg-[var(--bad)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -973,7 +973,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.keysCount === "2_KEYS"
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1007,7 +1007,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.serviceBook
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1019,7 +1019,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.serviceBook
-                      ? "bg-[#78716C] text-white shadow-xs"
+                      ? "bg-[var(--muted)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1041,7 +1041,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "ORIGINAL"
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1053,7 +1053,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "MODIFIED"
-                      ? "bg-[#2563EB] text-white shadow-xs"
+                      ? "bg-[var(--accent)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1065,7 +1065,7 @@ export function VehicleNewClient() {
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "BROKEN_OR_NONE"
-                      ? "bg-[#DC2626] text-white shadow-xs"
+                      ? "bg-[var(--bad)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1129,7 +1129,7 @@ export function VehicleNewClient() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>
@@ -1152,7 +1152,7 @@ export function VehicleNewClient() {
           <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-[var(--line)] space-y-5">
             {/* Header Dialog */}
             <div className="text-center space-y-2">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--bg)] text-[var(--accent)] border border-[var(--line)] flex items-center justify-center mx-auto shadow-xs">
                 <CheckCircle className="w-7 h-7" />
               </div>
               <div>
@@ -1177,8 +1177,8 @@ export function VehicleNewClient() {
             </div>
 
             {/* Prompt Heading */}
-            <div className="border-t border-[var(--bg)] pt-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#92400E] block mb-3">
+            <div className="border-t border-[var(--line)] pt-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[var(--muted)] block mb-3">
                 Langkah Berikutnya yang Direkomendasikan:
               </span>
 
@@ -1187,11 +1187,11 @@ export function VehicleNewClient() {
                 {/* 1. Ganti Oli Mandiri */}
                 <Link
                   href="/admin/workshop"
-                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-[var(--bg)] hover:bg-[#FEF3C7] hover:border-[var(--accent)]/50 transition-all group flex flex-col justify-between text-left"
+                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-white hover:border-[var(--accent)] hover:bg-[var(--bg)] transition-all group flex flex-col justify-between text-left shadow-xs"
                 >
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--accent)]">
-                      <Droplet className="w-4 h-4" />
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                      <Droplet className="w-4 h-4 text-[var(--accent)]" />
                       <span>Servis Oli Mandiri</span>
                     </div>
                     <p className="text-[11px] text-[var(--muted)] leading-snug">
@@ -1209,18 +1209,18 @@ export function VehicleNewClient() {
                   href={`/api/pdf/workshop-dispatch/${createdVehicle.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-[var(--bg)] hover:bg-[#FEF3C7] hover:border-[var(--accent)]/50 transition-all group flex flex-col justify-between text-left"
+                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-white hover:border-[var(--accent)] hover:bg-[var(--bg)] transition-all group flex flex-col justify-between text-left shadow-xs"
                 >
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-[#92400E]">
-                      <Wrench className="w-4 h-4" />
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                      <Wrench className="w-4 h-4 text-[var(--accent)]" />
                       <span>Surat Jalan Bengkel</span>
                     </div>
                     <p className="text-[11px] text-[var(--muted)] leading-snug">
                       Unduh PDF perintah kerja rekondisi resmi sebelum dikirim ke bengkel cat.
                     </p>
                   </div>
-                  <div className="mt-3 text-[11px] font-bold text-[#92400E] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  <div className="mt-3 text-[11px] font-bold text-[var(--accent)] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                     <span>Cetak PDF SPK</span>
                     <span>→</span>
                   </div>
@@ -1229,18 +1229,18 @@ export function VehicleNewClient() {
                 {/* 3. Cek Fisik & Inspeksi */}
                 <Link
                   href={`/admin/inspections/${createdVehicle.id}`}
-                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-[var(--bg)] hover:bg-emerald-50 hover:border-emerald-300 transition-all group flex flex-col justify-between text-left"
+                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-white hover:border-[var(--accent)] hover:bg-[var(--bg)] transition-all group flex flex-col justify-between text-left shadow-xs"
                 >
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
-                      <ClipboardCheck className="w-4 h-4 text-emerald-600" />
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                      <ClipboardCheck className="w-4 h-4 text-[var(--accent)]" />
                       <span>Inspeksi 11 Panel</span>
                     </div>
                     <p className="text-[11px] text-[var(--muted)] leading-snug">
                       Uji mikron cat &amp; verifikasi bodi bebas tabrak dan bebas banjir.
                     </p>
                   </div>
-                  <div className="mt-3 text-[11px] font-bold text-emerald-700 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  <div className="mt-3 text-[11px] font-bold text-[var(--accent)] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                     <span>Mulai Cek Fisik</span>
                     <span>→</span>
                   </div>
@@ -1249,18 +1249,18 @@ export function VehicleNewClient() {
                 {/* 4. Upload Foto Media */}
                 <Link
                   href={`/admin/inventory/${createdVehicle.id}/media`}
-                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-[var(--bg)] hover:bg-blue-50 hover:border-blue-300 transition-all group flex flex-col justify-between text-left"
+                  className="p-3.5 rounded-2xl border border-[var(--line)] bg-white hover:border-[var(--accent)] hover:bg-[var(--bg)] transition-all group flex flex-col justify-between text-left shadow-xs"
                 >
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-blue-800">
-                      <Camera className="w-4 h-4 text-blue-600" />
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--ink)]">
+                      <Camera className="w-4 h-4 text-[var(--accent)]" />
                       <span>Upload Media &amp; Berkas</span>
                     </div>
                     <p className="text-[11px] text-[var(--muted)] leading-snug">
                       Unggah foto eksterior, interior, serta scan STNK &amp; kuitansi lelang.
                     </p>
                   </div>
-                  <div className="mt-3 text-[11px] font-bold text-blue-700 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  <div className="mt-3 text-[11px] font-bold text-[var(--accent)] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                     <span>Upload Media</span>
                     <span>→</span>
                   </div>
@@ -1269,11 +1269,11 @@ export function VehicleNewClient() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="border-t border-[var(--bg)] pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="border-t border-[var(--line)] pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
               <button
                 type="button"
                 onClick={handleResetForm}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[var(--line)] text-xs font-bold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>+ Input Unit Mobil Lainnya</span>
@@ -1281,7 +1281,7 @@ export function VehicleNewClient() {
 
               <Link
                 href="/admin/inventory"
-                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[var(--ink)] hover:bg-[#44403C] text-white text-xs font-bold text-center shadow-md transition-all cursor-pointer"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold text-center shadow-xs transition-colors cursor-pointer"
               >
                 Selesai &amp; Buka Daftar Inventori
               </Link>

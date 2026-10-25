@@ -308,10 +308,10 @@ export function DashboardClient({
                   className={cn(
                     "w-14 h-14 rounded-[var(--r-btn)] flex flex-col items-center justify-center border-2 shrink-0 bg-white shadow-xs",
                     orchestration.healthStatus === "PRIMA"
-                      ? "border-emerald-500 text-emerald-700"
+                      ? "border-[var(--ok)] text-[var(--ok)]"
                       : orchestration.healthStatus === "WASPADA"
-                      ? "border-amber-500 text-amber-700"
-                      : "border-rose-500 text-rose-700"
+                      ? "border-[var(--warn)] text-[var(--warn)]"
+                      : "border-[var(--bad)] text-[var(--bad)]"
                   )}
                 >
                   <span className="text-xl font-bold leading-none">{orchestration.healthScore}</span>
@@ -323,10 +323,10 @@ export function DashboardClient({
                       className={cn(
                         "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border",
                         orchestration.healthStatus === "PRIMA"
-                          ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                          ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
                           : orchestration.healthStatus === "WASPADA"
-                          ? "bg-amber-50 text-amber-800 border-amber-300"
-                          : "bg-rose-50 text-rose-800 border-rose-300"
+                          ? "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
+                          : "bg-[var(--bg)] text-[var(--bad)] border-[var(--bad)]/30"
                       )}
                     >
                       Status: {orchestration.healthStatus}
@@ -348,7 +348,7 @@ export function DashboardClient({
                   <div className="text-xs sm:text-sm font-bold text-[var(--ink)] mt-0.5">
                     {orchestration.metrics.cashRunwayDays} Hari
                   </div>
-                  <div className="text-[10px] text-emerald-700 font-medium">
+                  <div className="text-[10px] text-[var(--ok)] font-medium">
                     {orchestration.metrics.cashRunwayVerdict}
                   </div>
                 </div>
@@ -368,7 +368,7 @@ export function DashboardClient({
                   <div
                     className={cn(
                       "text-xs sm:text-sm font-bold mt-0.5",
-                      orchestration.metrics.taxAlertCount > 0 ? "text-rose-600" : "text-emerald-700"
+                      orchestration.metrics.taxAlertCount > 0 ? "text-[var(--bad)]" : "text-[var(--ok)]"
                     )}
                   >
                     {orchestration.metrics.taxAlertCount} Pajak
@@ -453,9 +453,9 @@ export function DashboardClient({
                     className={cn(
                       "rounded-[var(--r-btn)] p-4 border flex flex-col justify-between transition-colors bg-white shadow-xs",
                       action.priority === "CRITICAL"
-                        ? "border-rose-300"
+                        ? "border-[var(--bad)]/40"
                         : action.priority === "HIGH"
-                        ? "border-amber-300"
+                        ? "border-[var(--warn)]/40"
                         : "border-[var(--line)]"
                     )}
                   >
@@ -468,10 +468,10 @@ export function DashboardClient({
                           className={cn(
                             "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border",
                             action.priority === "CRITICAL"
-                              ? "bg-rose-50 text-rose-800 border-rose-300"
+                              ? "bg-[var(--bg)] text-[var(--bad)] border-[var(--bad)]/30"
                               : action.priority === "HIGH"
-                              ? "bg-amber-50 text-amber-800 border-amber-300"
-                              : "bg-blue-50 text-blue-800 border-blue-300"
+                              ? "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
+                              : "bg-[var(--bg)] text-[var(--accent)] border-[var(--line)]"
                           )}
                         >
                           {action.badgeText}
@@ -517,8 +517,8 @@ export function DashboardClient({
                     className={cn(
                       "text-xs font-bold px-3 py-1 rounded-full border shrink-0",
                       orchestration.auctionStrategy.canBuy
-                        ? "bg-emerald-50 text-emerald-800 border-emerald-300"
-                        : "bg-amber-50 text-amber-800 border-amber-300"
+                        ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
+                        : "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
                     )}
                   >
                     {orchestration.auctionStrategy.canBuy ? "Aman Kulakan Hari Ini" : "Tunda Kulakan Sementara"}
@@ -566,7 +566,7 @@ export function DashboardClient({
               <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] p-5 space-y-4 animate-in fade-in shadow-xs">
                 <div className="pb-3 border-b border-[var(--line)]">
                   <h4 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-emerald-700" />
+                    <TrendingUp className="w-4 h-4 text-[var(--ok)]" />
                     <span>{orchestration.salesAcceleration.headline}</span>
                   </h4>
                 </div>
@@ -574,7 +574,7 @@ export function DashboardClient({
                 <div className="space-y-2.5">
                   {orchestration.salesAcceleration.tactics.map((tactic, idx) => (
                     <div key={idx} className="flex items-start gap-2.5 bg-[var(--bg)] p-3 rounded-[var(--r-btn)] border border-[var(--line)]">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
                       <p className="text-xs text-[var(--ink)] leading-relaxed">{tactic}</p>
                     </div>
                   ))}
@@ -707,39 +707,24 @@ export function DashboardClient({
         return (
           <div
             className={cn(
-              "rounded-[var(--r-card)] p-5 border shadow-sm transition-all relative overflow-hidden",
-              hasOverdue
-                ? "bg-rose-50/80 border-rose-200"
-                : "bg-amber-50/80 border-amber-200"
+              "rounded-[var(--r-card)] p-5 border shadow-sm transition-all relative overflow-hidden bg-white border-[var(--line)]"
             )}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-200/80">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--line)]">
               <div className="flex items-center gap-3">
-                <div
-                  className={cn(
-                    "w-10 h-10 rounded-[var(--r-btn)] flex items-center justify-center shrink-0 shadow-sm",
-                    hasOverdue ? "bg-rose-600 text-white" : "bg-amber-600 text-white"
-                  )}
-                >
+                <div className="w-10 h-10 rounded-[var(--r-btn)] flex items-center justify-center shrink-0 shadow-xs bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)]">
                   <BellRing className="w-5 h-5 " />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-extrabold text-sm sm:text-base text-stone-900 tracking-tight">
+                    <h3 className="font-extrabold text-sm sm:text-base text-[var(--ink)] tracking-tight">
                       Alarm Pelunasan Cash Tempo Garasi ({urgentReceivables.length} Tagihan Butuh Tindakan)
                     </h3>
-                    <span
-                      className={cn(
-                        "text-[10px] font-bold px-2.5 py-0.5 rounded-full border",
-                        hasOverdue
-                          ? "bg-rose-100 text-rose-800 border-rose-300"
-                          : "bg-amber-100 text-amber-800 border-amber-300"
-                      )}
-                    >
+                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-[var(--bg)] text-[var(--ink)] border-[var(--line)] shadow-2xs">
                       Total: {formatRupiah(totalUrgentAmount)}
                     </span>
                   </div>
-                  <p className="text-xs text-stone-600 mt-0.5">
+                  <p className="text-xs text-[var(--muted)] mt-0.5">
                     Kebijakan Nur Mobil: Cash Tempo maksimal 30 hari. BPKB dan STNK asli tetap ditahan di brankas showroom hingga pelunasan sisa 30% diterima penuh.
                   </p>
                 </div>
@@ -747,7 +732,7 @@ export function DashboardClient({
 
               <Link
                 href="/admin/sales"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-700 hover:text-stone-900 bg-white/90 hover:bg-white border border-stone-300 px-3 py-1.5 rounded-[var(--r-btn)] transition-colors shrink-0 shadow-xs"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--ink)] bg-white hover:bg-[var(--bg)] border border-[var(--line)] px-3 py-1.5 rounded-[var(--r-btn)] transition-colors shrink-0 shadow-xs"
               >
                 <span>Lihat Semua Penjualan</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -773,21 +758,21 @@ export function DashboardClient({
                 return (
                   <div
                     key={r.id}
-                    className="bg-white rounded-[var(--r-btn)] p-3.5 border border-stone-200 shadow-xs flex flex-col justify-between gap-3 hover:border-amber-400 transition-colors"
+                    className="bg-white rounded-[var(--r-btn)] p-3.5 border border-[var(--line)] shadow-xs flex flex-col justify-between gap-3 hover:border-[var(--accent)] transition-colors"
                   >
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className="font-extrabold text-xs text-stone-900 truncate">
+                        <span className="font-extrabold text-xs text-[var(--ink)] truncate">
                           {r.vehiclePlate} · {r.vehicleBrand} {r.vehicleModel}
                         </span>
                         <span
                           className={cn(
                             "text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0",
                             isOverdue
-                              ? "bg-red-100 text-red-700"
+                              ? "bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30"
                               : isToday
-                              ? "bg-amber-100 text-amber-800"
-                              : "bg-stone-100 text-stone-700"
+                              ? "bg-[var(--bg)] text-[var(--warn)] border border-[var(--warn)]/30"
+                              : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]"
                           )}
                         >
                           {isOverdue
@@ -798,43 +783,43 @@ export function DashboardClient({
                         </span>
                       </div>
 
-                      <div className="text-xs text-stone-600 flex items-center justify-between">
+                      <div className="text-xs text-[var(--muted)] flex items-center justify-between">
                         <span>
-                          Pembeli: <strong>{r.buyerName}</strong>
+                          Pembeli: <strong className="text-[var(--ink)]">{r.buyerName}</strong>
                         </span>
-                        <span className="text-[11px] text-stone-500">
+                        <span className="text-[11px] text-[var(--muted)]">
                           {r.daysSinceSale} hari lalu
                         </span>
                       </div>
 
-                      <div className="bg-stone-50 rounded-lg p-2 flex items-center justify-between border border-stone-100">
-                        <span className="text-[11px] text-stone-500 font-medium">Sisa Piutang:</span>
-                        <span className="font-black text-sm text-stone-900">
+                      <div className="bg-[var(--bg)] rounded-lg p-2 flex items-center justify-between border border-[var(--line)]">
+                        <span className="text-[11px] text-[var(--muted)] font-medium">Sisa Piutang:</span>
+                        <span className="font-black text-sm text-[var(--ink)]">
                           {formatRupiah(r.remainingAmount)}
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 pt-1 border-t border-stone-100">
+                    <div className="flex items-center gap-2 pt-1 border-t border-[var(--line)]">
                       {waLink ? (
                         <a
                           href={waLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-xs transition-colors cursor-pointer"
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-bold text-xs py-2 px-3 rounded-lg shadow-xs transition-colors cursor-pointer"
                         >
                           <MessageCircle className="w-3.5 h-3.5" />
                           <span>Kirim WA Tagihan (1-Klik)</span>
                         </a>
                       ) : (
-                        <span className="flex-1 text-[11px] text-stone-400 italic text-center py-1">
+                        <span className="flex-1 text-[11px] text-[var(--muted)] italic text-center py-1">
                           No HP belum diisi
                         </span>
                       )}
                       <Link
                         href="/admin/sales"
                         title="Catat Pelunasan"
-                        className="p-2 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-bold transition-colors"
+                        className="p-2 rounded-lg bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-[var(--ink)] text-xs font-bold transition-colors"
                       >
                         <Receipt className="w-3.5 h-3.5" />
                       </Link>
@@ -890,51 +875,51 @@ export function DashboardClient({
           </div>
 
           {/* 2. Ready Siap Jual */}
-          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1 bg-white">
-            <div className="flex items-center justify-between text-emerald-700">
+          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
+            <div className="flex items-center justify-between text-[var(--ok)]">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Siap Jual</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
             </div>
             <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
-              {data.readyCount} <span className="text-xs font-semibold text-emerald-600">Unit</span>
+              {data.readyCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
             </div>
-            <p className="text-[10px] text-emerald-700">Tayang di katalog publik</p>
+            <p className="text-[10px] text-[var(--muted)]">Tayang di katalog publik</p>
           </div>
 
           {/* 3. Belum Salon & Poles */}
-          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1 bg-white">
-            <div className="flex items-center justify-between text-amber-700">
+          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
+            <div className="flex items-center justify-between text-[var(--warn)]">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Belum Poles</span>
-              <Wrench className="w-4 h-4 text-amber-600" />
+              <Wrench className="w-4 h-4 text-[var(--warn)]" />
             </div>
             <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
-              {data.pendingSalonCount} <span className="text-xs font-semibold text-amber-600">Unit</span>
+              {data.pendingSalonCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
             </div>
-            <p className="text-[10px] text-amber-700">Butuh salon & detailing</p>
+            <p className="text-[10px] text-[var(--muted)]">Butuh salon & detailing</p>
           </div>
 
           {/* 4. Sedang / Butuh Cat */}
-          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1 bg-white">
-            <div className="flex items-center justify-between text-blue-700">
+          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
+            <div className="flex items-center justify-between text-[var(--accent)]">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Perbaikan Cat</span>
-              <Layers className="w-4 h-4 text-blue-600" />
+              <Layers className="w-4 h-4 text-[var(--accent)]" />
             </div>
             <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
-              {data.pendingPaintCount} <span className="text-xs font-semibold text-blue-600">Unit</span>
+              {data.pendingPaintCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
             </div>
-            <p className="text-[10px] text-blue-700">Di bengkel body repair</p>
+            <p className="text-[10px] text-[var(--muted)]">Di bengkel body repair</p>
           </div>
 
           {/* 5. Alarm BPKB Tertahan */}
-          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1 bg-white">
-            <div className="flex items-center justify-between text-purple-700">
+          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
+            <div className="flex items-center justify-between text-[var(--accent)]">
               <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">BPKB Tertahan</span>
-              <FileText className="w-4 h-4 text-purple-600" />
+              <FileText className="w-4 h-4 text-[var(--accent)]" />
             </div>
             <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
-              {data.pendingBpkbCount} <span className="text-xs font-semibold text-purple-600">Unit</span>
+              {data.pendingBpkbCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
             </div>
-            <p className="text-[10px] text-purple-700">Proses leasing/penjual</p>
+            <p className="text-[10px] text-[var(--muted)]">Proses leasing/penjual</p>
           </div>
 
           {/* 6. Unit Macet (>45 Hari) */}
@@ -982,7 +967,7 @@ export function DashboardClient({
         {/* ── AUCTION PIPELINE ── */}
         <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
           <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center gap-3 bg-[var(--bg)] border-b border-[var(--line)]">
-            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shrink-0 shadow-2xs">
               <Gavel className="w-4.5 h-4.5" />
             </div>
             <div>
@@ -1000,26 +985,26 @@ export function DashboardClient({
                 <div className="text-xl font-black text-[var(--ink)]">{ap.totalAuctionUnits}</div>
                 <div className="text-[10px] text-[var(--muted)] font-semibold leading-tight">Unit dari Lelang</div>
               </div>
-              <div className="bg-emerald-50 rounded-[var(--r-btn)] p-3 space-y-1 border border-emerald-200/60">
-                <div className="text-xl font-black text-emerald-800">{ap.eksPerusahaanCount}</div>
-                <div className="text-[10px] text-emerald-700 font-semibold leading-tight">
+              <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-3 space-y-1 border border-[var(--line)]">
+                <div className="text-xl font-black text-[var(--ok)]">{ap.eksPerusahaanCount}</div>
+                <div className="text-[10px] text-[var(--muted)] font-semibold leading-tight">
                   Eks Perusahaan
                   <br />
-                  <span className="font-normal text-emerald-600">(aman)</span>
+                  <span className="font-normal text-[var(--ok)]">(aman)</span>
                 </div>
               </div>
               <div
                 className={cn(
                   "rounded-[var(--r-btn)] p-3 space-y-1 border",
                   ap.eksTarikLeasingCount > 0
-                    ? "bg-orange-50 border-orange-200/60"
+                    ? "bg-[var(--bg)] border-[var(--warn)]/30"
                     : "bg-[var(--bg)] border-[var(--line)]"
                 )}
               >
                 <div
                   className={cn(
                     "text-xl font-black",
-                    ap.eksTarikLeasingCount > 0 ? "text-orange-800" : "text-[var(--ink)]"
+                    ap.eksTarikLeasingCount > 0 ? "text-[var(--warn)]" : "text-[var(--ink)]"
                   )}
                 >
                   {ap.eksTarikLeasingCount}
@@ -1027,12 +1012,12 @@ export function DashboardClient({
                 <div
                   className={cn(
                     "text-[10px] font-semibold leading-tight",
-                    ap.eksTarikLeasingCount > 0 ? "text-orange-700" : "text-[var(--muted)]"
+                    ap.eksTarikLeasingCount > 0 ? "text-[var(--warn)]" : "text-[var(--muted)]"
                   )}
                 >
                   Eks Leasing
                   <br />
-                  <span className={ap.eksTarikLeasingCount > 0 ? "text-orange-600 font-normal" : "font-normal"}>
+                  <span className="font-normal">
                     {ap.eksTarikLeasingCount > 0 ? "(pantau dok.)" : "(nihil)"}
                   </span>
                 </div>
@@ -1042,16 +1027,16 @@ export function DashboardClient({
             {/* BPKB Estimasi Tiba */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-[var(--ink)]">
-                <CalendarClock className="w-3.5 h-3.5 text-purple-600" />
+                <CalendarClock className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>BPKB Estimasi Tiba dalam 7 Hari</span>
-                <span className="ml-auto text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">
+                <span className="ml-auto text-[10px] bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full font-bold shadow-2xs">
                   {ap.unitsBpkbArrivingSoon.length} Unit
                 </span>
               </div>
 
               {ap.unitsBpkbArrivingSoon.length === 0 ? (
                 <div className="text-[11px] text-[var(--muted)] text-center py-3 bg-[var(--bg)] rounded-[var(--r-btn)]">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
+                  <CheckCircle2 className="w-5 h-5 text-[var(--ok)] mx-auto mb-1" />
                   Tidak ada BPKB yang diperkirakan tiba dalam 7 hari ke depan
                 </div>
               ) : (
@@ -1062,10 +1047,10 @@ export function DashboardClient({
                       className={cn(
                         "flex items-center justify-between text-xs rounded-[var(--r-btn)] px-3 py-2.5 border",
                         u.estimatedBpkbArrivalDays <= 0
-                          ? "bg-red-50 border-red-200 text-red-800"
+                          ? "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
                           : u.estimatedBpkbArrivalDays <= 2
-                          ? "bg-orange-50 border-orange-200 text-orange-800"
-                          : "bg-purple-50 border-purple-200 text-purple-800"
+                          ? "bg-[var(--bg)] border-[var(--warn)]/30 text-[var(--warn)]"
+                          : "bg-[var(--bg)] border-[var(--line)] text-[var(--ink)]"
                       )}
                     >
                       <div>
@@ -1091,13 +1076,13 @@ export function DashboardClient({
             {/* Info Benchmark */}
             <div className="bg-[var(--bg)] rounded-[var(--r-btn)] px-3 py-2 text-[10px] text-[var(--muted)] flex gap-4">
               <div className="flex items-center gap-1.5">
-                <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <BadgeCheck className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
                 <span>
                   <strong>Eks Perusahaan:</strong> BPKB ~7-14 hari
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <ShieldAlert className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                <ShieldAlert className="w-3.5 h-3.5 text-[var(--warn)] shrink-0" />
                 <span>
                   <strong>Eks Leasing:</strong> BPKB ~14-28 hari
                 </span>
@@ -1109,7 +1094,7 @@ export function DashboardClient({
         {/* ── CASH FLOW PROJECTION 14 HARI ── */}
         <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
           <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center gap-3 bg-[var(--bg)] border-b border-[var(--line)]">
-            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shrink-0 shadow-2xs">
               <BarChart3 className="w-4.5 h-4.5" />
             </div>
             <div>
@@ -1123,46 +1108,34 @@ export function DashboardClient({
           <div className="p-5 space-y-4">
             {/* Kasflow Overview */}
             <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="bg-emerald-50 border border-emerald-200/60 rounded-[var(--r-btn)] p-3 space-y-1">
-                <ArrowUpCircle className="w-4 h-4 text-emerald-600 mx-auto" />
-                <div className="text-sm font-black text-emerald-800">
+              <div className="bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] p-3 space-y-1">
+                <ArrowUpCircle className="w-4 h-4 text-[var(--ok)] mx-auto" />
+                <div className="text-sm font-black text-[var(--ink)]">
                   {formatRupiah(cf.projectedCashIn14Days)}
                 </div>
-                <div className="text-[10px] text-emerald-700 font-semibold">Masuk (Est.)</div>
+                <div className="text-[10px] text-[var(--ok)] font-semibold">Masuk (Est.)</div>
               </div>
-              <div className="bg-rose-50 border border-rose-200/60 rounded-[var(--r-btn)] p-3 space-y-1">
-                <ArrowDownCircle className="w-4 h-4 text-rose-500 mx-auto" />
-                <div className="text-sm font-black text-rose-800">
+              <div className="bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] p-3 space-y-1">
+                <ArrowDownCircle className="w-4 h-4 text-[var(--bad)] mx-auto" />
+                <div className="text-sm font-black text-[var(--bad)]">
                   {formatRupiah(cf.projectedCashOut14Days)}
                 </div>
-                <div className="text-[10px] text-rose-700 font-semibold">Keluar (Est.)</div>
+                <div className="text-[10px] text-[var(--bad)] font-semibold">Keluar (Est.)</div>
               </div>
-              <div
-                className={cn(
-                  "rounded-[var(--r-btn)] p-3 space-y-1 border",
-                  netPositive
-                    ? "bg-emerald-50 border-emerald-200/60"
-                    : "bg-red-50 border-red-200/60"
-                )}
-              >
+              <div className="bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] p-3 space-y-1">
                 <TrendingUp
-                  className={cn("w-4 h-4 mx-auto", netPositive ? "text-emerald-600" : "text-red-500")}
+                  className={cn("w-4 h-4 mx-auto", netPositive ? "text-[var(--ok)]" : "text-[var(--bad)]")}
                 />
                 <div
                   className={cn(
                     "text-sm font-black",
-                    netPositive ? "text-emerald-800" : "text-red-800"
+                    netPositive ? "text-[var(--ok)]" : "text-[var(--bad)]"
                   )}
                 >
                   {netPositive ? "+" : ""}
                   {formatRupiah(Math.abs(cf.netCashflow14Days))}
                 </div>
-                <div
-                  className={cn(
-                    "text-[10px] font-semibold",
-                    netPositive ? "text-emerald-700" : "text-red-700"
-                  )}
-                >
+                <div className="text-[10px] text-[var(--muted)] font-semibold">
                   Net Cashflow
                 </div>
               </div>
@@ -1171,12 +1144,12 @@ export function DashboardClient({
             {/* Cash Runway */}
             <div
               className={cn(
-                "rounded-[var(--r-btn)] px-4 py-3 flex items-center justify-between",
+                "rounded-[var(--r-btn)] px-4 py-3 flex items-center justify-between border",
                 cf.cashRunwayDays > 90
-                  ? "bg-emerald-50 border border-emerald-200"
+                  ? "bg-[var(--bg)] border-[var(--ok)]/30"
                   : cf.cashRunwayDays > 30
-                  ? "bg-amber-50 border border-amber-200"
-                  : "bg-red-50 border border-red-200"
+                  ? "bg-[var(--bg)] border-[var(--warn)]/30"
+                  : "bg-[var(--bg)] border-[var(--bad)]/30"
               )}
             >
               <div>
@@ -1190,10 +1163,10 @@ export function DashboardClient({
                   className={cn(
                     "text-xl font-black",
                     cf.cashRunwayDays > 90
-                      ? "text-emerald-800"
+                      ? "text-[var(--ok)]"
                       : cf.cashRunwayDays > 30
-                      ? "text-amber-800"
-                      : "text-red-800"
+                      ? "text-[var(--warn)]"
+                      : "text-[var(--bad)]"
                   )}
                 >
                   {cf.cashRunwayDays >= 999 ? "∞" : cf.cashRunwayDays}
@@ -1210,7 +1183,7 @@ export function DashboardClient({
               </div>
               {cf.pendingSettlements.filter((p) => p.isLikelyClearingSoon).length === 0 ? (
                 <div className="text-[11px] text-[var(--muted)] text-center py-3 bg-[var(--bg)] rounded-[var(--r-btn)]">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto mb-1" />
+                  <CheckCircle2 className="w-5 h-5 text-[var(--ok)] mx-auto mb-1" />
                   Tidak ada piutang yang mendekati 2 minggu
                 </div>
               ) : (
@@ -1236,17 +1209,17 @@ export function DashboardClient({
                       return (
                         <div
                           key={i}
-                          className="flex items-center justify-between bg-amber-50 border border-amber-200/60 rounded-[var(--r-btn)] px-3 py-2 text-xs gap-2"
+                          className="flex items-center justify-between bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] px-3 py-2 text-xs gap-2"
                         >
                           <div className="truncate">
                             <span className="font-bold text-[var(--ink)]">{p.vehiclePlate}</span>
                             <span className="text-[10px] text-[var(--muted)] ml-1.5">{p.buyerName}</span>
-                            <span className="text-[10px] text-amber-700 ml-1.5 font-semibold">
+                            <span className="text-[10px] text-[var(--warn)] ml-1.5 font-semibold">
                               · {p.daysSinceSale} hari lalu
                             </span>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
-                            <span className="font-black text-amber-800 whitespace-nowrap">
+                            <span className="font-black text-[var(--ink)] whitespace-nowrap">
                               {formatRupiah(p.amount)}
                             </span>
                             {waLink && (
@@ -1255,7 +1228,7 @@ export function DashboardClient({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 title="Kirim WA Tagihan"
-                                className="p-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white transition-colors cursor-pointer"
+                                className="p-1 rounded-md bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white transition-colors cursor-pointer"
                               >
                                 <MessageCircle className="w-3.5 h-3.5" />
                               </a>
@@ -1291,7 +1264,7 @@ export function DashboardClient({
             <div className="text-3xl font-black text-[var(--ink)] tracking-tight">
               {formatRupiah(data.cashBalance)}
             </div>
-            <p className="text-xs text-emerald-700 font-medium mt-1">Kas riil on-hand di rekening bank BCA</p>
+            <p className="text-xs text-[var(--ok)] font-medium mt-1">Kas riil on-hand di rekening bank BCA</p>
           </div>
 
           <div className="pt-3 border-t border-[var(--line)] space-y-2 text-xs">
@@ -1301,13 +1274,13 @@ export function DashboardClient({
             </div>
             <div className="flex justify-between text-[var(--muted)]">
               <span>Cadangan Kas Operasional (Aman):</span>
-              <span className="font-bold text-amber-700">
+              <span className="font-bold text-[var(--warn)]">
                 {formatRupiah(data.buyingPowerRecommendation.reserveFund)}
               </span>
             </div>
             <div className="flex justify-between text-[var(--muted)]">
               <span>Dana Maksimal Kulakan Baru:</span>
-              <span className="font-black text-emerald-700 text-sm">
+              <span className="font-black text-[var(--ok)] text-sm">
                 {formatRupiah(data.buyingPowerRecommendation.recommendedBudget)}
               </span>
             </div>
@@ -1317,20 +1290,20 @@ export function DashboardClient({
         {/* Card Rekomendasi Keputusan Kulakan */}
         <div className="lg:col-span-2 bg-white border border-[var(--line)] rounded-[var(--r-card)] p-6 shadow-xs space-y-3 flex flex-col justify-between">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-[#92400E]">
+            <div className="flex items-center gap-2 text-[var(--ink)]">
               <Coins className="w-5 h-5 text-[var(--accent)]" />
-              <h4 className="font-extrabold text-sm uppercase tracking-wider text-[#78350F]">
+              <h4 className="font-extrabold text-sm uppercase tracking-wider text-[var(--ink)]">
                 Rekomendasi Keputusan Kulakan Unit Baru
               </h4>
             </div>
 
-            <p className="text-xs text-[#92400E] leading-relaxed">
+            <p className="text-xs text-[var(--muted)] leading-relaxed">
               {data.buyingPowerRecommendation.advice}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <div className="bg-white/90 p-3.5 rounded-[var(--r-btn)] border border-amber-200/80 space-y-1">
+            <div className="bg-[var(--bg)] p-3.5 rounded-[var(--r-btn)] border border-[var(--line)] space-y-1">
               <span className="text-[10px] font-bold uppercase text-[var(--muted)] block">Rekomendasi Jumlah Unit:</span>
               <span className="text-lg font-black text-[var(--ink)]">
                 {data.buyingPowerRecommendation.recommendedUnits > 0
@@ -1342,12 +1315,12 @@ export function DashboardClient({
               </span>
             </div>
 
-            <div className="bg-white/90 p-3.5 rounded-[var(--r-btn)] border border-amber-200/80 space-y-1">
+            <div className="bg-[var(--bg)] p-3.5 rounded-[var(--r-btn)] border border-[var(--line)] space-y-1">
               <span className="text-[10px] font-bold uppercase text-[var(--muted)] block">Target Segmen Disarankan:</span>
               <span className="text-xs font-bold text-[var(--ink)] block truncate">
                 {data.buyingPowerRecommendation.targetSegment}
               </span>
-              <span className="text-[11px] text-emerald-700 font-semibold block">
+              <span className="text-[11px] text-[var(--ok)] font-semibold block">
                 Fokus perputaran &lt; 20 hari
               </span>
             </div>
@@ -1369,7 +1342,7 @@ export function DashboardClient({
 
         {data.urgentVehicles.length === 0 ? (
           <div className="p-8 text-center text-[var(--muted)] text-xs">
-            <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2 opacity-80" />
+            <CheckCircle2 className="w-8 h-8 text-[var(--ok)] mx-auto mb-2 opacity-80" />
             Semua unit dalam kondisi aman. Tidak ada BPKB tertahan atau unit macet kritis.
           </div>
         ) : (
@@ -1397,7 +1370,7 @@ export function DashboardClient({
                       <span
                         className={cn(
                           "inline-flex items-center gap-1 font-bold text-xs",
-                          v.days > 45 ? "text-rose-700" : "text-amber-700"
+                          v.days > 45 ? "text-[var(--bad)]" : "text-[var(--warn)]"
                         )}
                       >
                         <Clock className="w-3.5 h-3.5" />
@@ -1438,7 +1411,7 @@ export function DashboardClient({
       <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
         <div className="p-4 sm:p-5 border-b border-[var(--line)] flex flex-wrap items-center justify-between gap-3 bg-[var(--bg)] border-b border-[var(--line)]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shrink-0 shadow-2xs">
               <CalendarClock className="w-5 h-5" />
             </div>
             <div>
@@ -1447,7 +1420,7 @@ export function DashboardClient({
                   Radar Alarm Pajak STNK & Plat Kaleng (PKB)
                 </h3>
                 {data.taxAlertSummary.overdueCount > 0 && (
-                  <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200 text-[10px] font-bold animate-pulse">
+                  <span className="px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30 text-[10px] font-bold animate-pulse shadow-2xs">
                     {data.taxAlertSummary.overdueCount} Overdue
                   </span>
                 )}
@@ -1459,17 +1432,17 @@ export function DashboardClient({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-700 border border-red-200">
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30">
               🔴 {data.taxAlertSummary.overdueCount} Lewat Jatuh Tempo
             </span>
-            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-amber-50 text-[#78350F] border border-amber-200">
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--warn)] border border-[var(--warn)]/30">
               🟡 {data.taxAlertSummary.expiringSoonCount} Kritis H-30
             </span>
-            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--ok)] border border-[var(--ok)]/30">
               🟢 {data.taxAlertSummary.safeCount} Pajak Hidup
             </span>
             {data.taxAlertSummary.unknownCount > 0 && (
-              <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-stone-100 text-stone-600 border border-stone-200">
+              <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
                 ⚪ {data.taxAlertSummary.unknownCount} Belum Diisi
               </span>
             )}
@@ -1478,8 +1451,8 @@ export function DashboardClient({
 
         {data.taxAlertSummary.criticalUnits.length === 0 ? (
           <div className="p-8 text-center text-[var(--muted)] text-xs">
-            <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2 opacity-80" />
-            <strong className="block text-emerald-900 font-bold mb-1">
+            <CheckCircle2 className="w-8 h-8 text-[var(--ok)] mx-auto mb-2 opacity-80" />
+            <strong className="block text-[var(--ink)] font-bold mb-1">
               Seluruh Pajak Unit Pajangan Aman!
             </strong>
             Tidak ada unit inventori aktif yang pajaknya mati ataupun mendekati jatuh tempo dalam 30 hari ke depan.
@@ -1524,13 +1497,13 @@ export function DashboardClient({
 
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         {isOverdue ? (
-                          <span className="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md bg-red-100 text-red-800 border border-red-300">
-                            <ShieldAlert className="w-3.5 h-3.5 text-red-600" />
+                          <span className="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30">
+                            <ShieldAlert className="w-3.5 h-3.5 text-[var(--bad)]" />
                             Lewat {Math.abs(u.daysRemaining)} Hari
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 border border-amber-300">
-                            <Clock className="w-3.5 h-3.5 text-amber-700" />
+                          <span className="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md bg-[var(--bg)] text-[var(--warn)] border border-[var(--warn)]/30">
+                            <Clock className="w-3.5 h-3.5 text-[var(--warn)]" />
                             Sisa {u.daysRemaining} Hari
                           </span>
                         )}
@@ -1570,7 +1543,7 @@ export function DashboardClient({
       <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
         <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)] border-b border-[var(--line)]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shrink-0 shadow-2xs">
               <BarChart3 className="w-4.5 h-4.5" />
             </div>
             <div>
@@ -1584,8 +1557,8 @@ export function DashboardClient({
             className={cn(
               "text-[10px] font-bold px-2.5 py-1 rounded-full border",
               data.businessPatterns.totalHistoricalVehicles >= 5
-                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                : "bg-amber-50 text-amber-700 border-amber-200"
+                ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
+                : "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
             )}
           >
             {data.businessPatterns.dataQualityNote.startsWith("✅") ? "✅ Data Andal" : "⚠️ Butuh Lebih Banyak Data"}
@@ -1609,7 +1582,7 @@ export function DashboardClient({
               </div>
               <div className="text-[11px] text-[var(--muted)]">hari beli → terjual</div>
               {data.businessPatterns.avgTotalCycleDays > 0 && (
-                <div className="text-[10px] text-emerald-700">
+                <div className="text-[10px] text-[var(--muted)]">
                   Intake→Siap: ~{data.businessPatterns.avgDaysIntakeToReady}h | Siap→Jual: ~{data.businessPatterns.avgDaysReadyToSold}h
                 </div>
               )}
@@ -1625,7 +1598,7 @@ export function DashboardClient({
               </div>
               <div className="text-[11px] text-[var(--muted)]">hari rata-rata lunas</div>
               {data.businessPatterns.avgPaymentLagDays > 0 && (
-                <div className="text-[10px] text-blue-700">
+                <div className="text-[10px] text-[var(--muted)]">
                   {data.businessPatterns.pctPaidWithin14Days}% lunas dalam 14 hari · {data.businessPatterns.pctPaidWithin7Days}% dalam 7 hari
                 </div>
               )}
@@ -1636,7 +1609,7 @@ export function DashboardClient({
               <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
                 <TrendingUp className="w-3 h-3" /> Avg Margin / Unit
               </div>
-              <div className="text-2xl font-black text-emerald-800">
+              <div className="text-2xl font-black text-[var(--ink)]">
                 {data.businessPatterns.avgGrossMarginRupiah > 0
                   ? formatRupiah(data.businessPatterns.avgGrossMarginRupiah)
                   : "-"}
@@ -1651,7 +1624,7 @@ export function DashboardClient({
               <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
                 <Gavel className="w-3 h-3" /> % Beli dari Lelang
               </div>
-              <div className="text-2xl font-black text-amber-800">
+              <div className="text-2xl font-black text-[var(--ink)]">
                 {data.businessPatterns.totalHistoricalVehicles > 0 ? `${data.businessPatterns.pctFromAuction}%` : "-"}
               </div>
               <div className="text-[11px] text-[var(--muted)]">
@@ -1667,7 +1640,7 @@ export function DashboardClient({
             {/* Balai lelang favorit dari data nyata */}
             <div className="space-y-2">
               <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                <Gavel className="w-3.5 h-3.5 text-amber-600" />
+                <Gavel className="w-3.5 h-3.5 text-[var(--accent)]" />
                 Balai Lelang Favorit (Data Nyata)
               </div>
               {data.businessPatterns.topAuctionHouses.length === 0 ? (
@@ -1687,7 +1660,7 @@ export function DashboardClient({
             {/* Unit tercepat laku */}
             <div className="space-y-2">
               <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+                <TrendingUp className="w-3.5 h-3.5 text-[var(--ok)]" />
                 Unit Tercepat Laku (Histori)
               </div>
               {data.businessPatterns.fastestSegments.length === 0 ? (
@@ -1697,7 +1670,7 @@ export function DashboardClient({
                   {data.businessPatterns.fastestSegments.slice(0, 4).map((s, i) => (
                     <div key={i} className="flex items-center justify-between text-xs">
                       <span className="text-[var(--ink)] font-medium">{s.brandModel}</span>
-                      <span className="text-emerald-700 font-bold">{s.avgDays} hari</span>
+                      <span className="text-[var(--ok)] font-bold">{s.avgDays} hari</span>
                     </div>
                   ))}
                 </div>
@@ -1707,7 +1680,7 @@ export function DashboardClient({
             {/* Merk paling menguntungkan */}
             <div className="space-y-2">
               <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                <Coins className="w-3.5 h-3.5 text-blue-600" />
+                <Coins className="w-3.5 h-3.5 text-[var(--accent)]" />
                 Margin Terbaik per Merk
               </div>
               {data.businessPatterns.mostProfitableBrands.length === 0 ? (
@@ -1717,7 +1690,7 @@ export function DashboardClient({
                   {data.businessPatterns.mostProfitableBrands.slice(0, 4).map((b, i) => (
                     <div key={i} className="flex items-center justify-between text-xs">
                       <span className="text-[var(--ink)] font-medium">{b.brand}</span>
-                      <span className="text-blue-700 font-bold">{formatRupiah(b.avgMargin)}</span>
+                      <span className="text-[var(--ink)] font-bold">{formatRupiah(b.avgMargin)}</span>
                     </div>
                   ))}
                 </div>

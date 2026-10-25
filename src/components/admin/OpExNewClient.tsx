@@ -102,11 +102,11 @@ export function OpExNewClient() {
         </div>
       </div>
 
-      <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 text-xs text-blue-900 flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-2xl bg-white border border-[var(--line)] shadow-xs text-xs text-[var(--muted)] flex items-start gap-2.5">
+        <Info className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
         <div>
-          <strong className="block font-bold">Pemisahan Biaya Ruko vs Biaya Mobil:</strong>
-          <span>
+          <strong className="block font-bold text-[var(--ink)]">Pemisahan Biaya Ruko vs Biaya Mobil:</strong>
+          <span className="leading-relaxed">
             Beban operasional showroom dicatat terpisah agar tidak menggelembungkan HPP kendaraan dan tidak mengurangi hak bagi hasil per unit bagi investor.
           </span>
         </div>
@@ -121,8 +121,8 @@ export function OpExNewClient() {
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--ok)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -130,7 +130,7 @@ export function OpExNewClient() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
           <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
-            <Building className="w-4 h-4 text-blue-600" />
+            <Building className="w-4 h-4 text-[var(--accent)]" />
             <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               Rincian Beban Operasional
             </h2>
@@ -235,7 +235,7 @@ export function OpExNewClient() {
           <button
             type="submit"
             disabled={loading || !amount || Number(amount) <= 0}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

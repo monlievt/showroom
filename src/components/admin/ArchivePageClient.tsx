@@ -277,9 +277,9 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Toast Feedback */}
       {toastMessage && (
-        <div className="p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm bg-emerald-50 border-emerald-200 text-emerald-800 animate-in fade-in duration-200">
+        <div className="p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-xs bg-[var(--bg)] border-[var(--line)] text-[var(--ink)] animate-in fade-in duration-200">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
             <span>{toastMessage}</span>
           </div>
           <button
@@ -421,7 +421,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                   : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+              <TrendingUp className="w-3.5 h-3.5" />
               <span>Untung ({currentSummary.profitCount || 0})</span>
             </button>
             <button
@@ -432,8 +432,8 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
               className={cn(
                 "px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5",
                 profitStatusFilter === "LOSS"
-                  ? "bg-rose-600 text-white shadow-xs font-bold"
-                  : "text-rose-700 hover:bg-rose-50"
+                  ? "bg-[var(--ink)] text-white shadow-xs font-bold"
+                  : "text-[var(--muted)] hover:text-[var(--ink)]"
               )}
             >
               <TrendingDown className="w-3.5 h-3.5" />
@@ -582,8 +582,8 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                         className={cn(
                           "inline-block font-extrabold px-2 py-0.5 rounded text-xs",
                           item.grossProfit >= 0
-                            ? "text-emerald-700 bg-emerald-50"
-                            : "text-rose-700 bg-rose-50"
+                            ? "text-[var(--ink)] bg-[var(--bg)] border border-[var(--line)]"
+                            : "text-[var(--bad)] bg-[var(--bg)] border border-[var(--bad)]/30"
                         )}
                       >
                         {formatRupiah(item.grossProfit)}
@@ -665,7 +665,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                     <span className="text-[11px] font-semibold text-[var(--muted)] block uppercase">
                       Harga Laku
                     </span>
-                    <span className="font-bold text-emerald-700 text-sm sm:text-base">
+                    <span className="font-bold text-[var(--ink)] text-sm sm:text-base">
                       {formatRupiah(selectedItem.sellingPrice)}
                     </span>
                   </div>
@@ -676,7 +676,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                     <span
                       className={cn(
                         "font-extrabold text-sm sm:text-base",
-                        selectedItem.grossProfit >= 0 ? "text-emerald-700" : "text-rose-700"
+                        selectedItem.grossProfit >= 0 ? "text-[var(--ink)]" : "text-[var(--bad)]"
                       )}
                     >
                       {formatRupiah(selectedItem.grossProfit)}
@@ -684,34 +684,34 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                   </div>
                 </div>
               ) : (
-                <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 space-y-3.5">
-                  <h4 className="font-bold text-amber-900 text-xs uppercase tracking-wider flex items-center gap-1.5">
-                    <Edit2 className="w-3.5 h-3.5" />
+                <div className="p-4 bg-[var(--bg)] rounded-xl border border-[var(--line)] space-y-3.5">
+                  <h4 className="font-bold text-[var(--ink)] text-xs uppercase tracking-wider flex items-center gap-1.5">
+                    <Edit2 className="w-3.5 h-3.5 text-[var(--accent)]" />
                     Edit Data Transaksi Historis
                   </h4>
                   
                   {/* Angka Keuangan */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs font-semibold text-amber-900 block mb-1">
+                      <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                         Modal Total HPP (Rp)
                       </label>
                       <input
                         type="number"
                         value={editTotalHpp}
                         onChange={(e) => setEditTotalHpp(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                        className="w-full px-3 py-1.5 border border-[var(--line)] rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-semibold text-amber-900 block mb-1">
+                      <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                         Harga Laku Terjual (Rp)
                       </label>
                       <input
                         type="number"
                         value={editSellingPrice}
                         onChange={(e) => setEditSellingPrice(Number(e.target.value))}
-                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                        className="w-full px-3 py-1.5 border border-[var(--line)] rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                       />
                     </div>
                   </div>
@@ -719,34 +719,34 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                   {/* Tanggal Beli & Tanggal Laku */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-xs font-semibold text-amber-900 block mb-1 flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-amber-700" />
+                      <label className="text-xs font-semibold text-[var(--ink)] block mb-1 flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5 text-[var(--muted)]" />
                         Tanggal Beli
                       </label>
                       <input
                         type="date"
                         value={editPurchaseDate}
                         onChange={(e) => setEditPurchaseDate(e.target.value)}
-                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                        className="w-full px-3 py-1.5 border border-[var(--line)] rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-semibold text-amber-900 block mb-1 flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-amber-700" />
+                      <label className="text-xs font-semibold text-[var(--ink)] block mb-1 flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5 text-[var(--muted)]" />
                         Tanggal Laku (Terjual)
                       </label>
                       <input
                         type="date"
                         value={editSaleDate}
                         onChange={(e) => setEditSaleDate(e.target.value)}
-                        className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                        className="w-full px-3 py-1.5 border border-[var(--line)] rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                       />
                     </div>
                   </div>
 
                   {/* Catatan Tambahan */}
                   <div>
-                    <label className="text-xs font-semibold text-amber-900 block mb-1">
+                    <label className="text-xs font-semibold text-[var(--ink)] block mb-1">
                       Catatan Tambahan
                     </label>
                     <textarea
@@ -754,7 +754,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                       onChange={(e) => setEditNotes(e.target.value)}
                       rows={3}
                       placeholder="Masukkan catatan khusus untuk unit ini..."
-                      className="w-full px-3 py-1.5 border border-amber-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                      className="w-full px-3 py-1.5 border border-[var(--line)] rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                     />
                   </div>
                 </div>
@@ -841,7 +841,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                   <button
                     onClick={handleSaveEdit}
                     disabled={isSubmitting}
-                    className="px-4 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors flex items-center gap-1.5"
+                    className="px-4 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
                   >
                     {isSubmitting ? "Menyimpan..." : "Simpan Perubahan"}
                   </button>
@@ -860,17 +860,17 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
               <Trash2 className="w-6 h-6" />
             </div>
             <div className="text-center space-y-2">
-              <h3 className="font-bold text-lg text-stone-900">
+              <h3 className="font-bold text-lg text-[var(--ink)]">
                 Hapus Data Historis?
               </h3>
-              <p className="text-sm text-stone-600">
+              <p className="text-sm text-[var(--muted)]">
                 Apakah Anda yakin ingin menghapus data unit{" "}
-                <span className="font-semibold text-stone-900 font-mono">
+                <span className="font-semibold text-[var(--ink)] font-mono">
                   {deletingItem.plateNumber}
                 </span>{" "}
                 ({deletingItem.model}) dari arsip penjualan?
               </p>
-              <p className="text-xs text-stone-400">
+              <p className="text-xs text-[var(--muted)]">
                 Tindakan ini permanen dan akan menghapus unit ini dari riwayat arsip.
               </p>
             </div>
@@ -879,7 +879,7 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
                 type="button"
                 onClick={() => setDeletingItem(null)}
                 disabled={isDeleting}
-                className="px-4 py-2 rounded-xl text-stone-600 text-sm font-semibold hover:bg-stone-100 transition-colors"
+                className="px-4 py-2 rounded-xl text-[var(--ink)] border border-[var(--line)] bg-white text-sm font-semibold hover:bg-[var(--bg)] transition-colors shadow-2xs"
               >
                 Batal
               </button>

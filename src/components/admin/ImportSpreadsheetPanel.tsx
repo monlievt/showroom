@@ -276,10 +276,10 @@ export function ImportSpreadsheetPanel() {
                   VEHICLE_IMPORT_TEMPLATE_CSV
                 )
               }
-              className="flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+              className="flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
               title="Download file template Excel/CSV siap pakai"
             >
-              <Download className="w-3.5 h-3.5 text-emerald-600" />
+              <Download className="w-3.5 h-3.5 text-white" />
               <span>Download Template Mobil (Excel)</span>
             </button>
 
@@ -407,14 +407,14 @@ export function ImportSpreadsheetPanel() {
             className={cn(
               "p-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 border transition-all",
               resultMessage.type === "success"
-                ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-                : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+                ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ink)]"
+                : "bg-red-50 border-red-200 text-red-700"
             )}
           >
             {resultMessage.type === "success" ? (
-              <CheckCircle2 className="w-5 h-5 shrink-0" />
+              <CheckCircle2 className="w-5 h-5 shrink-0 text-[var(--accent)]" />
             ) : (
-              <AlertTriangle className="w-5 h-5 shrink-0" />
+              <AlertTriangle className="w-5 h-5 shrink-0 text-red-600" />
             )}
             <span>{resultMessage.text}</span>
           </div>
@@ -428,7 +428,7 @@ export function ImportSpreadsheetPanel() {
             <div>
               <h4 className="font-extrabold text-sm text-[var(--ink)] flex items-center gap-2">
                 <span>Pratinjau Data yang Siap Diimpor</span>
-                <span className="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full font-bold">
+                <span className="text-xs bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2.5 py-0.5 rounded-full font-bold">
                   {parsedRows.length} Baris Terbaca
                 </span>
               </h4>
@@ -498,22 +498,19 @@ export function ImportSpreadsheetPanel() {
                       <td className="py-2.5 px-3 whitespace-nowrap">{row.brand} {row.model}</td>
                       <td className="py-2.5 px-3">{row.year}</td>
                       <td className="py-2.5 px-3">
-                        <span className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded font-bold">
+                        <span className="text-[10px] bg-[var(--bg)] border border-[var(--line)] px-1.5 py-0.5 rounded-full font-bold">
                           {row.transmission}
                         </span>
                       </td>
                       <td className="py-2.5 px-3 text-right font-medium">{formatRupiah(row.purchasePrice)}</td>
-                      <td className="py-2.5 px-3 text-right font-bold text-emerald-700">{formatRupiah(row.targetSellingPrice || 0)}</td>
+                      <td className="py-2.5 px-3 text-right font-bold text-[var(--ink)]">{formatRupiah(row.targetSellingPrice || 0)}</td>
                       <td className="py-2.5 px-3">
-                        <span className={cn(
-                          "text-[10px] px-1.5 py-0.5 rounded-full font-bold",
-                          row.bpkbStatus === "READY" ? "bg-emerald-100 text-emerald-800" : "bg-purple-100 text-purple-800"
-                        )}>
+                        <span className="text-[10px] bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full font-bold">
                           {row.bpkbStatus}
                         </span>
                       </td>
                       <td className="py-2.5 px-3">
-                        <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded-full font-bold">
+                        <span className="text-[10px] bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full font-bold">
                           {row.status}
                         </span>
                       </td>
@@ -538,7 +535,7 @@ export function ImportSpreadsheetPanel() {
                     <tr key={idx} className="hover:bg-[var(--bg)]">
                       <td className="py-2.5 px-3 font-bold text-[var(--ink)] whitespace-nowrap">{row.plateNumber}</td>
                       <td className="py-2.5 px-3 whitespace-nowrap">
-                        <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded-full font-bold">
+                        <span className="text-[10px] bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full font-bold">
                           {row.category}
                         </span>
                       </td>

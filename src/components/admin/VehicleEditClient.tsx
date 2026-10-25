@@ -331,7 +331,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
           <Link
             href={`/katalog/${generateVehicleSlug(vehicle)}`}
             target="_blank"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 hover:bg-amber-100 font-bold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-bold text-xs transition-colors shadow-xs"
           >
             <ExternalLink className="w-4 h-4 text-[var(--accent)]" />
             <span>Buka di Katalog Publik</span>
@@ -348,14 +348,14 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between gap-3 animate-in fade-in">
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center justify-between gap-3 animate-in fade-in">
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+            <CheckCircle className="w-4 h-4 shrink-0 text-[var(--ok)]" />
             <span>{successMsg}</span>
           </div>
           <Link
             href="/admin/inventory"
-            className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[11px] whitespace-nowrap"
+            className="px-3 py-1 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-lg font-bold text-[11px] whitespace-nowrap shadow-xs"
           >
             Lihat di Tabel Inventori →
           </Link>
@@ -431,10 +431,10 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
 
         {/* SECTION 2: Jika Sumber Balai Lelang */}
         {isAuction && (
-          <div className="bg-amber-50/50 border border-amber-200 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-            <div className="flex items-center gap-2 border-b border-amber-200 pb-3">
-              <Gavel className="w-4 h-4 text-amber-700" />
-              <h2 className="text-sm font-bold text-amber-950 uppercase tracking-wider">
+          <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+            <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+              <Gavel className="w-4 h-4 text-[var(--accent)]" />
+              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
                 2. Balai Lelang &amp; BPKB Tracker Lead Time
               </h2>
             </div>
@@ -447,7 +447,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 <select
                   value={formData.auctionHouse}
                   onChange={(e) => handleAuctionHouseChange(e.target.value)}
-                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   {Object.entries(AUCTION_HOUSE_PRESETS).map(([key, val]) => (
                     <option key={key} value={key}>
@@ -456,7 +456,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   ))}
                 </select>
                 {currentPreset && (
-                  <p className="text-[11px] text-amber-800 mt-1.5 font-medium">
+                  <p className="text-[11px] text-[var(--muted)] mt-1.5 font-medium">
                     📌 {currentPreset.notes}
                   </p>
                 )}
@@ -471,7 +471,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   onChange={(e) =>
                     setFormData({ ...formData, auctionLotType: e.target.value })
                   }
-                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   <option value="EKS_PERUSAHAAN">
                     Eks Perusahaan ✅ (BPKB bersih, 7-14 hari)
@@ -482,7 +482,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   <option value="UNKNOWN">Belum Konfirmasi / Lainnya</option>
                 </select>
                 {formData.auctionLotType === "EKS_TARIKAN_LEASING" && (
-                  <p className="text-[11px] text-orange-800 mt-1.5 font-semibold">
+                  <p className="text-[11px] text-[var(--warn)] mt-1.5 font-semibold">
                     ⚠️ Eks Leasing: Pastikan STNK &amp; surat pelepasan hak lengkap.
                   </p>
                 )}
@@ -497,7 +497,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   onChange={(e) =>
                     setFormData({ ...formData, bpkbStatus: e.target.value })
                   }
-                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                  className="w-full h-11 px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
                   <option value="PROCESS_1_2_WEEKS">
                     Masih Diproses Balai Lelang
@@ -528,9 +528,9 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                         bpkbLeadDays: Number(e.target.value),
                       })
                     }
-                    className="w-full h-11 px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-bold text-amber-900 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                    className="w-full h-11 px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                   />
-                  <span className="text-xs text-amber-900 font-semibold whitespace-nowrap">
+                  <span className="text-xs text-[var(--muted)] font-semibold whitespace-nowrap">
                     Hari Kerja
                   </span>
                 </div>
@@ -540,7 +540,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
         )}
 
         {/* SECTION 2B: Legalitas STNK & Alarm Pajak Tahunan PKB */}
-        <div className="bg-[#FAF9F5] border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
               <CalendarClock className="w-4 h-4 text-[var(--accent)]" />
@@ -548,7 +548,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 Dokumen STNK &amp; Radar Pajak Kendaraan (PKB)
               </h2>
             </div>
-            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
               Alarm H-30 Hari Showroom
             </span>
           </div>
@@ -653,13 +653,13 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
               );
             } else if (diffDays <= 30) {
               return (
-                <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 text-xs flex items-start gap-2.5">
-                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs flex items-start gap-2.5">
+                  <AlertTriangle className="w-4 h-4 text-[var(--warn)] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="font-bold text-[#78350F] block">
+                    <strong className="font-bold text-[var(--ink)] block">
                       Pajak Akan Jatuh Tempo Dalam {diffDays} Hari!
                     </strong>
-                    <p className="mt-0.5 text-[11px] text-[#92400E] leading-relaxed">
+                    <p className="mt-0.5 text-[11px] text-[var(--muted)] leading-relaxed">
                       Unit masuk dalam Radar Alarm H-30 Dashboard. Siapkan alokasi dana perpanjangan atau informasikan pada kesepakatan jual-beli.
                     </p>
                   </div>
@@ -667,13 +667,13 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
               );
             } else {
               return (
-                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs flex items-start gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
                   <div>
-                    <strong className="font-bold text-emerald-950 block">
+                    <strong className="font-bold text-[var(--ink)] block">
                       Pajak Hidup &amp; Aman (Sisa {diffDays} Hari)
                     </strong>
-                    <p className="mt-0.5 text-[11px] text-emerald-800 leading-relaxed">
+                    <p className="mt-0.5 text-[11px] text-[var(--muted)] leading-relaxed">
                       Masa berlaku pajak STNK masih panjang dan siap untuk dipajang serta uji jalan tanpa kendala razia.
                     </p>
                   </div>
@@ -894,7 +894,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     targetSellingPrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-emerald-300 rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
               <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Harga publish yang tertera di katalog publik
@@ -916,7 +916,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                     minSellingPrice: parseThousands(e.target.value),
                   })
                 }
-                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-amber-300 rounded-xl text-sm font-medium text-[#92400E] focus:outline-none focus:ring-2 focus:ring-[#92400E]/40"
+                className="w-full h-11 px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
               <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Pedoman batas tawar untuk tim sales internal
@@ -934,7 +934,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 5. Sumber Modal &amp; Pendanaan Unit (Alokasi Modal)
               </h2>
             </div>
-            <span className="text-[11px] font-semibold text-[#16A34A] bg-[#DCFCE7] px-2.5 py-0.5 rounded-full border border-emerald-300">
+            <span className="text-[11px] font-semibold text-[var(--ink)] bg-[var(--bg)] px-2.5 py-0.5 rounded-full border border-[var(--line)]">
               Sinkron ke Kas &amp; Buku Modal Investor
             </span>
           </div>
@@ -951,7 +951,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
               className={cn(
                 "p-4 rounded-xl border text-left transition-all cursor-pointer",
                 fundingMode === "SHOWROOM"
-                  ? "border-[var(--accent)] bg-[#FEF3C7]/40 ring-2 ring-[var(--accent)]/20 shadow-xs"
+                  ? "border-[var(--accent)] bg-white ring-2 ring-[var(--accent)]/20 shadow-xs"
                   : "border-[var(--line)] bg-[var(--bg)] hover:bg-white text-[var(--muted)]"
               )}
             >
@@ -974,7 +974,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
               className={cn(
                 "p-4 rounded-xl border text-left transition-all cursor-pointer",
                 fundingMode === "INVESTOR"
-                  ? "border-[var(--accent)] bg-[#FEF3C7]/40 ring-2 ring-[var(--accent)]/20 shadow-xs"
+                  ? "border-[var(--accent)] bg-white ring-2 ring-[var(--accent)]/20 shadow-xs"
                   : "border-[var(--line)] bg-[var(--bg)] hover:bg-white text-[var(--muted)]"
               )}
             >
@@ -996,7 +996,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
           {fundingMode === "INVESTOR" && (
             <div className="space-y-4 pt-2 border-t border-[var(--line)]">
               {availableInvestors.length === 0 ? (
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs">
+                <div className="p-4 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-[var(--ink)] text-xs">
                   Belum ada data investor yang terdaftar. Tambahkan akun investor terlebih dahulu di menu <strong>Investor &amp; Bagi Hasil</strong>.
                 </div>
               ) : (
@@ -1159,12 +1159,12 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                           }
 
                           return (
-                            <div className="p-2.5 bg-emerald-50/70 border border-emerald-200/70 rounded-lg text-[11px] text-emerald-800 flex items-center justify-between">
+                            <div className="p-2.5 bg-white border border-[var(--line)] rounded-lg text-[11px] text-[var(--ink)] flex items-center justify-between shadow-2xs">
                               <span className="flex items-center gap-1.5 font-medium">
-                                <span className="text-emerald-600 font-bold">✓</span> Saldo kas bebas mencukupi ({formatRupiah(maxAllowed)})
+                                <span className="text-[var(--ok)] font-bold">✓</span> Saldo kas bebas mencukupi ({formatRupiah(maxAllowed)})
                               </span>
-                              <span className="text-[10px] text-emerald-700">
-                                Sisa saldo kas bebas setelah alokasi ini: <strong>{formatRupiah(diff)}</strong>
+                              <span className="text-[10px] text-[var(--muted)]">
+                                Sisa saldo kas bebas setelah alokasi ini: <strong className="text-[var(--ink)]">{formatRupiah(diff)}</strong>
                               </span>
                             </div>
                           );
@@ -1198,21 +1198,21 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                         : 0;
 
                     return (
-                      <div className="p-4 bg-amber-50/60 border border-amber-200/80 rounded-xl space-y-3">
-                        <div className="text-xs font-bold text-[#92400E] flex items-center justify-between">
+                      <div className="p-4 bg-white border border-[var(--line)] rounded-xl space-y-3 shadow-xs">
+                        <div className="text-xs font-bold text-[var(--ink)] flex items-center justify-between">
                           <span>Ringkasan Komposisi Pendanaan Patungan Unit:</span>
-                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
                             {investorFundingList.length} Investor Terdaftar
                           </span>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-1">
-                          <div className="p-2.5 bg-white rounded-lg border border-amber-100">
+                          <div className="p-2.5 bg-[var(--bg)] rounded-lg border border-[var(--line)]">
                             <span className="text-[10px] text-[var(--muted)] block">Harga Beli Unit</span>
                             <span className="font-bold text-[var(--ink)]">
                               {formatRupiah(purchasePriceNum)}
                             </span>
                           </div>
-                          <div className="p-2.5 bg-white rounded-lg border border-amber-100">
+                          <div className="p-2.5 bg-[var(--bg)] rounded-lg border border-[var(--line)]">
                             <span className="text-[10px] text-[var(--muted)] block">
                               Total Modal Investor ({invPercent}%)
                             </span>
@@ -1220,18 +1220,18 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                               {formatRupiah(totalInvCap)}
                             </span>
                           </div>
-                          <div className="p-2.5 bg-white rounded-lg border border-amber-100">
+                          <div className="p-2.5 bg-[var(--bg)] rounded-lg border border-[var(--line)]">
                             <span className="text-[10px] text-[var(--muted)] block">
                               Didanai Kas Showroom ({100 - invPercent}%)
                             </span>
-                            <span className="font-bold text-[#16A34A]">
+                            <span className="font-bold text-[var(--ink)]">
                               {formatRupiah(showroomShare)}
                             </span>
                           </div>
                         </div>
 
                         {showroomShare > 0 && (
-                          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-[11px] text-emerald-900 leading-relaxed">
+                          <div className="p-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-lg text-[11px] text-[var(--ink)] leading-relaxed">
                             💡 <strong>Pendanaan Patungan Kas Showroom:</strong> Sisa kekurangan modal sebesar <strong>{formatRupiah(showroomShare)}</strong> ({100 - invPercent}%) otomatis didanai dari kas showroom (modal Anda). Ketika mobil ini laku, 100% laba dari porsi modal showroom ini menjadi hak Anda sebagai Owner.
                           </div>
                         )}
@@ -1259,7 +1259,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                 6. Ceklist Bawaan Fisik Turun Towing (Anti-Kehilangan)
               </h2>
             </div>
-            <span className="text-[11px] font-semibold text-[#92400E] bg-[#FEF3C7] px-2.5 py-0.5 rounded-full border border-[var(--accent)]/30">
+            <span className="text-[11px] font-semibold text-[var(--ink)] bg-[var(--bg)] px-2.5 py-0.5 rounded-full border border-[var(--line)]">
               SOP Balai Lelang &amp; Ekspedisi
             </span>
           </div>
@@ -1282,7 +1282,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "ADA_BAGUS"
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1294,7 +1294,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "ADA_AUS"
-                      ? "bg-[var(--accent)] text-white shadow-xs"
+                      ? "bg-[var(--warn)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1306,7 +1306,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.spareTire === "TIDAK_ADA"
-                      ? "bg-[#DC2626] text-white shadow-xs"
+                      ? "bg-[var(--bad)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1328,7 +1328,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.jack
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1340,7 +1340,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.jack
-                      ? "bg-[#DC2626] text-white shadow-xs"
+                      ? "bg-[var(--bad)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1362,7 +1362,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.wheelWrench
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1374,7 +1374,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.wheelWrench
-                      ? "bg-[#DC2626] text-white shadow-xs"
+                      ? "bg-[var(--bad)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1396,7 +1396,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.keysCount === "2_KEYS"
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1408,7 +1408,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.keysCount === "1_KEY"
-                      ? "bg-[var(--accent)] text-white shadow-xs"
+                      ? "bg-[var(--warn)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1430,7 +1430,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     physicalChecklist.serviceBook
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1442,7 +1442,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer text-center",
                     !physicalChecklist.serviceBook
-                      ? "bg-[#78716C] text-white shadow-xs"
+                      ? "bg-[var(--muted)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1464,7 +1464,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "ORIGINAL"
-                      ? "bg-[#16A34A] text-white shadow-xs"
+                      ? "bg-[var(--ok)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1476,7 +1476,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "MODIFIED"
-                      ? "bg-[#2563EB] text-white shadow-xs"
+                      ? "bg-[var(--accent)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1488,7 +1488,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   className={cn(
                     "px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer",
                     physicalChecklist.audioUnit === "BROKEN_OR_NONE"
-                      ? "bg-[#DC2626] text-white shadow-xs"
+                      ? "bg-[var(--bad)] text-white shadow-xs"
                       : "bg-white text-[var(--muted)] border border-[var(--line)]"
                   )}
                 >
@@ -1552,7 +1552,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

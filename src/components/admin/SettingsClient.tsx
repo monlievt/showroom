@@ -152,12 +152,12 @@ export function SettingsClient({
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <span>{feedback.message}</span>
-          <button onClick={() => setFeedback(null)} className="text-xs underline">
+          <button onClick={() => setFeedback(null)} className="text-xs underline cursor-pointer">
             Tutup
           </button>
         </div>
@@ -177,7 +177,7 @@ export function SettingsClient({
         <button
           disabled={cronLoading}
           onClick={handleTriggerCronManual}
-          className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-colors cursor-pointer"
+          className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
         >
           <RefreshCw className={cn("w-4 h-4", cronLoading && "animate-spin")} />
           <span>Jalankan Cron Pengingat Sekarang</span>
@@ -186,21 +186,21 @@ export function SettingsClient({
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs">
           <div className="flex items-center justify-between text-[var(--muted)] mb-2">
             <span className="text-xs font-semibold uppercase">Berhasil Terkirim</span>
-            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+            <CheckCircle2 className="w-5 h-5 text-[var(--ok)]" />
           </div>
-          <div className="text-2xl font-bold text-emerald-600">{totalSent}</div>
+          <div className="text-2xl font-bold text-[var(--ink)]">{totalSent}</div>
           <div className="text-xs text-[var(--muted)] mt-1">Pesan terkirim ke WhatsApp</div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs">
           <div className="flex items-center justify-between text-[var(--muted)] mb-2">
             <span className="text-xs font-semibold uppercase">Gagal (Perlu Retry)</span>
-            <AlertCircle className="w-5 h-5 text-red-600" />
+            <AlertCircle className="w-5 h-5 text-[var(--bad)]" />
           </div>
-          <div className="text-2xl font-bold text-red-600">{totalFailed}</div>
+          <div className="text-2xl font-bold text-[var(--bad)]">{totalFailed}</div>
           <div className="text-xs text-[var(--muted)] mt-1">Siap dipicu ulang secara manual</div>
         </div>
 
@@ -292,16 +292,16 @@ export function SettingsClient({
           <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-sm space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[var(--line)]">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
-                  <Smartphone className="w-5 h-5 text-emerald-600" />
+                <div className="w-10 h-10 rounded-xl bg-[var(--bg)] border border-[var(--line)] flex items-center justify-center shrink-0 shadow-2xs">
+                  <Smartphone className="w-5 h-5 text-[var(--accent)]" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="font-extrabold text-[var(--ink)] text-base">
                       WhatsApp Gateway (WAHA Engine)
                     </h3>
-                    <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2 py-0.5 rounded-full">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="inline-flex items-center gap-1 bg-white border border-[var(--line)] text-[var(--ink)] text-[11px] font-bold px-2 py-0.5 rounded-full shadow-2xs">
+                      <span className="w-2 h-2 rounded-full bg-[var(--ok)] animate-pulse" />
                       Port 2026 Ready
                     </span>
                   </div>
@@ -436,21 +436,8 @@ export function SettingsClient({
                     </tr>
                   ) : (
                     filteredLogs.map((log) => {
-                      const getTypeBadge = (type: string) => {
-                        switch (type) {
-                          case "UNIT_SOLD":
-                            return "bg-blue-100 text-blue-800 border-blue-200";
-                          case "PROFIT_DISTRIBUTION":
-                            return "bg-emerald-100 text-emerald-800 border-emerald-200";
-                          case "DOCUMENT_READY":
-                            return "bg-indigo-100 text-indigo-800 border-indigo-200";
-                          case "PIUTANG_DUE":
-                            return "bg-amber-100 text-amber-800 border-amber-200";
-                          case "PAJAK_EXPIRY":
-                            return "bg-rose-100 text-rose-800 border-rose-200";
-                          default:
-                            return "bg-gray-100 text-gray-800 border-gray-200";
-                        }
+                      const getTypeBadge = (_type: string) => {
+                        return "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]";
                       };
 
                       const getTypeLabel = (type: string) => {
@@ -492,18 +479,18 @@ export function SettingsClient({
                           <td className="py-3 px-4 whitespace-nowrap">
                             <span
                               className={cn(
-                                "text-[10px] font-bold px-2 py-0.5 rounded-full uppercase",
+                                "text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border",
                                 log.status === "SENT"
-                                  ? "bg-emerald-100 text-emerald-800"
+                                  ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
                                   : log.status === "FAILED"
-                                  ? "bg-red-100 text-red-800"
-                                  : "bg-amber-100 text-amber-800"
+                                  ? "bg-[var(--bg)] text-[var(--bad)] border-[var(--bad)]/30"
+                                  : "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
                               )}
                             >
                               {log.status} {log.retryCount > 0 ? `(${log.retryCount}x)` : ""}
                             </span>
                             {log.failureReason && (
-                              <span className="block text-[10px] text-red-600 truncate max-w-xs mt-0.5">
+                              <span className="block text-[10px] text-[var(--bad)] truncate max-w-xs mt-0.5">
                                 {log.failureReason}
                               </span>
                             )}
@@ -571,20 +558,20 @@ export function SettingsClient({
             <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs">
+                  <div className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center font-bold text-xs shadow-2xs">
                     L1
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-[var(--ink)]">Snapshot Lokal VPS</h4>
-                    <span className="text-[11px] text-emerald-700 font-semibold">Rotasi Otomatis 7 Hari</span>
+                    <span className="text-[11px] text-[var(--muted)] font-semibold">Rotasi Otomatis 7 Hari</span>
                   </div>
                 </div>
-                <HardDrive className="w-4 h-4 text-emerald-600" />
+                <HardDrive className="w-4 h-4 text-[var(--accent)]" />
               </div>
               <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Dump database <code>.sql.gz</code> dan arsip foto mobil <code>.tar.gz</code> otomatis setiap malam. Backup lama &gt; 7 hari otomatis dibersihkan agar kapasitas disk VPS tetap lega.
               </p>
-              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-stone-700">
+              <div className="bg-[var(--bg)] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-[var(--muted)]">
                 Lokasi: <code>/backups/db/</code> &amp; <code>/backups/media/</code>
               </div>
             </div>
@@ -593,20 +580,20 @@ export function SettingsClient({
             <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-xs">
+                  <div className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center font-bold text-xs shadow-2xs">
                     L2
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-[var(--ink)]">Off-Site Telegram Bot</h4>
-                    <span className="text-[11px] text-blue-700 font-semibold">100% Gratis &amp; Unlimited Storage</span>
+                    <span className="text-[11px] text-[var(--muted)] font-semibold">100% Gratis &amp; Unlimited Storage</span>
                   </div>
                 </div>
-                <Cloud className="w-4 h-4 text-blue-600" />
+                <Cloud className="w-4 h-4 text-[var(--accent)]" />
               </div>
               <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Setiap malam database terkompresi dikirim langsung ke chat Telegram pribadi Owner. Jika VPS terbakar/rusak fatal, file cadangan tetap utuh dan aman di server cloud Telegram.
               </p>
-              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-stone-700">
+              <div className="bg-[var(--bg)] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-[var(--muted)]">
                 Setup: <code>TELEGRAM_BOT_TOKEN</code> &amp; <code>TELEGRAM_CHAT_ID</code>
               </div>
             </div>
@@ -615,20 +602,20 @@ export function SettingsClient({
             <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs">
+                  <div className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center font-bold text-xs shadow-2xs">
                     L3
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-[var(--ink)]">Google Drive Rclone Sync</h4>
-                    <span className="text-[11px] text-amber-800 font-semibold">Gratis Kuota Akun Google 15 GB</span>
+                    <span className="text-[11px] text-[var(--muted)] font-semibold">Gratis Kuota Akun Google 15 GB</span>
                   </div>
                 </div>
-                <Cloud className="w-4 h-4 text-amber-600" />
+                <Cloud className="w-4 h-4 text-[var(--accent)]" />
               </div>
               <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Menggunakan utility open-source <code>rclone</code> untuk menyinkronkan seluruh folder foto mobil garasi ke Google Drive secara otomatis tanpa intervensi manual.
               </p>
-              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-stone-700">
+              <div className="bg-[var(--bg)] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-[var(--muted)]">
                 Folder: <code>gdrive:nur_mobil_backups/</code>
               </div>
             </div>
@@ -637,20 +624,20 @@ export function SettingsClient({
             <div className="bg-white rounded-2xl border border-[var(--line)] p-5 shadow-xs space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-stone-200 text-stone-800 flex items-center justify-center font-bold text-xs">
+                  <div className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] flex items-center justify-center font-bold text-xs">
                     L4
                   </div>
                   <div>
                     <h4 className="font-bold text-sm text-[var(--ink)]">GitHub Repository</h4>
-                    <span className="text-[11px] text-stone-700 font-semibold">Source Code &amp; Skema DB</span>
+                    <span className="text-[11px] text-[var(--muted)] font-semibold">Source Code &amp; Skema DB</span>
                   </div>
                 </div>
-                <Database className="w-4 h-4 text-stone-700" />
+                <Database className="w-4 h-4 text-[var(--muted)]" />
               </div>
               <p className="text-xs text-[var(--muted)] leading-relaxed">
                 Seluruh kode program aplikasi, skema Prisma, dan dokumentasi operasional ter-commit aman di repositori GitHub. Memungkinkan deploy ulang ke VPS baru dalam hitungan menit.
               </p>
-              <div className="bg-[#FAF9F5] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-stone-700 truncate">
+              <div className="bg-[var(--bg)] p-2.5 rounded-lg border border-[var(--line)] text-[11px] font-mono text-[var(--ink)] truncate">
                 Repo: <code>monlievt/showroom.git</code>
               </div>
             </div>
@@ -667,7 +654,7 @@ export function SettingsClient({
             <p className="text-xs text-[var(--muted)]">
               Jalankan perintah berikut di terminal SSH VPS Anda untuk mengaktifkan backup otomatis setiap malam pukul 02:00 WIB:
             </p>
-            <div className="bg-stone-900 text-stone-100 p-3.5 rounded-xl font-mono text-xs overflow-x-auto">
+            <div className="bg-[var(--ink)] text-white p-3.5 rounded-xl font-mono text-xs overflow-x-auto">
               <code>0 2 * * * cd /path/to/showroom-app &amp;&amp; bash scripts/backup-multi-layer.sh &gt;&gt; /var/log/nur_mobil_backup.log 2&gt;&amp;1</code>
             </div>
           </div>
@@ -683,7 +670,7 @@ export function SettingsClient({
             <p className="text-xs text-[var(--muted)]">
               Bila server mengalami kendala atau database rusak, jalankan script restore 1 klik untuk memulihkan seluruh data dari snapshot terakhir:
             </p>
-            <div className="bg-stone-900 text-stone-100 p-3 rounded-xl font-mono text-xs">
+            <div className="bg-[var(--ink)] text-white p-3 rounded-xl font-mono text-xs">
               <code>bash scripts/restore-db.sh</code>
             </div>
           </div>
@@ -706,13 +693,13 @@ type AuditLogEntry = {
 };
 
 const ACTION_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
-  CREATE:        { bg: "bg-green-50",  text: "text-green-700",  border: "border-green-200",  label: "Buat" },
-  UPDATE:        { bg: "bg-blue-50",   text: "text-blue-700",   border: "border-blue-200",   label: "Ubah" },
-  VOID:          { bg: "bg-red-50",    text: "text-red-700",    border: "border-red-200",    label: "Batal" },
-  CORRECTION:    { bg: "bg-orange-50", text: "text-orange-700", border: "border-orange-200", label: "Koreksi" },
-  PROFIT_SHARE:  { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200", label: "Bagi Hasil" },
-  SALE:          { bg: "bg-amber-50",  text: "text-amber-700",  border: "border-amber-200",  label: "Penjualan" },
-  STATUS_CHANGE: { bg: "bg-sky-50",    text: "text-sky-700",    border: "border-sky-200",    label: "Ubah Status" },
+  CREATE:        { bg: "bg-[var(--bg)]",  text: "text-[var(--ok)]",    border: "border-[var(--ok)]/30",   label: "Buat" },
+  UPDATE:        { bg: "bg-[var(--bg)]",  text: "text-[var(--accent)]", border: "border-[var(--line)]",   label: "Ubah" },
+  VOID:          { bg: "bg-[var(--bg)]",  text: "text-[var(--bad)]",   border: "border-[var(--bad)]/30",  label: "Batal" },
+  CORRECTION:    { bg: "bg-[var(--bg)]",  text: "text-[var(--warn)]",  border: "border-[var(--warn)]/30", label: "Koreksi" },
+  PROFIT_SHARE:  { bg: "bg-[var(--bg)]",  text: "text-[var(--ink)]",   border: "border-[var(--line)]",    label: "Bagi Hasil" },
+  SALE:          { bg: "bg-[var(--bg)]",  text: "text-[var(--ink)]",   border: "border-[var(--line)]",    label: "Penjualan" },
+  STATUS_CHANGE: { bg: "bg-[var(--bg)]",  text: "text-[var(--accent)]", border: "border-[var(--line)]",   label: "Ubah Status" },
 };
 
 const ENTITY_LABELS: Record<string, string> = {
@@ -795,7 +782,7 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
               {auditLogs.length} entri tercatat &middot; Klik <strong>Lihat</strong> pada baris untuk membuka detail perubahan data
             </p>
           </div>
-          <span className="text-xs bg-amber-50 border border-amber-200 text-amber-700 font-bold px-3 py-1 rounded-full self-start sm:self-auto whitespace-nowrap">
+          <span className="text-xs bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] font-bold px-3 py-1 rounded-full self-start sm:self-auto whitespace-nowrap shadow-2xs">
             Immutable &middot; Read-only
           </span>
         </div>
@@ -872,7 +859,7 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
               <tbody className="divide-y divide-[var(--line)]">
                 {filtered.map((log) => {
                   const actionStyle = ACTION_COLORS[log.action] ?? {
-                    bg: "bg-stone-50", text: "text-stone-700", border: "border-stone-200", label: log.action,
+                    bg: "bg-[var(--bg)]", text: "text-[var(--ink)]", border: "border-[var(--line)]", label: log.action,
                   };
                   const entityLink = getEntityLink(log.entityType, log.entityId);
                   const isExpanded = expandedId === log.id;
@@ -883,7 +870,7 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
 
                   return (
                     <React.Fragment key={log.id}>
-                      <tr className={cn("transition-colors", isExpanded ? "bg-amber-50/40" : "hover:bg-[var(--bg)]")}>
+                      <tr className={cn("transition-colors", isExpanded ? "bg-[var(--bg)]" : "hover:bg-[var(--bg)]")}>
                         {/* Waktu */}
                         <td className="py-3 px-4 text-xs text-[var(--muted)] whitespace-nowrap">
                           {formatDateTime(log.createdAt)}
@@ -912,7 +899,7 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                             {entityLink && (
                               <a
                                 href={entityLink}
-                                className="text-[var(--accent)] hover:text-amber-700 shrink-0"
+                                className="text-[var(--accent)] hover:text-[var(--accent-hover)] shrink-0"
                                 title="Buka halaman terkait"
                               >
                                 <ExternalLink className="w-3 h-3" />
@@ -938,10 +925,10 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                             <button
                               onClick={() => setExpandedId(isExpanded ? null : log.id)}
                               className={cn(
-                                "text-xs px-2.5 py-1 rounded-lg border transition-colors font-medium",
+                                "text-xs px-2.5 py-1 rounded-lg border transition-colors font-medium cursor-pointer",
                                 isExpanded
-                                  ? "bg-amber-100 border-amber-300 text-amber-700"
-                                  : "bg-white border-[var(--line)] text-[var(--muted)] hover:border-amber-300 hover:text-amber-700"
+                                  ? "bg-[var(--ink)] border-[var(--ink)] text-white shadow-2xs"
+                                  : "bg-white border-[var(--line)] text-[var(--muted)] hover:border-[var(--line)] hover:text-[var(--ink)]"
                               )}
                             >
                               {isExpanded ? "Tutup" : "Lihat"}
@@ -954,14 +941,14 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
 
                       {/* Expanded Detail Row */}
                       {isExpanded && hasDetail && (
-                        <tr className="bg-amber-50/20">
+                        <tr className="bg-[var(--bg)]/60">
                           <td colSpan={6} className="px-6 pb-5 pt-2">
-                            <div className="bg-white border border-amber-200 rounded-xl p-4">
+                            <div className="bg-white border border-[var(--line)] rounded-xl p-4 shadow-2xs">
                               <p className="text-xs font-bold text-[var(--ink)] mb-3 flex items-center gap-1.5">
-                                <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
+                                <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
                                 Data setelah perubahan (afterData)
                               </p>
-                              <pre className="text-xs text-[var(--muted)] whitespace-pre-wrap break-all leading-relaxed font-mono bg-stone-50 rounded-lg p-3 border border-stone-200 max-h-72 overflow-y-auto">
+                              <pre className="text-xs text-[var(--muted)] whitespace-pre-wrap break-all leading-relaxed font-mono bg-[var(--bg)] rounded-lg p-3 border border-[var(--line)] max-h-72 overflow-y-auto">
                                 {JSON.stringify(log.afterData, null, 2)}
                               </pre>
                             </div>

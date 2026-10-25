@@ -84,8 +84,8 @@ export function InvestorHistoryPageClient({
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <span>{feedback.message}</span>
@@ -121,9 +121,9 @@ export function InvestorHistoryPageClient({
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Dana Dibagikan</span>
-            <Coins className="w-5 h-5 text-emerald-600" />
+            <Coins className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-emerald-700 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(totalDistributed)}
           </div>
           <p className="text-xs text-[var(--muted)]">Total transfer bagi hasil yang valid</p>
@@ -132,12 +132,12 @@ export function InvestorHistoryPageClient({
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Integritas Ledger</span>
-            <CheckCircle2 className="w-5 h-5 text-[#16A34A]" />
+            <CheckCircle2 className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             100% Audit Trail
           </div>
-          <p className="text-xs text-[#16A34A] font-semibold">Tercatat permanen & reversible</p>
+          <p className="text-xs text-[var(--muted)] font-semibold">Tercatat permanen &amp; reversible</p>
         </div>
       </div>
 
@@ -207,7 +207,7 @@ export function InvestorHistoryPageClient({
                         {formatRupiah(d.grossProfitAtCalc)}
                       </td>
                       <td className="py-3.5 px-4 text-right font-black">
-                        <span className={isReversed ? "text-red-600 line-through" : "text-emerald-700"}>
+                        <span className={isReversed ? "text-red-600 line-through" : "text-[var(--ink)]"}>
                           {formatRupiah(d.calculatedAmount)}
                         </span>
                       </td>
@@ -217,7 +217,7 @@ export function InvestorHistoryPageClient({
                             DIBATALKAN
                           </span>
                         ) : (
-                          <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">
+                          <span className="bg-[var(--bg)] text-[var(--ink)] text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--line)]">
                             LUNAS
                           </span>
                         )}

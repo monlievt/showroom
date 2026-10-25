@@ -89,10 +89,10 @@ export function OwnerDrawNewClient() {
         </div>
       </div>
 
-      <div className="p-4 rounded-2xl bg-purple-50/80 border border-purple-200 text-xs text-purple-900 flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-2xl bg-white border border-[var(--line)] shadow-xs text-xs text-[var(--muted)] flex items-start gap-2.5">
+        <Info className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
         <div>
-          <strong className="block font-bold">Prinsip Rekening Campur BCA:</strong>
+          <strong className="block font-bold text-[var(--ink)]">Prinsip Rekening Campur BCA:</strong>
           <span>
             Uang kas rekening bank akan berkurang secara riil, namun <strong>TIDAK dimasukkan ke biaya unit mobil</strong>. Dengan demikian, laba kotor mobil dan bagian bagi hasil investor tidak akan berkurang secara sepihak.
           </span>
@@ -108,8 +108,8 @@ export function OwnerDrawNewClient() {
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--ok)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -117,7 +117,7 @@ export function OwnerDrawNewClient() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
           <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
-            <ShoppingBag className="w-4 h-4 text-purple-600" />
+            <ShoppingBag className="w-4 h-4 text-[var(--accent)]" />
             <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
               Form Penarikan Prive
             </h2>
@@ -140,7 +140,7 @@ export function OwnerDrawNewClient() {
                     e.target.value === "" ? "" : Number(e.target.value)
                   )
                 }
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
               />
             </div>
 
@@ -154,7 +154,7 @@ export function OwnerDrawNewClient() {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
               />
             </div>
           </div>
@@ -170,7 +170,7 @@ export function OwnerDrawNewClient() {
               placeholder="Contoh: Belanja bulanan dapur, bayar SPP anak sekolah, keperluan darurat keluarga..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-purple-500/20 resize-none"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 resize-none"
             />
           </div>
 
@@ -196,7 +196,7 @@ export function OwnerDrawNewClient() {
           <button
             type="submit"
             disabled={loading || !amount || Number(amount) <= 0}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

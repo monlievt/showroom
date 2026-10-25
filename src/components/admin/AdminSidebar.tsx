@@ -528,7 +528,7 @@ export function AdminSidebar({
               {!isCollapsed && <span className="truncate">Buka Katalog Web</span>}
             </div>
             {!isCollapsed && (
-              <span className="text-[10px] bg-[#FEF3C7] text-[#92400E] px-2 py-0.5 rounded-full font-bold">
+              <span className="text-[10px] bg-white border border-[var(--line)] text-[var(--ink)] px-2 py-0.5 rounded-full font-bold shadow-2xs">
                 Publik
               </span>
             )}
@@ -556,17 +556,17 @@ export function AdminSidebar({
                 <span
                   className={cn(
                     "w-1.5 h-1.5 rounded-full",
-                    isOwner ? "bg-[#16A34A] animate-pulse" : isStaff ? "bg-blue-600" : "bg-amber-600"
+                    isOwner ? "bg-[var(--ok)] animate-pulse" : isStaff ? "bg-[var(--accent)]" : "bg-[var(--warn)]"
                   )}
                 />
                 <span
                   className={cn(
-                    "text-[10px] font-bold px-1.5 py-0.5 rounded-md",
+                    "text-[10px] font-bold px-1.5 py-0.5 rounded-md border",
                     isOwner
-                      ? "text-emerald-800 bg-emerald-100/80"
+                      ? "text-[var(--ok)] bg-white border-[var(--ok)]/30"
                       : isStaff
-                      ? "text-blue-800 bg-blue-100/80"
-                      : "text-amber-800 bg-amber-100/80"
+                      ? "text-[var(--accent)] bg-white border-[var(--accent)]/30"
+                      : "text-[var(--warn)] bg-white border-[var(--warn)]/30"
                   )}
                 >
                   {isOwner ? "👑 Owner Showroom" : isStaff ? "🔧 Staff Garasi" : "🎯 Tim Sales"}

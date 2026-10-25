@@ -37,27 +37,27 @@ const STATUS_DESCRIPTIONS: Record<
   IN_REPAIR: {
     label: "Bengkel / Salon (In Repair)",
     desc: "Unit sedang pengerjaan cat, mesin, kaki-kaki, atau salon detailing.",
-    badgeClass: "bg-amber-100 text-amber-900 border-amber-300",
+    badgeClass: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]",
   },
   READY_FOR_SALE: {
     label: "Ready Jual (Display Katalog)",
     desc: "Kondisi unit prima, siap tayang di website publik dan ditawarkan ke calon pembeli.",
-    badgeClass: "bg-emerald-100 text-emerald-900 border-emerald-300",
+    badgeClass: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]",
   },
   BOOKED: {
     label: "Booked (Tanda Jadi / DP)",
     desc: "Sudah diikat tanda jadi oleh pembeli atau showroom rekanan.",
-    badgeClass: "bg-yellow-100 text-yellow-900 border-yellow-300",
+    badgeClass: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]",
   },
   AT_SHOWROOM_PENDING: {
     label: "Titip Showroom Rekanan",
     desc: "Unit dikirim ke showroom rekanan untuk konsinyasi/pajang dengan tempo pelunasan.",
-    badgeClass: "bg-blue-100 text-blue-900 border-blue-300",
+    badgeClass: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]",
   },
   SOLD_SETTLED: {
     label: "Terjual Lunas (Settled)",
     desc: "Pembayaran 100% lunas, siap cetak kuitansi resmi dan bagi hasil investor.",
-    badgeClass: "bg-[var(--ink)] text-white border-black",
+    badgeClass: "bg-[var(--ink)] text-white border-[var(--ink)]",
   },
 };
 
@@ -176,8 +176,8 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--accent)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -195,11 +195,11 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
         </div>
 
         {validTransitions.length === 0 ? (
-          <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2">
-            <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
+          <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-xs text-[var(--ink)] flex items-start gap-2">
+            <ShieldAlert className="w-4 h-4 shrink-0 text-[var(--accent)] mt-0.5" />
             <div>
               <p className="font-bold">Tidak ada perubahan status langsung yang diizinkan saat ini.</p>
-              <p className="mt-1 text-amber-800">
+              <p className="mt-1 text-[var(--muted)]">
                 Unit dengan status <strong>{currInfo.label}</strong> telah mencapai batas alur (misal: sudah lunas atau menunggu input pembayaran pada modul Penjualan).
               </p>
             </div>
@@ -216,7 +216,7 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
                   onClick={() => setTargetStatus(statusKey)}
                   className={`flex items-start gap-3 p-4 rounded-xl border transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-amber-50/60 border-[var(--accent)] ring-2 ring-[var(--accent)]/20"
+                      ? "bg-white border-[var(--accent)] shadow-xs"
                       : "bg-[var(--bg)] border-[var(--line)] hover:bg-[var(--bg)]"
                   }`}
                 >

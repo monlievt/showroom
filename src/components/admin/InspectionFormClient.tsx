@@ -213,7 +213,7 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white font-bold rounded-lg shadow-sm transition-colors cursor-pointer disabled:opacity-50"
+          className="flex items-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-bold rounded-xl shadow-xs transition-colors cursor-pointer disabled:opacity-50"
         >
           <Save className="w-4 h-4" />
           <span>{loading ? "Menyimpan..." : "Simpan & Terbitkan Sertifikat"}</span>
@@ -221,7 +221,7 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
       </div>
 
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-[#FEE2E2] border border-[#DC2626]/30 text-[#DC2626] text-sm font-semibold">
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-sm font-semibold">
           {errorMsg}
         </div>
       )}
@@ -247,10 +247,10 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
             </span>
             <span className={cn(
               "text-2xl font-black block",
-              totalGradePreview === "A" ? "text-emerald-600" :
-              totalGradePreview === "B" ? "text-blue-600" :
-              totalGradePreview === "C" ? "text-amber-600" :
-              totalGradePreview === "D" ? "text-orange-600" : "text-red-600"
+              totalGradePreview === "A" ? "text-[var(--ok)]" :
+              totalGradePreview === "B" ? "text-[var(--accent)]" :
+              totalGradePreview === "C" ? "text-[var(--warn)]" :
+              totalGradePreview === "D" ? "text-[var(--warn)]" : "text-[var(--bad)]"
             )}>
               {totalGradePreview}
             </span>
@@ -282,30 +282,30 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
               Total Grade dihitung otomatis dari agregat tertimbang 4 pilar (Rangka 35%, Mesin 30%, Eksterior 20%, Interior 15%).
             </p>
           </div>
-          <div className="inline-flex items-center gap-2 bg-[#FEF3C7] text-[#92400E] px-3 py-1 rounded-full text-xs font-bold">
+          <div className="inline-flex items-center gap-2 bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-3 py-1 rounded-full text-xs font-bold">
             <span>Hasil Kalkulasi: Grade {totalGradePreview}</span>
             <span>({GRADE_LABELS[totalGradePreview]?.desc})</span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <GradePicker title="Mesin & Penggerak" value={engineGrade} onChange={setEngineGrade} />
-          <GradePicker title="Interior & Kabin" value={interiorGrade} onChange={setInteriorGrade} />
-          <GradePicker title="Eksterior & Bodi" value={exteriorGrade} onChange={setExteriorGrade} />
-          <GradePicker title="Rangka & Sasis" value={frameGrade} onChange={setFrameGrade} note="A: Bebas laka berat" />
+          <GradePicker title="Mesin &amp; Penggerak" value={engineGrade} onChange={setEngineGrade} />
+          <GradePicker title="Interior &amp; Kabin" value={interiorGrade} onChange={setInteriorGrade} />
+          <GradePicker title="Eksterior &amp; Bodi" value={exteriorGrade} onChange={setExteriorGrade} />
+          <GradePicker title="Rangka &amp; Sasis" value={frameGrade} onChange={setFrameGrade} note="A: Bebas laka berat" />
         </div>
 
         {/* Checkbox Riwayat Tabrakan & Banjir */}
         <div className="pt-4 border-t border-[var(--line)] grid grid-cols-1 sm:grid-cols-2 gap-4">
           <label className={cn(
             "flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-colors",
-            accidentHistory ? "bg-[#FEE2E2] border-[#DC2626]" : "bg-white border-[var(--line)]"
+            accidentHistory ? "bg-[var(--bg)] border-[var(--bad)] text-[var(--bad)]" : "bg-white border-[var(--line)]"
           )}>
             <input
               type="checkbox"
               checked={accidentHistory}
               onChange={(e) => setAccidentHistory(e.target.checked)}
-              className="w-5 h-5 rounded text-[#DC2626] cursor-pointer"
+              className="w-5 h-5 rounded text-[var(--bad)] cursor-pointer"
             />
             <div>
               <span className="text-sm font-bold text-[var(--ink)] block">
@@ -319,20 +319,20 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
 
           <label className={cn(
             "flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-colors",
-            floodHistory ? "bg-[#FEE2E2] border-[#DC2626]" : "bg-white border-[var(--line)]"
+            floodHistory ? "bg-[var(--bg)] border-[var(--bad)] text-[var(--bad)]" : "bg-white border-[var(--line)]"
           )}>
             <input
               type="checkbox"
               checked={floodHistory}
               onChange={(e) => setFloodHistory(e.target.checked)}
-              className="w-5 h-5 rounded text-[#DC2626] cursor-pointer"
+              className="w-5 h-5 rounded text-[var(--bad)] cursor-pointer"
             />
             <div>
               <span className="text-sm font-bold text-[var(--ink)] block">
                 {floodHistory ? "⚠️ Terindikasi Pernah Terendam Banjir" : "✓ Bebas Terendam Banjir"}
               </span>
               <span className="text-xs text-[var(--muted)] block">
-                {floodHistory ? "Ditemukan lumpur/karat di dasar jok & modul kabel" : "Kabin bawah bersih bebas bau apek dan endapan lumpur"}
+                {floodHistory ? "Ditemukan lumpur/karat di dasar jok &amp; modul kabel" : "Kabin bawah bersih bebas bau apek dan endapan lumpur"}
               </span>
             </div>
           </label>
@@ -344,7 +344,7 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
         <div>
           <h2 className="text-lg font-bold text-[var(--ink)] tracking-tight flex items-center gap-2">
             <KeyRound className="w-5 h-5 text-[var(--accent)]" />
-            <span>Kelengkapan Esensial & Malfungsi Listrik (IBID Checklist)</span>
+            <span>Kelengkapan Esensial &amp; Malfungsi Listrik (IBID Checklist)</span>
           </h2>
           <p className="text-xs text-[var(--muted)]">
             Pemeriksaan kelengkapan bawaan pabrik dan deteksi lampu malfungsi airbag / check engine.
@@ -354,7 +354,7 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <label className={cn(
             "p-3.5 rounded-xl border cursor-pointer transition-all flex items-start gap-3",
-            hasServiceBook ? "bg-white border-[var(--line)]" : "bg-amber-50 border-amber-300"
+            hasServiceBook ? "bg-white border-[var(--line)]" : "bg-[var(--bg)] border-[var(--line)]"
           )}>
             <input
               type="checkbox"
@@ -365,7 +365,7 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
             <div>
               <span className="text-xs font-bold text-[var(--ink)] block flex items-center gap-1.5">
                 <BookOpen className="w-3.5 h-3.5 text-[var(--accent)]" />
-                <span>Buku Servis & Manual</span>
+                <span>Buku Servis &amp; Manual</span>
               </span>
               <span className="text-[11px] text-[var(--muted)]">
                 {hasServiceBook ? "Lengkap ada buku servis" : "⚠️ Tidak ada buku servis"}
@@ -375,7 +375,7 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
 
           <label className={cn(
             "p-3.5 rounded-xl border cursor-pointer transition-all flex items-start gap-3",
-            hasSpareKey ? "bg-white border-[var(--line)]" : "bg-amber-50 border-amber-300"
+            hasSpareKey ? "bg-white border-[var(--line)]" : "bg-[var(--bg)] border-[var(--line)]"
           )}>
             <input
               type="checkbox"
@@ -451,7 +451,7 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
                 </div>
                 <span className={cn(
                   "text-[10px] px-2 py-0.5 rounded-full font-bold uppercase",
-                  isOk ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
+                  isOk ? "bg-[var(--bg)] text-[var(--ok)] border border-[var(--ok)]/30" : "bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30"
                 )}>
                   {isOk ? "Normal" : "Ada Cacat"}
                 </span>
@@ -494,12 +494,12 @@ export function InspectionFormClient({ vehicle }: InspectionFormClientProps) {
                     <td className="py-3 px-3 font-semibold text-xs text-[var(--ink)]">
                       <div>{PANEL_LABELS[p.panelType] || p.panelType}</div>
                       {isBumper && (
-                        <span className="text-[10px] text-amber-700 font-bold bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                        <span className="text-[10px] text-[var(--ink)] font-bold bg-[var(--bg)] px-1.5 py-0.5 rounded border border-[var(--line)]">
                           Plastik Non-Mikron
                         </span>
                       )}
                       {p.panelType.includes("ROCKER") && (
-                        <span className="text-[10px] text-blue-700 font-bold bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">
+                        <span className="text-[10px] text-[var(--accent)] font-bold bg-[var(--bg)] px-1.5 py-0.5 rounded border border-[var(--line)]">
                           Sasis Samping
                         </span>
                       )}
@@ -756,10 +756,10 @@ function GradePicker({
 // ── HELPER MICRON INDICATOR BADGE ──────────────────────────────
 function MicronIndicator({ category }: { category: string }) {
   if (category === "ORIGINAL") {
-    return <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A]" title="Original (<120µm)" />;
+    return <span className="w-2.5 h-2.5 rounded-full bg-[var(--ok)]" title="Original (<120µm)" />;
   }
   if (category === "REPAINT") {
-    return <span className="w-2.5 h-2.5 rounded-full bg-[#CA8A04]" title="Repaint (120-200µm)" />;
+    return <span className="w-2.5 h-2.5 rounded-full bg-[var(--warn)]" title="Repaint (120-200µm)" />;
   }
-  return <span className="w-2.5 h-2.5 rounded-full bg-[#DC2626] animate-pulse" title="Dempul Tebal (>200µm)" />;
+  return <span className="w-2.5 h-2.5 rounded-full bg-[var(--bad)] animate-pulse" title="Dempul Tebal (>200µm)" />;
 }

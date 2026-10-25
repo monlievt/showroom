@@ -362,12 +362,12 @@ export function InvestorAccountsPageClient({
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
             <span>{feedback.message}</span>
           </div>
           <button
@@ -402,9 +402,9 @@ export function InvestorAccountsPageClient({
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Saldo Modal Bebas</span>
-            <Coins className="w-5 h-5 text-blue-600" />
+            <Coins className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-blue-700 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(totalCapitalInPool)}
           </div>
           <p className="text-xs text-[var(--muted)]">Modal mengendap siap dialokasikan ke unit</p>
@@ -413,9 +413,9 @@ export function InvestorAccountsPageClient({
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Laba yang Dibagikan</span>
-            <TrendingUp className="w-5 h-5 text-emerald-600" />
+            <TrendingUp className="w-5 h-5 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-emerald-700 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(totalProfitGiven)}
           </div>
           <p className="text-xs text-[var(--muted)]">Akumulasi pencairan profit sharing</p>
@@ -489,14 +489,7 @@ export function InvestorAccountsPageClient({
 
                 <div className="flex items-center gap-1.5">
                   <span
-                    className={cn(
-                      "text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border",
-                      inv.type === "MOTHER_SIBLING"
-                        ? "bg-purple-100 text-purple-800 border-purple-200"
-                        : inv.type === "OWNER_EQUITY"
-                        ? "bg-emerald-100 text-emerald-800 border-emerald-200"
-                        : "bg-blue-100 text-blue-800 border-blue-200"
-                    )}
+                    className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
                   >
                     {inv.type === "MOTHER_SIBLING" ? "Ibu / 4 Saudara" : inv.type === "OWNER_EQUITY" ? "Owner Equity" : "Pihak Ketiga"}
                   </span>
@@ -527,12 +520,12 @@ export function InvestorAccountsPageClient({
                     <span>{inv.bankName || "Rekening Bank"}</span>
                   </div>
                   {inv.type === "THIRD_PARTY" && (
-                    <span className="text-[11px] font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full border border-blue-200">
+                    <span className="text-[11px] font-bold text-[var(--ink)] bg-white px-2 py-0.5 rounded-full border border-[var(--line)]">
                       Bagi Hasil: {inv.defaultProfitSharePercent ?? 50}%
                     </span>
                   )}
                   {inv.type === "MOTHER_SIBLING" && (
-                    <span className="text-[10px] font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full border border-purple-200">
+                    <span className="text-[10px] font-bold text-[var(--ink)] bg-white px-2 py-0.5 rounded-full border border-[var(--line)]">
                       Skema Tier 4 Saudara
                     </span>
                   )}
@@ -571,7 +564,7 @@ export function InvestorAccountsPageClient({
                 </div>
                 <div className="flex justify-between text-[var(--muted)]">
                   <span>Total Laba Diterima:</span>
-                  <span className="font-bold text-emerald-700">{formatRupiah(inv.totalProfitDistributed)}</span>
+                  <span className="font-bold text-[var(--ink)]">{formatRupiah(inv.totalProfitDistributed)}</span>
                 </div>
               </div>
 
@@ -669,7 +662,7 @@ export function InvestorAccountsPageClient({
                     Lampiran Bukti Transfer (Bisa Beberapa Foto / PDF)
                   </label>
                   {depositProofs.length > 0 && (
-                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <span className="text-[10px] font-bold text-[var(--ink)] bg-white px-2 py-0.5 rounded-full border border-[var(--line)]">
                       {depositProofs.length} File
                     </span>
                   )}
@@ -687,7 +680,7 @@ export function InvestorAccountsPageClient({
                         className="flex items-center justify-between p-2 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-xs"
                       >
                         <div className="flex items-center gap-2 truncate">
-                          <FileText className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                          <FileText className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
                           <span className="truncate max-w-[180px] font-medium text-[var(--ink)]">
                             #{idx + 1} {p.name || "Bukti Transfer"}
                           </span>
@@ -845,9 +838,9 @@ export function InvestorAccountsPageClient({
 
               {/* Default Bagi Hasil jika Pihak Ketiga */}
               {editType === "THIRD_PARTY" && (
-                <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl space-y-1">
-                  <label className="text-xs font-bold text-blue-900 flex items-center gap-1.5">
-                    <Percent className="w-3.5 h-3.5 text-blue-700" />
+                <div className="p-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl space-y-1">
+                  <label className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
+                    <Percent className="w-3.5 h-3.5 text-[var(--accent)]" />
                     <span>Default Persentase Bagi Hasil (%)</span>
                   </label>
                   <div className="flex items-center gap-2">
@@ -858,9 +851,9 @@ export function InvestorAccountsPageClient({
                       step="0.5"
                       value={editDefaultProfitShare}
                       onChange={(e) => setEditDefaultProfitShare(e.target.value)}
-                      className="w-28 border border-blue-300 rounded-lg px-3 py-1.5 text-sm font-black text-blue-950 bg-white"
+                      className="w-28 border border-[var(--line)] rounded-lg px-3 py-1.5 text-sm font-black text-[var(--ink)] bg-white"
                     />
-                    <span className="text-xs text-blue-800">
+                    <span className="text-xs text-[var(--muted)]">
                       % dari laba bersih setiap unit mobil yang didanai
                     </span>
                   </div>
@@ -869,7 +862,7 @@ export function InvestorAccountsPageClient({
 
               {/* Bagian Rekening Bank */}
               <div className="border-t border-[var(--line)] pt-3 space-y-3">
-                <span className="text-xs font-bold text-[#92400E] uppercase tracking-wider block">
+                <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider block">
                   Rekening Bank Tujuan Transfer Bagi Hasil:
                 </span>
 

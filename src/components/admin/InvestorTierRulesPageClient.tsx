@@ -288,12 +288,12 @@ export function InvestorTierRulesPageClient({
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
             <span>{feedback.message}</span>
           </div>
           <button
@@ -313,10 +313,10 @@ export function InvestorTierRulesPageClient({
       />
 
       {/* Penjelasan Transparansi Modal Keluarga */}
-      <div className="bg-[#FFFBEB] border border-[#FDE68A] p-4 rounded-2xl flex items-start gap-3 shadow-xs">
+      <div className="bg-white border border-[var(--line)] p-4 rounded-2xl flex items-start gap-3 shadow-xs">
         <Info className="w-5 h-5 text-[var(--accent)] shrink-0 mt-0.5" />
-        <div className="space-y-1 text-xs text-[#92400E]">
-          <p className="font-bold text-sm text-[#78350F]">
+        <div className="space-y-1 text-xs text-[var(--muted)]">
+          <p className="font-bold text-sm text-[var(--ink)]">
             Skema Bagi Hasil Khusus Modal Ibu Nurdiah (Alokasi 4 Penerima)
           </p>
           <p className="leading-relaxed">
@@ -345,7 +345,7 @@ export function InvestorTierRulesPageClient({
             </button>
             <button
               onClick={() => setSimulationProfit("1500000")}
-              className="px-2 py-0.5 rounded-lg bg-blue-50 text-blue-700 font-bold border border-blue-200 hover:bg-blue-100 transition-colors text-[11px] cursor-pointer"
+              className="px-2 py-0.5 rounded-lg bg-[var(--bg)] text-[var(--ink)] font-bold border border-[var(--line)] hover:bg-white transition-colors text-[11px] cursor-pointer"
             >
               Uji Untung 1.5 Juta
             </button>
@@ -380,7 +380,7 @@ export function InvestorTierRulesPageClient({
                 <span>Unit Mengalami Kerugian Operasional</span>
               </span>
             ) : matchedRule ? (
-              <span className="inline-block mt-2 text-xs font-bold text-[var(--accent)] bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+              <span className="inline-block mt-2 text-xs font-bold text-[var(--accent)] bg-[var(--bg)] px-2.5 py-1 rounded-full border border-[var(--line)]">
                 Masuk ke: {matchedRule.name}
               </span>
             ) : null}
@@ -391,14 +391,14 @@ export function InvestorTierRulesPageClient({
             className={cn(
               "p-4 rounded-xl border space-y-1 transition-all",
               isLoss
-                ? "bg-gray-50 border-gray-200 text-gray-500"
-                : "bg-purple-50 border-purple-200"
+                ? "bg-[var(--bg)] border-[var(--line)] text-[var(--muted)]"
+                : "bg-white border-[var(--line)] shadow-xs"
             )}
           >
             <span
               className={cn(
                 "text-[11px] font-bold uppercase tracking-wider",
-                isLoss ? "text-gray-500" : "text-purple-700"
+                isLoss ? "text-[var(--muted)]" : "text-[var(--accent)]"
               )}
             >
               Total Alokasi Keluarga (4 Orang)
@@ -406,12 +406,12 @@ export function InvestorTierRulesPageClient({
             <div
               className={cn(
                 "text-xl font-black",
-                isLoss ? "text-gray-400" : "text-purple-900"
+                isLoss ? "text-[var(--muted)]" : "text-[var(--ink)]"
               )}
             >
               {formatRupiah(totalAlokasiSaudara)}
             </div>
-            <p className={cn("text-xs", isLoss ? "text-gray-500" : "text-purple-700")}>
+            <p className={cn("text-xs", isLoss ? "text-[var(--muted)]" : "text-[var(--muted)]")}>
               {isLoss
                 ? "Rp 0 (Keluarga tidak menanggung rugi, modal pokok aman 100%)"
                 : matchedRule
@@ -426,21 +426,21 @@ export function InvestorTierRulesPageClient({
               "p-4 rounded-xl border space-y-1 transition-all",
               isLoss
                 ? "bg-rose-50 border-rose-200 text-rose-900"
-                : "bg-emerald-50 border-emerald-200 text-emerald-900"
+                : "bg-white border-[var(--line)] shadow-xs"
             )}
           >
             <span
               className={cn(
                 "text-[11px] font-bold uppercase tracking-wider",
-                isLoss ? "text-rose-700" : "text-emerald-700"
+                isLoss ? "text-rose-700" : "text-[var(--ink)]"
               )}
             >
               {isLoss ? "Beban Kerugian Diserap Owner" : "Sisa Laba Bersih Pengelola (Owner)"}
             </span>
-            <div className="text-xl font-black">
+            <div className={cn("text-xl font-black", isLoss ? "text-rose-700" : "text-[var(--ink)]")}>
               {isLoss ? `- ${formatRupiah(Math.abs(sisaLabaOwner))}` : formatRupiah(sisaLabaOwner)}
             </div>
-            <p className={cn("text-xs", isLoss ? "text-rose-700" : "text-emerald-700")}>
+            <p className={cn("text-xs", isLoss ? "text-rose-700" : "text-[var(--muted)]")}>
               {isLoss
                 ? "100% kerugian diserap oleh operasional showroom Nur Mobil"
                 : "Bagian operasional & jerih payah pengelola showroom"}
@@ -458,11 +458,11 @@ export function InvestorTierRulesPageClient({
                 Konfigurasi Aturan Bertingkat Modal Ibu (4 Saudara)
               </h3>
               {isEditing ? (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
                   Mode Edit Aktif ({editableRules.length} Tingkatan)
                 </span>
               ) : (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
                   Aktif &amp; Terkunci ({editableRules.length} Tingkatan)
                 </span>
               )}
@@ -490,7 +490,7 @@ export function InvestorTierRulesPageClient({
                 <button
                   type="button"
                   onClick={handleAddNewTier}
-                  className="flex items-center gap-1 bg-[#FEF3C7] hover:bg-[#FDE68A] border border-[var(--accent)]/40 text-[#92400E] px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                  className="flex items-center gap-1 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] px-3 py-2 rounded-xl text-xs font-bold transition-colors shadow-xs cursor-pointer"
                   title="Tambah baris tingkatan baru"
                 >
                   <Plus className="w-3.5 h-3.5 text-[var(--accent)]" />
@@ -500,7 +500,7 @@ export function InvestorTierRulesPageClient({
                 <button
                   type="button"
                   onClick={handleResetToStandard}
-                  className="flex items-center gap-1 bg-[var(--bg)] hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+                  className="flex items-center gap-1 bg-[var(--bg)] hover:bg-white border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-3 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
                   title="Kembalikan ke 7 aturan standar keluarga"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -520,7 +520,7 @@ export function InvestorTierRulesPageClient({
                   type="button"
                   onClick={handleSaveRules}
                   disabled={loading || Boolean(contiguityError)}
-                  className="flex items-center gap-1.5 bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-xs cursor-pointer"
+                  className="flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-xs cursor-pointer"
                 >
                   <Save className="w-3.5 h-3.5" />
                   <span>{loading ? "Menyimpan..." : "Simpan Perubahan"}</span>
@@ -532,15 +532,15 @@ export function InvestorTierRulesPageClient({
 
         {/* Error Feedback */}
         {ruleError && (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+          <div className="p-3 bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs rounded-xl font-medium flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[var(--bad)]" />
             <span>{ruleError}</span>
           </div>
         )}
 
         {isEditing && contiguityError && (
-          <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl font-medium flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-amber-600" />
+          <div className="p-3 bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs rounded-xl font-medium flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[var(--accent)]" />
             <span>{contiguityError}</span>
           </div>
         )}
@@ -564,7 +564,7 @@ export function InvestorTierRulesPageClient({
 
                 if (isEditing) {
                   return (
-                    <tr key={idx} className="bg-amber-50/30">
+                    <tr key={idx} className="bg-[var(--bg)]/50">
                       {/* Nama Tier */}
                       <td className="py-3 px-4">
                         <input
@@ -611,7 +611,7 @@ export function InvestorTierRulesPageClient({
                             type="number"
                             value={r.amountPerPerson}
                             onChange={(e) => handleRuleChange(idx, "amountPerPerson", Number(e.target.value))}
-                            className="w-28 p-1.5 border border-[var(--line)] rounded-lg text-xs font-bold text-emerald-700 bg-white text-right focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                            className="w-28 p-1.5 border border-[var(--line)] rounded-lg text-xs font-bold text-[var(--ink)] bg-white text-right focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                           />
                         </div>
                       </td>
@@ -663,7 +663,7 @@ export function InvestorTierRulesPageClient({
                     <td className="py-3.5 px-4 text-[var(--muted)] font-medium font-mono text-xs">
                       {rangeLabel}
                     </td>
-                    <td className="py-3.5 px-4 text-right font-bold text-emerald-700">
+                    <td className="py-3.5 px-4 text-right font-bold text-[var(--ink)]">
                       {formatRupiah(r.amountPerPerson)} <span className="text-[11px] text-[var(--muted)] font-normal">/ orang</span>
                     </td>
                     <td className="py-3.5 px-4 text-center font-medium text-[var(--ink)]">
@@ -683,7 +683,7 @@ export function InvestorTierRulesPageClient({
       {/* Bagian Penjelasan Proteksi Risiko Jika Mobil Rugi */}
       <div className="bg-white rounded-2xl border border-[var(--line)] p-6 shadow-xs space-y-4">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-emerald-600" />
+          <ShieldCheck className="w-5 h-5 text-[var(--accent)]" />
           <h3 className="font-bold text-base text-[var(--ink)]">
             Kebijakan &amp; Algoritma Back-End Jika Unit Mengalami Kerugian (Loss Protection)
           </h3>
@@ -694,32 +694,32 @@ export function InvestorTierRulesPageClient({
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
-          <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 space-y-1.5">
-            <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+          <div className="p-4 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-1.5">
+            <div className="flex items-center gap-2 text-[var(--ink)] font-bold text-xs uppercase tracking-wider">
+              <CheckCircle2 className="w-4 h-4 text-[var(--accent)]" />
               <span>1. Pokok Modal Terlindungi 100%</span>
             </div>
-            <p className="text-xs text-[#44403C] leading-snug">
+            <p className="text-xs text-[var(--muted)] leading-snug">
               Modal pokok Ibu Nurdiah ataupun investor pihak ketiga <strong>tidak dipotong sepeserpun</strong> saat mobil rugi. Pokok investasi dikembalikan penuh 100%.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/50 space-y-1.5">
-            <div className="flex items-center gap-2 text-amber-800 font-bold text-xs uppercase tracking-wider">
-              <Info className="w-4 h-4 text-amber-600" />
+          <div className="p-4 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-1.5">
+            <div className="flex items-center gap-2 text-[var(--ink)] font-bold text-xs uppercase tracking-wider">
+              <Info className="w-4 h-4 text-[var(--accent)]" />
               <span>2. Bagi Hasil = Rp 0</span>
             </div>
-            <p className="text-xs text-[#44403C] leading-snug">
+            <p className="text-xs text-[var(--muted)] leading-snug">
               Bagi hasil murni dihitung dari keuntungan bersih. Jika laba kotor <strong>Rp 0 atau minus</strong>, maka alokasi dividen untuk keluarga/investor otomatis <strong>Rp 0</strong>.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl border border-rose-200 bg-rose-50/50 space-y-1.5">
-            <div className="flex items-center gap-2 text-rose-800 font-bold text-xs uppercase tracking-wider">
+          <div className="p-4 rounded-xl border border-[var(--line)] bg-[var(--bg)] space-y-1.5">
+            <div className="flex items-center gap-2 text-[var(--ink)] font-bold text-xs uppercase tracking-wider">
               <TrendingDown className="w-4 h-4 text-rose-600" />
               <span>3. Risiko Diserap 100% Oleh Owner</span>
             </div>
-            <p className="text-xs text-[#44403C] leading-snug">
+            <p className="text-xs text-[var(--muted)] leading-snug">
               Seluruh kerugian operasional dan selisih minus harga jual diserap penuh oleh pengelola showroom (Owner Nur Mobil) sebagai penanggung jawab bisnis.
             </p>
           </div>

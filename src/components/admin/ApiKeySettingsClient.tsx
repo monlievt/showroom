@@ -51,14 +51,14 @@ function ToggleSwitch({
         className={cn(
           "text-[10px] sm:text-xs font-black px-2.5 py-0.5 rounded-full flex items-center gap-1.5 transition-all tracking-wider",
           enabled
-            ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
-            : "bg-stone-100 text-stone-500 border border-stone-300"
+            ? "bg-[var(--bg)] text-[var(--ok)] border border-[var(--ok)]/30"
+            : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]"
         )}
       >
         <span
           className={cn(
             "w-2 h-2 rounded-full",
-            enabled ? "bg-emerald-600 animate-pulse" : "bg-stone-400"
+            enabled ? "bg-[var(--ok)] animate-pulse" : "bg-[var(--muted)]"
           )}
         />
         {enabled ? "AKTIF" : "NONAKTIF"}
@@ -71,7 +71,7 @@ function ToggleSwitch({
         onClick={() => onChange(!enabled)}
         className={cn(
           "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-50",
-          enabled ? "bg-emerald-600" : "bg-stone-300"
+          enabled ? "bg-[var(--accent)]" : "bg-[var(--line)]"
         )}
         title={label || (enabled ? "Klik untuk menonaktifkan" : "Klik untuk mengaktifkan")}
       >
@@ -232,12 +232,12 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <div className="flex items-center gap-2">
-            {feedback.type === "success" ? <CheckCircle2 className="w-5 h-5 text-emerald-600" /> : <AlertCircle className="w-5 h-5 text-red-600" />}
+            {feedback.type === "success" ? <CheckCircle2 className="w-5 h-5 text-[var(--ok)]" /> : <AlertCircle className="w-5 h-5 text-[var(--bad)]" />}
             <span>{feedback.message}</span>
           </div>
           <button
@@ -256,18 +256,18 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
           className={cn(
             "p-4 rounded-2xl border text-xs sm:text-sm font-medium flex items-start justify-between gap-3 shadow-sm",
             testResult.success
-              ? "bg-emerald-50 border-emerald-200 text-emerald-800"
-              : "bg-red-50 border-red-200 text-red-800"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <div className="flex items-start gap-2.5">
             {testResult.success ? (
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+              <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0 mt-0.5" />
             ) : (
-              <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-[var(--bad)] shrink-0 mt-0.5" />
             )}
             <div>
-              <strong className="font-bold block">
+              <strong className="font-bold block text-[var(--ink)]">
                 {testResult.target === "gemini" ? "Hasil Pengujian Google Gemini AI:" : "Hasil Pengujian Telegram Bot:"}
               </strong>
               <p className="mt-0.5 leading-relaxed">{testResult.message}</p>
@@ -289,15 +289,15 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
       <div className="bg-white rounded-3xl border border-[var(--line)] p-6 sm:p-7 shadow-xs space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--line)] pb-5">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-amber-500 text-white flex items-center justify-center shadow-md shadow-purple-500/20 shrink-0">
-              <Sparkles className="w-6 h-6" />
+            <div className="w-12 h-12 rounded-2xl bg-[var(--ink)] text-white flex items-center justify-center shadow-xs shrink-0">
+              <Sparkles className="w-6 h-6 text-[var(--accent)]" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="font-bold text-[var(--ink)] text-base sm:text-lg">
                   Google Gemini AI (Asisten Keputusan & Briefing)
                 </h3>
-                <span className="text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] bg-white border border-[var(--line)] text-[var(--ink)] px-2 py-0.5 rounded-full font-bold shadow-2xs">
                   Versi Free (1500 req/hari)
                 </span>
               </div>
@@ -342,8 +342,8 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 <span className="text-red-500">*</span>
               </label>
               {getSettingItem("GEMINI_API_KEY")?.isSet && (
-                <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200 flex items-center gap-1">
-                  <Check className="w-3 h-3 text-emerald-600" />
+                <span className="text-[10px] text-[var(--ok)] bg-[var(--bg)] px-2 py-0.5 rounded-full font-bold border border-[var(--ok)]/30 flex items-center gap-1">
+                  <Check className="w-3 h-3 text-[var(--ok)]" />
                   Kunci Tersimpan di Database
                 </span>
               )}
@@ -355,7 +355,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 placeholder={getSettingItem("GEMINI_API_KEY")?.maskedValue || "Tempelkan API Key (AIzaSy...)"}
                 value={settings["GEMINI_API_KEY"] || ""}
                 onChange={(e) => handleInputChange("GEMINI_API_KEY", e.target.value)}
-                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-purple-500/20 bg-[var(--bg)] focus:bg-white transition-all"
+                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 bg-[var(--bg)] focus:bg-white transition-all"
               />
               <button
                 type="button"
@@ -382,9 +382,9 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                   type="button"
                   onClick={handleTestGemini}
                   disabled={testingGemini}
-                  className="inline-flex items-center gap-1 text-purple-700 hover:text-purple-900 font-bold underline cursor-pointer"
+                  className="inline-flex items-center gap-1 text-[var(--accent)] hover:text-[var(--accent-hover)] font-bold underline cursor-pointer"
                 >
-                  <Zap className="w-3 h-3 text-purple-600" />
+                  <Zap className="w-3 h-3 text-[var(--accent)]" />
                   <span>{testingGemini ? "Menguji..." : "Tes Koneksi"}</span>
                 </button>
               </div>
@@ -399,7 +399,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
             <select
               value={settings["GEMINI_MODEL"] || "gemini-2.5-flash"}
               onChange={(e) => handleInputChange("GEMINI_MODEL", e.target.value)}
-              className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+              className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
             >
               <option value="gemini-2.5-flash">gemini-2.5-flash (Rekomendasi: Tercepat & Cerdas)</option>
               <option value="gemini-flash-latest">gemini-flash-latest (Versi Selalu Terkini)</option>
@@ -419,7 +419,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
       <div className="bg-white rounded-3xl border border-[var(--line)] p-6 sm:p-7 shadow-xs space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--line)] pb-5">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-600/20 shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-white border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shadow-xs shrink-0">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
@@ -427,7 +427,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 <h3 className="font-bold text-[var(--ink)] text-base sm:text-lg">
                   Google reCAPTCHA (Proteksi Bot, Form & Login)
                 </h3>
-                <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] bg-white border border-[var(--line)] text-[var(--ink)] px-2 py-0.5 rounded-full font-bold shadow-2xs">
                   v2 / v3
                 </span>
               </div>
@@ -456,7 +456,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 ])
               }
               disabled={savingService === "recaptcha"}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer disabled:opacity-50"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{savingService === "recaptcha" ? "Menyimpan..." : "Simpan reCAPTCHA"}</span>
@@ -475,7 +475,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 type="checkbox"
                 checked={isEnabled("RECAPTCHA_ON_LOGIN", true)}
                 onChange={(e) => handleInputChange("RECAPTCHA_ON_LOGIN", e.target.checked ? "true" : "false")}
-                className="mt-0.5 rounded text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
+                className="mt-0.5 rounded text-[var(--accent)] focus:ring-[var(--accent)] w-4 h-4 cursor-pointer"
               />
               <div>
                 <strong className="text-[var(--ink)] block font-bold">Halaman Login Admin & Investor</strong>
@@ -490,7 +490,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 type="checkbox"
                 checked={isEnabled("RECAPTCHA_ON_INQUIRIES", true)}
                 onChange={(e) => handleInputChange("RECAPTCHA_ON_INQUIRIES", e.target.checked ? "true" : "false")}
-                className="mt-0.5 rounded text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer"
+                className="mt-0.5 rounded text-[var(--accent)] focus:ring-[var(--accent)] w-4 h-4 cursor-pointer"
               />
               <div>
                 <strong className="text-[var(--ink)] block font-bold">Form Kontak & Komentar Katalog Publik</strong>
@@ -511,7 +511,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 reCAPTCHA Site Key (Kunci Publik)
               </label>
               {getSettingItem("RECAPTCHA_SITE_KEY")?.isSet && (
-                <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
+                <span className="text-[10px] text-[var(--ok)] bg-[var(--bg)] px-2 py-0.5 rounded-full font-bold border border-[var(--ok)]/30">
                   Tersimpan
                 </span>
               )}
@@ -521,7 +521,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
               placeholder="Contoh: 6Ld..."
               value={settings["RECAPTCHA_SITE_KEY"] || ""}
               onChange={(e) => handleInputChange("RECAPTCHA_SITE_KEY", e.target.value)}
-              className="w-full px-3 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-[var(--bg)] focus:bg-white transition-all"
+              className="w-full px-3 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 bg-[var(--bg)] focus:bg-white transition-all"
             />
             <div className="flex items-center justify-between text-[11px] text-[var(--muted)]">
               <span>Kunci publik untuk memuat widget di sisi browser.</span>
@@ -529,7 +529,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 href="https://www.google.com/recaptcha/admin"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-blue-600 hover:underline font-semibold"
+                className="inline-flex items-center gap-1 text-[var(--accent)] hover:underline font-semibold"
               >
                 <span>Daftar reCAPTCHA</span>
                 <ExternalLink className="w-3 h-3" />
@@ -544,7 +544,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 reCAPTCHA Secret Key (Kunci Rahasia)
               </label>
               {getSettingItem("RECAPTCHA_SECRET_KEY")?.isSet && (
-                <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
+                <span className="text-[10px] text-[var(--ok)] bg-[var(--bg)] px-2 py-0.5 rounded-full font-bold border border-[var(--ok)]/30">
                   Tersimpan di Sistem
                 </span>
               )}
@@ -555,7 +555,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 placeholder={getSettingItem("RECAPTCHA_SECRET_KEY")?.maskedValue || "Contoh: 6Ld..."}
                 value={settings["RECAPTCHA_SECRET_KEY"] || ""}
                 onChange={(e) => handleInputChange("RECAPTCHA_SECRET_KEY", e.target.value)}
-                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-[var(--bg)] focus:bg-white transition-all"
+                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 bg-[var(--bg)] focus:bg-white transition-all"
               />
               <button
                 type="button"
@@ -630,7 +630,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 Telegram Bot Token
               </label>
               {getSettingItem("TELEGRAM_BOT_TOKEN")?.isSet && (
-                <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
+                <span className="text-[10px] text-[var(--ok)] bg-[var(--bg)] px-2 py-0.5 rounded-full font-bold border border-[var(--ok)]/30">
                   Tersimpan di Sistem
                 </span>
               )}
@@ -641,7 +641,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 placeholder={getSettingItem("TELEGRAM_BOT_TOKEN")?.maskedValue || "Contoh: 1234567890:ABCdef..."}
                 value={settings["TELEGRAM_BOT_TOKEN"] || ""}
                 onChange={(e) => handleInputChange("TELEGRAM_BOT_TOKEN", e.target.value)}
-                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500/20 bg-[var(--bg)] focus:bg-white transition-all"
+                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 bg-[var(--bg)] focus:bg-white transition-all"
               />
               <button
                 type="button"
@@ -653,7 +653,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
               </button>
             </div>
             <p className="text-[11px] text-[var(--muted)]">
-              Dapatkan token bot dengan membuka chat dengan <a href="https://t.me/BotFather" target="_blank" rel="noopener noreferrer" className="text-sky-600 underline font-semibold">@BotFather</a> di Telegram.
+              Dapatkan token bot dengan membuka chat dengan <a href="https://t.me/BotFather" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] hover:underline font-semibold">@BotFather</a> di Telegram.
             </p>
           </div>
 
@@ -664,7 +664,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 Chat ID Telegram HP Anda
               </label>
               {getSettingItem("TELEGRAM_CHAT_ID")?.isSet && (
-                <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
+                <span className="text-[10px] text-[var(--ok)] bg-[var(--bg)] px-2 py-0.5 rounded-full font-bold border border-[var(--ok)]/30">
                   Terpasang
                 </span>
               )}
@@ -674,17 +674,17 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
               placeholder="Contoh: 987654321"
               value={settings["TELEGRAM_CHAT_ID"] || ""}
               onChange={(e) => handleInputChange("TELEGRAM_CHAT_ID", e.target.value)}
-              className="w-full px-3 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500/20 bg-[var(--bg)] focus:bg-white transition-all"
+              className="w-full px-3 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 bg-[var(--bg)] focus:bg-white transition-all"
             />
             <div className="flex items-center justify-between text-[11px] text-[var(--muted)]">
-              <span>Cek ID Anda lewat bot <a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer" className="text-sky-600 underline font-semibold">@userinfobot</a>.</span>
+              <span>Cek ID Anda lewat bot <a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] hover:underline font-semibold">@userinfobot</a>.</span>
               <button
                 type="button"
                 onClick={handleTestTelegram}
                 disabled={testingTelegram}
-                className="inline-flex items-center gap-1 text-sky-600 hover:text-sky-800 font-bold underline cursor-pointer"
+                className="inline-flex items-center gap-1 text-[var(--accent)] hover:text-[var(--accent-hover)] font-bold underline cursor-pointer"
               >
-                <Zap className="w-3 h-3 text-sky-500" />
+                <Zap className="w-3 h-3 text-[var(--accent)]" />
                 <span>{testingTelegram ? "Mengirim..." : "Kirim Uji Coba ke HP"}</span>
               </button>
             </div>
@@ -698,7 +698,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
       <div className="bg-white rounded-3xl border border-[var(--line)] p-6 sm:p-7 shadow-xs space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--line)] pb-5">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md shadow-emerald-600/20 shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-white border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shadow-xs shrink-0">
               <MessageSquare className="w-6 h-6" />
             </div>
             <div>
@@ -706,7 +706,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 <h3 className="font-bold text-[var(--ink)] text-base sm:text-lg">
                   WhatsApp Gateway Endpoint
                 </h3>
-                <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] bg-white border border-[var(--line)] text-[var(--ink)] px-2 py-0.5 rounded-full font-bold shadow-2xs">
                   Kuitansi & Notifikasi WA
                 </span>
               </div>
@@ -733,7 +733,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 ])
               }
               disabled={savingService === "whatsapp"}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer disabled:opacity-50"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{savingService === "whatsapp" ? "Menyimpan..." : "Simpan WhatsApp"}</span>
@@ -752,7 +752,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
               placeholder="https://api.fonnte.com/send atau http://localhost:3001/send"
               value={settings["WHATSAPP_GATEWAY_URL"] || ""}
               onChange={(e) => handleInputChange("WHATSAPP_GATEWAY_URL", e.target.value)}
-              className="w-full px-3 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/20 bg-[var(--bg)] focus:bg-white transition-all"
+              className="w-full px-3 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 bg-[var(--bg)] focus:bg-white transition-all"
             />
           </div>
 
@@ -763,7 +763,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 WhatsApp API Key / Token
               </label>
               {getSettingItem("WHATSAPP_API_KEY")?.isSet && (
-                <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
+                <span className="text-[10px] text-[var(--ok)] bg-[var(--bg)] px-2 py-0.5 rounded-full font-bold border border-[var(--ok)]/30">
                   Tersimpan di Sistem
                 </span>
               )}
@@ -774,7 +774,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 placeholder={getSettingItem("WHATSAPP_API_KEY")?.maskedValue || "Token WA Gateway..."}
                 value={settings["WHATSAPP_API_KEY"] || ""}
                 onChange={(e) => handleInputChange("WHATSAPP_API_KEY", e.target.value)}
-                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500/20 bg-[var(--bg)] focus:bg-white transition-all"
+                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 bg-[var(--bg)] focus:bg-white transition-all"
               />
               <button
                 type="button"
@@ -795,7 +795,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
       <div className="bg-white rounded-3xl border border-[var(--line)] p-6 sm:p-7 shadow-xs space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--line)] pb-5">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-amber-600 text-white flex items-center justify-center shadow-md shadow-amber-600/20 shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-white border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shadow-xs shrink-0">
               <CreditCard className="w-6 h-6" />
             </div>
             <div>
@@ -803,7 +803,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 <h3 className="font-bold text-[var(--ink)] text-base sm:text-lg">
                   Payment Gateway (Midtrans QRIS & Virtual Account)
                 </h3>
-                <span className="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-[10px] bg-white border border-[var(--line)] text-[var(--ink)] px-2 py-0.5 rounded-full font-bold shadow-2xs">
                   Snap Payment
                 </span>
               </div>
@@ -830,7 +830,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 ])
               }
               disabled={savingService === "midtrans"}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer disabled:opacity-50"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{savingService === "midtrans" ? "Menyimpan..." : "Simpan Midtrans"}</span>
@@ -846,7 +846,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 Midtrans Server Key
               </label>
               {getSettingItem("MIDTRANS_SERVER_KEY")?.isSet && (
-                <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
+                <span className="text-[10px] text-[var(--ok)] bg-[var(--bg)] px-2 py-0.5 rounded-full font-bold border border-[var(--ok)]/30">
                   Tersimpan di Sistem
                 </span>
               )}
@@ -857,7 +857,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 placeholder={getSettingItem("MIDTRANS_SERVER_KEY")?.maskedValue || "SB-Mid-server-..."}
                 value={settings["MIDTRANS_SERVER_KEY"] || ""}
                 onChange={(e) => handleInputChange("MIDTRANS_SERVER_KEY", e.target.value)}
-                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/20 bg-[var(--bg)] focus:bg-white transition-all"
+                className="w-full pl-3 pr-10 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 bg-[var(--bg)] focus:bg-white transition-all"
               />
               <button
                 type="button"
@@ -877,7 +877,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
                 Midtrans Client Key
               </label>
               {getSettingItem("MIDTRANS_CLIENT_KEY")?.isSet && (
-                <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">
+                <span className="text-[10px] text-[var(--ok)] bg-[var(--bg)] px-2 py-0.5 rounded-full font-bold border border-[var(--ok)]/30">
                   Tersimpan
                 </span>
               )}
@@ -887,7 +887,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
               placeholder="SB-Mid-client-..."
               value={settings["MIDTRANS_CLIENT_KEY"] || ""}
               onChange={(e) => handleInputChange("MIDTRANS_CLIENT_KEY", e.target.value)}
-              className="w-full px-3 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-amber-500/20 bg-[var(--bg)] focus:bg-white transition-all"
+              className="w-full px-3 py-2.5 border border-[var(--line)] rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 bg-[var(--bg)] focus:bg-white transition-all"
             />
           </div>
         </div>
@@ -896,7 +896,7 @@ export function ApiKeySettingsClient({ initialSettings }: ApiKeySettingsProps) {
       {/* Floating / Sticky Save Bar */}
       <div className="sticky bottom-6 z-20 bg-white/95 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-[var(--line)] shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2.5 text-xs text-[var(--muted)]">
-          <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-[var(--accent)] shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--line)] flex items-center justify-center text-[var(--accent)] shrink-0 shadow-2xs">
             <KeyRound className="w-4 h-4" />
           </div>
           <div>

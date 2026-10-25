@@ -191,7 +191,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       type: "OPERATIONAL",
       title: OPEX_CATEGORY_LABELS[e.category] || e.category,
       categoryBadge: "Beban Operasional",
-      badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
+      badgeColor: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]",
       recipient: e.recipient || "-",
       amount: e.amount,
       isOutgoing: true,
@@ -204,7 +204,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       type: "OWNER_DRAW",
       title: "Prive Pribadi (Belanja / Keluarga)",
       categoryBadge: "Prive (Non-HPP)",
-      badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
+      badgeColor: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]",
       recipient: "Owner Pribadi",
       amount: d.amount,
       isOutgoing: true,
@@ -217,7 +217,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       type: "OWNER_EQUITY",
       title: "Setoran Modal Pribadi ke Kas",
       categoryBadge: "Setor Modal",
-      badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+      badgeColor: "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]",
       recipient: "Showroom (BCA)",
       amount: eq.amount,
       isOutgoing: false,
@@ -244,8 +244,8 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <span>{feedback.message}</span>
@@ -267,36 +267,36 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Beban Operasional</span>
-            <Building className="w-4 h-4 text-blue-600" />
+            <Building className="w-4 h-4 text-[var(--accent)]" />
           </div>
           <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalOperationalExpenses || operationalData.totalOperational)}
           </div>
-          <p className="text-xs text-[var(--muted)]">Sewa garasi, listrik, WiFi, gaji & iklan</p>
+          <p className="text-xs text-[var(--muted)]">Sewa garasi, listrik, WiFi, gaji &amp; iklan</p>
         </div>
 
         {/* Prive Pribadi */}
-        <div className="bg-white p-5 rounded-2xl border border-purple-200 shadow-xs space-y-1 bg-purple-50/20">
-          <div className="flex items-center justify-between text-purple-700">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Prive (Pribadi Owner)</span>
-            <ShoppingBag className="w-4 h-4 text-purple-600" />
+            <ShoppingBag className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-purple-800 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalOwnerDraw || operationalData.totalOwnerDraw)}
           </div>
-          <p className="text-xs text-purple-700">Belanja dapur, SPP anak (Non-HPP)</p>
+          <p className="text-xs text-[var(--muted)]">Belanja dapur, SPP anak (Non-HPP)</p>
         </div>
 
         {/* Setor Modal Pribadi */}
-        <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-xs space-y-1 bg-emerald-50/20">
-          <div className="flex items-center justify-between text-emerald-700">
+        <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Setor Modal Pribadi</span>
-            <ArrowDownLeft className="w-4 h-4 text-emerald-600" />
+            <ArrowDownLeft className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-emerald-800 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalOwnerEquity || operationalData.totalOwnerEquity)}
           </div>
-          <p className="text-xs text-emerald-700">Uang pribadi masuk ke kas showroom</p>
+          <p className="text-xs text-[var(--muted)]">Uang pribadi masuk ke kas showroom</p>
         </div>
 
         {/* Saldo Kas BCA Riil */}
@@ -308,17 +308,17 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
           <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.cashBalance)}
           </div>
-          <p className="text-xs text-[#16A34A] font-semibold">Tersinkronisasi Rekening Koran</p>
+          <p className="text-xs text-[var(--muted)] font-medium">Tersinkronisasi Rekening Koran</p>
         </div>
       </div>
 
       {/* Edukasi Solusi Rekening Campur BCA */}
-      <div className="bg-[#FEF3C7]/40 border border-[#FDE68A] p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-[#92400E]">
+      <div className="bg-white border border-[var(--line)] p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs text-[var(--muted)] shadow-xs">
         <div className="flex items-start gap-2.5">
           <AlertTriangle className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
           <div>
-            <strong className="font-bold text-[#78350F]">Solusi Rekening Campur (Showroom + Pribadi):</strong>
-            <p className="mt-0.5 text-[#92400E]">
+            <strong className="font-bold text-[var(--ink)]">Solusi Rekening Campur (Showroom + Pribadi):</strong>
+            <p className="mt-0.5 text-[var(--muted)] leading-relaxed">
               Semua transaksi belanja pribadi owner dicatat sebagai <strong>Prive</strong>. Saldo kas bank BCA akan tetap cocok persis dengan mutasi M-Banking, namun laba unit mobil dan bagi hasil investor <strong>100% aman dan tidak tercemar</strong>.
             </p>
           </div>
@@ -343,25 +343,25 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
         <div className="flex flex-wrap items-center gap-2">
           <Link
             href="/admin/finance/prive/new"
-            className="flex items-center gap-1.5 bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-800 px-3.5 py-2 rounded-xl text-xs font-bold transition-colors"
+            className="flex items-center gap-1.5 bg-white hover:bg-[var(--bg)] border border-[var(--line-input)] text-[var(--ink)] px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xs transition-colors"
           >
-            <ShoppingBag className="w-3.5 h-3.5 text-purple-600" />
+            <ShoppingBag className="w-3.5 h-3.5 text-[var(--accent)]" />
             <span>+ Catat Prive (Pribadi)</span>
           </Link>
 
           <Link
             href="/admin/finance/expenses/new"
-            className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 px-3.5 py-2 rounded-xl text-xs font-bold transition-colors"
+            className="flex items-center gap-1.5 bg-white hover:bg-[var(--bg)] border border-[var(--line-input)] text-[var(--ink)] px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xs transition-colors"
           >
-            <Building className="w-3.5 h-3.5 text-blue-600" />
+            <Building className="w-3.5 h-3.5 text-[var(--accent)]" />
             <span>+ Beban Operasional</span>
           </Link>
 
           <Link
             href="/admin/finance/equity/new"
-            className="flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 px-3.5 py-2 rounded-xl text-xs font-bold transition-colors"
+            className="flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xs transition-colors"
           >
-            <ArrowDownLeft className="w-3.5 h-3.5 text-emerald-600" />
+            <ArrowDownLeft className="w-3.5 h-3.5" />
             <span>+ Setor Modal Pribadi</span>
           </Link>
         </div>
@@ -374,7 +374,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
           className={cn(
             "px-3 py-1.5 rounded-xl font-bold transition-all border shrink-0",
             expenseFilter === "ALL"
-              ? "bg-[var(--ink)] text-white border-[var(--ink)]"
+              ? "bg-[var(--ink)] text-white border-[var(--ink)] shadow-xs"
               : "bg-white text-[var(--muted)] border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
@@ -385,8 +385,8 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
           className={cn(
             "px-3 py-1.5 rounded-xl font-bold transition-all border shrink-0 flex items-center gap-1.5",
             expenseFilter === "OPERATIONAL"
-              ? "bg-blue-600 text-white border-blue-600"
-              : "bg-white text-blue-800 border-blue-200 hover:bg-blue-50"
+              ? "bg-[var(--ink)] text-white border-[var(--ink)] shadow-xs"
+              : "bg-white text-[var(--muted)] border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
           <Building className="w-3.5 h-3.5" />
@@ -397,8 +397,8 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
           className={cn(
             "px-3 py-1.5 rounded-xl font-bold transition-all border shrink-0 flex items-center gap-1.5",
             expenseFilter === "OWNER_DRAW"
-              ? "bg-purple-600 text-white border-purple-600"
-              : "bg-white text-purple-800 border-purple-200 hover:bg-purple-50"
+              ? "bg-[var(--ink)] text-white border-[var(--ink)] shadow-xs"
+              : "bg-white text-[var(--muted)] border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
           <ShoppingBag className="w-3.5 h-3.5" />
@@ -409,8 +409,8 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
           className={cn(
             "px-3 py-1.5 rounded-xl font-bold transition-all border shrink-0 flex items-center gap-1.5",
             expenseFilter === "OWNER_EQUITY"
-              ? "bg-emerald-600 text-white border-emerald-600"
-              : "bg-white text-emerald-800 border-emerald-200 hover:bg-emerald-50"
+              ? "bg-[var(--ink)] text-white border-[var(--ink)] shadow-xs"
+              : "bg-white text-[var(--muted)] border-[var(--line)] hover:bg-[var(--bg)]"
           )}
         >
           <ArrowDownLeft className="w-3.5 h-3.5" />
@@ -422,7 +422,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       <div className="bg-white rounded-2xl border border-[var(--line)] shadow-xs overflow-hidden">
         <div className="p-4 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)]">
           <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-purple-600" />
+            <Layers className="w-4 h-4 text-[var(--accent)]" />
             <h3 className="font-bold text-sm text-[var(--ink)]">
               Rincian Pemisahan Beban Showroom vs Prive Pribadi (Rekening BCA)
             </h3>
@@ -476,7 +476,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                     </td>
 
                     <td className="py-3.5 px-4 text-right whitespace-nowrap font-black">
-                      <span className={item.isOutgoing ? "text-rose-700" : "text-emerald-700"}>
+                      <span className={item.isOutgoing ? "text-[var(--bad)]" : "text-[var(--ink)]"}>
                         {item.isOutgoing ? "-" : "+"} {formatRupiah(item.amount)}
                       </span>
                     </td>
@@ -491,10 +491,10 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       {/* Modal: Catat Beban Operasional Showroom */}
       {showOpExModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-2xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <Building className="w-5 h-5 text-blue-600" />
+                <Building className="w-5 h-5 text-[var(--accent)]" />
                 <h3 className="font-bold text-base text-[var(--ink)]">
                   Catat Beban Operasional Showroom
                 </h3>
@@ -515,14 +515,14 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                 <select
                   value={opExCategory}
                   onChange={(e: any) => setOpExCategory(e.target.value)}
-                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 >
-                  <option value="RENT_SHOWROOM">Sewa Lahan & Garasi Showroom</option>
-                  <option value="UTILITIES_WIFI">Listrik, Air & WiFi Internet</option>
-                  <option value="MARKETING_ADS">Iklan Berbayar FB/IG & OLX</option>
-                  <option value="SALARY_WAGES">Gaji & Upah Karyawan Showroom</option>
-                  <option value="OFFICE_SUPPLIES">Kertas, ATK, Kwitansi & Materai</option>
-                  <option value="CONSUMPTION_GUEST">Kopi, Air Mineral & Jamuan Tamu</option>
+                  <option value="RENT_SHOWROOM">Sewa Lahan &amp; Garasi Showroom</option>
+                  <option value="UTILITIES_WIFI">Listrik, Air &amp; WiFi Internet</option>
+                  <option value="MARKETING_ADS">Iklan Berbayar FB/IG &amp; OLX</option>
+                  <option value="SALARY_WAGES">Gaji &amp; Upah Karyawan Showroom</option>
+                  <option value="OFFICE_SUPPLIES">Kertas, ATK, Kwitansi &amp; Materai</option>
+                  <option value="CONSUMPTION_GUEST">Kopi, Air Mineral &amp; Jamuan Tamu</option>
                   <option value="MAINTENANCE">Perawatan Fasilitas Garasi</option>
                   <option value="OTHER">Beban Operasional Lainnya</option>
                 </select>
@@ -539,7 +539,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: 1500000"
                   value={opExAmount}
                   onChange={(e) => setOpExAmount(e.target.value)}
-                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -553,7 +553,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                     required
                     value={opExDate}
                     onChange={(e) => setOpExDate(e.target.value)}
-                    className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                   />
                 </div>
                 <div>
@@ -565,7 +565,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                     placeholder="Contoh: PLN / Pemilik Ruko"
                     value={opExRecipient}
                     onChange={(e) => setOpExRecipient(e.target.value)}
-                    className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                   />
                 </div>
               </div>
@@ -579,7 +579,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: Token listrik showroom 1 bulan..."
                   value={opExNotes}
                   onChange={(e) => setOpExNotes(e.target.value)}
-                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -594,7 +594,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Menyimpan..." : "Simpan Beban"}
                 </button>
@@ -607,10 +607,10 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       {/* Modal: Catat Prive (Pribadi Owner) */}
       {showOwnerDrawModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-2xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <ShoppingBag className="w-5 h-5 text-purple-600" />
+                <ShoppingBag className="w-5 h-5 text-[var(--accent)]" />
                 <h3 className="font-bold text-base text-[var(--ink)]">
                   Catat Prive (Kebutuhan Pribadi Owner)
                 </h3>
@@ -623,8 +623,8 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
               </button>
             </div>
 
-            <p className="text-xs text-purple-800 bg-purple-50 p-3 rounded-xl border border-purple-200">
-              Uang kas rekening BCA berkurang untuk keperluan keluarga, namun <strong>TIDAK dimasukkan ke biaya mobil</strong> sehingga laba unit & investor tetap akurat.
+            <p className="text-xs text-[var(--muted)] bg-[var(--bg)] p-3 rounded-xl border border-[var(--line)] leading-relaxed">
+              Uang kas rekening BCA berkurang untuk keperluan keluarga, namun <strong>TIDAK dimasukkan ke biaya mobil</strong> sehingga laba unit &amp; investor tetap akurat.
             </p>
 
             <form onSubmit={handleOwnerDrawSubmit} className="space-y-4">
@@ -639,7 +639,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: 1500000"
                   value={drawAmount}
                   onChange={(e) => setDrawAmount(e.target.value)}
-                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -652,7 +652,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   required
                   value={drawDate}
                   onChange={(e) => setDrawDate(e.target.value)}
-                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -666,7 +666,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: Belanja bulanan dapur, SPP anak sekolah, keperluan pribadi..."
                   value={drawNotes}
                   onChange={(e) => setDrawNotes(e.target.value)}
-                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -681,7 +681,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Menyimpan..." : "Simpan Prive"}
                 </button>
@@ -694,10 +694,10 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
       {/* Modal: Setor Modal Pribadi */}
       {showOwnerEquityModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-2xl border border-[var(--line)] shadow-2xl max-w-md w-full p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <ArrowDownLeft className="w-5 h-5 text-emerald-600" />
+                <ArrowDownLeft className="w-5 h-5 text-[var(--accent)]" />
                 <h3 className="font-bold text-base text-[var(--ink)]">
                   Setor Modal Tambahan Pribadi
                 </h3>
@@ -710,7 +710,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
               </button>
             </div>
 
-            <p className="text-xs text-emerald-800 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
+            <p className="text-xs text-[var(--muted)] bg-[var(--bg)] p-3 rounded-xl border border-[var(--line)] leading-relaxed">
               Gunakan form ini jika Anda mentransfer dana pribadi dari rekening luar ke kas rekening BCA showroom.
             </p>
 
@@ -726,7 +726,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: 10000000"
                   value={equityAmount}
                   onChange={(e) => setEquityAmount(e.target.value)}
-                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -739,7 +739,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   required
                   value={equityDate}
                   onChange={(e) => setEquityDate(e.target.value)}
-                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -752,7 +752,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                   placeholder="Contoh: Tambahan modal pribadi untuk perputaran kas..."
                   value={equityNotes}
                   onChange={(e) => setEquityNotes(e.target.value)}
-                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full p-2.5 border border-[var(--line)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
                 />
               </div>
 
@@ -767,7 +767,7 @@ export function ExpensesPrivePageClient({ summary, operationalData }: ExpensesPr
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+                  className="px-5 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Menyimpan..." : "Simpan Setoran Modal"}
                 </button>

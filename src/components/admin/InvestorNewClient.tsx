@@ -98,10 +98,10 @@ export function InvestorNewClient() {
         </div>
       </div>
 
-      <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-2xl bg-white border border-[var(--line)] shadow-xs text-xs text-[var(--muted)] flex items-start gap-2.5">
+        <Info className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
         <div>
-          <strong className="block font-bold">Skema Pembagian Keuntungan:</strong>
+          <strong className="block font-bold text-[var(--ink)]">Skema Pembagian Keuntungan:</strong>
           <span>
             Pilih <strong>Mitra Pihak Ketiga</strong> untuk pemodal luar dengan sistem persentase (%) laba unit, atau <strong>Ibu / 4 Saudara</strong> untuk pembagian skema nominal tier bertingkat keluarga.
           </span>
@@ -117,8 +117,8 @@ export function InvestorNewClient() {
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--ok)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -182,9 +182,9 @@ export function InvestorNewClient() {
 
           {/* Pengaturan Persentase Default (Khusus Pihak Ketiga) */}
           {type === "THIRD_PARTY" && (
-            <div className="p-3.5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-2">
-              <label className="block text-xs font-bold text-blue-900 flex items-center gap-1.5">
-                <Percent className="w-3.5 h-3.5 text-blue-700" />
+            <div className="p-3.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl space-y-2">
+              <label className="block text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
+                <Percent className="w-3.5 h-3.5 text-[var(--accent)]" />
                 <span>Default Persentase Bagi Hasil Investor (%)</span>
               </label>
               <div className="flex items-center gap-3">
@@ -196,14 +196,14 @@ export function InvestorNewClient() {
                     step="0.5"
                     value={defaultProfitSharePercent}
                     onChange={(e) => setDefaultProfitSharePercent(e.target.value)}
-                    className="w-full pr-8 pl-3.5 py-2 bg-white border border-blue-300 rounded-lg text-sm font-black text-blue-950 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                    className="w-full pr-8 pl-3.5 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-black text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
                     placeholder="50"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-blue-700">
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--muted)]">
                     %
                   </span>
                 </div>
-                <p className="text-[11px] text-blue-800 leading-snug">
+                <p className="text-[11px] text-[var(--muted)] leading-snug">
                   Persentase keuntungan yang didapat investor dari laba bersih setiap unit mobil yang didanai (contoh: 50% untuk investor, 50% untuk showroom).
                 </p>
               </div>

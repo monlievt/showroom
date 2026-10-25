@@ -344,7 +344,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                             } else if (diffDays <= 30) {
                               return (
                                 <span
-                                  className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-200"
+                                  className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]"
                                   title={`Jatuh tempo: ${new Date(vehicle.taxExpiryDate).toLocaleDateString("id-ID")}`}
                                 >
                                   🟡 Pajak Kritis (sisa {diffDays}h)
@@ -353,7 +353,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                             } else {
                               return (
                                 <span
-                                  className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                  className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]"
                                   title={`Jatuh tempo: ${new Date(vehicle.taxExpiryDate).toLocaleDateString("id-ID")}`}
                                 >
                                   🟢 Pajak Hidup
@@ -361,7 +361,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                               );
                             }
                           })() : (
-                            <span className="text-[10px] text-stone-400 italic">Pajak: -</span>
+                            <span className="text-[10px] text-[var(--muted)] italic">Pajak: -</span>
                           )}
                         </div>
                       </td>
@@ -456,7 +456,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           )}
 
                           {vehicle.status === "SOLD_SETTLED" && (
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-[#DCFCE7] text-[#15803D] text-xs font-bold border border-[#16A34A]/30">
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-[var(--bg)] text-[var(--ink)] text-xs font-bold border border-[var(--line)]">
                               Terjual Lunas
                             </span>
                           )}
@@ -584,9 +584,9 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                                     })}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[#15803D] hover:bg-[#DCFCE7]/60 font-semibold transition-colors"
+                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
                                   >
-                                    <MessageCircle className="w-4 h-4 text-[#16A34A]" />
+                                    <MessageCircle className="w-4 h-4 text-[var(--accent)]" />
                                     <span>Share via WhatsApp</span>
                                   </a>
                                 </div>
@@ -622,7 +622,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           <div className="bg-white rounded-3xl max-w-4xl w-full p-6 space-y-4 shadow-2xl border border-[var(--line)] max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
               <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
+                <FileSpreadsheet className="w-5 h-5 text-[var(--accent)]" />
                 <h3 className="font-bold text-base text-[var(--ink)]">
                   Import Data Mobil Lama dari Spreadsheet (Excel / CSV)
                 </h3>
@@ -699,8 +699,8 @@ function StatusBadge({ status }: { status: string }) {
           <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
             Intake Baru
           </span>
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
-            <Sparkles className="w-2.5 h-2.5 text-amber-600" />
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--ink)] bg-[var(--bg)] px-1.5 py-0.5 rounded border border-[var(--line)]">
+            <Sparkles className="w-2.5 h-2.5 text-[var(--accent)]" />
             <span>Katalog: Segera Hadir</span>
           </span>
         </div>
@@ -708,11 +708,11 @@ function StatusBadge({ status }: { status: string }) {
     case "IN_REPAIR":
       return (
         <div className="flex flex-col gap-1 items-start">
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEF3C7] text-[#92400E] border border-[var(--accent)]/30">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
             Bengkel / Salon
           </span>
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
-            <Sparkles className="w-2.5 h-2.5 text-amber-600" />
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--ink)] bg-[var(--bg)] px-1.5 py-0.5 rounded border border-[var(--line)]">
+            <Sparkles className="w-2.5 h-2.5 text-[var(--accent)]" />
             <span>Katalog: Segera Hadir</span>
           </span>
         </div>
@@ -720,23 +720,23 @@ function StatusBadge({ status }: { status: string }) {
     case "READY_FOR_SALE":
       return (
         <div className="flex flex-col gap-1 items-start">
-          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#DCFCE7] text-[#16A34A] border border-[#16A34A]/30">
+          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--bg)] text-[var(--ok)] border border-[var(--line)] font-bold">
             Ready Jual
           </span>
-          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+          <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--muted)] bg-[var(--bg)] px-1.5 py-0.5 rounded border border-[var(--line)]">
             <span>Katalog: Tayang Lengkap</span>
           </span>
         </div>
       );
     case "BOOKED":
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#FEF3C7] text-[var(--accent)] border border-[var(--accent)] font-bold animate-pulse">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--bg)] text-[var(--accent)] border border-[var(--accent)] font-bold animate-pulse">
           Booked (DP)
         </span>
       );
     case "AT_SHOWROOM_PENDING":
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[#F1F5F9] text-[#64748B] border border-[var(--line)]">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
           Titip Showroom
         </span>
       );
@@ -755,7 +755,7 @@ function StatusBadge({ status }: { status: string }) {
 function AgingBadge({ days, category }: { days: number; category: string }) {
   if (category === "WARNING_STAGNANT") {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-[#FEE2E2] text-[#DC2626] border border-[#DC2626]/30 animate-pulse">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30 animate-pulse">
         <Clock className="w-3 h-3" />
         {days} hari (Macet)
       </span>
@@ -764,15 +764,15 @@ function AgingBadge({ days, category }: { days: number; category: string }) {
 
   if (category === "FRESH") {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[#DCFCE7] text-[#16A34A] border border-[#16A34A]/30">
-        <Sparkles className="w-3 h-3" />
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--bg)] text-[var(--ok)] border border-[var(--ok)]/30">
+        <Sparkles className="w-3 h-3 text-[var(--ok)]" />
         {days} hari (Fresh)
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-[var(--bg)] text-[var(--muted)]">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
       <Clock className="w-3 h-3" />
       {days} hari
     </span>
@@ -896,22 +896,22 @@ function AddVehicleModal({
         </div>
 
         {/* FLOW GUIDE */}
-        <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
-          <strong className="block mb-1.5 text-amber-800">📋 Alur Siklus & Tampilan Publik:</strong>
+        <div className="mb-4 p-3 rounded-xl bg-white border border-[var(--line)] text-xs text-[var(--ink)] shadow-xs">
+          <strong className="block mb-1.5 text-[var(--ink)]">📋 Alur Siklus &amp; Tampilan Publik:</strong>
           <div className="flex flex-wrap items-center gap-1.5 font-medium">
             <span className="bg-[var(--bg)] text-[var(--muted)] px-2 py-0.5 rounded-full border border-[var(--line)]">INTAKE (baru masuk)</span>
-            <span className="text-amber-600">→</span>
-            <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-300">IN_REPAIR (salon/bengkel)</span>
-            <span className="text-amber-600">→</span>
-            <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-300">READY JUAL ✅ (siap tayang 100%)</span>
+            <span className="text-[var(--muted)]">→</span>
+            <span className="bg-[var(--bg)] text-[var(--ink)] px-2 py-0.5 rounded-full border border-[var(--line)]">IN_REPAIR (salon/bengkel)</span>
+            <span className="text-[var(--muted)]">→</span>
+            <span className="bg-[var(--bg)] text-[var(--ok)] px-2 py-0.5 rounded-full border border-[var(--line)] font-bold">READY JUAL ✅ (siap tayang 100%)</span>
           </div>
-          <p className="mt-1.5 text-amber-800 leading-relaxed">
-            💡 <strong>Stok Segera Hadir (Upcoming):</strong> Unit berstatus <em>INTAKE</em> & <em>IN_REPAIR</em> otomatis tayang di katalog publik dengan 1 foto depan & estimasi harga psikologis. Setelah salon & inspeksi selesai, ubah status ke <strong>Ready Jual</strong> untuk membuka galeri 11 foto lengkap & sertifikat inspeksi digital.
+          <p className="mt-1.5 text-[var(--muted)] leading-relaxed">
+            💡 <strong>Stok Segera Hadir (Upcoming):</strong> Unit berstatus <em>INTAKE</em> &amp; <em>IN_REPAIR</em> otomatis tayang di katalog publik dengan 1 foto depan &amp; estimasi harga psikologis. Setelah salon &amp; inspeksi selesai, ubah status ke <strong>Ready Jual</strong> untuk membuka galeri 11 foto lengkap &amp; sertifikat inspeksi digital.
           </p>
         </div>
 
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-lg bg-[#FEE2E2] border border-[#DC2626]/30 text-[#DC2626] text-xs font-semibold">
+          <div className="mb-4 p-3 rounded-lg bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs font-semibold">
             {errorMsg}
           </div>
         )}
@@ -947,9 +947,9 @@ function AddVehicleModal({
 
           {/* SECTION LELANG */}
           {isAuction && (
-            <div className="bg-white border border-amber-200 rounded-xl p-4 space-y-3">
+            <div className="bg-white border border-[var(--line)] rounded-xl p-4 space-y-3">
               <div className="text-xs font-bold text-[var(--ink)] border-b border-[var(--line)] pb-2">
-                🏛️ Informasi Balai Lelang & Estimasi BPKB
+                🏛️ Informasi Balai Lelang &amp; Estimasi BPKB
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1015,7 +1015,7 @@ function AddVehicleModal({
                       max={90}
                       value={formData.bpkbLeadDays}
                       onChange={(e) => setFormData({ ...formData, bpkbLeadDays: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-white border border-amber-300 rounded-lg text-sm font-bold text-amber-900"
+                      className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[var(--ink)]"
                     />
                     <span className="text-xs text-[var(--muted)] whitespace-nowrap">hari kerja</span>
                   </div>
@@ -1145,7 +1145,7 @@ function AddVehicleModal({
                 placeholder="165.000.000"
                 value={formData.targetSellingPrice ? formatThousands(formData.targetSellingPrice) : ""}
                 onChange={(e) => setFormData({ ...formData, targetSellingPrice: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm text-[#16A34A] font-bold"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm text-[var(--ink)] font-bold"
               />
             </div>
             <div>
@@ -1156,7 +1156,7 @@ function AddVehicleModal({
                 placeholder="158.000.000"
                 value={formData.minSellingPrice ? formatThousands(formData.minSellingPrice) : ""}
                 onChange={(e) => setFormData({ ...formData, minSellingPrice: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm text-[#92400E] font-medium"
+                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm text-[var(--ink)] font-medium"
               />
             </div>
           </div>
@@ -1284,7 +1284,7 @@ function AddExpenseModal({
         </div>
 
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-lg bg-[#FEE2E2] border border-[#DC2626]/30 text-[#DC2626] text-xs font-semibold">
+          <div className="mb-4 p-3 rounded-lg bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs font-semibold">
             {errorMsg}
           </div>
         )}
@@ -1299,11 +1299,11 @@ function AddExpenseModal({
             >
               <option value="AUCTION_ADMIN_FEE">Biaya Admin Lelang Resmi</option>
               <option value="BROKER_COMMISSION">Komisi Makelar / Mediator</option>
-              <option value="OIL_AND_SERVICE">Servis Mesin & Ganti Oli</option>
-              <option value="BODY_PAINT">Cat Bodi & Ketok Spet</option>
+              <option value="OIL_AND_SERVICE">Servis Mesin &amp; Ganti Oli</option>
+              <option value="BODY_PAINT">Cat Bodi &amp; Ketok Spet</option>
               <option value="DETAILING_SALON">Salon, Poles, Cuci Kolong</option>
               <option value="SPAREPARTS">Penggantian Sparepart</option>
-              <option value="DOCUMENT_TAX_MUTATION">Pajak, STNK & Cabut Berkas Mutasi</option>
+              <option value="DOCUMENT_TAX_MUTATION">Pajak, STNK &amp; Cabut Berkas Mutasi</option>
               <option value="TRANSPORT_PICKUP">Ongkos Angkut / Towing</option>
               <option value="OTHER">Lain-lain</option>
             </select>
@@ -1365,7 +1365,7 @@ function AddExpenseModal({
                   Mengunggah bukti nota ke server...
                 </div>
               ) : receiptUrl ? (
-                <div className="flex items-center justify-between px-2 py-1.5 bg-emerald-50 border border-emerald-200 rounded-md text-xs text-emerald-800 font-semibold">
+                <div className="flex items-center justify-between px-2 py-1.5 bg-[var(--bg)] border border-[var(--line)] rounded-md text-xs text-[var(--ink)] font-semibold">
                   <span className="flex items-center gap-1.5 truncate">
                     <span>✓</span>
                     <span className="truncate">{receiptFileName || "Foto struk terunggah"}</span>
@@ -1469,7 +1469,7 @@ function UpdateStatusModal({
         </div>
 
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-lg bg-[#FEE2E2] border border-[#DC2626]/30 text-[#DC2626] text-xs font-semibold">
+          <div className="mb-4 p-3 rounded-lg bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs font-semibold">
             {errorMsg}
           </div>
         )}
@@ -1512,12 +1512,12 @@ function UpdateStatusModal({
             )}
 
             {targetStatus === "READY_FOR_SALE" && (
-              <p className="text-[11px] text-emerald-700 bg-emerald-50 p-2.5 rounded-lg border border-emerald-200 mt-2 leading-relaxed">
+              <p className="text-[11px] text-[var(--ok)] bg-[var(--bg)] p-2.5 rounded-lg border border-[var(--line)] mt-2 leading-relaxed">
                 ✅ <strong>Ready Jual:</strong> Membuka 11 foto lengkap, skor inspeksi, dan dokumen resmi di katalog publik untuk calon pembeli.
               </p>
             )}
             {(targetStatus === "INTAKE" || targetStatus === "IN_REPAIR") && (
-              <p className="text-[11px] text-amber-800 bg-amber-50 p-2.5 rounded-lg border border-amber-200 mt-2 leading-relaxed">
+              <p className="text-[11px] text-[var(--muted)] bg-[var(--bg)] p-2.5 rounded-lg border border-[var(--line)] mt-2 leading-relaxed">
                 ✨ <strong>Segera Hadir:</strong> Unit akan tampil di katalog publik dengan 1 foto depan dan perkiraan harga estimasi.
               </p>
             )}
@@ -1614,8 +1614,8 @@ function MediaUploadModal({
             className={cn(
               "mb-4 p-3 rounded-lg text-xs font-semibold border",
               msg.type === "success"
-                ? "bg-[#DCFCE7] border-[#16A34A]/30 text-[#16A34A]"
-                : "bg-[#FEE2E2] border-[#DC2626]/30 text-[#DC2626]"
+                ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+                : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
             )}
           >
             {msg.text}

@@ -131,8 +131,8 @@ export function AssetNewClient() {
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--ok)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -255,7 +255,7 @@ export function AssetNewClient() {
                     e.target.value === "" ? "" : Number(e.target.value)
                   )
                 }
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
             </div>
 
@@ -274,8 +274,8 @@ export function AssetNewClient() {
             </div>
           </div>
 
-          <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl">
-            <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-amber-950">
+          <div className="p-3.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-[var(--ink)]">
               <input
                 type="checkbox"
                 checked={recordCashOut}
@@ -286,7 +286,7 @@ export function AssetNewClient() {
                 Potong saldo kas BCA showroom saat ini (Catat pengeluaran kas riil)
               </span>
             </label>
-            <p className="text-[10px] text-amber-800 ml-5 mt-0.5">
+            <p className="text-[10px] text-[var(--muted)] ml-5 mt-0.5">
               Centang jika barang baru dibeli menggunakan uang rekening showroom hari ini. Jangan centang jika ini inventaris lama bawaan.
             </p>
           </div>

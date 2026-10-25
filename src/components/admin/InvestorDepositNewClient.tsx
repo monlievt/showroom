@@ -191,10 +191,10 @@ export function InvestorDepositNewClient({
         </div>
       </div>
 
-      <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5">
-        <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-2xl bg-white border border-[var(--line)] shadow-xs text-xs text-[var(--muted)] flex items-start gap-2.5">
+        <Info className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
         <div>
-          <strong className="block font-bold">Sinkronisasi Ledger & Buku Kas:</strong>
+          <strong className="block font-bold text-[var(--ink)]">Sinkronisasi Ledger &amp; Buku Kas:</strong>
           <span>
             Setoran modal secara otomatis menambah saldo berjalan di <strong>Capital Ledger Investor</strong> sekaligus menambah kas masuk (IN_CAPITAL_DEPOSIT) di buku kas utama rekening BCA showroom.
           </span>
@@ -210,8 +210,8 @@ export function InvestorDepositNewClient({
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--ok)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -282,7 +282,7 @@ export function InvestorDepositNewClient({
               placeholder="Contoh: 50.000.000"
               value={amount !== "" ? formatThousands(amount) : ""}
               onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
-              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
             />
           </div>
 
@@ -294,7 +294,7 @@ export function InvestorDepositNewClient({
                 <span>Lampiran Bukti Transfer Bank (Bisa Beberapa Foto / Screenshot)</span>
               </label>
               {proofList.length > 0 && (
-                <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                <span className="text-[11px] font-bold text-[var(--ink)] bg-[var(--bg)] border border-[var(--line)] px-2 py-0.5 rounded-full">
                   ✓ {proofList.length} Foto/Dokumen Terlampir
                 </span>
               )}
@@ -344,8 +344,8 @@ export function InvestorDepositNewClient({
                             />
                           </div>
                         ) : (
-                          <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex flex-col items-center justify-center shrink-0 border border-amber-200">
-                            <FileText className="w-5 h-5" />
+                          <div className="w-12 h-12 rounded-xl bg-white text-[var(--ink)] flex flex-col items-center justify-center shrink-0 border border-[var(--line)] shadow-2xs">
+                            <FileText className="w-5 h-5 text-[var(--accent)]" />
                             <span className="text-[9px] font-bold">PDF</span>
                           </div>
                         )}
@@ -354,7 +354,7 @@ export function InvestorDepositNewClient({
                           <p className="text-xs font-bold text-[var(--ink)] truncate max-w-[150px] sm:max-w-[130px]">
                             {proof.name || `Bukti Transfer #${idx + 1}`}
                           </p>
-                          <span className="text-[10px] text-emerald-700 font-semibold block">
+                          <span className="text-[10px] text-[var(--accent)] font-semibold block">
                             Foto #{idx + 1} Tersimpan
                           </span>
                         </div>
@@ -404,7 +404,7 @@ export function InvestorDepositNewClient({
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center space-y-2">
-                  <div className="w-10 h-10 rounded-full bg-amber-50 group-hover:bg-amber-100 text-[var(--accent)] flex items-center justify-center transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-white border border-[var(--line)] shadow-xs text-[var(--accent)] flex items-center justify-center transition-colors">
                     <UploadCloud className="w-5 h-5" />
                   </div>
                   <div className="text-xs text-[var(--ink)]">

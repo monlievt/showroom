@@ -223,7 +223,7 @@ export function SalePaymentNewClient({
               <User className="w-3.5 h-3.5 text-[var(--muted)]" />
               <span>Pembeli: <strong>{sale.buyer.name}</strong></span>
               {sale.buyer.isShowroom && (
-                <span className="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.2 rounded-full font-bold">
+                <span className="text-[10px] bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full font-bold">
                   Showroom Rekanan
                 </span>
               )}
@@ -240,7 +240,7 @@ export function SalePaymentNewClient({
           </div>
           <div>
             <span className="text-[10px] text-[var(--muted)] block font-medium">Sudah Masuk</span>
-            <span className="text-xs font-bold text-emerald-600">
+            <span className="text-xs font-bold text-[var(--ink)]">
               {formatRupiah(sale.paidAmount)}
             </span>
           </div>
@@ -262,8 +262,8 @@ export function SalePaymentNewClient({
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--accent)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -293,7 +293,7 @@ export function SalePaymentNewClient({
                     e.target.value === "" ? "" : Number(e.target.value)
                   )
                 }
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[#16A34A] focus:outline-none focus:ring-2 focus:ring-[#16A34A]/40"
+                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
               <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Maksimal sisa piutang: {formatRupiah(sale.remainingAmount)}
@@ -330,14 +330,14 @@ export function SalePaymentNewClient({
           </div>
 
           {method === "TRADE_IN" && (
-            <div className="p-4 rounded-xl bg-amber-50/70 border border-amber-200 space-y-2">
-              <label className="block text-xs font-semibold text-amber-950 mb-1">
+            <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] space-y-2">
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
                 Pilih Unit Tukar Tambah (Trade-In dari Konsumen)
               </label>
               <select
                 value={tradeInVehicleId}
                 onChange={(e) => setTradeInVehicleId(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-white border border-amber-300 rounded-xl text-sm font-semibold text-[var(--ink)]"
+                className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)]"
               >
                 <option value="">-- Pilih unit intake trade-in --</option>
                 {availableVehicles.map((v) => (
@@ -346,7 +346,7 @@ export function SalePaymentNewClient({
                   </option>
                 ))}
               </select>
-              <p className="text-[11px] text-amber-800">
+              <p className="text-[11px] text-[var(--muted)]">
                 Pilih mobil yang diserahkan konsumen sebagai pengganti nominal pembayaran.
               </p>
             </div>
@@ -376,9 +376,9 @@ export function SalePaymentNewClient({
         </div>
 
         {/* Live Calculation */}
-        <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2 text-amber-950">
-            <Receipt className="w-4 h-4 text-amber-700" />
+        <div className="p-4 rounded-2xl bg-[var(--bg)] border border-[var(--line)] text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-[var(--ink)]">
+            <Receipt className="w-4 h-4 text-[var(--accent)]" />
             <span className="font-semibold">
               Status Piutang Setelah Pembayaran Ini:
             </span>
@@ -386,16 +386,16 @@ export function SalePaymentNewClient({
 
           <div className="flex items-center gap-3">
             <span className="text-[var(--muted)]">
-              Sisa Baru: <strong>{formatRupiah(newRemaining)}</strong>
+              Sisa Baru: <strong className="text-[var(--ink)]">{formatRupiah(newRemaining)}</strong>
             </span>
             {isNowSettled ? (
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[var(--ink)] text-white">
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[var(--ink)] text-white shadow-xs">
                 <Check className="w-3 h-3" />
                 LUNAS 100% (Settled)
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-200 text-amber-900">
-                <Clock className="w-3 h-3" />
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-white text-[var(--ink)] border border-[var(--line)] shadow-xs">
+                <Clock className="w-3 h-3 text-[var(--muted)]" />
                 Masih Ada Tempo
               </span>
             )}
@@ -434,7 +434,7 @@ export function SalePaymentNewClient({
                       </span>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-semibold">
+                  <span className="px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] text-[11px] font-semibold">
                     Masuk Rekening Showroom
                   </span>
                 </div>
@@ -455,7 +455,7 @@ export function SalePaymentNewClient({
           <button
             type="submit"
             disabled={loading || !amount || Number(amount) <= 0}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>
@@ -475,11 +475,11 @@ export function SalePaymentNewClient({
       {/* ── SETTLEMENT SUCCESS & INVESTOR PROFIT SHARE MODAL ── */}
       {settlementModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-lg w-full border border-stone-200 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full border border-[var(--line)] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
             {/* Header Dialog */}
-            <div className="bg-gradient-to-br from-[var(--ink)] via-[#292524] to-[var(--ink)] text-white p-6 relative">
+            <div className="bg-[var(--ink)] text-white p-6 relative">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-emerald-400 text-white flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-[var(--accent)] text-white flex items-center justify-center shadow-xs shrink-0">
                   {settlementInfo.hasInvestor ? (
                     <HeartHandshake className="w-6 h-6" />
                   ) : (
@@ -488,7 +488,7 @@ export function SalePaymentNewClient({
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider">
+                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white/10 text-white border border-white/20 uppercase tracking-wider">
                       Lunas 100% • Settled
                     </span>
                   </div>
@@ -498,11 +498,11 @@ export function SalePaymentNewClient({
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-stone-800 text-xs text-stone-300 flex items-center justify-between">
+              <div className="mt-4 pt-3 border-t border-white/10 text-xs text-white/80 flex items-center justify-between">
                 <span>
                   <strong>{sale.vehicle.brand} {sale.vehicle.model}</strong> ({sale.vehicle.plateNumber})
                 </span>
-                <span className="text-emerald-400 font-bold">
+                <span className="text-white font-bold">
                   {formatRupiah(sale.sellingPrice)}
                 </span>
               </div>
@@ -512,18 +512,18 @@ export function SalePaymentNewClient({
             <div className="p-6 space-y-5">
               {/* Notifikasi Investor vs Modal Sendiri */}
               {settlementInfo.hasInvestor ? (
-                <div className="bg-gradient-to-br from-amber-50 to-orange-50/60 border border-amber-200 rounded-2xl p-4.5 space-y-3">
+                <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4.5 space-y-3">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-xl bg-amber-100 text-amber-800 shrink-0 mt-0.5">
-                      <Coins className="w-5 h-5 text-amber-700" />
+                    <div className="p-2 rounded-xl bg-white border border-[var(--line)] text-[var(--accent)] shrink-0 mt-0.5">
+                      <Coins className="w-5 h-5 text-[var(--accent)]" />
                     </div>
                     <div className="space-y-1">
-                      <h4 className="font-extrabold text-sm text-[#78350F]">
+                      <h4 className="font-extrabold text-sm text-[var(--ink)]">
                         Unit Mobil Didanai Investor
                       </h4>
-                      <p className="text-xs text-[#92400E] leading-relaxed">
+                      <p className="text-xs text-[var(--muted)] leading-relaxed">
                         Mobil ini didanai oleh pemodal:{" "}
-                        <strong className="text-stone-900 font-bold">
+                        <strong className="text-[var(--ink)] font-bold">
                           {settlementInfo.investorNames.length > 0
                             ? settlementInfo.investorNames.join(", ")
                             : "Investor Rekanan"}
@@ -541,17 +541,17 @@ export function SalePaymentNewClient({
                   )}
 
                   {distributedSuccess ? (
-                    <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs space-y-2">
-                      <div className="flex items-center gap-2 font-bold text-emerald-800">
-                        <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <div className="p-3.5 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] text-xs space-y-2">
+                      <div className="flex items-center gap-2 font-bold text-[var(--ink)]">
+                        <CheckCircle className="w-4 h-4 text-[var(--accent)]" />
                         <span>Bagi Hasil Sukses Dieksekusi!</span>
                       </div>
-                      <p className="text-[11px] text-emerald-700 leading-relaxed">
+                      <p className="text-[11px] text-[var(--muted)] leading-relaxed">
                         Snapshot aturan deterministik tersimpan, mutasi Capital Ledger tercatat, dan sisa laba bersih masuk kas showroom.
                       </p>
                       <Link
                         href="/admin/investors/history"
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 underline hover:text-emerald-900 pt-1"
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--accent)] underline hover:text-[var(--accent-hover)] pt-1"
                       >
                         <span>Buka Riwayat Bagi Hasil Investor</span>
                         <ExternalLink className="w-3 h-3" />
@@ -562,7 +562,7 @@ export function SalePaymentNewClient({
                       type="button"
                       onClick={handleExecuteProfitShareNow}
                       disabled={distributingProfit}
-                      className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50"
+                      className="w-full py-3 px-4 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer disabled:opacity-50"
                     >
                       {distributingProfit ? (
                         <>
@@ -579,17 +579,17 @@ export function SalePaymentNewClient({
                   )}
                 </div>
               ) : (
-                <div className="bg-emerald-50/80 border border-emerald-200 rounded-2xl p-4.5 flex items-start gap-3">
-                  <div className="p-2 rounded-xl bg-emerald-100 text-emerald-800 shrink-0">
-                    <CheckCircle className="w-5 h-5 text-emerald-700" />
+                <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4.5 flex items-start gap-3">
+                  <div className="p-2 rounded-xl bg-white border border-[var(--line)] text-[var(--accent)] shrink-0">
+                    <CheckCircle className="w-5 h-5 text-[var(--accent)]" />
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-sm text-emerald-950">
+                    <h4 className="font-extrabold text-sm text-[var(--ink)]">
                       100% Modal Mandiri Showroom
                     </h4>
-                    <p className="text-xs text-emerald-800 mt-1 leading-relaxed">
+                    <p className="text-xs text-[var(--muted)] mt-1 leading-relaxed">
                       Unit ini tidak memiliki investor eksternal. Seluruh penerimaan pembayaran dan laba kotor sebesar{" "}
-                      <strong>+{formatRupiah(sale.grossProfit || 0)}</strong> telah resmi masuk kas operasional Nur Mobil.
+                      <strong className="text-[var(--ink)]">+{formatRupiah(sale.grossProfit || 0)}</strong> telah resmi masuk kas operasional Nur Mobil.
                     </p>
                   </div>
                 </div>
@@ -597,7 +597,7 @@ export function SalePaymentNewClient({
 
               {/* Dokumen Serah Terima Resmi */}
               <div className="space-y-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--muted)] block">
                   Cetak Dokumen Transaksi Resmi:
                 </span>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -605,9 +605,9 @@ export function SalePaymentNewClient({
                     href={`/api/pdf/bast/${sale.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-xl border border-stone-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all flex items-center gap-2 text-xs font-bold text-stone-800"
+                    className="p-3 rounded-xl border border-[var(--line)] bg-white hover:border-[var(--accent)] hover:bg-[var(--bg)] transition-all flex items-center gap-2 text-xs font-bold text-[var(--ink)] shadow-xs"
                   >
-                    <FileText className="w-4 h-4 text-emerald-600" />
+                    <FileText className="w-4 h-4 text-[var(--accent)]" />
                     <span>Cetak BAST (PDF)</span>
                   </a>
 
@@ -615,19 +615,19 @@ export function SalePaymentNewClient({
                     href={`/api/pdf/invoice/${sale.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 rounded-xl border border-stone-200 hover:border-stone-800 hover:bg-stone-50 transition-all flex items-center gap-2 text-xs font-bold text-stone-800"
+                    className="p-3 rounded-xl border border-[var(--line)] bg-white hover:border-[var(--accent)] hover:bg-[var(--bg)] transition-all flex items-center gap-2 text-xs font-bold text-[var(--ink)] shadow-xs"
                   >
-                    <Printer className="w-4 h-4 text-stone-700" />
+                    <Printer className="w-4 h-4 text-[var(--accent)]" />
                     <span>Kuitansi Lunas (PDF)</span>
                   </a>
                 </div>
               </div>
 
               {/* Tombol Selesai */}
-              <div className="pt-2 flex items-center justify-between gap-3 border-t border-stone-100">
+              <div className="pt-2 flex items-center justify-between gap-3 border-t border-[var(--line)]">
                 <Link
                   href="/admin/sales"
-                  className="w-full py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs text-center transition-colors shadow-sm"
+                  className="w-full py-2.5 px-4 rounded-xl bg-[var(--ink)] hover:bg-[var(--accent)] text-white font-bold text-xs text-center transition-colors shadow-xs"
                 >
                   Selesai & Ke Daftar Penjualan
                 </Link>

@@ -153,7 +153,7 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
           </div>
           <div>
             <span className="text-[10px] text-[var(--muted)] block font-bold">HPP Sekarang</span>
-            <span className="text-xs font-extrabold text-[#16A34A]">
+            <span className="text-xs font-extrabold text-[var(--ink)]">
               {formatRupiah(vehicle.totalHpp)}
             </span>
           </div>
@@ -169,8 +169,8 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
+        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
+          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--accent)]" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -276,8 +276,8 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
 
         {/* Live Calculation Preview */}
         {amount && Number(amount) > 0 ? (
-          <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs flex items-center justify-between">
-            <span className="text-amber-900 font-medium">
+          <div className="p-4 rounded-2xl bg-[var(--bg)] border border-[var(--line)] text-xs flex items-center justify-between">
+            <span className="text-[var(--ink)] font-medium">
               Simulasi HPP Baru setelah biaya dicatat:
             </span>
             <div className="flex items-center gap-2">
@@ -303,7 +303,7 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>

@@ -140,28 +140,25 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
           </div>
         </div>
 
-        <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-5 shadow-sm">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 shadow-xs">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-xs font-semibold uppercase tracking-wider">Total Kas Masuk (Lunas/DP)</span>
-            <CheckCircle2 className="w-5 h-5 text-[#16A34A]" />
+            <CheckCircle2 className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-bold text-[#16A34A]">{formatRupiah(totalDanaMasuk)}</span>
+            <span className="text-2xl font-bold text-[var(--ink)]">{formatRupiah(totalDanaMasuk)}</span>
             <div className="text-[11px] text-[var(--muted)] mt-0.5">Sudah masuk buku kas</div>
           </div>
         </div>
 
-        <div className={cn(
-          "border rounded-xl p-5 shadow-sm transition-all",
-          totalSisaPiutang > 0 ? "bg-[#FEF3C7] border-[var(--accent)]/40" : "bg-[var(--bg)] border-[var(--line)]"
-        )}>
-          <div className="flex items-center justify-between text-[#92400E]">
+        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 shadow-xs">
+          <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-xs font-semibold uppercase tracking-wider">Sisa Piutang Berjalan</span>
             <Clock className="w-5 h-5 text-[var(--accent)]" />
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-bold text-[var(--accent)]">{formatRupiah(totalSisaPiutang)}</span>
-            <div className="text-[11px] text-[#92400E] font-medium mt-0.5">
+            <span className="text-2xl font-bold text-[var(--ink)]">{formatRupiah(totalSisaPiutang)}</span>
+            <div className="text-[11px] text-[var(--muted)] font-medium mt-0.5">
               Dari {totalPendingUnits} unit belum lunas
             </div>
           </div>
@@ -223,8 +220,8 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
           className={cn(
             "px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5",
             selectedFilter === "PENDING_RECEIVABLES"
-              ? "bg-[var(--accent)] text-white shadow-sm"
-              : "bg-[var(--bg)] text-[#92400E] border border-[var(--line)]"
+              ? "bg-[var(--accent)] text-white shadow-xs"
+              : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
           )}
         >
           <span>Piutang Tempo / Belum Lunas</span>
@@ -237,8 +234,8 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
           className={cn(
             "px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer",
             selectedFilter === "SETTLED"
-              ? "bg-[#16A34A] text-white shadow-sm"
-              : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]"
+              ? "bg-[var(--ink)] text-white shadow-xs"
+              : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
           )}
         >
           Terjual Lunas ({sales.filter((s) => s.isFullyPaid).length})
@@ -246,7 +243,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
       </div>
 
       {/* ── SALES TABLE ───────────────────────────────────────── */}
-      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white border border-[var(--line)] rounded-2xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
@@ -273,12 +270,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                       {/* Tanggal & Jalur */}
                       <td className="py-4 px-4 align-top text-xs">
                         <div className="font-bold text-[var(--ink)]">{formatDate(sale.saleDate)}</div>
-                        <span className={cn(
-                          "inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold border",
-                          sale.saleType === "SHOWROOM"
-                            ? "bg-[#FEF3C7] text-[#92400E] border-[var(--accent)]/30"
-                            : "bg-[#DCFCE7] text-[#16A34A] border-[#16A34A]/30"
-                        )}>
+                        <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
                           {sale.saleType === "SHOWROOM" ? "Showroom Rekanan" : "Konsumen Langsung"}
                         </span>
                       </td>
@@ -294,7 +286,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                       {/* Pembeli */}
                       <td className="py-4 px-4 align-top text-xs">
                         <div className="font-bold text-[var(--ink)] flex items-center gap-1.5">
-                          {sale.buyer.isShowroom ? <Building2 className="w-3.5 h-3.5 text-[var(--accent)]" /> : <UserCheck className="w-3.5 h-3.5 text-[#16A34A]" />}
+                          {sale.buyer.isShowroom ? <Building2 className="w-3.5 h-3.5 text-[var(--accent)]" /> : <UserCheck className="w-3.5 h-3.5 text-[var(--accent)]" />}
                           <span>{sale.buyer.name}</span>
                         </div>
                         {sale.buyer.phone && (
@@ -310,7 +302,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                         <div className="font-bold text-base text-[var(--ink)]">
                           {formatRupiah(sale.sellingPrice)}
                         </div>
-                        <div className="text-[11px] text-[#16A34A] font-semibold mt-0.5">
+                        <div className="text-[11px] text-[var(--muted)] font-semibold mt-0.5">
                           Laba Kotor: +{formatRupiah(sale.grossProfit)}
                         </div>
                       </td>
@@ -318,7 +310,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                       {/* Progress Pelunasan */}
                       <td className="py-4 px-4 align-top text-xs">
                         <div className="flex items-center justify-between font-bold mb-1">
-                          <span className={sale.isFullyPaid ? "text-[#16A34A]" : "text-[var(--accent)]"}>
+                          <span className={sale.isFullyPaid ? "text-[var(--ink)]" : "text-[var(--accent)]"}>
                             {sale.isFullyPaid ? "Lunas 100%" : `Kurang ${formatRupiah(sale.remainingAmount)}`}
                           </span>
                           <span className="text-[11px] text-[var(--muted)]">{sale.percentagePaid}%</span>
@@ -329,7 +321,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                           <div
                             className={cn(
                               "h-full transition-all duration-500",
-                              sale.isFullyPaid ? "bg-[#16A34A]" : "bg-[var(--accent)]"
+                              sale.isFullyPaid ? "bg-[var(--ink)]" : "bg-[var(--accent)]"
                             )}
                             style={{ width: `${sale.percentagePaid}%` }}
                           />
@@ -345,16 +337,16 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                             {sale.profitDistributionStatus === "READY_FOR_DISTRIBUTION" && (
                               <Link
                                 href="/admin/investors"
-                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-xs hover:opacity-95 transition-opacity"
+                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[var(--accent)] text-white shadow-xs hover:bg-[var(--accent-hover)] transition-colors"
                                 title="Unit didanai investor & belum dibagikan labanya. Klik untuk bagi hasil."
                               >
-                                <Coins className="w-3 h-3 animate-spin" />
+                                <Coins className="w-3 h-3" />
                                 <span>Siap Bagi Hasil ({sale.investorNames?.join(", ") || "Investor"})</span>
                               </Link>
                             )}
                             {sale.profitDistributionStatus === "DISTRIBUTED" && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
+                                <CheckCircle2 className="w-3 h-3 text-[var(--muted)]" />
                                 <span>Bagi Hasil Selesai</span>
                               </span>
                             )}
@@ -374,7 +366,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                           {sale.isFullyPaid && sale.profitDistributionStatus === "READY_FOR_DISTRIBUTION" && (
                             <Link
                               href="/admin/investors"
-                              className="p-1.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-600 hover:text-white text-amber-800 transition-colors shadow-xs"
+                              className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
                               title="Bagi Hasil ke Investor Sekarang"
                             >
                               <HeartHandshake className="w-4 h-4" />
@@ -385,7 +377,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                           {!sale.isFullyPaid && (
                             <Link
                               href={`/admin/sales/${sale.id}/payment`}
-                              className="p-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors"
+                              className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
                               title="Catat Pembayaran Masuk / Angsuran"
                             >
                               <Plus className="w-4 h-4" />
@@ -397,7 +389,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                             href={`/api/pdf/invoice/${sale.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--ink)] hover:text-white text-[var(--ink)] transition-colors"
+                            className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
                             title="Cetak Kuitansi / Faktur Pembayaran (Meterai)"
                           >
                             <Printer className="w-4 h-4" />
@@ -408,7 +400,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                             href={`/api/pdf/agreement/${sale.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[#2563EB] hover:text-white text-[var(--ink)] transition-colors"
+                            className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
                             title="Cetak Surat Perjanjian Jual Beli (SPK & Syarat Ketentuan)"
                           >
                             <FileText className="w-4 h-4" />
@@ -419,7 +411,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                             href={`/api/pdf/bast/${sale.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[#059669] hover:text-white text-[var(--ink)] transition-colors"
+                            className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
                             title="Cetak Berita Acara Serah Terima (BAST)"
                           >
                             <ClipboardCheck className="w-4 h-4" />
@@ -438,7 +430,7 @@ export function SalesClient({ initialSales, availableVehicles }: SalesClientProp
                               })}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1.5 rounded-lg border border-[#16A34A]/30 bg-[#DCFCE7] hover:bg-[#16A34A] hover:text-white text-[#16A34A] transition-colors"
+                              className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
                               title="Kirim Reminder WA Tagihan"
                             >
                               <MessageCircle className="w-4 h-4" />
@@ -492,7 +484,7 @@ function ReceivableBadge({
 }) {
   if (dueStatus.status === "OVERDUE") {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#DC2626] bg-[#FEE2E2] px-2 py-0.5 rounded border border-[#DC2626]/30 animate-pulse">
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--bad)] bg-[var(--bg)] px-2 py-0.5 rounded border border-[var(--bad)]/30 animate-pulse">
         <AlertTriangle className="w-3 h-3" />
         Lewat Jatuh Tempo ({Math.abs(dueStatus.daysRemaining || 0)} hari)
       </span>
@@ -500,7 +492,7 @@ function ReceivableBadge({
   }
   if (dueStatus.status === "DUE_SOON") {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#CA8A04] bg-[#FEF9C3] px-2 py-0.5 rounded border border-[#CA8A04]/30">
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--warn)] bg-[var(--bg)] px-2 py-0.5 rounded border border-[var(--warn)]/30">
         <Clock className="w-3 h-3" />
         Jatuh Tempo H-{dueStatus.daysRemaining}
       </span>
@@ -623,7 +615,7 @@ function CreateSaleModal({
         </div>
 
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-lg bg-[#FEE2E2] border border-[#DC2626]/30 text-[#DC2626] text-xs font-semibold">
+          <div className="mb-4 p-3 rounded-lg bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs font-semibold">
             {errorMsg}
           </div>
         )}
@@ -749,7 +741,7 @@ function CreateSaleModal({
           <div className="border-t border-[var(--line)] pt-4 space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-bold uppercase text-[var(--muted)]">Pembayaran Awal / DP Masuk</h3>
-              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-stone-100 text-stone-700">
+              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
                 100% Cash / Tempo Garasi (Non-Leasing)
               </span>
             </div>
@@ -762,7 +754,7 @@ function CreateSaleModal({
                   placeholder="Contoh: 105000000"
                   value={initialPaymentAmount}
                   onChange={(e) => setInitialPaymentAmount(Number(e.target.value))}
-                  className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[#16A34A]"
+                  className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[var(--ink)]"
                 />
                 {priceNum > 0 && isTempo && (
                   <span className="text-[10px] text-[var(--muted)] mt-1 block">
@@ -811,8 +803,8 @@ function CreateSaleModal({
                     Aturan Nur Mobil: Pembelian tempo wajib DP minimal 70% ({formatRupiah(minDp70)}). Sisa maksimal 30% ({formatRupiah(priceNum - minDp70)}) diselesaikan dalam 30 hari.
                   </div>
                 ) : (
-                  <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-[#78350F] text-xs">
-                    <strong className="block font-bold">Ketentuan Jaminan Dokumen:</strong>
+                  <div className="p-3 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs">
+                    <strong className="block font-bold mb-0.5">Ketentuan Jaminan Dokumen:</strong>
                     Asli BPKB dan Asli STNK <strong>wajib ditahan di brankas showroom</strong> sampai sisa pelunasan 100% diterima. Konsumen hanya memegang Surat Jalan resmi sementara.
                   </div>
                 )}
@@ -827,7 +819,7 @@ function CreateSaleModal({
             <button
               type="submit"
               disabled={loading || availableVehicles.length === 0}
-              className="px-6 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
+              className="px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
             >
               {loading ? "Menyimpan Transaksi..." : "Simpan Penjualan & Terbitkan Kuitansi"}
             </button>
@@ -888,7 +880,7 @@ function AddPaymentModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl w-full max-w-md shadow-2xl p-6">
+      <div className="bg-white border border-[var(--line)] rounded-2xl w-full max-w-md shadow-2xl p-6">
         <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-4">
           <div>
             <h2 className="text-base font-bold text-[var(--ink)]">Catat Pembayaran Masuk</h2>
@@ -902,12 +894,12 @@ function AddPaymentModal({
         </div>
 
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-lg bg-[#FEE2E2] border border-[#DC2626]/30 text-[#DC2626] text-xs font-semibold">
+          <div className="mb-4 p-3 rounded-lg bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs font-semibold">
             {errorMsg}
           </div>
         )}
 
-        <div className="mb-4 p-3 bg-[var(--bg)] rounded-xl text-xs flex justify-between items-center">
+        <div className="mb-4 p-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-xs flex justify-between items-center">
           <span className="text-[var(--muted)]">Sisa Piutang Saat Ini:</span>
           <span className="font-bold text-sm text-[var(--accent)]">{formatRupiah(sale.remainingAmount)}</span>
         </div>
@@ -920,7 +912,7 @@ function AddPaymentModal({
               type="number"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
-              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[#16A34A]"
+              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[var(--ink)]"
             />
           </div>
 
@@ -986,7 +978,7 @@ function AddPaymentModal({
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-bold shadow-sm transition-colors cursor-pointer"
+              className="px-5 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
             >
               {loading ? "Menyimpan..." : "Catat & Update Pelunasan"}
             </button>

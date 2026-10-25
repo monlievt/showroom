@@ -77,8 +77,8 @@ export function InvestorPendingPageClient({
           className={cn(
             "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-sm transition-all",
             feedback.type === "success"
-              ? "bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]"
-              : "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
+              : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
           )}
         >
           <span>{feedback.message}</span>
@@ -103,12 +103,12 @@ export function InvestorPendingPageClient({
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Unit Siap Dibagi Laba</span>
-            <HeartHandshake className="w-4 h-4 text-amber-600" />
+            <HeartHandshake className="w-4 h-4 text-[var(--accent)]" />
           </div>
           <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {pendingSales.length} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
           </div>
-          <p className="text-xs text-amber-700 font-medium">Lunas 100% & menunggu eksekusi</p>
+          <p className="text-xs text-[var(--muted)] font-medium">Lunas 100% &amp; menunggu eksekusi</p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
@@ -125,20 +125,20 @@ export function InvestorPendingPageClient({
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Laba Investor</span>
-            <TrendingUp className="w-4 h-4 text-emerald-600" />
+            <TrendingUp className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-emerald-700 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalInvestorProfit)}
           </div>
-          <p className="text-xs text-[var(--muted)]">Total dibagikan ke mitra & keluarga</p>
+          <p className="text-xs text-[var(--muted)]">Total dibagikan ke mitra &amp; keluarga</p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-[var(--line)] shadow-xs space-y-1">
           <div className="flex items-center justify-between text-[var(--muted)]">
             <span className="text-[11px] font-bold uppercase tracking-wider">Total Laba Owner</span>
-            <Building className="w-4 h-4 text-blue-600" />
+            <Building className="w-4 h-4 text-[var(--accent)]" />
           </div>
-          <div className="text-2xl font-black text-blue-700 tracking-tight">
+          <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
             {formatRupiah(summary.totalOwnerProfit)}
           </div>
           <p className="text-xs text-[var(--muted)]">Bagian hasil bersih pengelola showroom</p>
@@ -156,14 +156,14 @@ export function InvestorPendingPageClient({
               Sesuai SOP, bagi hasil hanya dieksekusi setelah pembayaran pembeli <strong>lunas 100%</strong>.
             </p>
           </div>
-          <span className="bg-amber-100 text-amber-800 text-xs px-3 py-1 rounded-full font-bold">
+          <span className="bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] text-xs px-3 py-1 rounded-full font-bold">
             {pendingSales.length} Unit Siap
           </span>
         </div>
 
         {pendingSales.length === 0 ? (
           <div className="p-12 text-center text-[var(--muted)] space-y-2">
-            <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto opacity-80" />
+            <CheckCircle2 className="w-10 h-10 text-[var(--accent)] mx-auto opacity-80" />
             <p className="text-sm font-bold text-[var(--ink)]">Semua unit terjual sudah didistribusikan labanya</p>
             <p className="text-xs text-[var(--muted)]">Tidak ada antrean pembagian laba yang tertunda saat ini.</p>
           </div>
@@ -198,7 +198,7 @@ export function InvestorPendingPageClient({
                       <span
                         className={cn(
                           "font-bold",
-                          s.grossProfit >= 0 ? "text-emerald-700" : "text-rose-700"
+                          s.grossProfit >= 0 ? "text-[var(--ink)]" : "text-[var(--bad)]"
                         )}
                       >
                         {formatRupiah(s.grossProfit)}
