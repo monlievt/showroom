@@ -23,7 +23,8 @@ import {
   LayoutDashboard, 
   History,
   Menu,
-  X
+  X,
+  BarChart3
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/actions/auth";
@@ -224,6 +225,30 @@ export function AdminSidebar({
             )}
           />
           {!collapsed && <span className="truncate">Arsip & Benchmark</span>}
+        </Link>
+      )}
+
+      {/* 4c. Analitik & Perputaran Unit */}
+      {!isSales && (
+        <Link
+          href="/admin/analytics"
+          onClick={onLinkClick}
+          title={collapsed ? "Analitik & Perputaran" : undefined}
+          className={cn(
+            "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group",
+            pathname.startsWith("/admin/analytics")
+              ? "bg-[var(--accent)] text-white shadow-xs font-semibold"
+              : "text-[var(--ink)] hover:bg-[var(--line)]/50",
+            collapsed && "justify-center px-0"
+          )}
+        >
+          <BarChart3
+            className={cn(
+              "w-4 h-4 shrink-0",
+              pathname.startsWith("/admin/analytics") ? "text-white" : "text-[var(--muted)] group-hover:text-[var(--ink)]"
+            )}
+          />
+          {!collapsed && <span className="truncate">Analitik &amp; Perputaran</span>}
         </Link>
       )}
 

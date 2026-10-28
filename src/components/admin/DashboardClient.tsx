@@ -1553,16 +1553,25 @@ export function DashboardClient({
               </p>
             </div>
           </div>
-          <span
-            className={cn(
-              "text-[10px] font-bold px-2.5 py-1 rounded-full border",
-              data.businessPatterns.totalHistoricalVehicles >= 5
-                ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
-                : "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
-            )}
-          >
-            {data.businessPatterns.dataQualityNote.startsWith("✅") ? "✅ Data Andal" : "⚠️ Butuh Lebih Banyak Data"}
-          </span>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/admin/analytics"
+              className="text-xs font-bold text-[var(--accent)] hover:text-[var(--accent-hover)] bg-white hover:bg-[var(--bg)] border border-[var(--line)] px-3 py-1.5 rounded-xl shadow-2xs flex items-center gap-1.5 transition-colors"
+            >
+              <span>Buka Timeline &amp; Analitik Lengkap</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <span
+              className={cn(
+                "text-[10px] font-bold px-2.5 py-1 rounded-full border hidden sm:inline-block",
+                data.businessPatterns.totalHistoricalVehicles >= 5
+                  ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
+                  : "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
+              )}
+            >
+              {data.businessPatterns.dataQualityNote.startsWith("✅") ? "✅ Data Andal" : "⚠️ Butuh Lebih Banyak Data"}
+            </span>
+          </div>
         </div>
 
         <div className="p-5 space-y-5">
