@@ -191,75 +191,262 @@ export function AnalyticsVelocityClient({ initialData }: AnalyticsVelocityClient
         </div>
       </div>
 
-      {/* ── 2. TABBED NAVIGATION ─────────────────────────────────── */}
-      <div className="border-b border-[var(--line)] flex items-center gap-2 overflow-x-auto pb-1">
-        <button
-          onClick={() => setActiveTab("TIMELINE")}
-          className={cn(
-            "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
-            activeTab === "TIMELINE"
-              ? "bg-[var(--ink)] text-white shadow-xs"
-              : "text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)]"
-          )}
-        >
-          <Calendar className="w-4 h-4" />
-          <span>Timeline Siklus Unit (Gantt Beli ➔ Laku)</span>
-          <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-white/20 text-white font-mono">
-            {timeline.length}
+      {/* ── 2. INTERACTIVE BENTO HUB SWITCHER (VARIASI 1) ─────────── */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs text-[var(--muted)] px-1">
+          <span className="font-semibold uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[var(--accent)]" />
+            Pilih Modul Analisis
           </span>
-        </button>
+          <span className="text-[11px] hidden sm:inline-block">Klik kartu untuk berganti modul secara instan</span>
+        </div>
 
-        <button
-          onClick={() => setActiveTab("MATRIX")}
-          className={cn(
-            "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
-            activeTab === "MATRIX"
-              ? "bg-[var(--ink)] text-white shadow-xs"
-              : "text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)]"
-          )}
-        >
-          <Award className="w-4 h-4" />
-          <span>Velocity Matrix (Panduan Kulakan)</span>
-        </button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          {/* Card 1: Timeline Siklus Unit */}
+          <button
+            onClick={() => setActiveTab("TIMELINE")}
+            type="button"
+            className={cn(
+              "text-left p-3.5 sm:p-4 rounded-2xl border transition-all relative flex flex-col justify-between cursor-pointer group",
+              activeTab === "TIMELINE"
+                ? "bg-white border-[var(--accent)] shadow-md ring-2 ring-[var(--accent)]/20"
+                : "bg-white border-[var(--line)] hover:border-[var(--muted)]/50 hover:bg-[var(--bg)]/60 shadow-2xs"
+            )}
+          >
+            <div>
+              <div className="flex items-center justify-between">
+                <div
+                  className={cn(
+                    "w-8 h-8 rounded-xl flex items-center justify-center transition-colors",
+                    activeTab === "TIMELINE"
+                      ? "bg-[var(--accent)] text-white shadow-2xs"
+                      : "bg-[var(--bg)] text-[var(--accent)] group-hover:bg-white"
+                  )}
+                >
+                  <Calendar className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)]">
+                  {timeline.length} Unit
+                </span>
+              </div>
+              <div className="mt-2.5">
+                <div className="text-xs sm:text-sm font-extrabold text-[var(--ink)] tracking-tight">
+                  Timeline Beli ➔ Laku
+                </div>
+                <p className="text-[11px] text-[var(--muted)] mt-0.5 line-clamp-1">
+                  Gantt chart jejak tanggal &amp; durasi
+                </p>
+              </div>
+            </div>
 
-        <button
-          onClick={() => setActiveTab("FUNNEL")}
-          className={cn(
-            "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
-            activeTab === "FUNNEL"
-              ? "bg-[var(--ink)] text-white shadow-xs"
-              : "text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)]"
-          )}
-        >
-          <Layers className="w-4 h-4" />
-          <span>Lead Time &amp; Bottleneck Garasi</span>
-        </button>
+            <div className="mt-3 pt-2 border-t border-[var(--line)] flex items-center justify-between text-[10px]">
+              <span
+                className={cn(
+                  "font-bold",
+                  activeTab === "TIMELINE" ? "text-[var(--accent)]" : "text-[var(--muted)]"
+                )}
+              >
+                {activeTab === "TIMELINE" ? "● Sedang Aktif" : "Buka Gantt Chart →"}
+              </span>
+            </div>
+          </button>
 
-        <button
-          onClick={() => setActiveTab("TREND")}
-          className={cn(
-            "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
-            activeTab === "TREND"
-              ? "bg-[var(--ink)] text-white shadow-xs"
-              : "text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)]"
-          )}
-        >
-          <BarChart3 className="w-4 h-4" />
-          <span>Tren Musiman (12 Bulan)</span>
-        </button>
+          {/* Card 2: Velocity Matrix */}
+          <button
+            onClick={() => setActiveTab("MATRIX")}
+            type="button"
+            className={cn(
+              "text-left p-3.5 sm:p-4 rounded-2xl border transition-all relative flex flex-col justify-between cursor-pointer group",
+              activeTab === "MATRIX"
+                ? "bg-white border-[var(--ok)] shadow-md ring-2 ring-[var(--ok)]/20"
+                : "bg-white border-[var(--line)] hover:border-[var(--muted)]/50 hover:bg-[var(--bg)]/60 shadow-2xs"
+            )}
+          >
+            <div>
+              <div className="flex items-center justify-between">
+                <div
+                  className={cn(
+                    "w-8 h-8 rounded-xl flex items-center justify-center transition-colors",
+                    activeTab === "MATRIX"
+                      ? "bg-[var(--ok)] text-white shadow-2xs"
+                      : "bg-[var(--bg)] text-[var(--ok)] group-hover:bg-white"
+                  )}
+                >
+                  <Award className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)]">
+                  {velocityMatrix.length} Tipe
+                </span>
+              </div>
+              <div className="mt-2.5">
+                <div className="text-xs sm:text-sm font-extrabold text-[var(--ink)] tracking-tight">
+                  Matriks Kulakan Cuan
+                </div>
+                <p className="text-[11px] text-[var(--muted)] mt-0.5 line-clamp-1">
+                  Peringkat fast cash &amp; margin tebal
+                </p>
+              </div>
+            </div>
 
-        <button
-          onClick={() => setActiveTab("SIMULATOR")}
-          className={cn(
-            "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shrink-0 cursor-pointer",
-            activeTab === "SIMULATOR"
-              ? "bg-[var(--accent)] text-white shadow-xs"
-              : "text-[var(--accent)] hover:bg-[var(--accent)]/10"
-          )}
-        >
-          <Calculator className="w-4 h-4" />
-          <span>Simulasi Efisiensi Modal</span>
-        </button>
+            <div className="mt-3 pt-2 border-t border-[var(--line)] flex items-center justify-between text-[10px]">
+              <span
+                className={cn(
+                  "font-bold",
+                  activeTab === "MATRIX" ? "text-[var(--ok)]" : "text-[var(--muted)]"
+                )}
+              >
+                {activeTab === "MATRIX" ? "● Sedang Aktif" : "Buka Rekomendasi →"}
+              </span>
+            </div>
+          </button>
+
+          {/* Card 3: Bottleneck Garasi */}
+          <button
+            onClick={() => setActiveTab("FUNNEL")}
+            type="button"
+            className={cn(
+              "text-left p-3.5 sm:p-4 rounded-2xl border transition-all relative flex flex-col justify-between cursor-pointer group",
+              activeTab === "FUNNEL"
+                ? "bg-white border-[var(--warn)] shadow-md ring-2 ring-[var(--warn)]/20"
+                : "bg-white border-[var(--line)] hover:border-[var(--muted)]/50 hover:bg-[var(--bg)]/60 shadow-2xs"
+            )}
+          >
+            <div>
+              <div className="flex items-center justify-between">
+                <div
+                  className={cn(
+                    "w-8 h-8 rounded-xl flex items-center justify-center transition-colors",
+                    activeTab === "FUNNEL"
+                      ? "bg-[var(--warn)] text-white shadow-2xs"
+                      : "bg-[var(--bg)] text-[var(--warn)] group-hover:bg-white"
+                  )}
+                >
+                  <Layers className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)]">
+                  4 Alur
+                </span>
+              </div>
+              <div className="mt-2.5">
+                <div className="text-xs sm:text-sm font-extrabold text-[var(--ink)] tracking-tight">
+                  Bottleneck Garasi
+                </div>
+                <p className="text-[11px] text-[var(--muted)] mt-0.5 line-clamp-1">
+                  Waktu terhambat di bengkel / salon
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-3 pt-2 border-t border-[var(--line)] flex items-center justify-between text-[10px]">
+              <span
+                className={cn(
+                  "font-bold",
+                  activeTab === "FUNNEL" ? "text-[var(--warn)]" : "text-[var(--muted)]"
+                )}
+              >
+                {activeTab === "FUNNEL" ? "● Sedang Aktif" : "Cek Titik Macet →"}
+              </span>
+            </div>
+          </button>
+
+          {/* Card 4: Tren Musiman */}
+          <button
+            onClick={() => setActiveTab("TREND")}
+            type="button"
+            className={cn(
+              "text-left p-3.5 sm:p-4 rounded-2xl border transition-all relative flex flex-col justify-between cursor-pointer group",
+              activeTab === "TREND"
+                ? "bg-white border-indigo-600 shadow-md ring-2 ring-indigo-600/20"
+                : "bg-white border-[var(--line)] hover:border-[var(--muted)]/50 hover:bg-[var(--bg)]/60 shadow-2xs"
+            )}
+          >
+            <div>
+              <div className="flex items-center justify-between">
+                <div
+                  className={cn(
+                    "w-8 h-8 rounded-xl flex items-center justify-center transition-colors",
+                    activeTab === "TREND"
+                      ? "bg-indigo-600 text-white shadow-2xs"
+                      : "bg-[var(--bg)] text-indigo-600 group-hover:bg-white"
+                  )}
+                >
+                  <BarChart3 className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)]">
+                  12 Bulan
+                </span>
+              </div>
+              <div className="mt-2.5">
+                <div className="text-xs sm:text-sm font-extrabold text-[var(--ink)] tracking-tight">
+                  Tren Musiman
+                </div>
+                <p className="text-[11px] text-[var(--muted)] mt-0.5 line-clamp-1">
+                  Pola ramai vs sepi bulan ke bulan
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-3 pt-2 border-t border-[var(--line)] flex items-center justify-between text-[10px]">
+              <span
+                className={cn(
+                  "font-bold",
+                  activeTab === "TREND" ? "text-indigo-600" : "text-[var(--muted)]"
+                )}
+              >
+                {activeTab === "TREND" ? "● Sedang Aktif" : "Buka Grafik Tren →"}
+              </span>
+            </div>
+          </button>
+
+          {/* Card 5: Simulasi Modal */}
+          <button
+            onClick={() => setActiveTab("SIMULATOR")}
+            type="button"
+            className={cn(
+              "text-left p-3.5 sm:p-4 rounded-2xl border transition-all relative flex flex-col justify-between cursor-pointer group",
+              activeTab === "SIMULATOR"
+                ? "bg-white border-[var(--accent)] shadow-md ring-2 ring-[var(--accent)]/20"
+                : "bg-white border-[var(--line)] hover:border-[var(--muted)]/50 hover:bg-[var(--bg)]/60 shadow-2xs"
+            )}
+          >
+            <div>
+              <div className="flex items-center justify-between">
+                <div
+                  className={cn(
+                    "w-8 h-8 rounded-xl flex items-center justify-center transition-colors",
+                    activeTab === "SIMULATOR"
+                      ? "bg-[var(--accent)] text-white shadow-2xs"
+                      : "bg-[var(--bg)] text-[var(--accent)] group-hover:bg-white"
+                  )}
+                >
+                  <Calculator className="w-4 h-4" />
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-[var(--ok)] border border-emerald-200">
+                  ROI Kas
+                </span>
+              </div>
+              <div className="mt-2.5">
+                <div className="text-xs sm:text-sm font-extrabold text-[var(--ink)] tracking-tight">
+                  Simulasi Efisiensi
+                </div>
+                <p className="text-[11px] text-[var(--muted)] mt-0.5 line-clamp-1">
+                  Pangkas hari garasi = cuan ekstra
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-3 pt-2 border-t border-[var(--line)] flex items-center justify-between text-[10px]">
+              <span
+                className={cn(
+                  "font-bold",
+                  activeTab === "SIMULATOR" ? "text-[var(--accent)]" : "text-[var(--muted)]"
+                )}
+              >
+                {activeTab === "SIMULATOR" ? "● Sedang Aktif" : "Mulai Simulasi →"}
+              </span>
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* ── 3. TAB CONTENT ───────────────────────────────────────── */}
