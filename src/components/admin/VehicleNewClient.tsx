@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -27,52 +27,64 @@ import {
   RotateCcw,
   CalendarClock,
   Truck,
+  ExternalLink,
 } from "lucide-react";
 import { createVehicleAction } from "@/app/actions/vehicle";
+import { getAuctionHousesAction, AuctionHouseItem } from "@/app/actions/auction-house";
 import { cn, formatThousands, parseThousands } from "@/lib/utils";
 
-// AUCTION PRESETS
+// AUCTION PRESETS (Default Bersih Tanpa Keterangan Berlebih)
 const AUCTION_HOUSE_PRESETS: Record<
   string,
   { label: string; bpkbLeadDays: number; notes: string }
 > = {
   JBA: {
-    label: "JBA (Japan Best Auto)",
+    label: "JBA",
     bpkbLeadDays: 14,
-    notes: "BPKB rata-rata 14 hari kerja",
+    notes: "Estimasi BPKB ~14 hari kerja",
   },
   AUKSI: {
-    label: "AUKSI (Mobil88/Garansindo)",
+    label: "AUKSI",
     bpkbLeadDays: 7,
-    notes: "BPKB cepat ~7 hari kerja",
+    notes: "Estimasi BPKB ~7 hari kerja",
   },
   IBID: {
-    label: "IBID (Graha Buana/Astra)",
+    label: "IBID",
     bpkbLeadDays: 10,
-    notes: "BPKB teratur ~10 hari kerja",
+    notes: "Estimasi BPKB ~10 hari kerja",
   },
   SMARTBID: {
     label: "SmartBid",
     bpkbLeadDays: 30,
-    notes: "BPKB agak lama ~30 hari kerja",
+    notes: "Estimasi BPKB ~30 hari kerja",
   },
   ADIRA: {
     label: "Adira Auction",
     bpkbLeadDays: 21,
-    notes: "BPKB berkisar ~21 hari kerja",
+    notes: "Estimasi BPKB ~21 hari kerja",
   },
   "BCA FINANCE": {
     label: "BCA Finance Auction",
     bpkbLeadDays: 14,
-    notes: "BPKB ~14 hari kerja",
+    notes: "Estimasi BPKB ~14 hari kerja",
   },
   "STAR AUCTION": {
     label: "Star Auction",
     bpkbLeadDays: 14,
-    notes: "BPKB ~14 hari kerja",
+    notes: "Estimasi BPKB ~14 hari kerja",
+  },
+  CAREADY: {
+    label: "Caready",
+    bpkbLeadDays: 14,
+    notes: "Estimasi BPKB ~14 hari kerja",
+  },
+  LEGOAS: {
+    label: "Legoas",
+    bpkbLeadDays: 14,
+    notes: "Estimasi BPKB ~14 hari kerja",
   },
   LAINNYA: {
-    label: "Balai Lelang Lainnya",
+    label: "Balai Lelang Lainnya (Ketik Manual)",
     bpkbLeadDays: 14,
     notes: "Tentukan estimasi secara manual",
   },
@@ -121,6 +133,15 @@ export function VehicleNewClient() {
   const [auctionAdminFee, setAuctionAdminFee] = useState<number>(3000000);
   const [transportPickupFee, setTransportPickupFee] = useState<number>(0);
   const [transportVendor, setTransportVendor] = useState("");
+  const [auctionHouses, setAuctionHouses] = useState<AuctionHouseItem[]>([]);
+
+  useEffect(() => {
+    getAuctionHousesAction().then((list) => {
+      if (list && list.length > 0) {
+        setAuctionHouses(list);
+      }
+    });
+  }, []);
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -182,11 +203,16 @@ export function VehicleNewClient() {
   };
 
   const handleAuctionHouseChange = (house: string) => {
+    const found = auctionHouses.find(
+      (a) => a.name.toLowerCase() === house.toLowerCase() || a.id.toLowerCase() === house.toLowerCase()
+    );
     const preset = AUCTION_HOUSE_PRESETS[house];
+    const days = found ? found.bpkbLeadDays : preset?.bpkbLeadDays ?? 14;
+
     setFormData((prev) => ({
       ...prev,
       auctionHouse: house,
-      bpkbLeadDays: preset?.bpkbLeadDays ?? 14,
+      bpkbLeadDays: days,
     }));
   };
 
@@ -393,19 +419,35 @@ export function VehicleNewClient() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                  Pilihan Balai Lelang
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-[var(--ink)]">
+                    Pilihan Balai Lelang
+                  </label>
+                  <Link
+                    href="/admin/settings"
+                    target="_blank"
+                    className="text-[11px] font-bold text-[var(--accent)] hover:underline flex items-center gap-1"
+                  >
+                    <span>Kelola Balai Lelang ↗</span>
+                  </Link>
+                </div>
                 <select
                   value={formData.auctionHouse}
                   onChange={(e) => handleAuctionHouseChange(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
-                  {Object.entries(AUCTION_HOUSE_PRESETS).map(([key, val]) => (
-                    <option key={key} value={key}>
-                      {val.label}
-                    </option>
-                  ))}
+                  {auctionHouses.length > 0
+                    ? auctionHouses.map((item) => (
+                        <option key={item.id} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))
+                    : Object.entries(AUCTION_HOUSE_PRESETS).map(([key, val]) => (
+                        <option key={key} value={val.label}>
+                          {val.label}
+                        </option>
+                      ))}
+                  <option value="LAINNYA">Balai Lelang Lainnya (Ketik Manual)</option>
                 </select>
                 {currentPreset && (
                   <p className="text-[11px] text-[var(--muted)] mt-1.5 font-medium">
@@ -439,21 +481,10 @@ export function VehicleNewClient() {
                   }
                   className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
                 >
-                  <option value="EKS_PERUSAHAAN">
-                    Eks Perusahaan ✅ (BPKB bersih, 7-14 hari)
-                  </option>
-                  <option value="EKS_TARIKAN_LEASING">
-                    Eks Tarikan Leasing ⚠️ (BPKB 14-30 hari)
-                  </option>
-                  <option value="UNKNOWN">
-                    Belum Konfirmasi / Lainnya
-                  </option>
+                  <option value="EKS_PERUSAHAAN">Eks Perusahaan</option>
+                  <option value="EKS_TARIKAN_LEASING">Eks Tarikan Leasing</option>
+                  <option value="UNKNOWN">Lainnya / Belum Konfirmasi</option>
                 </select>
-                {formData.auctionLotType === "EKS_TARIKAN_LEASING" && (
-                  <p className="text-[11px] text-[var(--muted)] mt-1.5 font-semibold">
-                    ⚠️ Eks Leasing: Pastikan STNK & surat pelepasan hak lengkap.
-                  </p>
-                )}
               </div>
 
               <div>

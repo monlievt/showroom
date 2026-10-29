@@ -4,16 +4,17 @@ import { AdminHeader } from "@/components/admin/AdminHeader";
 import { SettingsClient } from "@/components/admin/SettingsClient";
 import { getSystemSettingsAction } from "@/app/actions/setting";
 import { getAllWhatsAppContactsAction } from "@/app/actions/contact";
+import { getAuctionHousesAction } from "@/app/actions/auction-house";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Sistem & Kunci API | Nur Mobil Admin",
-  description: "Pengaturan Kunci API Gemini, Google reCAPTCHA, Telegram Bot, WhatsApp Gateway, dan audit log.",
+  description: "Pengaturan Kunci API Gemini, Google reCAPTCHA, Telegram Bot, WhatsApp Gateway, master balai lelang, dan audit log.",
 };
 
 export default async function SettingsPage() {
-  const [logs, auditLogs, settingsRes, contactsRes] = await Promise.all([
+  const [logs, auditLogs, settingsRes, contactsRes, auctionHouses] = await Promise.all([
     prisma.notificationLog.findMany({
       orderBy: { createdAt: "desc" },
       take: 100,
@@ -24,6 +25,7 @@ export default async function SettingsPage() {
     }),
     getSystemSettingsAction(),
     getAllWhatsAppContactsAction(),
+    getAuctionHousesAction(),
   ]);
 
   return (
@@ -58,6 +60,7 @@ export default async function SettingsPage() {
           }))}
           initialSettings={settingsRes.data || []}
           initialContacts={contactsRes.data || []}
+          initialAuctionHouses={auctionHouses}
         />
       </main>
     </div>

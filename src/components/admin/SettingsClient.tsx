@@ -23,13 +23,16 @@ import {
   Copy,
   Check,
   Phone,
+  Gavel,
 } from "lucide-react";
 import { formatDate, cn } from "@/lib/utils";
 import { retryNotificationLog } from "@/lib/services/whatsapp";
 import { sendTestWhatsAppAction } from "@/app/actions/notification";
 import { SettingItem } from "@/app/actions/setting";
+import { AuctionHouseItem } from "@/app/actions/auction-house";
 import { ApiKeySettingsClient } from "./ApiKeySettingsClient";
 import { WhatsAppContactsSettingsClient } from "./WhatsAppContactsSettingsClient";
+import { AuctionHousesSettingsClient } from "./AuctionHousesSettingsClient";
 import { WhatsAppAdminContact } from "@/lib/utils/whatsapp";
 import { KeyRound } from "lucide-react";
 
@@ -57,6 +60,7 @@ interface SettingsProps {
   }>;
   initialSettings?: SettingItem[];
   initialContacts?: WhatsAppAdminContact[];
+  initialAuctionHouses?: AuctionHouseItem[];
 }
 
 export function SettingsClient({
@@ -64,9 +68,10 @@ export function SettingsClient({
   auditLogs,
   initialSettings = [],
   initialContacts = [],
+  initialAuctionHouses = [],
 }: SettingsProps) {
   const [activeTab, setActiveTab] = useState<
-    "api_keys" | "whatsapp_contacts" | "notifications" | "audit" | "backup"
+    "api_keys" | "auction_houses" | "whatsapp_contacts" | "notifications" | "audit" | "backup"
   >("api_keys");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [typeFilter, setTypeFilter] = useState("ALL");
@@ -229,6 +234,18 @@ export function SettingsClient({
           <span>Kunci API & Integrasi Layanan</span>
         </button>
         <button
+          onClick={() => setActiveTab("auction_houses")}
+          className={cn(
+            "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
+            activeTab === "auction_houses"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
+          )}
+        >
+          <Gavel className="w-4 h-4 text-[var(--accent)]" />
+          <span>Master Balai Lelang ({initialAuctionHouses.length})</span>
+        </button>
+        <button
           onClick={() => setActiveTab("whatsapp_contacts")}
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
@@ -278,6 +295,11 @@ export function SettingsClient({
       {/* TAB 0: KUNCI API & INTEGRASI */}
       {activeTab === "api_keys" && (
         <ApiKeySettingsClient initialSettings={initialSettings} />
+      )}
+
+      {/* TAB: MASTER BALAI LELANG */}
+      {activeTab === "auction_houses" && (
+        <AuctionHousesSettingsClient initialAuctionHouses={initialAuctionHouses} />
       )}
 
       {/* TAB: KONTAK WHATSAPP ADMIN */}
