@@ -38,6 +38,9 @@ export const createVehicleSchema = z.object({
   sourceType: SourceTypeEnum.default("AUCTION"),
   auctionHouse: z.string().optional().nullable(),
   auctionLotType: AuctionLotTypeEnum.optional().nullable(),
+  auctionAdminFee: z.coerce.number().nonnegative().optional().nullable(),
+  transportPickupFee: z.coerce.number().nonnegative().optional().nullable(),
+  transportVendor: z.string().optional().nullable(),
   purchasePrice: z.coerce
     .number()
     .positive("Harga beli harus lebih besar dari 0"),

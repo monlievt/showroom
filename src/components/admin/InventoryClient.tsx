@@ -1295,17 +1295,27 @@ function AddExpenseModal({
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
+              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-semibold text-[var(--ink)]"
             >
-              <option value="AUCTION_ADMIN_FEE">Biaya Admin Lelang Resmi</option>
-              <option value="BROKER_COMMISSION">Komisi Makelar / Mediator</option>
-              <option value="OIL_AND_SERVICE">Servis Mesin &amp; Ganti Oli</option>
-              <option value="BODY_PAINT">Cat Bodi &amp; Ketok Spet</option>
-              <option value="DETAILING_SALON">Salon, Poles, Cuci Kolong</option>
-              <option value="SPAREPARTS">Penggantian Sparepart</option>
-              <option value="DOCUMENT_TAX_MUTATION">Pajak, STNK &amp; Cabut Berkas Mutasi</option>
-              <option value="TRANSPORT_PICKUP">Ongkos Angkut / Towing</option>
-              <option value="OTHER">Lain-lain</option>
+              <optgroup label="Pengadaan & Logistik Awal (Landed Cost)">
+                <option value="AUCTION_ADMIN_FEE">Biaya Admin Lelang Resmi</option>
+                <option value="TRANSPORT_PICKUP">Ongkos Angkut / Towing / Biaya Ambil Unit</option>
+                <option value="BROKER_COMMISSION">Komisi Makelar / Mediator</option>
+              </optgroup>
+              <optgroup label="Perbaikan & Restorasi (Maintenance)">
+                <option value="BODY_PAINT">Cat Bodi &amp; Ketok Spet</option>
+                <option value="OIL_AND_SERVICE">Servis Mesin &amp; Ganti Oli</option>
+                <option value="DETAILING_SALON">Salon, Poles, Cuci Kolong</option>
+                <option value="SPAREPARTS">Penggantian Sparepart &amp; Kaki-kaki</option>
+                <option value="TIRES_AND_WHEELS">Ganti Ban, Spooring &amp; Balancing</option>
+                <option value="ELECTRICAL">Kelistrikan, Audio &amp; AC</option>
+              </optgroup>
+              <optgroup label="Legalitas & Dokumen">
+                <option value="DOCUMENT_TAX_MUTATION">Pajak, STNK &amp; Cabut Berkas Mutasi</option>
+              </optgroup>
+              <optgroup label="Lainnya">
+                <option value="OTHER">Lain-lain / Operasional</option>
+              </optgroup>
             </select>
           </div>
 

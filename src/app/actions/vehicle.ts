@@ -217,6 +217,64 @@ export async function createVehicleAction(input: CreateVehicleInput) {
         },
       });
 
+      let currentRunningBalance = newBalance;
+
+      // 4b. Jika ada Biaya Admin Balai Lelang saat intake, catat otomatis ke Expense & CashTransaction
+      if (validated.auctionAdminFee && validated.auctionAdminFee > 0) {
+        currentRunningBalance -= validated.auctionAdminFee;
+        const adminExpense = await tx.expense.create({
+          data: {
+            vehicleId: vehicle.id,
+            category: "AUCTION_ADMIN_FEE",
+            vendorName: validated.auctionHouse || "Balai Lelang",
+            amount: validated.auctionAdminFee,
+            date: validated.purchaseDate,
+            notes: "Biaya admin resmi balai lelang saat menang palu",
+            createdBy: "Owner/Admin",
+          },
+        });
+
+        await tx.cashTransaction.create({
+          data: {
+            type: "OUT_EXPENSE",
+            amount: validated.auctionAdminFee,
+            relatedVehicleId: vehicle.id,
+            relatedExpenseId: adminExpense.id,
+            runningBalance: currentRunningBalance,
+            notes: `Biaya admin lelang ${validated.auctionHouse || ""} untuk ${vehicle.plateNumber}`,
+            createdBy: "Owner/Admin",
+          },
+        });
+      }
+
+      // 4c. Jika ada Biaya Ambil / Driver / Towing saat intake, catat otomatis ke Expense & CashTransaction
+      if (validated.transportPickupFee && validated.transportPickupFee > 0) {
+        currentRunningBalance -= validated.transportPickupFee;
+        const transportExpense = await tx.expense.create({
+          data: {
+            vehicleId: vehicle.id,
+            category: "TRANSPORT_PICKUP",
+            vendorName: validated.transportVendor || "Driver / Ekspedisi Towing",
+            amount: validated.transportPickupFee,
+            date: validated.purchaseDate,
+            notes: `Biaya ambil/towing unit (${validated.transportVendor || "Driver/Ekspedisi"})`,
+            createdBy: "Owner/Admin",
+          },
+        });
+
+        await tx.cashTransaction.create({
+          data: {
+            type: "OUT_EXPENSE",
+            amount: validated.transportPickupFee,
+            relatedVehicleId: vehicle.id,
+            relatedExpenseId: transportExpense.id,
+            runningBalance: currentRunningBalance,
+            notes: `Ongkos ambil/towing unit ${vehicle.plateNumber} (${validated.transportVendor || "Driver"})`,
+            createdBy: "Owner/Admin",
+          },
+        });
+      }
+
       // 5. Tulis AuditLog
       await tx.auditLog.create({
         data: {

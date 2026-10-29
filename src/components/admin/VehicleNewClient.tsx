@@ -26,6 +26,7 @@ import {
   Printer,
   RotateCcw,
   CalendarClock,
+  Truck,
 } from "lucide-react";
 import { createVehicleAction } from "@/app/actions/vehicle";
 import { cn, formatThousands, parseThousands } from "@/lib/utils";
@@ -116,6 +117,11 @@ export function VehicleNewClient() {
     audioUnit: "ORIGINAL" as "ORIGINAL" | "MODIFIED" | "BROKEN_OR_NONE",
   });
 
+  const [customAuctionHouse, setCustomAuctionHouse] = useState("");
+  const [auctionAdminFee, setAuctionAdminFee] = useState<number>(3000000);
+  const [transportPickupFee, setTransportPickupFee] = useState<number>(0);
+  const [transportVendor, setTransportVendor] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -167,6 +173,10 @@ export function VehicleNewClient() {
       cabinMats: true,
       audioUnit: "ORIGINAL",
     });
+    setCustomAuctionHouse("");
+    setAuctionAdminFee(3000000);
+    setTransportPickupFee(0);
+    setTransportVendor("");
     setSuccessMsg("");
     setErrorMsg("");
   };
@@ -186,8 +196,18 @@ export function VehicleNewClient() {
     setErrorMsg("");
 
     try {
+      const finalAuctionHouse = isAuction
+        ? formData.auctionHouse === "LAINNYA" && customAuctionHouse.trim()
+          ? customAuctionHouse.trim()
+          : formData.auctionHouse
+        : undefined;
+
       const res = await createVehicleAction({
         ...formData,
+        auctionHouse: finalAuctionHouse,
+        auctionAdminFee: isAuction ? (Number(auctionAdminFee) || 0) : 0,
+        transportPickupFee: Number(transportPickupFee) || 0,
+        transportVendor: transportVendor.trim() || undefined,
         year: Number(formData.year),
         odometer: Number(formData.odometer),
         engineCapacity: Number(formData.engineCapacity),
@@ -391,6 +411,20 @@ export function VehicleNewClient() {
                   <p className="text-[11px] text-[var(--muted)] mt-1.5 font-medium">
                     📌 {currentPreset.notes}
                   </p>
+                )}
+                {formData.auctionHouse === "LAINNYA" && (
+                  <div className="mt-2.5">
+                    <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                      Ketik Nama Balai Lelang Kustom *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Contoh: Caready, Legoas, Hybid, Balai Lelang Mandiri..."
+                      value={customAuctionHouse}
+                      onChange={(e) => setCustomAuctionHouse(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                    />
+                  </div>
                 )}
               </div>
 
@@ -823,6 +857,90 @@ export function VehicleNewClient() {
               <span className="text-[10px] text-[var(--muted)] mt-1 block">
                 Pedoman batas tawar untuk tim sales
               </span>
+            </div>
+          </div>
+
+          {/* Biaya Pengadaan & Logistik Awal (Admin Lelang & Ongkos Jemput/Towing) */}
+          <div className="pt-3 border-t border-[var(--line)] space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+              <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
+                <Truck className="w-3.5 h-3.5 text-[var(--accent)]" />
+                Biaya Pengadaan Awal &amp; Logistik (Landed Cost Langsung Masuk HPP)
+              </span>
+              <span className="text-[11px] text-[var(--muted)]">
+                Otomatis dicatat ke buku kas &amp; HPP unit tanpa perlu input ulang
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {isAuction && (
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
+                    Biaya Admin Balai Lelang (Rp)
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="Contoh: 3.000.000"
+                    value={auctionAdminFee ? formatThousands(auctionAdminFee) : ""}
+                    onChange={(e) => setAuctionAdminFee(parseThousands(e.target.value))}
+                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                  />
+                  <span className="text-[10px] text-[var(--muted)] mt-1 block">
+                    Standar balai lelang: Rp 3jt - 5jt
+                  </span>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
+                  Biaya Ambil / Driver / Towing (Rp)
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="Contoh: 2.200.000 (Jkt) / 1.000.000 (Smg)"
+                  value={transportPickupFee ? formatThousands(transportPickupFee) : ""}
+                  onChange={(e) => setTransportPickupFee(parseThousands(e.target.value))}
+                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                />
+                <span className="text-[10px] text-[var(--muted)] mt-1 block">
+                  Bisa global driver atau estimasi tiket/BBM/tol
+                </span>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
+                  Keterangan Driver / Rute Pengambilan
+                </label>
+                <input
+                  type="text"
+                  placeholder="Contoh: Driver Mas Budi (Jakarta) / Ambil Sendiri"
+                  value={transportVendor}
+                  onChange={(e) => setTransportVendor(e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                />
+                <span className="text-[10px] text-[var(--muted)] mt-1 block">
+                  Nama driver atau vendor towing
+                </span>
+              </div>
+            </div>
+
+            {/* Rincian Kalkulasi HPP Pengadaan Awal */}
+            <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[var(--muted)]">Harga Beli: <strong>Rp {formatThousands(formData.purchasePrice || 0)}</strong></span>
+                {isAuction && (
+                  <span className="text-[var(--muted)]">+ Admin Lelang: <strong>Rp {formatThousands(auctionAdminFee || 0)}</strong></span>
+                )}
+                <span className="text-[var(--muted)]">+ Biaya Ambil: <strong>Rp {formatThousands(transportPickupFee || 0)}</strong></span>
+              </div>
+              <div className="text-right">
+                <span className="text-[11px] text-[var(--muted)] mr-1.5 font-bold">Total HPP Awal:</span>
+                <span className="text-sm font-black text-[var(--ink)]">
+                  Rp {formatThousands((formData.purchasePrice || 0) + (isAuction ? (auctionAdminFee || 0) : 0) + (transportPickupFee || 0))}
+                </span>
+              </div>
             </div>
           </div>
         </div>

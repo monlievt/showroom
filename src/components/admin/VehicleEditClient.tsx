@@ -88,6 +88,10 @@ interface VehicleEditClientProps {
 export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleEditClientProps) {
   const router = useRouter();
 
+  const isKnownPreset = vehicle.auctionHouse ? !!AUCTION_HOUSE_PRESETS[vehicle.auctionHouse] : true;
+  const initialAuctionHouseKey = isKnownPreset ? (vehicle.auctionHouse || "JBA") : "LAINNYA";
+  const [customAuctionHouse, setCustomAuctionHouse] = useState(isKnownPreset ? "" : (vehicle.auctionHouse || ""));
+
   const [formData, setFormData] = useState({
     plateNumber: vehicle.plateNumber || "",
     brand: vehicle.brand || "",
@@ -98,7 +102,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
     transmission: vehicle.transmission || "AUTOMATIC",
     engineCapacity: vehicle.engineCapacity ?? 1500,
     sourceType: vehicle.sourceType || "AUCTION",
-    auctionHouse: vehicle.auctionHouse || "JBA",
+    auctionHouse: initialAuctionHouseKey,
     auctionLotType: vehicle.auctionLotType || "EKS_PERUSAHAAN",
     purchasePrice: vehicle.purchasePrice ?? 0,
     purchaseDate: vehicle.purchaseDate
@@ -230,6 +234,12 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
     setSuccessMsg("");
 
     try {
+      const finalAuctionHouse = isAuction
+        ? formData.auctionHouse === "LAINNYA" && customAuctionHouse.trim()
+          ? customAuctionHouse.trim()
+          : formData.auctionHouse
+        : null;
+
       const res = await updateVehicleAction(vehicle.id, {
         plateNumber: formData.plateNumber,
         brand: formData.brand,
@@ -240,7 +250,7 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
         transmission: formData.transmission as any,
         engineCapacity: Number(formData.engineCapacity),
         sourceType: formData.sourceType as any,
-        auctionHouse: isAuction ? formData.auctionHouse : null,
+        auctionHouse: finalAuctionHouse,
         auctionLotType: isAuction ? (formData.auctionLotType as any) : null,
         purchasePrice: Number(formData.purchasePrice),
         purchaseDate: new Date(formData.purchaseDate),
@@ -459,6 +469,20 @@ export function VehicleEditClient({ vehicle, availableInvestors = [] }: VehicleE
                   <p className="text-[11px] text-[var(--muted)] mt-1.5 font-medium">
                     📌 {currentPreset.notes}
                   </p>
+                )}
+                {formData.auctionHouse === "LAINNYA" && (
+                  <div className="mt-2.5">
+                    <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                      Ketik Nama Balai Lelang Kustom *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Contoh: Caready, Legoas, Hybid, Balai Lelang Mandiri..."
+                      value={customAuctionHouse}
+                      onChange={(e) => setCustomAuctionHouse(e.target.value)}
+                      className="w-full h-11 px-3.5 py-2.5 bg-white border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                    />
+                  </div>
                 )}
               </div>
 

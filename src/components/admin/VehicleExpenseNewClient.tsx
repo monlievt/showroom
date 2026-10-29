@@ -32,15 +32,38 @@ interface VehicleSummary {
   status: string;
 }
 
-const EXPENSE_CATEGORIES = [
-  { value: "OIL_AND_SERVICE", label: "Oli, Tune Up & Servis Rutin" },
-  { value: "BODY_PAINT", label: "Body Repair, Ketok & Cat" },
-  { value: "DETAILING_SALON", label: "Salon Interior, Eksterior & Detailing" },
-  { value: "TIRES_AND_WHEELS", label: "Ganti Ban, Spooring & Balancing" },
-  { value: "DOCUMENT_TAX_MUTATION", label: "Pajak Tahunan, Kaleng, Balik Nama & STNK" },
-  { value: "ELECTRICAL", label: "Kelistrikan, Audio & AC Mobil" },
-  { value: "SPAREPARTS", label: "Penggantian Sparepart & Kaki-kaki" },
-  { value: "OTHER", label: "Biaya Operasional / Lainnya" },
+const EXPENSE_GROUPS = [
+  {
+    group: "Pengadaan & Logistik Awal (Landed Cost)",
+    items: [
+      { value: "AUCTION_ADMIN_FEE", label: "Biaya Admin Lelang Resmi" },
+      { value: "TRANSPORT_PICKUP", label: "Ongkos Angkut / Towing / Biaya Ambil Unit" },
+      { value: "BROKER_COMMISSION", label: "Komisi Makelar / Mediator" },
+    ],
+  },
+  {
+    group: "Perbaikan, Mesin & Salon (Restorasi)",
+    items: [
+      { value: "BODY_PAINT", label: "Body Repair, Ketok & Cat Spet" },
+      { value: "OIL_AND_SERVICE", label: "Oli, Tune Up & Servis Rutin" },
+      { value: "DETAILING_SALON", label: "Salon Interior, Eksterior & Detailing" },
+      { value: "SPAREPARTS", label: "Penggantian Sparepart & Kaki-kaki" },
+      { value: "TIRES_AND_WHEELS", label: "Ganti Ban, Spooring & Balancing" },
+      { value: "ELECTRICAL", label: "Kelistrikan, Audio & AC Mobil" },
+    ],
+  },
+  {
+    group: "Legalitas & Dokumen",
+    items: [
+      { value: "DOCUMENT_TAX_MUTATION", label: "Pajak Tahunan, Kaleng, Balik Nama & STNK" },
+    ],
+  },
+  {
+    group: "Lain-lain",
+    items: [
+      { value: "OTHER", label: "Biaya Operasional / Pengeluaran Lainnya" },
+    ],
+  },
 ];
 
 export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }) {
@@ -108,10 +131,10 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
           </Link>
           <div>
             <h1 className="text-xl font-bold text-[var(--ink)]">
-              Catat Biaya Perbaikan & HPP Unit
+              Catat Biaya Tambahan Unit (HPP)
             </h1>
             <p className="text-xs text-[var(--muted)]">
-              Pengeluaran bengkel, salon, sparepart yang otomatis menambah Harga Pokok Penjualan (HPP).
+              Biaya admin lelang, ongkos ambil/towing, perbaikan bengkel, dan salon yang otomatis menambah Harga Pokok Penjualan (HPP).
             </p>
           </div>
         </div>
@@ -180,7 +203,7 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
           <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
             <Wrench className="w-4 h-4 text-[var(--accent)]" />
             <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
-              Rincian Pengeluaran Servis / Perbaikan
+              Rincian Pengeluaran Biaya Unit (Menambah HPP)
             </h2>
           </div>
 
@@ -195,10 +218,14 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
-                {EXPENSE_CATEGORIES.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
-                  </option>
+                {EXPENSE_GROUPS.map((g) => (
+                  <optgroup key={g.group} label={g.group}>
+                    {g.items.map((c) => (
+                      <option key={c.value} value={c.value}>
+                        {c.label}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
             </div>
@@ -220,11 +247,11 @@ export function VehicleExpenseNewClient({ vehicle }: { vehicle: VehicleSummary }
             <div>
               <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
                 <Store className="w-3.5 h-3.5 text-[var(--muted)]" />
-                <span>Nama Bengkel / Vendor / Toko</span>
+                <span>Nama Balai Lelang / Driver / Bengkel / Toko</span>
               </label>
               <input
                 type="text"
-                placeholder="Contoh: Bengkel Maju Lancar, Toko Aki Jaya..."
+                placeholder="Contoh: Balai Lelang IBID / Driver Mas Budi (Jakarta) / Bengkel Barokah..."
                 value={vendorName}
                 onChange={(e) => setVendorName(e.target.value)}
                 className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
