@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useTransition } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { 
   Plus, 
@@ -91,13 +92,57 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
   const [selectedVehicleForExpense, setSelectedVehicleForExpense] = useState<VehicleItem | null>(null);
   const [selectedVehicleForStatus, setSelectedVehicleForStatus] = useState<VehicleItem | null>(null);
   const [selectedVehicleForMedia, setSelectedVehicleForMedia] = useState<VehicleItem | null>(null);
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<{
+    vehicle: VehicleItem;
+    top?: number;
+    bottom?: number;
+    right: number;
+  } | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = () => setOpenDropdownId(null);
-    window.addEventListener("click", handleClickOutside);
-    return () => window.removeEventListener("click", handleClickOutside);
+    setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!activeDropdown) return;
+
+    const handleClose = () => setActiveDropdown(null);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActiveDropdown(null);
+    };
+
+    window.addEventListener("click", handleClose);
+    window.addEventListener("scroll", handleClose, true);
+    window.addEventListener("resize", handleClose);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("click", handleClose);
+      window.removeEventListener("scroll", handleClose, true);
+      window.removeEventListener("resize", handleClose);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeDropdown]);
+
+  const handleToggleDropdown = (e: React.MouseEvent<HTMLButtonElement>, v: VehicleItem) => {
+    e.stopPropagation();
+    if (activeDropdown?.vehicle.id === v.id) {
+      setActiveDropdown(null);
+    } else {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const dropdownHeight = 360;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const openUpwards = spaceBelow < dropdownHeight && rect.top > dropdownHeight;
+
+      setActiveDropdown({
+        vehicle: v,
+        top: openUpwards ? undefined : rect.bottom + 6,
+        bottom: openUpwards ? window.innerHeight - rect.top + 6 : undefined,
+        right: Math.max(16, window.innerWidth - rect.right),
+      });
+    }
+  };
 
   // Filter calculation
   const filteredVehicles = vehicles.filter((v) => {
@@ -471,127 +516,20 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           </Link>
 
                           {/* 2. Menu Dropdown [Titik Tiga ...] */}
-                          <div className="relative">
+                          <div>
                             <button
                               type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setOpenDropdownId(openDropdownId === vehicle.id ? null : vehicle.id);
-                              }}
+                              onClick={(e) => handleToggleDropdown(e, vehicle)}
                               className={cn(
                                 "p-1.5 rounded-lg border border-[var(--line)] transition-colors cursor-pointer",
-                                openDropdownId === vehicle.id
-                                  ? "bg-[var(--ink)] text-white"
+                                activeDropdown?.vehicle.id === vehicle.id
+                                  ? "bg-[var(--ink)] text-white shadow-xs"
                                   : "bg-[var(--bg)] hover:bg-[var(--line)] text-[var(--ink)]"
                               )}
                               title="Menu Opsi Aksi Lengkap"
                             >
                               <MoreVertical className="w-4 h-4" />
                             </button>
-
-                            {/* Popover Dropdown Menu */}
-                            {openDropdownId === vehicle.id && (
-                              <div
-                                onClick={(e) => e.stopPropagation()}
-                                className="absolute right-0 top-full mt-1.5 w-56 bg-white border border-[var(--line)] rounded-xl shadow-xl z-30 py-1.5 text-left text-xs divide-y divide-[var(--bg)]"
-                              >
-                                <div className="py-1">
-                                  <Link
-                                    href={`/admin/inventory/${vehicle.id}/edit`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-                                  >
-                                    <Pencil className="w-4 h-4 text-[var(--accent)]" />
-                                    <span>Edit Semua Data Unit</span>
-                                  </Link>
-
-                                  <Link
-                                    href={`/admin/inspections/${vehicle.id}`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-                                  >
-                                    <ClipboardCheck className="w-4 h-4 text-[var(--accent)]" />
-                                    <span>Cek Fisik &amp; Inspeksi</span>
-                                  </Link>
-
-                                  <Link
-                                    href={`/admin/inventory/${vehicle.id}/expenses/new`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-                                  >
-                                    <Receipt className="w-4 h-4 text-[var(--accent)]" />
-                                    <span>Catat Biaya / Servis</span>
-                                  </Link>
-
-                                  <Link
-                                    href={`/admin/inventory/${vehicle.id}/media`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-                                  >
-                                    <Camera className="w-4 h-4 text-[var(--accent)]" />
-                                    <span>Upload Foto &amp; Dokumen</span>
-                                  </Link>
-                                </div>
-
-                                <div className="py-1">
-                                  <a
-                                    href={`/api/pdf/workshop-dispatch/${vehicle.id}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-                                  >
-                                    <Wrench className="w-4 h-4 text-[var(--accent)]" />
-                                    <span>Surat Jalan Bengkel (SPK)</span>
-                                  </a>
-
-                                  <a
-                                    href={`/api/pdf/spec-tag/${vehicle.id}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-                                  >
-                                    <Tag className="w-4 h-4 text-[#7C3AED]" />
-                                    <span>Cetak Tag Spion (QR)</span>
-                                  </a>
-                                </div>
-
-                                <div className="py-1">
-                                  <Link
-                                    href={`/katalog/${generateVehicleSlug(vehicle)}`}
-                                    target="_blank"
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--accent)] hover:bg-[var(--bg)] font-semibold transition-colors"
-                                  >
-                                    <ExternalLink className="w-4 h-4 text-[var(--accent)]" />
-                                    <span>
-                                      {vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR"
-                                        ? "Lihat Tampilan Segera Hadir"
-                                        : "Lihat di Katalog Publik"}
-                                    </span>
-                                  </Link>
-
-                                  <Link
-                                    href={`/admin/inventory/${vehicle.id}/status`}
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-                                  >
-                                    <ArrowRight className="w-4 h-4 text-[var(--muted)]" />
-                                    <span>Ubah Status Kendaraan</span>
-                                  </Link>
-
-                                  <a
-                                    href={generateCatalogWhatsAppLink("081234567890", {
-                                      brand: vehicle.brand,
-                                      model: vehicle.model,
-                                      year: vehicle.year,
-                                      plateNumber: vehicle.plateNumber,
-                                      targetSellingPrice: vehicle.targetSellingPrice,
-                                      status: vehicle.status,
-                                    })}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-                                  >
-                                    <MessageCircle className="w-4 h-4 text-[var(--accent)]" />
-                                    <span>Share via WhatsApp</span>
-                                  </a>
-                                </div>
-                              </div>
-                            )}
                           </div>
                         </div>
                       </td>
@@ -685,6 +623,127 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           vehicle={selectedVehicleForMedia}
           onClose={() => setSelectedVehicleForMedia(null)}
         />
+      )}
+
+      {/* ── PORTAL DROPDOWN MENU (Prevent table overflow clipping) ── */}
+      {mounted && activeDropdown && typeof document !== "undefined" && createPortal(
+        <div
+          style={{
+            position: "fixed",
+            top: activeDropdown.top !== undefined ? `${activeDropdown.top}px` : undefined,
+            bottom: activeDropdown.bottom !== undefined ? `${activeDropdown.bottom}px` : undefined,
+            right: `${activeDropdown.right}px`,
+            zIndex: 9999,
+          }}
+          onClick={(e) => e.stopPropagation()}
+          className="w-56 bg-white border border-[var(--line)] rounded-xl shadow-2xl py-1.5 text-left text-xs divide-y divide-[var(--bg)] animate-in fade-in zoom-in-95 duration-100"
+        >
+          <div className="py-1">
+            <Link
+              href={`/admin/inventory/${activeDropdown.vehicle.id}/edit`}
+              onClick={() => setActiveDropdown(null)}
+              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+            >
+              <Pencil className="w-4 h-4 text-[var(--accent)]" />
+              <span>Edit Semua Data Unit</span>
+            </Link>
+
+            <Link
+              href={`/admin/inspections/${activeDropdown.vehicle.id}`}
+              onClick={() => setActiveDropdown(null)}
+              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+            >
+              <ClipboardCheck className="w-4 h-4 text-[var(--accent)]" />
+              <span>Cek Fisik &amp; Inspeksi</span>
+            </Link>
+
+            <Link
+              href={`/admin/inventory/${activeDropdown.vehicle.id}/expenses/new`}
+              onClick={() => setActiveDropdown(null)}
+              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+            >
+              <Receipt className="w-4 h-4 text-[var(--accent)]" />
+              <span>Catat Biaya / Servis</span>
+            </Link>
+
+            <Link
+              href={`/admin/inventory/${activeDropdown.vehicle.id}/media`}
+              onClick={() => setActiveDropdown(null)}
+              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+            >
+              <Camera className="w-4 h-4 text-[var(--accent)]" />
+              <span>Upload Foto &amp; Dokumen</span>
+            </Link>
+          </div>
+
+          <div className="py-1">
+            <a
+              href={`/api/pdf/workshop-dispatch/${activeDropdown.vehicle.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setActiveDropdown(null)}
+              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+            >
+              <Wrench className="w-4 h-4 text-[var(--accent)]" />
+              <span>Surat Jalan Bengkel (SPK)</span>
+            </a>
+
+            <a
+              href={`/api/pdf/spec-tag/${activeDropdown.vehicle.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setActiveDropdown(null)}
+              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+            >
+              <Tag className="w-4 h-4 text-[#7C3AED]" />
+              <span>Cetak Tag Spion (QR)</span>
+            </a>
+          </div>
+
+          <div className="py-1">
+            <Link
+              href={`/katalog/${generateVehicleSlug(activeDropdown.vehicle)}`}
+              target="_blank"
+              onClick={() => setActiveDropdown(null)}
+              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--accent)] hover:bg-[var(--bg)] font-semibold transition-colors"
+            >
+              <ExternalLink className="w-4 h-4 text-[var(--accent)]" />
+              <span>
+                {activeDropdown.vehicle.status === "INTAKE" || activeDropdown.vehicle.status === "IN_REPAIR"
+                  ? "Lihat Tampilan Segera Hadir"
+                  : "Lihat di Katalog Publik"}
+              </span>
+            </Link>
+
+            <Link
+              href={`/admin/inventory/${activeDropdown.vehicle.id}/status`}
+              onClick={() => setActiveDropdown(null)}
+              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+            >
+              <ArrowRight className="w-4 h-4 text-[var(--muted)]" />
+              <span>Ubah Status Kendaraan</span>
+            </Link>
+
+            <a
+              href={generateCatalogWhatsAppLink("081234567890", {
+                brand: activeDropdown.vehicle.brand,
+                model: activeDropdown.vehicle.model,
+                year: activeDropdown.vehicle.year,
+                plateNumber: activeDropdown.vehicle.plateNumber,
+                targetSellingPrice: activeDropdown.vehicle.targetSellingPrice,
+                status: activeDropdown.vehicle.status,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setActiveDropdown(null)}
+              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+            >
+              <MessageCircle className="w-4 h-4 text-[var(--accent)]" />
+              <span>Share via WhatsApp</span>
+            </a>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );
