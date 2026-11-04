@@ -2,7 +2,7 @@ import React from "react";
 import prisma from "@/lib/prisma";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { SettingsClient } from "@/components/admin/SettingsClient";
-import { getSystemSettingsAction } from "@/app/actions/setting";
+import { getSystemSettingsAction, getSettingValue } from "@/app/actions/setting";
 import { getAllWhatsAppContactsAction } from "@/app/actions/contact";
 import { getAuctionHousesAction } from "@/app/actions/auction-house";
 
@@ -14,7 +14,7 @@ export const metadata = {
 };
 
 export default async function SettingsPage() {
-  const [logs, auditLogs, settingsRes, contactsRes, auctionHouses] = await Promise.all([
+  const [logs, auditLogs, settingsRes, contactsRes, auctionHouses, telegramChatId, telegramBotToken, telegramAllowedChatIds, appPublicUrl] = await Promise.all([
     prisma.notificationLog.findMany({
       orderBy: { createdAt: "desc" },
       take: 100,
@@ -26,6 +26,10 @@ export default async function SettingsPage() {
     getSystemSettingsAction(),
     getAllWhatsAppContactsAction(),
     getAuctionHousesAction(),
+    getSettingValue("TELEGRAM_CHAT_ID"),
+    getSettingValue("TELEGRAM_BOT_TOKEN"),
+    getSettingValue("TELEGRAM_BOT_ALLOWED_CHAT_IDS"),
+    getSettingValue("APP_PUBLIC_URL"),
   ]);
 
   return (
@@ -61,6 +65,10 @@ export default async function SettingsPage() {
           initialSettings={settingsRes.data || []}
           initialContacts={contactsRes.data || []}
           initialAuctionHouses={auctionHouses}
+          telegramChatId={telegramChatId}
+          telegramBotToken={telegramBotToken ? "***" : ""}
+          telegramAllowedChatIds={telegramAllowedChatIds}
+          appPublicUrl={appPublicUrl}
         />
       </main>
     </div>

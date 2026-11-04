@@ -24,6 +24,7 @@ import {
   Check,
   Phone,
   Gavel,
+  Bot,
 } from "lucide-react";
 import { formatDate, cn } from "@/lib/utils";
 import { retryNotificationLog } from "@/lib/services/whatsapp";
@@ -33,6 +34,7 @@ import { AuctionHouseItem } from "@/app/actions/auction-house";
 import { ApiKeySettingsClient } from "./ApiKeySettingsClient";
 import { WhatsAppContactsSettingsClient } from "./WhatsAppContactsSettingsClient";
 import { AuctionHousesSettingsClient } from "./AuctionHousesSettingsClient";
+import { TelegramBotSetupClient } from "./TelegramBotSetupClient";
 import { WhatsAppAdminContact } from "@/lib/utils/whatsapp";
 import { KeyRound } from "lucide-react";
 
@@ -61,6 +63,10 @@ interface SettingsProps {
   initialSettings?: SettingItem[];
   initialContacts?: WhatsAppAdminContact[];
   initialAuctionHouses?: AuctionHouseItem[];
+  telegramChatId?: string;
+  telegramBotToken?: string;
+  telegramAllowedChatIds?: string;
+  appPublicUrl?: string;
 }
 
 export function SettingsClient({
@@ -69,9 +75,13 @@ export function SettingsClient({
   initialSettings = [],
   initialContacts = [],
   initialAuctionHouses = [],
+  telegramChatId = "",
+  telegramBotToken = "",
+  telegramAllowedChatIds = "",
+  appPublicUrl = "",
 }: SettingsProps) {
   const [activeTab, setActiveTab] = useState<
-    "api_keys" | "auction_houses" | "whatsapp_contacts" | "notifications" | "audit" | "backup"
+    "api_keys" | "auction_houses" | "telegram_bot" | "whatsapp_contacts" | "notifications" | "audit" | "backup"
   >("api_keys");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [typeFilter, setTypeFilter] = useState("ALL");
@@ -246,6 +256,18 @@ export function SettingsClient({
           <span>Master Balai Lelang ({initialAuctionHouses.length})</span>
         </button>
         <button
+          onClick={() => setActiveTab("telegram_bot")}
+          className={cn(
+            "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
+            activeTab === "telegram_bot"
+              ? "border-b-2 border-[var(--accent)] text-[var(--accent)] font-bold"
+              : "text-[var(--muted)] hover:text-[var(--ink)]"
+          )}
+        >
+          <Bot className="w-4 h-4 text-[var(--accent)]" />
+          <span>Bot Telegram</span>
+        </button>
+        <button
           onClick={() => setActiveTab("whatsapp_contacts")}
           className={cn(
             "pb-3 -mb-px transition-colors cursor-pointer shrink-0 flex items-center gap-1.5",
@@ -300,6 +322,16 @@ export function SettingsClient({
       {/* TAB: MASTER BALAI LELANG */}
       {activeTab === "auction_houses" && (
         <AuctionHousesSettingsClient initialAuctionHouses={initialAuctionHouses} />
+      )}
+
+      {/* TAB: BOT TELEGRAM */}
+      {activeTab === "telegram_bot" && (
+        <TelegramBotSetupClient
+          chatId={telegramChatId}
+          botToken={telegramBotToken}
+          allowedChatIds={telegramAllowedChatIds}
+          appPublicUrl={appPublicUrl}
+        />
       )}
 
       {/* TAB: KONTAK WHATSAPP ADMIN */}

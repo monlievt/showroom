@@ -118,6 +118,23 @@ const DEFAULT_CONFIGS: Array<{
     defaultValue: "",
   },
 
+  {
+    key: "TELEGRAM_BOT_ALLOWED_CHAT_IDS",
+    group: "NOTIFICATIONS",
+    label: "Chat ID Tambahan (Multi-User Bot)",
+    description: "Chat ID Telegram tambahan yang diizinkan menggunakan bot (pisahkan dengan koma). Gunakan @userinfobot untuk mendapatkan ID.",
+    isSecret: false,
+    defaultValue: "",
+  },
+  {
+    key: "APP_PUBLIC_URL",
+    group: "NOTIFICATIONS",
+    label: "URL Publik Aplikasi (untuk Webhook Telegram)",
+    description: "URL domain publik aplikasi ini (mis: https://showroom-anda.vercel.app). Digunakan untuk mendaftarkan webhook Telegram.",
+    isSecret: false,
+    defaultValue: "",
+  },
+
   // 4. WhatsApp Gateway
   {
     key: "WHATSAPP_ENABLED",
