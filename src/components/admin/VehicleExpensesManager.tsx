@@ -18,6 +18,7 @@ import {
   Store,
   Trash2,
   AlertTriangle,
+  ExternalLink,
   X,
   Lock,
 } from "lucide-react";
@@ -52,6 +53,7 @@ export interface ExpenseRecord {
   notes?: string | null;
   receiptUrl?: string | null;
   createdAt?: string | Date;
+  createdBy?: string | null;
 }
 
 export interface ExpenseVehicleSummary {
@@ -84,6 +86,25 @@ function toDateInputValue(input?: string | Date | null): string {
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function isPdfUrl(url: string): boolean {
+  return url.toLowerCase().split("?")[0].endsWith(".pdf");
+}
+
+function formatDateTimeWib(input?: string | Date | null): string | null {
+  if (!input) return null;
+  const d = new Date(input);
+  if (Number.isNaN(d.getTime())) return null;
+  return `${new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Jakarta",
+  }).format(d)} WIB`;
 }
 
 type ExpenseCategoryValue = CreateExpenseInput["category"];
@@ -119,6 +140,11 @@ export function VehicleExpensesManager({
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [previewProof, setPreviewProof] = useState<{
+    url: string;
+    title: string;
+    subtitle?: string;
+  } | null>(null);
 
   const formRef = useRef<HTMLFormElement>(null);
   const onExpensesChangedRef = useRef(onExpensesChanged);
@@ -174,11 +200,13 @@ export function VehicleExpensesManager({
     };
   }, [initialExpenses, vehicle.id]);
 
-  // Escape to cancel edit (if editing) or close modal
+  // Escape to close proof preview, delete confirm, cancel edit, or close modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (confirmDeleteId) {
+        if (previewProof) {
+          setPreviewProof(null);
+        } else if (confirmDeleteId) {
           setConfirmDeleteId(null);
         } else if (editingId) {
           resetForm();
@@ -189,7 +217,7 @@ export function VehicleExpensesManager({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [confirmDeleteId, editingId, mode, onClose, resetForm]);
+  }, [previewProof, confirmDeleteId, editingId, mode, onClose, resetForm]);
 
   const startEdit = (item: ExpenseRecord) => {
     setEditingId(item.id);
@@ -806,20 +834,35 @@ export function VehicleExpensesManager({
                         {proofs.length > 0 && (
                           <div className="flex items-center gap-1.5 flex-wrap pt-1">
                             {proofs.map((url, idx) => (
-                              <a
+                              <button
                                 key={idx}
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[var(--line)] hover:border-[var(--accent)] text-[11px] font-semibold text-[var(--ink)] transition-colors"
+                                type="button"
+                                onClick={() =>
+                                  setPreviewProof({
+                                    url,
+                                    title:
+                                      proofs.length > 1
+                                        ? `${getExpenseCategoryShortLabel(item.category)} • Nota #${idx + 1}`
+                                        : `${getExpenseCategoryShortLabel(item.category)} • Bukti Nota`,
+                                    subtitle: `${item.vendorName || "Biaya Unit"} • ${formatRupiah(item.amount)} • ${formatDate(item.date)}`,
+                                  })
+                                }
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[var(--line)] hover:border-[var(--accent)] text-[11px] font-semibold text-[var(--ink)] transition-colors cursor-pointer"
                               >
                                 <Paperclip className="w-3 h-3 text-[var(--accent)]" />
                                 <span>
                                   {proofs.length > 1 ? `Nota #${idx + 1}` : "Lihat Nota"}
                                 </span>
-                              </a>
+                              </button>
                             ))}
                           </div>
+                        )}
+
+                        {item.createdAt && (
+                          <p className="text-[11px] text-[var(--muted)] pt-0.5">
+                            Diinput {formatDateTimeWib(item.createdAt)}
+                            {item.createdBy ? ` • ${item.createdBy}` : ""}
+                          </p>
                         )}
                       </div>
 
@@ -884,6 +927,74 @@ export function VehicleExpensesManager({
           )}
         </div>
       </div>
+
+      {/* In-App Receipt / Proof Popup Modal */}
+      {previewProof && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
+          onClick={(e) => {
+            e.stopPropagation();
+            setPreviewProof(null);
+          }}
+        >
+          <div
+            className="w-full max-w-3xl bg-white rounded-2xl border border-[var(--line)] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-4 py-3 border-b border-[var(--line)] flex items-center justify-between gap-3 bg-[var(--bg)]/60 shrink-0">
+              <div className="min-w-0">
+                <h4 className="text-sm font-bold text-[var(--ink)] truncate">
+                  {previewProof.title}
+                </h4>
+                {previewProof.subtitle && (
+                  <p className="text-xs text-[var(--muted)] truncate mt-0.5">
+                    {previewProof.subtitle}
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <a
+                  href={previewProof.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--bg)] text-xs font-semibold text-[var(--ink)] transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Tab Baru</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreviewProof(null);
+                  }}
+                  aria-label="Tutup lampiran"
+                  className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--bg)] text-[var(--ink)] transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-auto bg-neutral-950/95 flex items-center justify-center p-4 min-h-[300px]">
+              {isPdfUrl(previewProof.url) ? (
+                <iframe
+                  src={previewProof.url}
+                  title={previewProof.title}
+                  className="w-full h-[70vh] rounded-lg bg-white"
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={previewProof.url}
+                  alt={previewProof.title}
+                  className="max-h-[75vh] max-w-full object-contain rounded-lg"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
