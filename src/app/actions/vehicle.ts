@@ -7,6 +7,8 @@ import { requireRole } from "@/lib/auth/session";
 import { createVehicleSchema, type CreateVehicleInput } from "@/lib/validations/vehicle";
 import { canTransition, type VehicleStatus } from "@/lib/calculations/vehicle-state";
 import { calculateHpp, calculateDaysInInventory, getInventoryAgingCategory } from "@/lib/calculations/hpp";
+import { recordCapitalLedgerEntry } from "./capital-ledger";
+import { formatRupiah } from "@/lib/utils";
 
 export async function getVehiclesAction(filters?: {
   status?: string;
@@ -63,6 +65,20 @@ export async function getVehiclesAction(filters?: {
             },
           },
         },
+        investments: {
+          select: {
+            id: true,
+            investorId: true,
+            capitalShare: true,
+            profitSharePercent: true,
+            investor: {
+              select: {
+                name: true,
+                type: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -111,6 +127,16 @@ export async function getVehiclesAction(filters?: {
               })),
             }
           : null,
+        investments: isSalesRole
+          ? []
+          : v.investments.map((inv) => ({
+              id: inv.id,
+              investorId: inv.investorId,
+              investorName: inv.investor.name,
+              investorType: inv.investor.type,
+              capitalShare: Number(inv.capitalShare),
+              profitSharePercent: Number(inv.profitSharePercent),
+            })),
       };
     });
 
@@ -126,6 +152,28 @@ export async function createVehicleAction(input: CreateVehicleInput) {
     const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const actorLabel = session.fullName || "Owner/Admin";
     const validated = createVehicleSchema.parse(input);
+    const investments = validated.investments ?? [];
+
+    const totalCashOut = new Decimal(validated.purchasePrice)
+      .plus(validated.auctionAdminFee || 0)
+      .plus(validated.transportPickupFee || 0);
+
+    // Cek duplikasi investor dan total alokasi modal investor di payload
+    const seenInvestorIds = new Set<string>();
+    let totalInvestorCap = new Decimal(0);
+    for (const inv of investments) {
+      if (seenInvestorIds.has(inv.investorId)) {
+        throw new Error("Terdapat pemodal yang dipilih ganda. Gabungkan nominalnya dalam satu baris.");
+      }
+      seenInvestorIds.add(inv.investorId);
+      totalInvestorCap = totalInvestorCap.plus(inv.capitalShare);
+    }
+
+    if (totalInvestorCap.gt(totalCashOut)) {
+      throw new Error(
+        `Total modal pemodal (${formatRupiah(totalInvestorCap.toNumber())}) melebihi total biaya pengadaan unit (${formatRupiah(totalCashOut.toNumber())}).`
+      );
+    }
 
     const result = await prisma.$transaction(async (tx) => {
       // 1. Cek plat nomor duplikat
@@ -134,6 +182,68 @@ export async function createVehicleAction(input: CreateVehicleInput) {
       });
       if (existing) {
         throw new Error(`Unit dengan plat nomor ${validated.plateNumber} sudah terdaftar.`);
+      }
+
+      // 1b. Cek kesiapan saldo kas showroom (anti minus)
+      const lastCashTx = await tx.cashTransaction.findFirst({
+        orderBy: { createdAt: "desc" },
+        select: { runningBalance: true, createdAt: true },
+      });
+      const currentBalanceDec = lastCashTx
+        ? new Decimal(lastCashTx.runningBalance.toString())
+        : new Decimal(0);
+      let nextCashTimestamp = Math.max(
+        Date.now(),
+        lastCashTx ? new Date(lastCashTx.createdAt).getTime() + 1 : 0
+      );
+
+      if (currentBalanceDec.lt(totalCashOut)) {
+        throw new Error(
+          `Saldo kas showroom tidak mencukupi (Tersedia: ${formatRupiah(currentBalanceDec.toNumber())}, Dibutuhkan: ${formatRupiah(totalCashOut.toNumber())}). Silakan setor modal awal di Buku Kas & Mutasi atau Daftar Akun Investor terlebih dahulu.`
+        );
+      }
+
+      // 1c. Cek saldo bebas masing-masing pemodal sebelum membuat data
+      const resolvedInvestments: Array<{
+        investorId: string;
+        investorName: string;
+        capitalAmt: Decimal;
+        profitSharePercent: Decimal;
+      }> = [];
+
+      for (const inv of investments) {
+        const investor = await tx.investor.findUnique({ where: { id: inv.investorId } });
+        if (!investor) {
+          throw new Error("Data pemodal yang dipilih tidak ditemukan.");
+        }
+
+        const capitalAmt = new Decimal(inv.capitalShare);
+        const latestLedger = await tx.capitalLedger.findFirst({
+          where: { investorId: inv.investorId },
+          orderBy: { createdAt: "desc" },
+        });
+        const currentAvail = latestLedger
+          ? new Decimal(latestLedger.runningBalance.toString())
+          : new Decimal(0);
+
+        if (capitalAmt.gt(currentAvail)) {
+          throw new Error(
+            `Saldo kas bebas ${investor.name} tidak mencukupi (Tersedia: ${formatRupiah(currentAvail.toNumber())}, Dialokasikan: ${formatRupiah(capitalAmt.toNumber())}). Silakan setor tambahan modal atau sesuaikan nominalnya.`
+          );
+        }
+
+        const requestedPercent = new Decimal(inv.profitSharePercent || 0);
+        const effectivePercent =
+          requestedPercent.isZero() && investor.defaultProfitSharePercent
+            ? new Decimal(investor.defaultProfitSharePercent.toString())
+            : requestedPercent;
+
+        resolvedInvestments.push({
+          investorId: inv.investorId,
+          investorName: investor.name,
+          capitalAmt,
+          profitSharePercent: effectivePercent,
+        });
       }
 
       // Format ringkasan ceklist fisik turun towing bila ada
@@ -205,12 +315,8 @@ export async function createVehicleAction(input: CreateVehicleInput) {
         });
       }
 
-      // 3. Ambil running balance terakhir kas
-      const lastCashTx = await tx.cashTransaction.findFirst({
-        orderBy: { createdAt: "desc" },
-        select: { runningBalance: true },
-      });
-      const currentBalance = lastCashTx ? Number(lastCashTx.runningBalance) : 0;
+      // 3. Gunakan saldo kas terakhir yang sudah divalidasi di langkah 1b
+      const currentBalance = currentBalanceDec.toNumber();
       const newBalance = currentBalance - validated.purchasePrice;
 
       // 4. Catat transaksi keluar pembelian unit di CashTransaction (relasi formal)
@@ -221,6 +327,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
           relatedVehicleId: vehicle.id,
           runningBalance: newBalance,
           notes: `Pembelian unit ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+          createdAt: new Date(nextCashTimestamp++),
           createdBy: actorLabel,
         },
       });
@@ -250,6 +357,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
             relatedExpenseId: adminExpense.id,
             runningBalance: currentRunningBalance,
             notes: `Biaya admin lelang ${validated.auctionHouse || ""} untuk ${vehicle.plateNumber}`,
+            createdAt: new Date(nextCashTimestamp++),
             createdBy: actorLabel,
           },
         });
@@ -278,8 +386,30 @@ export async function createVehicleAction(input: CreateVehicleInput) {
             relatedExpenseId: transportExpense.id,
             runningBalance: currentRunningBalance,
             notes: `Ongkos ambil/towing unit ${vehicle.plateNumber} (${validated.transportVendor || "Driver"})`,
+            createdAt: new Date(nextCashTimestamp++),
             createdBy: actorLabel,
           },
+        });
+      }
+
+      // 4d. Catat alokasi modal pemodal (jika didanai investor)
+      for (const inv of resolvedInvestments) {
+        await tx.vehicleInvestment.create({
+          data: {
+            vehicleId: vehicle.id,
+            investorId: inv.investorId,
+            capitalShare: inv.capitalAmt,
+            profitSharePercent: inv.profitSharePercent,
+          },
+        });
+
+        await recordCapitalLedgerEntry(tx, {
+          investorId: inv.investorId,
+          type: "ALLOCATED",
+          amount: inv.capitalAmt,
+          vehicleId: vehicle.id,
+          notes: `Alokasi modal untuk unit ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+          createdBy: actorLabel,
         });
       }
 
@@ -290,7 +420,12 @@ export async function createVehicleAction(input: CreateVehicleInput) {
           action: "CREATE",
           entityType: "Vehicle",
           entityId: vehicle.id,
-          afterData: vehicle as any,
+          afterData: JSON.parse(
+            JSON.stringify({
+              vehicle,
+              investments: resolvedInvestments,
+            })
+          ),
         },
       });
 
@@ -298,6 +433,9 @@ export async function createVehicleAction(input: CreateVehicleInput) {
     });
 
     revalidatePath("/admin/inventory");
+    revalidatePath("/admin/finance");
+    revalidatePath("/admin/investors");
+    revalidatePath("/admin/investors/accounts");
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Error creating vehicle:", error);
@@ -722,6 +860,147 @@ export async function updateVehicleAction(
       return { success: false, error: "Nomor plat sudah terdaftar pada kendaraan lain." };
     }
     return { success: false, error: error.message || "Gagal memperbarui data unit kendaraan" };
+  }
+}
+
+export async function deleteVehicleAction(vehicleId: string) {
+  try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Admin";
+
+    const deletedSummary = await prisma.$transaction(async (tx) => {
+      const vehicle = await tx.vehicle.findUnique({
+        where: { id: vehicleId },
+        include: {
+          sale: { select: { id: true } },
+          investments: true,
+          expenses: { select: { id: true } },
+          cashTransactions: true,
+        },
+      });
+
+      if (!vehicle) {
+        throw new Error("Unit kendaraan tidak ditemukan.");
+      }
+
+      if (vehicle.sale) {
+        throw new Error(
+          "Unit ini sudah memiliki data penjualan. Unit yang sudah terjual tidak dapat dihapus."
+        );
+      }
+
+      const tradeInCount = await tx.salePayment.count({
+        where: { tradeInVehicleId: vehicleId },
+      });
+      if (tradeInCount > 0) {
+        throw new Error(
+          "Unit ini terkait dengan transaksi pembayaran tukar-tambah sehingga tidak dapat dihapus."
+        );
+      }
+
+      // 1. Kembalikan alokasi modal investor ke saldo bebas (CapitalLedger RETURNED)
+      for (const inv of vehicle.investments) {
+        await recordCapitalLedgerEntry(tx, {
+          investorId: inv.investorId,
+          type: "RETURNED",
+          amount: inv.capitalShare,
+          vehicleId: null,
+          notes: `Pengembalian alokasi modal akibat penghapusan unit ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+          createdBy: actorLabel,
+        });
+      }
+
+      // 2. Hitung net kas keluar yang pernah dicatat untuk unit ini & kembalikan saldo kas umum
+      let netCashDeducted = new Decimal(0);
+      for (const cashTx of vehicle.cashTransactions) {
+        const amt = new Decimal(cashTx.amount.toString());
+        if (cashTx.type.startsWith("OUT_")) {
+          netCashDeducted = netCashDeducted.plus(amt);
+        } else if (cashTx.type.startsWith("IN_")) {
+          netCashDeducted = netCashDeducted.minus(amt);
+        }
+      }
+
+      if (!netCashDeducted.isZero()) {
+        const lastCashTx = await tx.cashTransaction.findFirst({
+          orderBy: { createdAt: "desc" },
+          select: { runningBalance: true },
+        });
+        const curBal = lastCashTx
+          ? new Decimal(lastCashTx.runningBalance.toString())
+          : new Decimal(0);
+        const newBal = curBal.plus(netCashDeducted);
+
+        await tx.cashTransaction.create({
+          data: {
+            type: netCashDeducted.gt(0) ? "IN_OTHER" : "OUT_OTHER",
+            amount: netCashDeducted.abs(),
+            runningBalance: newBal,
+            notes: `Penyesuaian saldo kas atas penghapusan unit ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+            createdBy: actorLabel,
+          },
+        });
+      }
+
+      // 3. Lepaskan relasi FK non-cascade sebelum menghapus Vehicle
+      const expenseIds = vehicle.expenses.map((e) => e.id);
+      await tx.capitalLedger.updateMany({
+        where: { vehicleId },
+        data: { vehicleId: null },
+      });
+      await tx.cashTransaction.updateMany({
+        where: {
+          OR: [
+            { relatedVehicleId: vehicleId },
+            ...(expenseIds.length > 0 ? [{ relatedExpenseId: { in: expenseIds } }] : []),
+          ],
+        },
+        data: { relatedVehicleId: null, relatedExpenseId: null },
+      });
+      await tx.notificationLog.updateMany({
+        where: { relatedVehicleId: vehicleId },
+        data: { relatedVehicleId: null },
+      });
+
+      await tx.vehicle.delete({
+        where: { id: vehicleId },
+      });
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "DELETE",
+          entityType: "Vehicle",
+          entityId: vehicleId,
+          beforeData: JSON.parse(JSON.stringify(vehicle)),
+        },
+      });
+
+      return {
+        id: vehicle.id,
+        plateNumber: vehicle.plateNumber,
+        brand: vehicle.brand,
+        model: vehicle.model,
+      };
+    });
+
+    revalidatePath("/admin/inventory");
+    revalidatePath("/admin/finance");
+    revalidatePath("/admin/investors");
+    revalidatePath("/admin/investors/accounts");
+    revalidatePath("/katalog");
+    revalidatePath("/", "layout");
+
+    return {
+      success: true,
+      message: `Unit ${deletedSummary.brand} ${deletedSummary.model} (${deletedSummary.plateNumber}) berhasil dihapus.`,
+    };
+  } catch (error: unknown) {
+    console.error("Error deleting vehicle:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Gagal menghapus unit kendaraan",
+    };
   }
 }
 

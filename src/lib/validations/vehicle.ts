@@ -78,6 +78,16 @@ export const createVehicleSchema = z.object({
     })
     .optional()
     .nullable(),
+  investments: z
+    .array(
+      z.object({
+        investorId: z.string().min(1, "Pemodal wajib dipilih"),
+        capitalShare: z.coerce.number().positive("Nominal modal pemodal harus lebih dari 0"),
+        profitSharePercent: z.coerce.number().min(0).max(100),
+      })
+    )
+    .optional()
+    .default([]),
 });
 
 export type CreateVehicleInput = z.input<typeof createVehicleSchema>;

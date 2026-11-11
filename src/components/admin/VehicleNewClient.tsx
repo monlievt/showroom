@@ -31,7 +31,12 @@ import {
 } from "lucide-react";
 import { createVehicleAction } from "@/app/actions/vehicle";
 import { getAuctionHousesAction, AuctionHouseItem } from "@/app/actions/auction-house";
-import { cn, formatThousands, parseThousands } from "@/lib/utils";
+import {
+  VehicleFundingSelector,
+  type InvestorOption,
+  type FundingAllocationRow,
+} from "@/components/admin/VehicleFundingSelector";
+import { cn, formatRupiah, formatThousands, parseThousands } from "@/lib/utils";
 
 // AUCTION PRESETS (Default Bersih Tanpa Keterangan Berlebih)
 const AUCTION_HOUSE_PRESETS: Record<
@@ -90,8 +95,18 @@ const AUCTION_HOUSE_PRESETS: Record<
   },
 };
 
-export function VehicleNewClient() {
+interface VehicleNewClientProps {
+  availableInvestors?: InvestorOption[];
+  currentCashBalance?: number;
+}
+
+export function VehicleNewClient({
+  availableInvestors = [],
+  currentCashBalance = 0,
+}: VehicleNewClientProps) {
   const router = useRouter();
+  const [investors, setInvestors] = useState<InvestorOption[]>(availableInvestors);
+  const [cashBalance, setCashBalance] = useState<number>(currentCashBalance);
 
   const [formData, setFormData] = useState({
     plateNumber: "",
@@ -146,6 +161,8 @@ export function VehicleNewClient() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [fundingMode, setFundingMode] = useState<"SHOWROOM" | "INVESTOR">("SHOWROOM");
+  const [investorFundingList, setInvestorFundingList] = useState<FundingAllocationRow[]>([]);
   const [createdVehicle, setCreatedVehicle] = useState<{
     id: string;
     plateNumber: string;
@@ -198,6 +215,8 @@ export function VehicleNewClient() {
     setAuctionAdminFee(3000000);
     setTransportPickupFee(0);
     setTransportVendor("");
+    setFundingMode("SHOWROOM");
+    setInvestorFundingList([]);
     setSuccessMsg("");
     setErrorMsg("");
   };
@@ -222,6 +241,57 @@ export function VehicleNewClient() {
     setErrorMsg("");
 
     try {
+      const adminFeeNum = isAuction ? (Number(auctionAdminFee) || 0) : 0;
+      const transportFeeNum = Number(transportPickupFee) || 0;
+      const totalCashOut = (Number(formData.purchasePrice) || 0) + adminFeeNum + transportFeeNum;
+
+      if (cashBalance < totalCashOut) {
+        throw new Error(
+          `Saldo kas showroom tidak mencukupi (Tersedia: ${formatRupiah(cashBalance)}, Dibutuhkan: ${formatRupiah(totalCashOut)}). Setor modal awal di Buku Kas & Mutasi atau Daftar Akun Investor terlebih dahulu.`
+        );
+      }
+
+      const cleanInvestments =
+        fundingMode === "INVESTOR"
+          ? investorFundingList.filter(
+              (inv) => inv.investorId && Number(inv.capitalShare) > 0
+            )
+          : [];
+
+      if (fundingMode === "INVESTOR") {
+        if (cleanInvestments.length === 0) {
+          throw new Error(
+            "Anda memilih mode Didanai Mitra Pemodal / Investor. Pilih pemodal dan masukkan nominal modal lebih dari Rp 0 (atau pilih 100% Modal Kas Showroom)."
+          );
+        }
+
+        const seenIds = new Set<string>();
+        let totalInvCap = 0;
+        for (const row of cleanInvestments) {
+          if (seenIds.has(row.investorId)) {
+            throw new Error(
+              "Terdapat pemodal yang dipilih ganda. Gabungkan nominalnya ke satu baris saja."
+            );
+          }
+          seenIds.add(row.investorId);
+          totalInvCap += Number(row.capitalShare) || 0;
+
+          const matchedInv = investors.find((inv) => inv.id === row.investorId);
+          const availBal = Number(matchedInv?.currentBalance) || 0;
+          if (Number(row.capitalShare) > availBal) {
+            throw new Error(
+              `Saldo kas bebas ${matchedInv?.name || "pemodal"} tidak mencukupi (Tersedia: ${formatRupiah(availBal)}, Diinput: ${formatRupiah(row.capitalShare)}).`
+            );
+          }
+        }
+
+        if (totalInvCap > totalCashOut) {
+          throw new Error(
+            `Total modal pemodal (${formatRupiah(totalInvCap)}) melebihi total biaya pengadaan unit (${formatRupiah(totalCashOut)}).`
+          );
+        }
+      }
+
       const finalAuctionHouse = isAuction
         ? formData.auctionHouse === "LAINNYA" && customAuctionHouse.trim()
           ? customAuctionHouse.trim()
@@ -231,8 +301,8 @@ export function VehicleNewClient() {
       const res = await createVehicleAction({
         ...formData,
         auctionHouse: finalAuctionHouse,
-        auctionAdminFee: isAuction ? (Number(auctionAdminFee) || 0) : 0,
-        transportPickupFee: Number(transportPickupFee) || 0,
+        auctionAdminFee: adminFeeNum,
+        transportPickupFee: transportFeeNum,
         transportVendor: transportVendor.trim() || undefined,
         year: Number(formData.year),
         odometer: Number(formData.odometer),
@@ -255,11 +325,26 @@ export function VehicleNewClient() {
         taxNominal: formData.taxNominal ? Number(formData.taxNominal) : undefined,
         stnkStatus: formData.stnkStatus as any,
         physicalChecklist,
+        investments: cleanInvestments,
       });
 
       if (!res.success || !res.data) {
         throw new Error(res.error || "Gagal menyimpan unit");
       }
+
+      // Sinkronkan sisa saldo lokal agar input unit berikutnya langsung akurat
+      setCashBalance((prev) => prev - totalCashOut);
+      if (cleanInvestments.length > 0) {
+        setInvestors((prev) =>
+          prev.map((inv) => {
+            const used = cleanInvestments.find((item) => item.investorId === inv.id);
+            return used
+              ? { ...inv, currentBalance: Math.max(0, inv.currentBalance - Number(used.capitalShare)) }
+              : inv;
+          })
+        );
+      }
+      router.refresh();
 
       setLoading(false);
       setCreatedVehicle({
@@ -270,9 +355,10 @@ export function VehicleNewClient() {
         year: res.data.year,
         purchasePrice: Number(res.data.purchasePrice),
       });
-    } catch (err: any) {
-      setErrorMsg(err.message || "Gagal menyimpan unit");
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : "Gagal menyimpan unit");
       setLoading(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -976,13 +1062,29 @@ export function VehicleNewClient() {
           </div>
         </div>
 
-        {/* SECTION 5: Ceklist Bawaan Fisik Turun Towing */}
+        {/* SECTION 5: Sumber Modal & Pemodal Unit */}
+        <VehicleFundingSelector
+          sectionNumber={5}
+          availableInvestors={investors}
+          fundingMode={fundingMode}
+          onFundingModeChange={setFundingMode}
+          investorFundingList={investorFundingList}
+          onInvestorFundingListChange={setInvestorFundingList}
+          purchasePrice={Number(formData.purchasePrice) || 0}
+          extraInitialCosts={
+            (isAuction ? Number(auctionAdminFee) || 0 : 0) +
+            (Number(transportPickupFee) || 0)
+          }
+          showroomCashBalance={cashBalance}
+        />
+
+        {/* SECTION 6: Ceklist Bawaan Fisik Turun Towing */}
         <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
             <div className="flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-[var(--accent)]" />
               <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
-                5. Ceklist Bawaan Fisik Turun Towing (Anti-Kehilangan)
+                6. Ceklist Bawaan Fisik Turun Towing (Anti-Kehilangan)
               </h2>
             </div>
             <span className="text-[11px] font-semibold text-[var(--ink)] bg-[var(--bg)] px-2.5 py-0.5 rounded-full border border-[var(--line)]">
@@ -1225,12 +1327,12 @@ export function VehicleNewClient() {
           </div>
         </div>
 
-        {/* SECTION 6: Catatan & Lokasi Garasi */}
+        {/* SECTION 7: Catatan & Lokasi Garasi */}
         <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-3">
           <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
             <FileText className="w-4 h-4 text-[var(--accent)]" />
             <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
-              6. Catatan Kondisi & Lokasi Garasi
+              7. Catatan Kondisi & Lokasi Garasi
             </h2>
           </div>
 

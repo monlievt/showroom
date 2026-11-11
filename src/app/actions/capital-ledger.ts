@@ -61,6 +61,12 @@ export async function recordCapitalLedgerEntry(
 
   const newRunningBalance = previousBalance.plus(delta);
 
+  const requestedAt = params.createdAt ? params.createdAt.getTime() : Date.now();
+  const minNextAt = latestLedger
+    ? new Date(latestLedger.createdAt).getTime() + 1
+    : 0;
+  const entryCreatedAt = new Date(Math.max(requestedAt, minNextAt));
+
   // Buat entri CapitalLedger
   const entry = await tx.capitalLedger.create({
     data: {
@@ -71,7 +77,7 @@ export async function recordCapitalLedgerEntry(
       runningBalance: newRunningBalance,
       notes: params.notes || null,
       proofUrl: params.proofUrl || null,
-      createdAt: params.createdAt || new Date(),
+      createdAt: entryCreatedAt,
       createdBy,
     },
   });

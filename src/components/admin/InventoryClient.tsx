@@ -26,7 +26,11 @@ import {
   ExternalLink,
   Pencil,
   Eye,
+  Users,
+  Trash2,
+  Loader2,
 } from "lucide-react";
+import { deleteVehicleAction } from "@/app/actions/vehicle";
 import { VehicleExpensesManager } from "./VehicleExpensesManager";
 import { formatRupiah, formatDate, cn } from "@/lib/utils";
 import { generateVehicleSlug } from "@/lib/utils/slug";
@@ -61,6 +65,14 @@ interface VehicleItem {
   taxNominal?: number | null;
   stnkStatus?: string | null;
   notes?: string | null;
+  investments?: Array<{
+    id: string;
+    investorId: string;
+    investorName: string;
+    investorType: string;
+    capitalShare: number;
+    profitSharePercent: number;
+  }>;
 }
 
 interface InventoryClientProps {
@@ -90,8 +102,11 @@ export function InventoryClient({
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Modal Kelola Biaya
+  // Modal Kelola Biaya & Hapus Unit
   const [selectedVehicleForExpense, setSelectedVehicleForExpense] = useState<VehicleItem | null>(null);
+  const [deleteTargetVehicle, setDeleteTargetVehicle] = useState<VehicleItem | null>(null);
+  const [deletingVehicle, setDeletingVehicle] = useState(false);
+  const [inventoryNotice, setInventoryNotice] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [mounted, setMounted] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<{
     vehicle: VehicleItem;
@@ -159,6 +174,31 @@ export function InventoryClient({
   const totalModalTerikat = activeUnits.reduce((acc, curr) => acc + curr.totalHpp, 0);
   const stagnantUnits = activeUnits.filter((v) => v.daysInInventory > 45);
   const readyUnits = activeUnits.filter((v) => v.status === "READY_FOR_SALE");
+
+  const handleConfirmDeleteVehicle = async () => {
+    if (!deleteTargetVehicle) return;
+    setDeletingVehicle(true);
+    setInventoryNotice(null);
+    const res = await deleteVehicleAction(deleteTargetVehicle.id);
+    setDeletingVehicle(false);
+
+    if (!res.success) {
+      setInventoryNotice({
+        type: "error",
+        text: res.error || "Gagal menghapus unit kendaraan.",
+      });
+      setDeleteTargetVehicle(null);
+      return;
+    }
+
+    setVehicles((prev) => prev.filter((item) => item.id !== deleteTargetVehicle.id));
+    setInventoryNotice({
+      type: "success",
+      text: res.message || `Unit ${deleteTargetVehicle.plateNumber} berhasil dihapus.`,
+    });
+    setDeleteTargetVehicle(null);
+    router.refresh();
+  };
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
@@ -269,6 +309,26 @@ export function InventoryClient({
       </div>
 
       {/* ── STATUS TABS ───────────────────────────────────────── */}
+      {inventoryNotice && (
+        <div
+          className={cn(
+            "p-3.5 rounded-xl border text-xs flex items-center justify-between gap-3",
+            inventoryNotice.type === "success"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-900"
+              : "bg-red-50 border-red-200 text-red-900"
+          )}
+        >
+          <span className="font-semibold">{inventoryNotice.text}</span>
+          <button
+            type="button"
+            onClick={() => setInventoryNotice(null)}
+            className="font-bold opacity-70 hover:opacity-100 cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[var(--line)]">
         {STATUS_FILTERS.map((tab) => {
           const isSelected = selectedStatus === tab.value;
@@ -476,6 +536,30 @@ export function InventoryClient({
                               </button>
                             );
                           })()}
+                          <div className="mt-1.5">
+                            {vehicle.investments && vehicle.investments.length > 0 ? (
+                              <span
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-50 border border-amber-200 text-[10px] font-bold text-amber-900"
+                                title={vehicle.investments
+                                  .map(
+                                    (inv) =>
+                                      `${inv.investorName}: ${formatRupiah(inv.capitalShare)} (${inv.profitSharePercent}%)`
+                                  )
+                                  .join(" • ")}
+                              >
+                                <Users className="w-2.5 h-2.5 text-amber-700 shrink-0" />
+                                <span>
+                                  {vehicle.investments.length === 1
+                                    ? vehicle.investments[0].investorName
+                                    : `${vehicle.investments[0].investorName} +${vehicle.investments.length - 1}`}
+                                </span>
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded bg-[var(--bg)] border border-[var(--line)] text-[10px] font-medium text-[var(--muted)]">
+                                Modal: Kas Showroom
+                              </span>
+                            )}
+                          </div>
                         </td>
                       )}
 
@@ -789,9 +873,89 @@ export function InventoryClient({
               <MessageCircle className="w-4 h-4 text-[var(--accent)]" />
               <span>Share via WhatsApp</span>
             </a>
+
+            {(userRole === "OWNER" || userRole === "ADMIN") &&
+              activeDropdown.vehicle.status !== "SOLD_SETTLED" && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const target = activeDropdown.vehicle;
+                    setActiveDropdown(null);
+                    setDeleteTargetVehicle(target);
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3.5 py-2 text-red-700 hover:bg-red-50 font-semibold transition-colors cursor-pointer text-left border-t border-[var(--line)] mt-1 pt-2"
+                >
+                  <Trash2 className="w-4 h-4 text-red-600" />
+                  <span>Hapus Unit dari Inventori</span>
+                </button>
+              )}
           </div>
         </div>,
         document.body
+      )}
+
+      {/* Modal Konfirmasi Hapus Unit */}
+      {deleteTargetVehicle && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+          onClick={() => !deletingVehicle && setDeleteTargetVehicle(null)}
+        >
+          <div
+            className="bg-white border border-[var(--line)] rounded-2xl w-full max-w-md shadow-2xl p-5 sm:p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3">
+              <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-600 shrink-0">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-[var(--ink)]">
+                  Hapus Unit dari Inventori?
+                </h3>
+                <p className="text-xs text-[var(--muted)] leading-relaxed">
+                  Anda akan menghapus{" "}
+                  <strong className="text-[var(--ink)]">
+                    {deleteTargetVehicle.brand} {deleteTargetVehicle.model} (
+                    {deleteTargetVehicle.plateNumber})
+                  </strong>
+                  . Foto, dokumen, dan catatan biaya terkait unit ini juga akan ikut terhapus.
+                </p>
+                <p className="text-[11px] text-[var(--ink)] bg-[var(--bg)] p-2.5 rounded-lg border border-[var(--line)] mt-2">
+                  Jika unit ini sebelumnya memotong saldo kas showroom atau mengikat modal pemodal, saldonya akan dikembalikan otomatis ke kas / saldo bebas pemodal.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--line)]">
+              <button
+                type="button"
+                disabled={deletingVehicle}
+                onClick={() => setDeleteTargetVehicle(null)}
+                className="px-4 py-2 rounded-xl border border-[var(--line)] bg-white hover:bg-[var(--bg)] text-xs font-semibold text-[var(--ink)] transition-colors cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={deletingVehicle}
+                onClick={handleConfirmDeleteVehicle}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                {deletingVehicle ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Menghapus...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Ya, Hapus Unit</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
