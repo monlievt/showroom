@@ -381,6 +381,9 @@ export async function getVehicleByIdAction(id: string) {
             payments: {
               orderBy: { paidAt: "desc" },
             },
+            distributions: {
+              select: { id: true, notes: true },
+            },
           },
         },
       },
@@ -425,6 +428,19 @@ export async function getVehicleByIdAction(id: string) {
         photos: vehicle.photos,
         documents: vehicle.documents,
         inspections: vehicle.inspections,
+        isExpensesLocked: Boolean(
+          vehicle.sale?.distributions?.some((d: any) => !d.notes?.includes("[REVERSED]"))
+        ),
+        sale: vehicle.sale
+          ? {
+              ...vehicle.sale,
+              sellingPrice: Number(vehicle.sale.sellingPrice),
+              payments: vehicle.sale.payments.map((p: any) => ({
+                ...p,
+                amount: Number(p.amount),
+              })),
+            }
+          : null,
       },
     };
   } catch (error: any) {

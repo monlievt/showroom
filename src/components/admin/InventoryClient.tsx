@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { 
   Plus, 
   Search, 
@@ -24,6 +25,7 @@ import {
   MoreVertical,
   ExternalLink,
   Pencil,
+  Eye,
 } from "lucide-react";
 import { VehicleExpensesManager } from "./VehicleExpensesManager";
 import { formatRupiah, formatDate, cn } from "@/lib/utils";
@@ -82,6 +84,7 @@ export function InventoryClient({
   userRole = "ADMIN",
   whatsappPhone = "081234567890",
 }: InventoryClientProps) {
+  const router = useRouter();
   const isSalesRole = userRole === "SALES";
   const [vehicles, setVehicles] = useState<VehicleItem[]>(initialVehicles);
   const [selectedStatus, setSelectedStatus] = useState("ALL");
@@ -321,7 +324,27 @@ export function InventoryClient({
               ) : (
                 filteredVehicles.map((vehicle) => {
                   return (
-                    <tr key={vehicle.id} className="hover:bg-[var(--bg)] transition-colors">
+                    <tr
+                      key={vehicle.id}
+                      onClick={(e) => {
+                        if ((e.target as HTMLElement).closest("a, button")) return;
+                        if (isSalesRole) {
+                          window.open(
+                            `/katalog/${generateVehicleSlug(vehicle)}`,
+                            "_blank",
+                            "noopener,noreferrer"
+                          );
+                        } else {
+                          router.push(`/admin/inventory/${vehicle.id}`);
+                        }
+                      }}
+                      className="hover:bg-[var(--bg)] transition-colors cursor-pointer"
+                      title={
+                        isSalesRole
+                          ? "Klik untuk lihat tampilan katalog unit"
+                          : "Klik baris untuk membuka detail unit, foto & dokumen"
+                      }
+                    >
                       {/* Plat & Brand */}
                       <td className="py-4 px-4 align-top">
                         <div className="font-bold text-base text-[var(--ink)] tracking-tight">
@@ -646,6 +669,15 @@ export function InventoryClient({
         >
           {!isSalesRole && (
             <div className="py-1">
+              <Link
+                href={`/admin/inventory/${activeDropdown.vehicle.id}`}
+                onClick={() => setActiveDropdown(null)}
+                className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+              >
+                <Eye className="w-4 h-4 text-[var(--accent)]" />
+                <span>Lihat Detail &amp; Foto Unit</span>
+              </Link>
+
               <Link
                 href={`/admin/inventory/${activeDropdown.vehicle.id}/edit`}
                 onClick={() => setActiveDropdown(null)}

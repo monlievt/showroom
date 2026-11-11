@@ -786,13 +786,17 @@ function formatDateTime(date: string | Date): string {
 function getEntityLink(entityType: string, entityId: string): string | null {
   switch (entityType) {
     case "Vehicle":  return `/admin/inventory/${entityId}`;
-    case "Sale":     return `/admin/inventory/${entityId}`;
+    case "Sale":
+    case "SalePayment": return `/admin/sales`;
     case "OperationalExpense":
     case "CashTransaction": return `/admin/finance`;
-    case "Asset":    return `/admin/assets`;
+    case "ShowroomAsset":
+    case "Asset":    return `/admin/workshop`;
     case "Investor":
     case "Investment":
+    case "VehicleInvestment":
     case "CapitalLedger":
+    case "ProfitDistribution":
     case "ProfitShareRule": return `/admin/investors`;
     default: return null;
   }
