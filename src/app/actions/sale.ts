@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth/session";
 import { 
   createSaleSchema, 
   createSalePaymentSchema, 
@@ -12,6 +13,8 @@ import { calculateSaleSettlement, getReceivableDueDateStatus } from "@/lib/calcu
 
 export async function createSaleAction(input: CreateSaleInput) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Admin";
     const validated = createSaleSchema.parse(input);
 
     const result = await prisma.$transaction(async (tx) => {
@@ -83,7 +86,7 @@ export async function createSaleAction(input: CreateSaleInput) {
             method: validated.initialPaymentMethod,
             tradeInVehicleId: validated.tradeInVehicleId,
             notes: validated.initialPaymentNotes || "Pembayaran awal / DP saat transaksi",
-            recordedBy: "Owner/Admin",
+            recordedBy: actorLabel,
           },
         });
 
@@ -104,7 +107,7 @@ export async function createSaleAction(input: CreateSaleInput) {
               relatedSaleId: sale.id,
               runningBalance: newBalance,
               notes: `Penerimaan DP/Pelunasan: ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
-              createdBy: "Owner/Admin",
+              createdBy: actorLabel,
             },
           });
         }
@@ -185,7 +188,7 @@ export async function createSaleAction(input: CreateSaleInput) {
 
       // 7. Catat Beban Komisi Makelar / Perantara (Jika Ada)
       if (validated.brokerFee && validated.brokerFee > 0) {
-        await tx.expense.create({
+        const brokerExpense = await tx.expense.create({
           data: {
             vehicleId: validated.vehicleId,
             category: "BROKER_COMMISSION",
@@ -193,7 +196,7 @@ export async function createSaleAction(input: CreateSaleInput) {
             amount: validated.brokerFee,
             date: validated.saleDate,
             notes: `Komisi penjualan unit oleh broker/perantara: ${validated.brokerName || "-"}`,
-            createdBy: "Admin/Owner",
+            createdBy: actorLabel,
           },
         });
 
@@ -208,9 +211,10 @@ export async function createSaleAction(input: CreateSaleInput) {
             amount: validated.brokerFee,
             relatedVehicleId: vehicle.id,
             relatedSaleId: sale.id,
+            relatedExpenseId: brokerExpense.id,
             runningBalance: currentBal - validated.brokerFee,
             notes: `Biaya Komisi Makelar: ${validated.brokerName || "Mediator"} (${vehicle.brand} ${vehicle.model} - ${vehicle.plateNumber})`,
-            createdBy: "Admin/Owner",
+            createdBy: actorLabel,
           },
         });
       }
@@ -218,7 +222,7 @@ export async function createSaleAction(input: CreateSaleInput) {
       // 8. AuditLog
       await tx.auditLog.create({
         data: {
-          actorUserId: "admin-owner-001",
+          actorUserId: session.userId,
           action: "CREATE",
           entityType: "Sale",
           entityId: sale.id,
@@ -250,6 +254,8 @@ export async function createSaleAction(input: CreateSaleInput) {
 
 export async function addSalePaymentAction(input: CreateSalePaymentInput) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Admin";
     const validated = createSalePaymentSchema.parse(input);
 
     const result = await prisma.$transaction(async (tx) => {
@@ -283,7 +289,7 @@ export async function addSalePaymentAction(input: CreateSalePaymentInput) {
           tradeInVehicleId: validated.tradeInVehicleId,
           notes: validated.notes,
           proofUrl: validated.proofUrl || null,
-          recordedBy: "Owner/Admin",
+          recordedBy: actorLabel,
         },
       });
 
@@ -304,7 +310,7 @@ export async function addSalePaymentAction(input: CreateSalePaymentInput) {
             relatedSaleId: sale.id,
             runningBalance: newBalance,
             notes: `Pembayaran angsuran/pelunasan: ${sale.vehicle.brand} ${sale.vehicle.model} (${sale.vehicle.plateNumber})`,
-            createdBy: "Owner/Admin",
+            createdBy: actorLabel,
           },
         });
       }
@@ -324,7 +330,7 @@ export async function addSalePaymentAction(input: CreateSalePaymentInput) {
       // 5. AuditLog
       await tx.auditLog.create({
         data: {
-          actorUserId: "admin-owner-001",
+          actorUserId: session.userId,
           action: "CREATE",
           entityType: "SalePayment",
           entityId: payment.id,
@@ -367,6 +373,7 @@ export async function getSalesAction(filters?: {
   search?: string;
 }) {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const sales = await prisma.sale.findMany({
       orderBy: { saleDate: "desc" },
       include: {
@@ -508,6 +515,7 @@ export async function getSalesAction(filters?: {
 
 export async function getSaleByIdAction(id: string) {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const sale = await prisma.sale.findUnique({
       where: { id },
       include: {

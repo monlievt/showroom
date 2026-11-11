@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 import { capitalLedgerSchema, CapitalLedgerInput } from "@/lib/validations/capital-ledger";
 import Decimal from "decimal.js";
 
@@ -84,9 +85,11 @@ export async function recordCapitalLedgerEntry(
  */
 export async function depositInvestorCapital(
   input: CapitalLedgerInput,
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const validated = capitalLedgerSchema.parse(input);
     const amt = new Decimal(validated.amount);
     const txDate = validated.depositDate ? new Date(validated.depositDate) : new Date();
@@ -109,7 +112,7 @@ export async function depositInvestorCapital(
         notes: validated.notes || "Setoran modal baru investor",
         proofUrl: resolvedProofUrl,
         createdAt: txDate,
-        createdBy: actorUserId,
+        createdBy: session.fullName || resolvedActorId,
       });
 
       // 2. Ambil saldo berjalan kas umum terakhir
@@ -132,14 +135,14 @@ export async function depositInvestorCapital(
           notes: `Setoran modal dari investor (Ref Ledger: ${ledgerEntry.id})`,
           proofUrl: resolvedProofUrl,
           createdAt: txDate,
-          createdBy: actorUserId,
+          createdBy: session.fullName || resolvedActorId,
         },
       });
 
       // 4. Audit Log
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "CREATE",
           entityType: "CapitalLedger",
           entityId: ledgerEntry.id,

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Wallet,
   Car,
@@ -63,7 +64,15 @@ export function InvestorClient({
   allInvestors?: Array<{ id: string; name: string }>;
   onSelectInvestor?: (id: string) => void;
 }) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<"portfolio" | "ledger" | "distributions">("portfolio");
+  const handleSelectInvestor = (id: string) => {
+    if (onSelectInvestor) {
+      onSelectInvestor(id);
+    } else {
+      router.push(`/investor?id=${id}`);
+    }
+  };
 
   if (!investor) {
     return (
@@ -99,13 +108,13 @@ export function InvestorClient({
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Switcher untuk keperluan simulasi/demo */}
-            {allInvestors && allInvestors.length > 1 && onSelectInvestor && (
+            {/* Switcher untuk Owner/Admin melihat portofolio investor */}
+            {allInvestors && allInvestors.length > 1 && (
               <div className="flex items-center gap-2 text-xs">
                 <span className="text-[var(--muted)] hidden sm:inline">Lihat sebagai:</span>
                 <select
                   value={investor.id}
-                  onChange={(e) => onSelectInvestor(e.target.value)}
+                  onChange={(e) => handleSelectInvestor(e.target.value)}
                   className="bg-[var(--bg)] border border-[var(--line)] rounded-lg px-2.5 py-1 text-xs font-semibold text-[var(--ink)]"
                 >
                   {allInvestors.map((inv) => (

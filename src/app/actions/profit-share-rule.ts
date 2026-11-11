@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 import {
   validateContiguousTiers,
   TierRuleInput,
@@ -11,6 +12,7 @@ import Decimal from "decimal.js";
 
 export async function getActiveProfitShareRules() {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const rules = await prisma.profitShareRule.findMany({
       where: { active: true },
       orderBy: { minProfit: "asc" },
@@ -36,9 +38,11 @@ export async function getActiveProfitShareRules() {
 
 export async function saveProfitShareRules(
   tiers: SingleProfitShareRuleInput[],
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     // 1. Validasi Contiguous (tanpa gap/overlap) di service layer
     const validation = validateContiguousTiers(tiers as TierRuleInput[]);
     if (!validation.valid) {
@@ -73,7 +77,7 @@ export async function saveProfitShareRules(
       // Audit Log
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "UPDATE",
           entityType: "ProfitShareRule",
           entityId: "batch",

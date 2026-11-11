@@ -3,6 +3,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import React from "react";
 import QRCode from "qrcode";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth/session";
 import { SpecTagPdfDocument } from "@/components/pdf/SpecTagPdfDocument";
 
 export async function GET(
@@ -10,6 +11,10 @@ export async function GET(
   { params }: { params: Promise<{ vehicleId: string }> }
 ) {
   try {
+    const session = await getSession();
+    if (!session || !["OWNER", "ADMIN", "STAFF_ADMIN", "SALES"].includes(session.role)) {
+      return NextResponse.json({ error: "Akses ditolak." }, { status: 401 });
+    }
     const { vehicleId } = await params;
     const host = req.headers.get("host") || "localhost:3000";
     const proto = req.headers.get("x-forwarded-proto") || "http";

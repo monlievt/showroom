@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 import {
   calculateProfitDistribution,
   InvestmentData,
@@ -12,6 +13,7 @@ import Decimal from "decimal.js";
 
 export async function getFinanceSummary() {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     // 1. Total modal saat ini di kas umum
     const latestCash = await prisma.cashTransaction.findFirst({
       orderBy: { createdAt: "desc" },
@@ -159,9 +161,11 @@ export async function getFinanceSummary() {
  */
 export async function executeProfitDistribution(
   saleId: string,
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     // 1. Ambil data penjualan lengkap
     const sale = await prisma.sale.findUnique({
       where: { id: saleId },
@@ -272,38 +276,38 @@ export async function executeProfitDistribution(
             type: "RETURNED",
             amount: item.returnedCapital,
             vehicleId: sale.vehicleId,
-            notes: `Pengembalian 100% pokok modal unit ${sale.vehicle.plateNumber} (Sale: ${sale.id})`,
-            createdBy: actorUserId,
-          });
+              notes: `Pengembalian 100% pokok modal unit ${sale.vehicle.plateNumber} (Sale: ${sale.id})`,
+              createdBy: resolvedActorId,
+            });
+          }
+
+          // Jika ada bagi hasil keuntungan untuk investor (> 0)
+          if (
+            item.investorId &&
+            item.calculatedAmount.gt(0) &&
+            item.beneficiaryType === "INVESTOR_EXTERNAL"
+          ) {
+            await recordCapitalLedgerEntry(tx, {
+              investorId: item.investorId,
+              type: "PROFIT_PAID",
+              amount: item.calculatedAmount,
+              vehicleId: sale.vehicleId,
+              notes: `Pembagian laba hasil penjualan unit ${sale.vehicle.plateNumber} (${item.agreedPercentAtCalc}% porsi modal)`,
+              createdBy: resolvedActorId,
+            });
+          }
         }
 
-        // Jika ada bagi hasil keuntungan untuk investor (> 0)
-        if (
-          item.investorId &&
-          item.calculatedAmount.gt(0) &&
-          item.beneficiaryType === "INVESTOR_EXTERNAL"
-        ) {
-          await recordCapitalLedgerEntry(tx, {
-            investorId: item.investorId,
-            type: "PROFIT_PAID",
-            amount: item.calculatedAmount,
-            vehicleId: sale.vehicleId,
-            notes: `Pembagian laba hasil penjualan unit ${sale.vehicle.plateNumber} (${item.agreedPercentAtCalc}% porsi modal)`,
-            createdBy: actorUserId,
-          });
-        }
-      }
+        // Pastikan status kendaraan adalah SOLD_SETTLED
+        await tx.vehicle.update({
+          where: { id: sale.vehicleId },
+          data: { status: "SOLD_SETTLED" },
+        });
 
-      // Pastikan status kendaraan adalah SOLD_SETTLED
-      await tx.vehicle.update({
-        where: { id: sale.vehicleId },
-        data: { status: "SOLD_SETTLED" },
-      });
-
-      // Audit Log
-      await tx.auditLog.create({
-        data: {
-          actorUserId,
+        // Audit Log
+        await tx.auditLog.create({
+          data: {
+            actorUserId: resolvedActorId,
           action: "CREATE",
           entityType: "ProfitDistribution",
           entityId: sale.id,
@@ -332,9 +336,11 @@ export async function executeProfitDistribution(
  */
 export async function reverseDistribution(
   saleId: string,
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const sale = await prisma.sale.findUnique({
       where: { id: saleId },
       include: {
@@ -357,7 +363,7 @@ export async function reverseDistribution(
       // 1. AuditLog: REVERSAL_INITIATED
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "REVERSAL_INITIATED",
           entityType: "ProfitDistribution",
           entityId: sale.id,
@@ -377,7 +383,7 @@ export async function reverseDistribution(
               amount: amt.negated(),
               vehicleId: sale.vehicleId,
               notes: `[REVERSAL] Koreksi pembatalan profit unit ${sale.vehicle.plateNumber}`,
-              createdBy: actorUserId,
+              createdBy: resolvedActorId,
             });
           }
 
@@ -389,7 +395,7 @@ export async function reverseDistribution(
               amount: cap.negated(),
               vehicleId: sale.vehicleId,
               notes: `[REVERSAL] Koreksi pengembalian modal unit ${sale.vehicle.plateNumber}`,
-              createdBy: actorUserId,
+              createdBy: resolvedActorId,
             });
           }
         }
@@ -407,7 +413,7 @@ export async function reverseDistribution(
       // 3. AuditLog: REVERSAL_COMPLETED
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "REVERSAL_COMPLETED",
           entityType: "ProfitDistribution",
           entityId: sale.id,
@@ -427,6 +433,7 @@ export async function reverseDistribution(
 
 export async function getDistributionsHistory() {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const distributions = await prisma.profitDistribution.findMany({
       include: {
         investor: true,

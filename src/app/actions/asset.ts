@@ -2,11 +2,13 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 import { showroomAssetSchema, ShowroomAssetInput } from "@/lib/validations/asset";
 import Decimal from "decimal.js";
 
 export async function getShowroomAssets() {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const assets = await prisma.showroomAsset.findMany({
       orderBy: { purchaseDate: "desc" },
     });
@@ -51,10 +53,10 @@ export async function getShowroomAssets() {
 
 export async function createShowroomAsset(
   input: ShowroomAssetInput,
-  recordCashOut: boolean = false,
-  actorUserId: string = "system"
+  recordCashOut: boolean = false
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const validated = showroomAssetSchema.parse(input);
     const cost = new Decimal(validated.purchaseCost);
     const currVal = validated.currentValue ? new Decimal(validated.currentValue) : cost;
@@ -76,7 +78,6 @@ export async function createShowroomAsset(
         },
       });
 
-      // Jika user memilih untuk langsung potong kas BCA saat beli aset
       if (recordCashOut) {
         const latestTx = await tx.cashTransaction.findFirst({
           orderBy: { createdAt: "desc" },
@@ -90,18 +91,18 @@ export async function createShowroomAsset(
             amount: cost,
             runningBalance: newBal,
             notes: `Pembelian Aset Showroom: ${validated.name}`,
-            createdBy: actorUserId,
+            createdBy: session.fullName || session.userId,
           },
         });
       }
 
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: session.userId,
           action: "CREATE",
           entityType: "ShowroomAsset",
           entityId: asset.id,
-          afterData: asset as any,
+          afterData: JSON.parse(JSON.stringify(asset)),
         },
       });
 
@@ -121,25 +122,80 @@ export async function createShowroomAsset(
 
 export async function updateShowroomAsset(
   id: string,
-  input: Partial<ShowroomAssetInput>,
-  actorUserId: string = "system"
+  input: Partial<ShowroomAssetInput>
 ) {
   try {
-    const data: any = {};
-    if (input.name) data.name = input.name;
-    if (input.category) data.category = input.category;
-    if (input.purchaseDate) data.purchaseDate = input.purchaseDate;
-    if (input.purchaseCost) data.purchaseCost = new Decimal(input.purchaseCost);
-    if (input.currentValue !== undefined) {
-      data.currentValue = input.currentValue ? new Decimal(input.currentValue) : null;
-    }
-    if (input.condition) data.condition = input.condition;
-    if (input.location !== undefined) data.location = input.location;
-    if (input.notes !== undefined) data.notes = input.notes;
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
 
-    const updated = await prisma.showroomAsset.update({
-      where: { id },
-      data,
+    const updated = await prisma.$transaction(async (tx) => {
+      const existing = await tx.showroomAsset.findUnique({ where: { id } });
+      if (!existing) {
+        throw new Error("Data aset tidak ditemukan.");
+      }
+
+      const data: Record<string, unknown> = {};
+      if (input.name) data.name = input.name;
+      if (input.category) data.category = input.category;
+      if (input.purchaseDate) data.purchaseDate = input.purchaseDate;
+      if (input.purchaseCost !== undefined) data.purchaseCost = new Decimal(input.purchaseCost);
+      if (input.currentValue !== undefined) {
+        data.currentValue = input.currentValue ? new Decimal(input.currentValue) : null;
+      }
+      if (input.condition) data.condition = input.condition;
+      if (input.location !== undefined) data.location = input.location;
+      if (input.notes !== undefined) data.notes = input.notes;
+
+      const nextAsset = await tx.showroomAsset.update({
+        where: { id },
+        data,
+      });
+
+      // Jika nilai beli berubah dan sebelumnya pernah memotong kas, catat selisihnya di buku kas
+      if (input.purchaseCost !== undefined) {
+        const hadCashPurchase = await tx.cashTransaction.findFirst({
+          where: {
+            type: "OUT_ASSET_PURCHASE",
+            notes: { contains: existing.name },
+          },
+        });
+        if (hadCashPurchase) {
+          const diff = new Decimal(input.purchaseCost).minus(
+            new Decimal(existing.purchaseCost.toString())
+          );
+          if (!diff.isZero()) {
+            const latestTx = await tx.cashTransaction.findFirst({
+              orderBy: { createdAt: "desc" },
+            });
+            const prevBal = latestTx
+              ? new Decimal(latestTx.runningBalance.toString())
+              : new Decimal(0);
+            const newBal = diff.gt(0) ? prevBal.minus(diff) : prevBal.plus(diff.abs());
+
+            await tx.cashTransaction.create({
+              data: {
+                type: diff.gt(0) ? "OUT_ASSET_PURCHASE" : "IN_OTHER",
+                amount: diff.abs(),
+                runningBalance: newBal,
+                notes: `Koreksi nilai beli aset "${nextAsset.name}" (${diff.gt(0) ? "+" : "-"}Rp ${diff.abs().toNumber().toLocaleString("id-ID")})`,
+                createdBy: session.fullName || session.userId,
+              },
+            });
+          }
+        }
+      }
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "UPDATE",
+          entityType: "ShowroomAsset",
+          entityId: id,
+          beforeData: JSON.parse(JSON.stringify(existing)),
+          afterData: JSON.parse(JSON.stringify(nextAsset)),
+        },
+      });
+
+      return nextAsset;
     });
 
     revalidatePath("/admin/workshop");
@@ -153,9 +209,56 @@ export async function updateShowroomAsset(
   }
 }
 
-export async function deleteShowroomAsset(id: string, actorUserId: string = "system") {
+export async function deleteShowroomAsset(id: string) {
   try {
-    await prisma.showroomAsset.delete({ where: { id } });
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+
+    await prisma.$transaction(async (tx) => {
+      const existing = await tx.showroomAsset.findUnique({ where: { id } });
+      if (!existing) {
+        throw new Error("Data aset tidak ditemukan.");
+      }
+
+      const hadCashPurchase = await tx.cashTransaction.findFirst({
+        where: {
+          type: "OUT_ASSET_PURCHASE",
+          notes: { contains: existing.name },
+        },
+      });
+
+      if (hadCashPurchase) {
+        const latestTx = await tx.cashTransaction.findFirst({
+          orderBy: { createdAt: "desc" },
+        });
+        const prevBal = latestTx
+          ? new Decimal(latestTx.runningBalance.toString())
+          : new Decimal(0);
+        const refund = new Decimal(existing.purchaseCost.toString());
+
+        await tx.cashTransaction.create({
+          data: {
+            type: "IN_OTHER",
+            amount: refund,
+            runningBalance: prevBal.plus(refund),
+            notes: `Pembatalan/hapus aset showroom: ${existing.name}`,
+            createdBy: session.fullName || session.userId,
+          },
+        });
+      }
+
+      await tx.showroomAsset.delete({ where: { id } });
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "DELETE",
+          entityType: "ShowroomAsset",
+          entityId: id,
+          beforeData: JSON.parse(JSON.stringify(existing)),
+        },
+      });
+    });
+
     revalidatePath("/admin/workshop");
     revalidatePath("/admin/finance");
     return { success: true };

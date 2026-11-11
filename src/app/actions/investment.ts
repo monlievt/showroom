@@ -2,15 +2,18 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 import { vehicleInvestmentSchema, VehicleInvestmentInput } from "@/lib/validations/investment";
 import { recordCapitalLedgerEntry } from "./capital-ledger";
 import Decimal from "decimal.js";
 
 export async function addVehicleInvestment(
   input: VehicleInvestmentInput,
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const validated = vehicleInvestmentSchema.parse(input);
     const capitalAmt = new Decimal(validated.capitalShare);
     const profitPercent = new Decimal(validated.profitSharePercent);
@@ -46,13 +49,13 @@ export async function addVehicleInvestment(
         amount: capitalAmt,
         vehicleId: validated.vehicleId,
         notes: `Alokasi modal untuk unit ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
-        createdBy: actorUserId,
+        createdBy: session.fullName || resolvedActorId,
       });
 
       // 4. Audit Log
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "CREATE",
           entityType: "VehicleInvestment",
           entityId: investment.id,
@@ -76,6 +79,7 @@ export async function addVehicleInvestment(
 
 export async function getVehicleInvestments(vehicleId: string) {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const investments = await prisma.vehicleInvestment.findMany({
       where: { vehicleId },
       include: {
@@ -106,9 +110,11 @@ export async function saveVehicleInvestmentsAction(
     capitalShare: number;
     profitSharePercent: number;
   }[],
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const result = await prisma.$transaction(async (tx) => {
       const vehicle = await tx.vehicle.findUnique({
         where: { id: vehicleId },
@@ -198,14 +204,14 @@ export async function saveVehicleInvestmentsAction(
           amount: capitalAmt,
           vehicleId: vehicle.id,
           notes: `Alokasi modal untuk unit ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
-          createdBy: actorUserId,
+          createdBy: session.fullName || resolvedActorId,
         });
       }
 
       // Audit Log
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "UPDATE",
           entityType: "VehicleInvestment",
           entityId: vehicleId,

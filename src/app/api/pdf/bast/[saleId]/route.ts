@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import React from "react";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth/session";
 import { BastPdfDocument } from "@/components/pdf/BastPdfDocument";
 
 export async function GET(
@@ -9,6 +10,10 @@ export async function GET(
   { params }: { params: Promise<{ saleId: string }> }
 ) {
   try {
+    const session = await getSession();
+    if (!session || !["OWNER", "ADMIN", "STAFF_ADMIN"].includes(session.role)) {
+      return NextResponse.json({ error: "Akses ditolak." }, { status: 401 });
+    }
     const { saleId } = await params;
 
     const sale = await prisma.sale.findUnique({

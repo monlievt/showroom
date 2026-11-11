@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME);
 
   // Verifikasi kriptografis signature HMAC session untuk mencegah Cookie Spoofing / Privilege Escalation
-  let session = sessionCookie?.value ? await verifySessionToken(sessionCookie.value) : null;
+  const session = sessionCookie?.value ? await verifySessionToken(sessionCookie.value) : null;
 
   // Jika cookie ada tapi tidak valid (dicoba dipalsukan/spoofed), hapus cookie tersebut
   const isCookieTampered = Boolean(sessionCookie?.value && !session);
@@ -29,9 +29,9 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/investor", request.url));
     }
 
-    // Role SALES: Hanya diizinkan melihat katalog stok mobil (/admin/inventory)
+    // Role SALES: Hanya diizinkan melihat daftar stok mobil (/admin/inventory)
     if (session.role === "SALES") {
-      const isAllowedSalesPath = pathname.startsWith("/admin/inventory");
+      const isAllowedSalesPath = pathname === "/admin/inventory";
       if (!isAllowedSalesPath) {
         return NextResponse.redirect(
           new URL("/admin/inventory?status=READY_FOR_SALE", request.url)

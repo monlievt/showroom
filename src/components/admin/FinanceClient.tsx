@@ -592,10 +592,7 @@ export function FinanceClient({
               </thead>
               <tbody className="divide-y divide-[var(--line)]">
                 {cashTransactions.map((tx) => {
-                  const isIncoming =
-                    tx.type === "IN_SALE_PAYMENT" ||
-                    tx.type === "IN_CAPITAL_DEPOSIT" ||
-                    tx.type === "IN_OWNER_EQUITY";
+                  const isIncoming = tx.type.startsWith("IN_");
 
                   return (
                     <tr key={tx.id} className="hover:bg-[var(--bg)]">

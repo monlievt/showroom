@@ -91,11 +91,11 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
   // Delete State
   const [deletingItem, setDeletingItem] = useState<HistoricalSaleItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 4000);
+  const showToast = (msg: string, type: "success" | "error" = "success") => {
+    setToast({ type, message: msg });
+    setTimeout(() => setToast(null), 4500);
   };
 
   // Ringkasan Dinamis (otomatis terupdate jika ada data yang dihapus/diedit)
@@ -241,11 +241,11 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
         showToast("Perubahan data unit historis berhasil disimpan.");
         setIsEditing(false);
       } else {
-        alert(res.error || "Gagal menyimpan perubahan.");
+        showToast(res.error || "Gagal menyimpan perubahan.", "error");
       }
     } catch (err: any) {
       console.error("Gagal menyimpan perubahan:", err);
-      alert(err.message || "Terjadi kesalahan saat menyimpan perubahan.");
+      showToast(err.message || "Terjadi kesalahan saat menyimpan perubahan.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -264,10 +264,10 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
         }
         setDeletingItem(null);
       } else {
-        alert(res.error || "Gagal menghapus data arsip.");
+        showToast(res.error || "Gagal menghapus data arsip.", "error");
       }
     } catch (err: any) {
-      alert(err.message || "Terjadi kesalahan saat menghapus data.");
+      showToast(err.message || "Terjadi kesalahan saat menghapus data.", "error");
     } finally {
       setIsDeleting(false);
     }
@@ -276,14 +276,25 @@ export function ArchivePageClient({ initialItems, initialSummary }: ArchivePageC
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Toast Feedback */}
-      {toastMessage && (
-        <div className="p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-xs bg-[var(--bg)] border-[var(--line)] text-[var(--ink)] animate-in fade-in duration-200">
+      {toast && (
+        <div
+          className={cn(
+            "p-4 rounded-xl text-sm font-medium flex items-center justify-between border shadow-xs animate-in fade-in duration-200",
+            toast.type === "error"
+              ? "bg-red-50 border-red-200 text-red-700"
+              : "bg-[var(--bg)] border-[var(--line)] text-[var(--ink)]"
+          )}
+        >
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
-            <span>{toastMessage}</span>
+            {toast.type === "error" ? (
+              <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />
+            ) : (
+              <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
+            )}
+            <span>{toast.message}</span>
           </div>
           <button
-            onClick={() => setToastMessage(null)}
+            onClick={() => setToast(null)}
             className="text-xs underline hover:opacity-80 cursor-pointer font-semibold"
           >
             Tutup

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import Decimal from "decimal.js";
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth/session";
 import { createVehicleSchema, type CreateVehicleInput } from "@/lib/validations/vehicle";
 import { canTransition, type VehicleStatus } from "@/lib/calculations/vehicle-state";
 import { calculateHpp, calculateDaysInInventory, getInventoryAgingCategory } from "@/lib/calculations/hpp";
@@ -12,6 +13,8 @@ export async function getVehiclesAction(filters?: {
   search?: string;
 }) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN", "SALES"]);
+    const isSalesRole = session.role === "SALES";
     const where: any = {};
 
     if (filters?.status && filters.status !== "ALL") {
@@ -80,21 +83,24 @@ export async function getVehiclesAction(filters?: {
 
       return {
         ...v,
-        purchasePrice: Number(v.purchasePrice),
+        purchasePrice: isSalesRole ? 0 : Number(v.purchasePrice),
         targetSellingPrice: v.targetSellingPrice ? Number(v.targetSellingPrice) : null,
-        minSellingPrice: v.minSellingPrice ? Number(v.minSellingPrice) : null,
-        totalExpenses: expensesList.reduce((acc, e) => acc + e.amount, 0),
-        totalHpp: totalHpp.toNumber(),
+        minSellingPrice: isSalesRole ? null : v.minSellingPrice ? Number(v.minSellingPrice) : null,
+        taxNominal: v.taxNominal ? Number(v.taxNominal) : null,
+        totalExpenses: isSalesRole ? 0 : expensesList.reduce((acc, e) => acc + e.amount, 0),
+        totalHpp: isSalesRole ? 0 : totalHpp.toNumber(),
         daysInInventory: days,
         agingCategory: aging,
         isFullyPaid,
-        expenses: v.expenses.map((e) => ({
-          id: e.id,
-          category: e.category,
-          amount: Number(e.amount),
-          date: e.date,
-          vendorName: e.vendorName,
-        })),
+        expenses: isSalesRole
+          ? []
+          : v.expenses.map((e) => ({
+              id: e.id,
+              category: e.category,
+              amount: Number(e.amount),
+              date: e.date,
+              vendorName: e.vendorName,
+            })),
         sale: v.sale
           ? {
               id: v.sale.id,
@@ -117,6 +123,8 @@ export async function getVehiclesAction(filters?: {
 
 export async function createVehicleAction(input: CreateVehicleInput) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Admin";
     const validated = createVehicleSchema.parse(input);
 
     const result = await prisma.$transaction(async (tx) => {
@@ -213,7 +221,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
           relatedVehicleId: vehicle.id,
           runningBalance: newBalance,
           notes: `Pembelian unit ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
-          createdBy: "Owner/Admin",
+          createdBy: actorLabel,
         },
       });
 
@@ -230,7 +238,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
             amount: validated.auctionAdminFee,
             date: validated.purchaseDate,
             notes: "Biaya admin resmi balai lelang saat menang palu",
-            createdBy: "Owner/Admin",
+            createdBy: actorLabel,
           },
         });
 
@@ -242,7 +250,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
             relatedExpenseId: adminExpense.id,
             runningBalance: currentRunningBalance,
             notes: `Biaya admin lelang ${validated.auctionHouse || ""} untuk ${vehicle.plateNumber}`,
-            createdBy: "Owner/Admin",
+            createdBy: actorLabel,
           },
         });
       }
@@ -258,7 +266,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
             amount: validated.transportPickupFee,
             date: validated.purchaseDate,
             notes: `Biaya ambil/towing unit (${validated.transportVendor || "Driver/Ekspedisi"})`,
-            createdBy: "Owner/Admin",
+            createdBy: actorLabel,
           },
         });
 
@@ -270,7 +278,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
             relatedExpenseId: transportExpense.id,
             runningBalance: currentRunningBalance,
             notes: `Ongkos ambil/towing unit ${vehicle.plateNumber} (${validated.transportVendor || "Driver"})`,
-            createdBy: "Owner/Admin",
+            createdBy: actorLabel,
           },
         });
       }
@@ -278,7 +286,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
       // 5. Tulis AuditLog
       await tx.auditLog.create({
         data: {
-          actorUserId: "admin-owner-001",
+          actorUserId: session.userId,
           action: "CREATE",
           entityType: "Vehicle",
           entityId: vehicle.id,
@@ -299,6 +307,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
 
 export async function updateVehicleStatusAction(vehicleId: string, toStatus: VehicleStatus) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const result = await prisma.$transaction(async (tx) => {
       const vehicle = await tx.vehicle.findUnique({
         where: { id: vehicleId },
@@ -323,7 +332,7 @@ export async function updateVehicleStatusAction(vehicleId: string, toStatus: Veh
       // AuditLog
       await tx.auditLog.create({
         data: {
-          actorUserId: "admin-owner-001",
+          actorUserId: session.userId,
           action: "UPDATE_STATUS",
           entityType: "Vehicle",
           entityId: vehicle.id,
@@ -345,6 +354,7 @@ export async function updateVehicleStatusAction(vehicleId: string, toStatus: Veh
 
 export async function getVehicleByIdAction(id: string) {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const vehicle = await prisma.vehicle.findUnique({
       where: { id },
       include: {
@@ -430,6 +440,7 @@ export async function updateVehicleTaxAction(
   taxNominal?: number | null
 ) {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const updated = await prisma.vehicle.update({
       where: { id: vehicleId },
       data: {
@@ -451,6 +462,7 @@ export async function updateVehicleTaxAction(
 
 export async function deleteVehiclePhotoAction(photoId: string, vehicleId: string) {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     await prisma.vehiclePhoto.delete({
       where: { id: photoId },
     });
@@ -466,6 +478,7 @@ export async function deleteVehiclePhotoAction(photoId: string, vehicleId: strin
 
 export async function deleteVehicleDocumentAction(documentId: string, vehicleId: string) {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     await prisma.vehicleDocument.delete({
       where: { id: documentId },
     });
@@ -509,85 +522,169 @@ export async function updateVehicleAction(
   }
 ) {
   try {
-    const updateData: any = {};
-    if (data.plateNumber) {
-      updateData.plateNumber = data.plateNumber.trim().toUpperCase().replace(/\s+/g, "");
-    }
-    if (data.brand !== undefined) updateData.brand = data.brand.trim();
-    if (data.model !== undefined) updateData.model = data.model.trim();
-    if (data.year !== undefined) updateData.year = Number(data.year);
-    if (data.color !== undefined) updateData.color = data.color.trim();
-    if (data.odometer !== undefined) updateData.odometer = Number(data.odometer);
-    if (data.transmission) updateData.transmission = data.transmission;
-    if (data.engineCapacity !== undefined) updateData.engineCapacity = Number(data.engineCapacity);
-    if (data.sourceType) updateData.sourceType = data.sourceType;
-    if (data.auctionHouse !== undefined) updateData.auctionHouse = data.auctionHouse;
-    if (data.auctionLotType !== undefined) updateData.auctionLotType = data.auctionLotType;
-    if (data.bpkbStatus) updateData.bpkbStatus = data.bpkbStatus;
-    if (data.bpkbLeadDays !== undefined) updateData.bpkbLeadDays = Number(data.bpkbLeadDays);
-    if (data.taxExpiryDate !== undefined) {
-      updateData.taxExpiryDate = data.taxExpiryDate ? new Date(data.taxExpiryDate) : null;
-    }
-    if (data.platExpiryDate !== undefined) {
-      updateData.platExpiryDate = data.platExpiryDate ? new Date(data.platExpiryDate) : null;
-    }
-    if (data.taxNominal !== undefined) {
-      updateData.taxNominal = data.taxNominal ? new Decimal(data.taxNominal) : null;
-    }
-    if (data.stnkStatus) updateData.stnkStatus = data.stnkStatus;
-    if (data.purchasePrice !== undefined) {
-      updateData.purchasePrice = new Decimal(data.purchasePrice);
-    }
-    if (data.purchaseDate) {
-      updateData.purchaseDate = new Date(data.purchaseDate);
-    }
-    if (data.targetSellingPrice !== undefined) {
-      updateData.targetSellingPrice = data.targetSellingPrice ? new Decimal(data.targetSellingPrice) : null;
-    }
-    if (data.minSellingPrice !== undefined) {
-      updateData.minSellingPrice = data.minSellingPrice ? new Decimal(data.minSellingPrice) : null;
-    }
-    if (data.notes !== undefined) updateData.notes = data.notes;
-    if (data.currentLocation !== undefined) updateData.currentLocation = data.currentLocation.trim();
-    if (data.youtubeVideoId !== undefined) updateData.youtubeVideoId = data.youtubeVideoId;
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Admin";
 
-    const updated = await prisma.vehicle.update({
-      where: { id: vehicleId },
-      data: updateData,
+    const updated = await prisma.$transaction(async (tx) => {
+      const existing = await tx.vehicle.findUnique({
+        where: { id: vehicleId },
+        include: {
+          sale: {
+            select: {
+              distributions: { select: { id: true, notes: true } },
+            },
+          },
+        },
+      });
+      if (!existing) {
+        throw new Error("Unit kendaraan tidak ditemukan.");
+      }
+
+      const updateData: any = {};
+      if (data.plateNumber) {
+        updateData.plateNumber = data.plateNumber.trim().toUpperCase().replace(/\s+/g, "");
+      }
+      if (data.brand !== undefined) updateData.brand = data.brand.trim();
+      if (data.model !== undefined) updateData.model = data.model.trim();
+      if (data.year !== undefined) updateData.year = Number(data.year);
+      if (data.color !== undefined) updateData.color = data.color.trim();
+      if (data.odometer !== undefined) updateData.odometer = Number(data.odometer);
+      if (data.transmission) updateData.transmission = data.transmission;
+      if (data.engineCapacity !== undefined) updateData.engineCapacity = Number(data.engineCapacity);
+      if (data.sourceType) updateData.sourceType = data.sourceType;
+      if (data.auctionHouse !== undefined) updateData.auctionHouse = data.auctionHouse;
+      if (data.auctionLotType !== undefined) updateData.auctionLotType = data.auctionLotType;
+      if (data.bpkbStatus) updateData.bpkbStatus = data.bpkbStatus;
+      if (data.bpkbLeadDays !== undefined) updateData.bpkbLeadDays = Number(data.bpkbLeadDays);
+      if (data.taxExpiryDate !== undefined) {
+        updateData.taxExpiryDate = data.taxExpiryDate ? new Date(data.taxExpiryDate) : null;
+      }
+      if (data.platExpiryDate !== undefined) {
+        updateData.platExpiryDate = data.platExpiryDate ? new Date(data.platExpiryDate) : null;
+      }
+      if (data.taxNominal !== undefined) {
+        updateData.taxNominal = data.taxNominal ? new Decimal(data.taxNominal) : null;
+      }
+      if (data.stnkStatus) updateData.stnkStatus = data.stnkStatus;
+      if (data.purchasePrice !== undefined) {
+        updateData.purchasePrice = new Decimal(data.purchasePrice);
+      }
+      if (data.purchaseDate) {
+        updateData.purchaseDate = new Date(data.purchaseDate);
+      }
+      if (data.targetSellingPrice !== undefined) {
+        updateData.targetSellingPrice = data.targetSellingPrice ? new Decimal(data.targetSellingPrice) : null;
+      }
+      if (data.minSellingPrice !== undefined) {
+        updateData.minSellingPrice = data.minSellingPrice ? new Decimal(data.minSellingPrice) : null;
+      }
+      if (data.notes !== undefined) updateData.notes = data.notes;
+      if (data.currentLocation !== undefined) updateData.currentLocation = data.currentLocation.trim();
+      if (data.youtubeVideoId !== undefined) updateData.youtubeVideoId = data.youtubeVideoId;
+
+      // Sinkronkan mutasi kas jika purchasePrice berubah
+      if (data.purchasePrice !== undefined) {
+        const oldPrice = new Decimal(existing.purchasePrice.toString());
+        const newPrice = new Decimal(data.purchasePrice);
+        const diff = newPrice.minus(oldPrice);
+
+        if (!diff.isZero()) {
+          const hasActiveDistribution = existing.sale?.distributions.some(
+            (d) => !d.notes?.includes("[REVERSED]")
+          );
+          if (hasActiveDistribution) {
+            throw new Error(
+              "Harga beli tidak dapat diubah karena bagi hasil penjualan unit ini sudah dicatat. Lakukan reversal distribusi terlebih dahulu."
+            );
+          }
+
+          const lastCashTx = await tx.cashTransaction.findFirst({
+            orderBy: { createdAt: "desc" },
+            select: { runningBalance: true },
+          });
+          const currentBalance = lastCashTx
+            ? new Decimal(lastCashTx.runningBalance.toString())
+            : new Decimal(0);
+
+          if (diff.gt(0)) {
+            await tx.cashTransaction.create({
+              data: {
+                type: "OUT_VEHICLE_PURCHASE",
+                amount: diff,
+                relatedVehicleId: existing.id,
+                runningBalance: currentBalance.minus(diff),
+                notes: `Penyesuaian (+Rp ${diff.toNumber().toLocaleString("id-ID")}) harga beli unit ${existing.brand} ${existing.model} (${existing.plateNumber})`,
+                createdBy: actorLabel,
+              },
+            });
+          } else {
+            const refund = diff.abs();
+            await tx.cashTransaction.create({
+              data: {
+                type: "IN_OTHER",
+                amount: refund,
+                relatedVehicleId: existing.id,
+                runningBalance: currentBalance.plus(refund),
+                notes: `Koreksi pengurangan harga beli (-Rp ${refund.toNumber().toLocaleString("id-ID")}) unit ${existing.brand} ${existing.model} (${existing.plateNumber})`,
+                createdBy: actorLabel,
+              },
+            });
+          }
+        }
+      }
+
+      const nextVehicle = await tx.vehicle.update({
+        where: { id: vehicleId },
+        data: updateData,
+      });
+
+      // Update atau create initial inspection record jika ada checklist fisik
+      if (data.physicalChecklist) {
+        const existingInspection = await tx.inspection.findFirst({
+          where: { vehicleId },
+          orderBy: { version: "asc" },
+        });
+        if (existingInspection) {
+          await tx.inspection.update({
+            where: { id: existingInspection.id },
+            data: {
+              checklistData: data.physicalChecklist,
+            },
+          });
+        } else {
+          await tx.inspection.create({
+            data: {
+              vehicleId,
+              version: 1,
+              isCurrent: true,
+              stage: "INTAKE",
+              engineGrade: "B",
+              interiorGrade: "B",
+              exteriorGrade: "B",
+              frameGrade: "A",
+              checklistData: data.physicalChecklist,
+              inspectedBy: actorLabel,
+            },
+          });
+        }
+      }
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "UPDATE",
+          entityType: "Vehicle",
+          entityId: vehicleId,
+          beforeData: JSON.parse(JSON.stringify(existing)),
+          afterData: JSON.parse(JSON.stringify(nextVehicle)),
+        },
+      });
+
+      return nextVehicle;
     });
 
-    // Update atau create initial inspection record jika ada checklist fisik
-    if (data.physicalChecklist) {
-      const existingInspection = await prisma.inspection.findFirst({
-        where: { vehicleId },
-        orderBy: { version: "asc" },
-      });
-      if (existingInspection) {
-        await prisma.inspection.update({
-          where: { id: existingInspection.id },
-          data: {
-            checklistData: data.physicalChecklist,
-          },
-        });
-      } else {
-        await prisma.inspection.create({
-          data: {
-            vehicleId,
-            version: 1,
-            isCurrent: true,
-            stage: "INTAKE",
-            engineGrade: "B",
-            interiorGrade: "B",
-            exteriorGrade: "B",
-            frameGrade: "A",
-            checklistData: data.physicalChecklist,
-            inspectedBy: "Checker Turun Towing",
-          },
-        });
-      }
-    }
-
     revalidatePath("/admin/inventory");
+    revalidatePath("/admin/finance");
     revalidatePath(`/admin/inventory/${vehicleId}`);
     revalidatePath(`/admin/inventory/${vehicleId}/edit`);
     revalidatePath("/katalog");

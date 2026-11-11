@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getPublicVehicleDetail } from "@/app/actions/catalog";
+import { getPublicWhatsAppContactsAction } from "@/app/actions/contact";
 import { VehicleDetailClient } from "@/components/public/VehicleDetailClient";
 
 export const dynamic = "force-dynamic";
@@ -31,11 +32,19 @@ export default async function VehicleDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const result = await getPublicVehicleDetail(slug);
+  const [result, waContacts] = await Promise.all([
+    getPublicVehicleDetail(slug),
+    getPublicWhatsAppContactsAction(),
+  ]);
 
   if (!result.success || !result.data) {
     notFound();
   }
 
-  return <VehicleDetailClient vehicle={result.data as any} />;
+  const primaryWa =
+    waContacts.find((c) => c.isPrimary && c.isActive)?.phone ||
+    waContacts[0]?.phone ||
+    "081234567890";
+
+  return <VehicleDetailClient vehicle={result.data as any} whatsappPhone={primaryWa} />;
 }

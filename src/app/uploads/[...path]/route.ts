@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { readFile, stat } from "fs/promises";
 import fs from "fs";
 import path from "path";
+import { getSession } from "@/lib/auth/session";
 
 // MIME types mapping untuk file yang diizinkan sistem
 const MIME_TYPES: Record<string, string> = {
@@ -13,6 +14,9 @@ const MIME_TYPES: Record<string, string> = {
   ".pdf": "application/pdf",
   ".svg": "image/svg+xml",
 };
+
+// Foto katalog kendaraan bersifat publik; dokumen legal, KTP, nota biaya & bukti transfer wajib login
+const PUBLIC_VEHICLE_PHOTO_RE = /^vehicles\/[^/]+\/photo\/[^/]+$/;
 
 export async function GET(
   req: NextRequest,
@@ -31,6 +35,16 @@ export async function GET(
     // Sanitasi anti-path traversal
     if (relativeSubPath.includes("..") || relativeSubPath.includes("\\")) {
       return new NextResponse("Akses dilarang (Path traversal terdeteksi)", { status: 403 });
+    }
+
+    const isPublicVehiclePhoto = PUBLIC_VEHICLE_PHOTO_RE.test(relativeSubPath);
+    if (!isPublicVehiclePhoto) {
+      const session = await getSession();
+      if (!session) {
+        return new NextResponse("Akses ditolak: Dokumen internal memerlukan autentikasi.", {
+          status: 401,
+        });
+      }
     }
 
     // Lokasi utama: public/uploads/...
@@ -69,12 +83,13 @@ export async function GET(
       headers: {
         "Content-Type": contentType,
         "Content-Length": String(fileStat.size),
-        // Cache selama 1 hari di browser, revalidate jika berubah
-        "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
+        "Cache-Control": isPublicVehiclePhoto
+          ? "public, max-age=86400, stale-while-revalidate=604800"
+          : "private, max-age=3600",
         "Content-Disposition": `inline; filename="${filename}"`,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error serving upload file:", error);
     return new NextResponse("Terjadi kesalahan saat memuat file", { status: 500 });
   }

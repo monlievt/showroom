@@ -47,6 +47,11 @@ export function AdminSidebar({
   const isOwner = userRole === "OWNER" || userRole === "ADMIN";
   const isStaff = userRole === "STAFF_ADMIN";
   const isSales = userRole === "SALES";
+  const homeHref = isSales
+    ? "/admin/inventory?status=READY_FOR_SALE"
+    : isStaff
+    ? "/admin/inventory"
+    : "/admin";
 
   // Submenu accordion states
   const [financeOpen, setFinanceOpen] = useState(true);
@@ -597,7 +602,7 @@ export function AdminSidebar({
           >
             <Menu className="w-5 h-5 text-[var(--ink)]" />
           </button>
-          <Link href="/admin" className="flex items-center gap-2.5">
+          <Link href={homeHref} className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-[var(--accent)] flex items-center justify-center text-white font-black text-sm shadow-xs shrink-0">
               N
             </div>
@@ -638,7 +643,7 @@ export function AdminSidebar({
               {/* Drawer Header */}
               <div className="border-b border-[var(--line)] p-4 flex items-center justify-between">
                 <Link
-                  href="/admin"
+                  href={homeHref}
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-2.5"
                 >
@@ -690,7 +695,7 @@ export function AdminSidebar({
             )}
           >
             <Link
-              href="/admin"
+              href={homeHref}
               className="flex items-center gap-3 group overflow-hidden"
               title="Nur Mobil Admin"
             >

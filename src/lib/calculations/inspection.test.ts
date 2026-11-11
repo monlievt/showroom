@@ -19,13 +19,15 @@ describe("Inspection Engine — Paint Micron Calculation", () => {
     assert.equal(getPaintMicronCategory(350), "THICK_FILLER");
   });
 
-  it("memiliki 11 panel body lengkap dengan label bahasa Indonesia", () => {
+  it("memiliki 15 panel body lengkap dengan label bahasa Indonesia", () => {
     const keys = Object.keys(PANEL_LABELS);
-    assert.equal(keys.length, 11);
+    assert.equal(keys.length, 15);
     assert.ok(keys.includes("FENDER_FRONT_RIGHT"));
     assert.ok(keys.includes("FENDER_FRONT_LEFT"));
     assert.ok(keys.includes("HOOD"));
     assert.ok(keys.includes("ROOF"));
+    assert.ok(keys.includes("BUMPER_FRONT"));
+    assert.ok(keys.includes("BUMPER_REAR"));
   });
 
   it("mengkalibrasi ketebalan cat khusus Wuling (lapisan primer/clearcoat lebih tebal)", () => {

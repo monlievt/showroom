@@ -93,6 +93,9 @@ export async function getPublicCatalog(filters?: PublicCatalogFilter) {
         currentLocation: true,
         youtubeVideoId: true,
         photos: {
+          where: {
+            OR: [{ tag: null }, { tag: { notIn: ["RECEIPT_EXPENSE", "HANDOVER_DELIVERY"] } }],
+          },
           select: {
             id: true,
             fileUrl: true,
@@ -191,6 +194,9 @@ export async function getShowroomHomepageData() {
         targetSellingPrice: true,
         notes: true,
         photos: {
+          where: {
+            OR: [{ tag: null }, { tag: { notIn: ["RECEIPT_EXPENSE", "HANDOVER_DELIVERY"] } }],
+          },
           select: { fileUrl: true, tag: true },
           take: 2,
         },
@@ -318,6 +324,9 @@ export async function getPublicVehicleDetail(identifier: string) {
           },
         },
         photos: {
+          where: {
+            OR: [{ tag: null }, { tag: { notIn: ["RECEIPT_EXPENSE", "HANDOVER_DELIVERY"] } }],
+          },
           select: {
             id: true,
             fileUrl: true,

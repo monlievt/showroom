@@ -24,4 +24,11 @@ export const createExpenseSchema = z.object({
   receiptUrl: z.string().optional().nullable(),
 });
 
+export const updateExpenseSchema = createExpenseSchema
+  .omit({ vehicleId: true })
+  .extend({
+    expenseId: z.string().uuid("ID biaya tidak valid"),
+  });
+
 export type CreateExpenseInput = z.infer<typeof createExpenseSchema>;
+export type UpdateExpenseInput = z.infer<typeof updateExpenseSchema>;

@@ -2,11 +2,13 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 import { investorSchema, InvestorInput } from "@/lib/validations/investor";
 import Decimal from "decimal.js";
 
 export async function getInvestors() {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const investors = await prisma.investor.findMany({
       include: {
         userProfile: true,
@@ -80,8 +82,10 @@ export async function getInvestors() {
   }
 }
 
-export async function createInvestor(input: InvestorInput, actorUserId: string = "system") {
+export async function createInvestor(input: InvestorInput, actorUserId?: string) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const validated = investorSchema.parse(input);
 
     const investor = await prisma.$transaction(async (tx) => {
@@ -116,7 +120,7 @@ export async function createInvestor(input: InvestorInput, actorUserId: string =
 
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "CREATE",
           entityType: "Investor",
           entityId: newInvestor.id,
@@ -139,9 +143,11 @@ export async function createInvestor(input: InvestorInput, actorUserId: string =
 export async function updateInvestor(
   id: string,
   input: Partial<InvestorInput>,
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const existing = await prisma.investor.findUnique({ where: { id } });
     if (!existing) throw new Error("Investor tidak ditemukan");
 
@@ -167,7 +173,7 @@ export async function updateInvestor(
 
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "UPDATE",
           entityType: "Investor",
           entityId: id,
@@ -190,6 +196,7 @@ export async function updateInvestor(
 
 export async function getInvestorDetails(investorId: string) {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const investor = await prisma.investor.findUnique({
       where: { id: investorId },
       include: {
@@ -239,8 +246,10 @@ export async function getInvestorDetails(investorId: string) {
   }
 }
 
-export async function deleteInvestor(id: string, actorUserId: string = "system") {
+export async function deleteInvestor(id: string, actorUserId?: string) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const existing = await prisma.investor.findUnique({
       where: { id },
       include: {
@@ -295,7 +304,7 @@ export async function deleteInvestor(id: string, actorUserId: string = "system")
       // 4. Audit Log
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "DELETE",
           entityType: "Investor",
           entityId: id,

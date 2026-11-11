@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { InvestorClient } from "@/components/investor/InvestorClient";
-import Decimal from "decimal.js";
+import { getSession } from "@/lib/auth/session";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -14,19 +15,31 @@ export default async function InvestorPortalPage({
 }: {
   searchParams: Promise<{ id?: string }>;
 }) {
+  const session = await getSession();
+  if (!session) {
+    redirect("/login");
+  }
+
   const { id: paramInvestorId } = await searchParams;
+  const canSwitchInvestor = session.role === "OWNER" || session.role === "ADMIN";
 
-  // Ambil semua investor untuk dropdown switch demo/audit
-  const allInvestors = await prisma.investor.findMany({
-    select: {
-      id: true,
-      name: true,
-    },
-    orderBy: { createdAt: "asc" },
-  });
+  let allInvestors: Array<{ id: string; name: string }> = [];
+  let targetId: string | undefined;
 
-  // Tentukan investor aktif: dari parameter URL atau default investor pertama
-  const targetId = paramInvestorId || allInvestors[0]?.id;
+  if (canSwitchInvestor) {
+    allInvestors = await prisma.investor.findMany({
+      select: { id: true, name: true },
+      orderBy: { createdAt: "asc" },
+    });
+    targetId = paramInvestorId || allInvestors[0]?.id;
+  } else {
+    // Role INVESTOR / non-admin terkunci hanya pada investorId miliknya sendiri
+    const profile = await prisma.userProfile.findUnique({
+      where: { id: session.userId },
+      select: { investorId: true },
+    });
+    targetId = profile?.investorId ?? undefined;
+  }
 
   let investorData = null;
 
@@ -65,8 +78,11 @@ export default async function InvestorPortalPage({
         .filter((item) => item.vehicle.status !== "SOLD_SETTLED")
         .reduce((sum, item) => sum + Number(item.capitalShare), 0);
 
-      // Hitung total profit yang diterima
-      const totalProfitReceived = inv.distributions.reduce(
+      // Hitung total profit yang diterima (abaikan entri yang di-reverse)
+      const activeDistributions = inv.distributions.filter(
+        (d) => !d.notes?.includes("[REVERSED]")
+      );
+      const totalProfitReceived = activeDistributions.reduce(
         (sum, item) => sum + Number(item.calculatedAmount),
         0
       );

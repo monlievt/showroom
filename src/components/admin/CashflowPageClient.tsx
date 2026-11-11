@@ -50,19 +50,19 @@ interface CashflowPageProps {
 }
 
 const CASH_TYPE_LABELS: Record<string, string> = {
-  IN_CAPITAL_DEPOSIT: "Setor Modal",
+  IN_SALE_PAYMENT: "Pembayaran / DP Penjualan",
+  IN_CAPITAL_DEPOSIT: "Setor Modal Investor",
   IN_OWNER_EQUITY: "Setor Modal Pribadi",
-  IN_CAR_SALE_FULL: "Pelunasan Penjualan Mobil",
-  IN_CAR_SALE_DP: "DP / Titipan Penjualan",
-  IN_OTHER: "Pemasukan Lainnya",
-  OUT_CAR_PURCHASE: "Pembelian Unit Mobil (Kulakan)",
-  OUT_CAR_EXPENSE: "Biaya Perbaikan / Salon Unit",
+  IN_OTHER: "Pemasukan / Koreksi Lainnya",
+  OUT_VEHICLE_PURCHASE: "Pembelian Unit Mobil (Kulakan)",
+  OUT_EXPENSE: "Biaya Perbaikan / Servis Unit",
   OUT_OPERATIONAL: "Beban Operasional Showroom",
   OUT_OWNER_DRAW: "Prive Pribadi (Keluarga)",
   OUT_ASSET_PURCHASE: "Pembelian Aset Peralatan",
   OUT_PROFIT_DISTRIBUTION: "Pencairan Bagi Hasil",
-  OUT_CAPITAL_WITHDRAWAL: "Tarik Modal",
+  OUT_CAPITAL_RETURN: "Pengembalian Modal Investor",
   OUT_OTHER: "Pengeluaran Lainnya",
+  CORRECTION: "Koreksi Saldo",
 };
 
 export function CashflowPageClient({ summary, cashTransactions }: CashflowPageProps) {

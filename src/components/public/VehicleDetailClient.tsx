@@ -31,6 +31,7 @@ import { VehicleGallery } from "@/components/public/VehicleGallery";
 import { InspectionBar } from "@/components/public/InspectionBar";
 
 interface VehicleDetailProps {
+  whatsappPhone?: string;
   vehicle: {
     id: string;
     slug: string;
@@ -88,7 +89,7 @@ interface VehicleDetailProps {
   };
 }
 
-export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
+export function VehicleDetailClient({ vehicle, whatsappPhone = "081234567890" }: VehicleDetailProps) {
   const isBooked = vehicle.status === "BOOKED";
   const isSold = vehicle.status === "SOLD_SETTLED" || vehicle.status === "SOLD";
   const isUpcoming = vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR";
@@ -99,7 +100,7 @@ export function VehicleDetailClient({ vehicle }: VehicleDetailProps) {
     ? calculateOverallVehiclePaint(vehicle.inspection.panels, vehicle.brand)
     : null;
 
-  const waLink = generateCatalogWhatsAppLink("081234567890", {
+  const waLink = generateCatalogWhatsAppLink(whatsappPhone, {
     brand: vehicle.brand,
     model: vehicle.model,
     year: vehicle.year,

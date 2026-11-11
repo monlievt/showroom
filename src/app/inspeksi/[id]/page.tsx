@@ -40,6 +40,9 @@ export default async function PublicInspectionCertificatePage({ params }: Props)
       vehicle: {
         include: {
           photos: {
+            where: {
+              OR: [{ tag: null }, { tag: { notIn: ["RECEIPT_EXPENSE", "HANDOVER_DELIVERY"] } }],
+            },
             orderBy: { uploadedAt: "desc" },
           },
         },

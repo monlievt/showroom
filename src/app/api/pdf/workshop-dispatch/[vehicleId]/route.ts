@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import React from "react";
 import prisma from "@/lib/prisma";
+import { getSession } from "@/lib/auth/session";
 import { WorkshopDispatchPdfDocument } from "@/components/pdf/WorkshopDispatchPdfDocument";
 
 export async function GET(
@@ -9,6 +10,10 @@ export async function GET(
   { params }: { params: Promise<{ vehicleId: string }> }
 ) {
   try {
+    const session = await getSession();
+    if (!session || !["OWNER", "ADMIN", "STAFF_ADMIN"].includes(session.role)) {
+      return NextResponse.json({ error: "Akses ditolak." }, { status: 401 });
+    }
     const { vehicleId } = await params;
     const url = new URL(req.url);
 

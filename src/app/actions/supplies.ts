@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { requireRole } from "@/lib/auth/session";
 
 export interface CreateSupplyInput {
   name: string;
@@ -26,6 +27,7 @@ export interface RecordUsageInput {
 
 export async function getWorkshopSuppliesAction() {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const supplies = await prisma.workshopSupply.findMany({
       orderBy: { createdAt: "desc" },
       include: {
@@ -113,6 +115,8 @@ export async function getWorkshopSuppliesAction() {
 
 export async function createWorkshopSupplyAction(input: CreateSupplyInput, deductCash = false) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Admin";
     const cost = Number(input.costPerUnit);
     const stock = Number(input.currentStock);
     const totalExpense = cost * stock;
@@ -147,7 +151,7 @@ export async function createWorkshopSupplyAction(input: CreateSupplyInput, deduc
             amount: totalExpense,
             runningBalance: newBal,
             notes: `Pembelian stok bahan habis pakai: ${input.name} (${stock} ${input.unit || "Pcs"} @ Rp ${cost.toLocaleString("id-ID")})`,
-            createdBy: "Owner/Admin",
+            createdBy: actorLabel,
           },
         });
       }
@@ -166,6 +170,8 @@ export async function createWorkshopSupplyAction(input: CreateSupplyInput, deduc
 
 export async function recordSupplyUsageAction(input: RecordUsageInput) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Garasi";
     const qty = Number(input.quantityUsed);
     if (qty <= 0) {
       throw new Error("Kuantitas yang digunakan minimal 1");
@@ -218,7 +224,7 @@ export async function recordSupplyUsageAction(input: RecordUsageInput) {
           chargedHppAmount: chargedHpp,
           workshopMargin: workshopMargin,
           serviceType: input.serviceType,
-          recordedBy: "Owner/Garasi",
+          recordedBy: actorLabel,
           notes: input.notes,
         },
       });
@@ -237,7 +243,7 @@ export async function recordSupplyUsageAction(input: RecordUsageInput) {
           date: new Date(),
           vendorName: "Garasi Mandiri Nur Mobil",
           notes: desc,
-          createdBy: "Owner/Garasi",
+          createdBy: actorLabel,
         },
       });
 
@@ -268,6 +274,16 @@ export async function recordSupplyUsageAction(input: RecordUsageInput) {
 
 export async function deleteWorkshopSupplyAction(id: string) {
   try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const usageCount = await prisma.workshopSupplyUsage.count({
+      where: { supplyId: id },
+    });
+    if (usageCount > 0) {
+      return {
+        success: false,
+        error: "Barang persediaan ini tidak dapat dihapus karena sudah memiliki riwayat pemakaian unit.",
+      };
+    }
     await prisma.workshopSupply.delete({
       where: { id },
     });

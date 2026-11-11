@@ -5,6 +5,7 @@ import { canTransition } from "./vehicle-state";
 describe("Vehicle State Machine — canTransition", () => {
   it("mengizinkan transisi maju normal", () => {
     assert.equal(canTransition("INTAKE", "IN_REPAIR"), true);
+    assert.equal(canTransition("INTAKE", "READY_FOR_SALE"), true);
     assert.equal(canTransition("IN_REPAIR", "READY_FOR_SALE"), true);
     assert.equal(canTransition("READY_FOR_SALE", "BOOKED"), true);
     assert.equal(canTransition("BOOKED", "SOLD_SETTLED"), true);
@@ -28,9 +29,10 @@ describe("Vehicle State Machine — canTransition", () => {
   });
 
   it("menolak lompatan status ilegal", () => {
-    // Lompat langsung dari intake ke jual
+    // Lompat langsung dari intake ke booking/jual tanpa siap jual
     assert.equal(canTransition("INTAKE", "SOLD_SETTLED"), false);
-    assert.equal(canTransition("INTAKE", "READY_FOR_SALE"), false);
+    assert.equal(canTransition("INTAKE", "BOOKED"), false);
+    assert.equal(canTransition("INTAKE", "AT_SHOWROOM_PENDING"), false);
     assert.equal(canTransition("IN_REPAIR", "SOLD_SETTLED"), false);
   });
 

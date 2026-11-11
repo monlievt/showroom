@@ -2,11 +2,13 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 import { cashTransactionSchema, CashTransactionInput } from "@/lib/validations/cash-transaction";
 import Decimal from "decimal.js";
 
 export async function getCashBalanceSummary() {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const latestTx = await prisma.cashTransaction.findFirst({
       orderBy: { createdAt: "desc" },
     });
@@ -55,6 +57,7 @@ export async function getCashTransactions(params?: {
   type?: string;
 }) {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const take = params?.take ? Math.min(params.take, 100) : 20;
 
     const where: any = {};
@@ -126,9 +129,11 @@ export async function getCashTransactions(params?: {
 
 export async function recordManualCashTransaction(
   input: CashTransactionInput,
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const validated = cashTransactionSchema.parse(input);
     const amt = new Decimal(validated.amount);
 
@@ -158,13 +163,13 @@ export async function recordManualCashTransaction(
           proofUrl: validated.proofUrls && validated.proofUrls.length > 0
             ? JSON.stringify(validated.proofUrls)
             : (validated.proofUrl || null),
-          createdBy: actorUserId,
+          createdBy: session.fullName || resolvedActorId,
         },
       });
 
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "CREATE",
           entityType: "CashTransaction",
           entityId: cashEntry.id,

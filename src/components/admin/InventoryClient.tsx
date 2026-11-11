@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { 
@@ -10,16 +10,12 @@ import {
   AlertTriangle, 
   CheckCircle2, 
   DollarSign, 
-  Layers, 
   ArrowRight,
   Receipt,
   MessageCircle,
   CarFront,
   Sparkles,
-  HelpCircle,
   Camera,
-  UploadCloud,
-  FileText,
   ClipboardCheck,
   FileSpreadsheet,
   Wrench,
@@ -29,12 +25,9 @@ import {
   ExternalLink,
   Pencil,
 } from "lucide-react";
-import { ImportSpreadsheetPanel } from "./ImportSpreadsheetPanel";
-import { formatRupiah, formatDate, cn, formatThousands, parseThousands } from "@/lib/utils";
+import { VehicleExpensesManager } from "./VehicleExpensesManager";
+import { formatRupiah, formatDate, cn } from "@/lib/utils";
 import { generateVehicleSlug } from "@/lib/utils/slug";
-import { createVehicleAction, updateVehicleStatusAction, updateVehicleAction } from "@/app/actions/vehicle";
-import { createExpenseAction } from "@/app/actions/expense";
-import { canTransition, type VehicleStatus } from "@/lib/calculations/vehicle-state";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
 
 interface VehicleItem {
@@ -57,6 +50,8 @@ interface VehicleItem {
   currentLocation: string;
   totalExpenses: number;
   totalHpp: number;
+  expenseCount?: number;
+  expenses?: Array<{ id: string }>;
   daysInInventory: number;
   agingCategory: "FRESH" | "NORMAL" | "WARNING_STAGNANT";
   taxExpiryDate?: string | Date | null;
@@ -68,6 +63,8 @@ interface VehicleItem {
 
 interface InventoryClientProps {
   initialVehicles: VehicleItem[];
+  userRole?: string;
+  whatsappPhone?: string;
 }
 
 const STATUS_FILTERS = [
@@ -80,18 +77,18 @@ const STATUS_FILTERS = [
   { label: "Terjual Lunas", value: "SOLD_SETTLED" },
 ];
 
-export function InventoryClient({ initialVehicles }: InventoryClientProps) {
+export function InventoryClient({
+  initialVehicles,
+  userRole = "ADMIN",
+  whatsappPhone = "081234567890",
+}: InventoryClientProps) {
+  const isSalesRole = userRole === "SALES";
   const [vehicles, setVehicles] = useState<VehicleItem[]>(initialVehicles);
   const [selectedStatus, setSelectedStatus] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
-  const [isPending, startTransition] = useTransition();
 
-  // Modals state
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showImportModal, setShowImportModal] = useState(false);
+  // Modal Kelola Biaya
   const [selectedVehicleForExpense, setSelectedVehicleForExpense] = useState<VehicleItem | null>(null);
-  const [selectedVehicleForStatus, setSelectedVehicleForStatus] = useState<VehicleItem | null>(null);
-  const [selectedVehicleForMedia, setSelectedVehicleForMedia] = useState<VehicleItem | null>(null);
   const [mounted, setMounted] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<{
     vehicle: VehicleItem;
@@ -175,18 +172,20 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           </div>
         </div>
 
-        <div className="bg-white border border-[var(--line)] rounded-xl p-5 shadow-xs">
-          <div className="flex items-center justify-between text-[var(--muted)]">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Modal Terikat (HPP)</span>
-            <DollarSign className="w-5 h-5 text-[var(--accent)]" />
+        {!isSalesRole && (
+          <div className="bg-white border border-[var(--line)] rounded-xl p-5 shadow-xs">
+            <div className="flex items-center justify-between text-[var(--muted)]">
+              <span className="text-xs font-semibold uppercase tracking-wider">Total Modal Terikat (HPP)</span>
+              <DollarSign className="w-5 h-5 text-[var(--accent)]" />
+            </div>
+            <div className="mt-3">
+              <span className="text-2xl font-bold text-[var(--ink)]">
+                {formatRupiah(totalModalTerikat)}
+              </span>
+              <div className="text-[11px] text-[var(--muted)] mt-0.5">Harga Beli + Total Biaya Unit</div>
+            </div>
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-bold text-[var(--ink)]">
-              {formatRupiah(totalModalTerikat)}
-            </span>
-            <div className="text-[11px] text-[var(--muted)] mt-0.5">Harga Beli + Total Biaya Unit</div>
-          </div>
-        </div>
+        )}
 
         <div className={cn(
           "border rounded-xl p-5 shadow-xs transition-all",
@@ -232,36 +231,38 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Action Button: Gudang Bahan Habis Pakai & Servis Mandiri */}
-          <Link
-            href="/admin/workshop"
-            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-lg text-sm font-semibold shadow-xs transition-colors"
-            title="Kelola persediaan oli, filter, bohlam, salon & alokasikan servis mandiri"
-          >
-            <Droplet className="w-4 h-4 text-[var(--accent)]" />
-            <span>Gudang Bahan &amp; Servis Mandiri</span>
-          </Link>
+        {!isSalesRole && (
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Action Button: Gudang Bahan Habis Pakai & Servis Mandiri */}
+            <Link
+              href="/admin/workshop"
+              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-lg text-sm font-semibold shadow-xs transition-colors"
+              title="Kelola persediaan oli, filter, bohlam, salon & alokasikan servis mandiri"
+            >
+              <Droplet className="w-4 h-4 text-[var(--accent)]" />
+              <span>Gudang Bahan &amp; Servis Mandiri</span>
+            </Link>
 
-          {/* Action Button: Import Spreadsheet */}
-          <Link
-            href="/admin/inventory/import"
-            className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-lg text-sm font-semibold shadow-xs transition-colors"
-            title="Import data mobil lama dari file spreadsheet / Excel / CSV"
-          >
-            <FileSpreadsheet className="w-4 h-4 text-[var(--muted)]" />
-            <span>Import Spreadsheet</span>
-          </Link>
+            {/* Action Button: Import Spreadsheet */}
+            <Link
+              href="/admin/inventory/import"
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-lg text-sm font-semibold shadow-xs transition-colors"
+              title="Import data mobil lama dari file spreadsheet / Excel / CSV"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-[var(--muted)]" />
+              <span>Import Spreadsheet</span>
+            </Link>
 
-          {/* Action Button: Intake Unit Baru */}
-          <Link
-            href="/admin/inventory/new"
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-lg text-sm font-semibold shadow-xs transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Intake Unit Baru</span>
-          </Link>
-        </div>
+            {/* Action Button: Intake Unit Baru */}
+            <Link
+              href="/admin/inventory/new"
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-lg text-sm font-semibold shadow-xs transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Intake Unit Baru</span>
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* ── STATUS TABS ───────────────────────────────────────── */}
@@ -305,15 +306,15 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                 <th className="py-3.5 px-4">Spesifikasi</th>
                 <th className="py-3.5 px-4">Status &amp; Alur</th>
                 <th className="py-3.5 px-4">Umur di Garasi</th>
-                <th className="py-3.5 px-4">HPP &amp; Biaya</th>
-                <th className="py-3.5 px-4">Target / Batas Bawah</th>
+                {!isSalesRole && <th className="py-3.5 px-4">HPP &amp; Biaya</th>}
+                <th className="py-3.5 px-4">{isSalesRole ? "Harga Jual" : "Target / Batas Bawah"}</th>
                 <th className="py-3.5 px-4 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--line)]">
               {filteredVehicles.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-[var(--muted)]">
+                  <td colSpan={isSalesRole ? 6 : 7} className="py-12 text-center text-[var(--muted)]">
                     Tidak ada unit yang cocok dengan filter atau pencarian saat ini.
                   </td>
                 </tr>
@@ -422,17 +423,38 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                       </td>
 
                       {/* HPP & Biaya */}
-                      <td className="py-4 px-4 align-top text-xs">
-                        <div className="font-bold text-sm text-[var(--ink)]">
-                          {formatRupiah(vehicle.totalHpp)}
-                        </div>
-                        <div className="text-[11px] text-[var(--muted)] mt-0.5">
-                          Beli: {formatRupiah(vehicle.purchasePrice)}
-                        </div>
-                        <div className="text-[11px] text-[var(--accent)] font-medium mt-0.5">
-                          Biaya: +{formatRupiah(vehicle.totalExpenses)}
-                        </div>
-                      </td>
+                      {!isSalesRole && (
+                        <td className="py-4 px-4 align-top text-xs">
+                          <div className="font-bold text-sm text-[var(--ink)]">
+                            {formatRupiah(vehicle.totalHpp)}
+                          </div>
+                          <div className="text-[11px] text-[var(--muted)] mt-0.5">
+                            Beli: {formatRupiah(vehicle.purchasePrice)}
+                          </div>
+                          {(() => {
+                            const count = vehicle.expenseCount ?? vehicle.expenses?.length ?? 0;
+                            return (
+                              <button
+                                type="button"
+                                onClick={() => setSelectedVehicleForExpense(vehicle)}
+                                className="mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[var(--bg)] border border-[var(--line)] hover:border-[var(--accent)] text-[11px] font-semibold text-[var(--accent)] transition-colors cursor-pointer"
+                                title="Klik untuk lihat daftar biaya, edit, atau tambah biaya baru"
+                              >
+                                <span>
+                                  {count > 0 || vehicle.totalExpenses > 0
+                                    ? `Biaya: +${formatRupiah(vehicle.totalExpenses)}`
+                                    : "+ Catat Biaya"}
+                                </span>
+                                {count > 0 && (
+                                  <span className="text-[10px] px-1 rounded bg-white text-[var(--ink)] border border-[var(--line)] font-bold">
+                                    {count}
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          })()}
+                        </td>
+                      )}
 
                       {/* Target & Min Price */}
                       <td className="py-4 px-4 align-top text-xs">
@@ -443,7 +465,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                         ) : (
                           <span className="text-[var(--muted)] italic text-[11px]">Belum diisi</span>
                         )}
-                        {vehicle.minSellingPrice && (
+                        {!isSalesRole && vehicle.minSellingPrice && (
                           <div className="text-[11px] text-[var(--muted)] font-medium mt-0.5" title="Batas Bawah Nego">
                             Bawah: {formatRupiah(vehicle.minSellingPrice)}
                           </div>
@@ -454,26 +476,27 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                       <td className="py-4 px-4 align-top text-right">
                         <div className="flex items-center justify-end gap-2 relative">
                           {/* 1. Tombol Aksi Utama Kontekstual Sesuai Status Mobil */}
-                          {vehicle.status === "INTAKE" && (
+                          {!isSalesRole && vehicle.status === "INTAKE" && (
                             <Link
                               href={`/admin/inspections/${vehicle.id}`}
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0"
-                              title="Mulai Cek Fisik & Inspeksi 11 Panel"
+                              title="Mulai Cek Fisik & Inspeksi"
                             >
                               <ClipboardCheck className="w-3.5 h-3.5" />
                               <span>Cek Fisik</span>
                             </Link>
                           )}
 
-                          {vehicle.status === "IN_REPAIR" && (
-                            <Link
-                              href={`/admin/inventory/${vehicle.id}/expenses/new`}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0"
-                              title="Catat Biaya Servis / Sparepart"
+                          {!isSalesRole && vehicle.status === "IN_REPAIR" && (
+                            <button
+                              type="button"
+                              onClick={() => setSelectedVehicleForExpense(vehicle)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0 cursor-pointer"
+                              title="Lihat, edit, atau catat biaya servis / sparepart"
                             >
                               <Receipt className="w-3.5 h-3.5" />
-                              <span>Catat Servis</span>
-                            </Link>
+                              <span>Biaya / Servis</span>
+                            </button>
                           )}
 
                           {vehicle.status === "READY_FOR_SALE" && (
@@ -489,7 +512,7 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                             </a>
                           )}
 
-                          {(vehicle.status === "BOOKED" || vehicle.status === "AT_SHOWROOM_PENDING") && (
+                          {!isSalesRole && (vehicle.status === "BOOKED" || vehicle.status === "AT_SHOWROOM_PENDING") && (
                             <Link
                               href={`/admin/inventory/${vehicle.id}/status`}
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--ink)] hover:bg-[#2c3746] text-white text-xs font-bold shadow-xs transition-all shrink-0"
@@ -507,13 +530,15 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
                           )}
 
                           {/* Quick Edit Unit & Katalog Button */}
-                          <Link
-                            href={`/admin/inventory/${vehicle.id}/edit`}
-                            className="p-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--line)] text-[var(--ink)] transition-colors cursor-pointer shrink-0"
-                            title="Edit Semua Data Unit (Form Lengkap Intake)"
-                          >
-                            <Pencil className="w-4 h-4 text-[var(--accent)]" />
-                          </Link>
+                          {!isSalesRole && (
+                            <Link
+                              href={`/admin/inventory/${vehicle.id}/edit`}
+                              className="p-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--line)] text-[var(--ink)] transition-colors cursor-pointer shrink-0"
+                              title="Edit Semua Data Unit (Form Lengkap Intake)"
+                            >
+                              <Pencil className="w-4 h-4 text-[var(--accent)]" />
+                            </Link>
+                          )}
 
                           {/* 2. Menu Dropdown [Titik Tiga ...] */}
                           <div>
@@ -543,86 +568,67 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
       </div>
 
       {/* ── MODALS ────────────────────────────────────────────── */}
-      {/* 1. Modal Intake Unit Baru */}
-      {showAddModal && (
-        <AddVehicleModal
-          onClose={() => setShowAddModal(false)}
-          onSuccess={(newUnit) => {
-            setVehicles([newUnit, ...vehicles]);
-            setShowAddModal(false);
-          }}
-        />
-      )}
-
-      {/* 1.5 Modal Import Spreadsheet */}
-      {showImportModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-4xl w-full p-6 space-y-4 shadow-2xl border border-[var(--line)] max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
+      {/* Modal Kelola Biaya & Servis Unit */}
+      {selectedVehicleForExpense && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-3 sm:p-5"
+          onClick={() => setSelectedVehicleForExpense(null)}
+        >
+          <div
+            className="bg-white border border-[var(--line)] rounded-2xl w-full max-w-5xl max-h-[92vh] overflow-y-auto shadow-2xl p-4 sm:p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
-              <div className="flex items-center gap-2">
-                <FileSpreadsheet className="w-5 h-5 text-[var(--accent)]" />
-                <h3 className="font-bold text-base text-[var(--ink)]">
-                  Import Data Mobil Lama dari Spreadsheet (Excel / CSV)
-                </h3>
+              <div>
+                <h2 className="text-base sm:text-lg font-bold text-[var(--ink)]">
+                  Biaya &amp; Servis Unit (HPP)
+                </h2>
+                <p className="text-xs text-[var(--muted)]">
+                  Lihat riwayat biaya, edit nominal atau nota, dan catat biaya baru tanpa pindah halaman.
+                </p>
               </div>
-              <button
-                onClick={() => setShowImportModal(false)}
-                className="text-[var(--muted)] hover:text-[var(--ink)] text-lg font-bold cursor-pointer"
-              >
-                ✕
-              </button>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/admin/inventory/${selectedVehicleForExpense.id}/expenses/new`}
+                  className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--line)]/40 text-[11px] font-semibold text-[var(--ink)] transition-colors"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  <span>Buka Halaman Penuh</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setSelectedVehicleForExpense(null)}
+                  className="px-2.5 py-1 rounded-lg border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] font-bold text-sm cursor-pointer"
+                  aria-label="Tutup modal biaya"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
-            <ImportSpreadsheetPanel />
+
+            <VehicleExpensesManager
+              vehicle={selectedVehicleForExpense}
+              mode="modal"
+              onClose={() => setSelectedVehicleForExpense(null)}
+              onExpensesChanged={(newTotalExpenses, newExpenseCount) => {
+                const targetId = selectedVehicleForExpense.id;
+                setVehicles((prev) =>
+                  prev.map((v) => {
+                    if (v.id === targetId) {
+                      return {
+                        ...v,
+                        totalExpenses: newTotalExpenses,
+                        totalHpp: v.purchasePrice + newTotalExpenses,
+                        expenseCount: newExpenseCount,
+                      };
+                    }
+                    return v;
+                  })
+                );
+              }}
+            />
           </div>
         </div>
-      )}
-
-      {/* 2. Modal Catat Biaya */}
-      {selectedVehicleForExpense && (
-        <AddExpenseModal
-          vehicle={selectedVehicleForExpense}
-          onClose={() => setSelectedVehicleForExpense(null)}
-          onSuccess={(expenseAmount) => {
-            // Update lokal
-            setVehicles(
-              vehicles.map((v) => {
-                if (v.id === selectedVehicleForExpense.id) {
-                  const newExpenses = v.totalExpenses + expenseAmount;
-                  return {
-                    ...v,
-                    totalExpenses: newExpenses,
-                    totalHpp: v.purchasePrice + newExpenses,
-                  };
-                }
-                return v;
-              })
-            );
-            setSelectedVehicleForExpense(null);
-          }}
-        />
-      )}
-
-      {/* 3. Modal Ubah Status */}
-      {selectedVehicleForStatus && (
-        <UpdateStatusModal
-          vehicle={selectedVehicleForStatus}
-          onClose={() => setSelectedVehicleForStatus(null)}
-          onSuccess={(updatedStatus) => {
-            setVehicles(
-              vehicles.map((v) =>
-                v.id === selectedVehicleForStatus.id ? { ...v, status: updatedStatus } : v
-              )
-            );
-            setSelectedVehicleForStatus(null);
-          }}
-        />
-      )}
-      {/* 4. Modal Upload Media & Dokumen */}
-      {selectedVehicleForMedia && (
-        <MediaUploadModal
-          vehicle={selectedVehicleForMedia}
-          onClose={() => setSelectedVehicleForMedia(null)}
-        />
       )}
 
       {/* ── PORTAL DROPDOWN MENU (Prevent table overflow clipping) ── */}
@@ -638,55 +644,63 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
           onClick={(e) => e.stopPropagation()}
           className="w-56 bg-white border border-[var(--line)] rounded-xl shadow-2xl py-1.5 text-left text-xs divide-y divide-[var(--bg)] animate-in fade-in zoom-in-95 duration-100"
         >
+          {!isSalesRole && (
+            <div className="py-1">
+              <Link
+                href={`/admin/inventory/${activeDropdown.vehicle.id}/edit`}
+                onClick={() => setActiveDropdown(null)}
+                className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+              >
+                <Pencil className="w-4 h-4 text-[var(--accent)]" />
+                <span>Edit Semua Data Unit</span>
+              </Link>
+
+              <Link
+                href={`/admin/inspections/${activeDropdown.vehicle.id}`}
+                onClick={() => setActiveDropdown(null)}
+                className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+              >
+                <ClipboardCheck className="w-4 h-4 text-[var(--accent)]" />
+                <span>Cek Fisik &amp; Inspeksi</span>
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const v = activeDropdown.vehicle;
+                  setActiveDropdown(null);
+                  setSelectedVehicleForExpense(v);
+                }}
+                className="w-full flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors cursor-pointer text-left"
+              >
+                <Receipt className="w-4 h-4 text-[var(--accent)]" />
+                <span>Kelola Biaya / Servis</span>
+              </button>
+
+              <Link
+                href={`/admin/inventory/${activeDropdown.vehicle.id}/media`}
+                onClick={() => setActiveDropdown(null)}
+                className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+              >
+                <Camera className="w-4 h-4 text-[var(--accent)]" />
+                <span>Upload Foto &amp; Dokumen</span>
+              </Link>
+            </div>
+          )}
+
           <div className="py-1">
-            <Link
-              href={`/admin/inventory/${activeDropdown.vehicle.id}/edit`}
-              onClick={() => setActiveDropdown(null)}
-              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-            >
-              <Pencil className="w-4 h-4 text-[var(--accent)]" />
-              <span>Edit Semua Data Unit</span>
-            </Link>
-
-            <Link
-              href={`/admin/inspections/${activeDropdown.vehicle.id}`}
-              onClick={() => setActiveDropdown(null)}
-              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-            >
-              <ClipboardCheck className="w-4 h-4 text-[var(--accent)]" />
-              <span>Cek Fisik &amp; Inspeksi</span>
-            </Link>
-
-            <Link
-              href={`/admin/inventory/${activeDropdown.vehicle.id}/expenses/new`}
-              onClick={() => setActiveDropdown(null)}
-              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-            >
-              <Receipt className="w-4 h-4 text-[var(--accent)]" />
-              <span>Catat Biaya / Servis</span>
-            </Link>
-
-            <Link
-              href={`/admin/inventory/${activeDropdown.vehicle.id}/media`}
-              onClick={() => setActiveDropdown(null)}
-              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-            >
-              <Camera className="w-4 h-4 text-[var(--accent)]" />
-              <span>Upload Foto &amp; Dokumen</span>
-            </Link>
-          </div>
-
-          <div className="py-1">
-            <a
-              href={`/api/pdf/workshop-dispatch/${activeDropdown.vehicle.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setActiveDropdown(null)}
-              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-            >
-              <Wrench className="w-4 h-4 text-[var(--accent)]" />
-              <span>Surat Jalan Bengkel (SPK)</span>
-            </a>
+            {!isSalesRole && (
+              <a
+                href={`/api/pdf/workshop-dispatch/${activeDropdown.vehicle.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setActiveDropdown(null)}
+                className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+              >
+                <Wrench className="w-4 h-4 text-[var(--accent)]" />
+                <span>Surat Jalan Bengkel (SPK)</span>
+              </a>
+            )}
 
             <a
               href={`/api/pdf/spec-tag/${activeDropdown.vehicle.id}`}
@@ -715,17 +729,19 @@ export function InventoryClient({ initialVehicles }: InventoryClientProps) {
               </span>
             </Link>
 
-            <Link
-              href={`/admin/inventory/${activeDropdown.vehicle.id}/status`}
-              onClick={() => setActiveDropdown(null)}
-              className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
-            >
-              <ArrowRight className="w-4 h-4 text-[var(--muted)]" />
-              <span>Ubah Status Kendaraan</span>
-            </Link>
+            {!isSalesRole && (
+              <Link
+                href={`/admin/inventory/${activeDropdown.vehicle.id}/status`}
+                onClick={() => setActiveDropdown(null)}
+                className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+              >
+                <ArrowRight className="w-4 h-4 text-[var(--muted)]" />
+                <span>Ubah Status Kendaraan</span>
+              </Link>
+            )}
 
             <a
-              href={generateCatalogWhatsAppLink("081234567890", {
+              href={generateCatalogWhatsAppLink(whatsappPhone, {
                 brand: activeDropdown.vehicle.brand,
                 model: activeDropdown.vehicle.model,
                 year: activeDropdown.vehicle.year,
@@ -835,949 +851,5 @@ function AgingBadge({ days, category }: { days: number; category: string }) {
       <Clock className="w-3 h-3" />
       {days} hari
     </span>
-  );
-}
-
-// Estimasi hari kerja BPKB per balai lelang (Auction House Presets)
-const AUCTION_HOUSE_PRESETS: Record<string, { label: string; bpkbLeadDays: number; notes: string }> = {
-  "JBA":          { label: "JBA (Japan Best Auto)", bpkbLeadDays: 14, notes: "BPKB ~14 hari kerja" },
-  "AUKSI":        { label: "AUKSI (Mobil88/Garansindo)", bpkbLeadDays: 7,  notes: "BPKB ~7 hari kerja" },
-  "IBID":         { label: "IBID (Graha Buana)", bpkbLeadDays: 10, notes: "BPKB ~10 hari kerja" },
-  "SMARTBID":     { label: "SmartBid", bpkbLeadDays: 30, notes: "BPKB ~30 hari kerja" },
-  "ADIRA":        { label: "Adira Auction", bpkbLeadDays: 21, notes: "BPKB ~21 hari kerja" },
-  "BCA FINANCE":  { label: "BCA Finance Auction", bpkbLeadDays: 14, notes: "BPKB ~14 hari kerja" },
-  "STAR AUCTION": { label: "Star Auction", bpkbLeadDays: 14, notes: "BPKB ~14 hari kerja" },
-  "LAINNYA":      { label: "Balai Lelang Lainnya", bpkbLeadDays: 14, notes: "Isi estimasi manual" },
-};
-
-// ── MODAL INTAKE UNIT BARU ─────────────────────────────────────
-function AddVehicleModal({
-  onClose,
-  onSuccess,
-}: {
-  onClose: () => void;
-  onSuccess: (unit: any) => void;
-}) {
-  const [formData, setFormData] = useState({
-    plateNumber: "",
-    brand: "",
-    model: "",
-    year: new Date().getFullYear(),
-    color: "",
-    odometer: 0,
-    transmission: "AUTOMATIC",
-    engineCapacity: 1500,
-    sourceType: "AUCTION",
-    auctionHouse: "JBA",
-    auctionLotType: "EKS_PERUSAHAAN",
-    purchasePrice: 0,
-    purchaseDate: new Date().toISOString().split("T")[0],
-    targetSellingPrice: 0,
-    minSellingPrice: 0,
-    currentLocation: "Garasi Utama",
-    bpkbStatus: "PROCESS_1_2_WEEKS",
-    bpkbLeadDays: 14,
-    notes: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const isAuction = formData.sourceType === "AUCTION";
-  const currentPreset = AUCTION_HOUSE_PRESETS[formData.auctionHouse];
-
-  const handleAuctionHouseChange = (house: string) => {
-    const preset = AUCTION_HOUSE_PRESETS[house];
-    setFormData((prev) => ({
-      ...prev,
-      auctionHouse: house,
-      bpkbLeadDays: preset?.bpkbLeadDays ?? 14,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMsg("");
-
-    try {
-      const res = await createVehicleAction({
-        ...formData,
-        year: Number(formData.year),
-        odometer: Number(formData.odometer),
-        engineCapacity: Number(formData.engineCapacity),
-        purchasePrice: Number(formData.purchasePrice),
-        purchaseDate: new Date(formData.purchaseDate),
-        targetSellingPrice: formData.targetSellingPrice ? Number(formData.targetSellingPrice) : undefined,
-        minSellingPrice: formData.minSellingPrice ? Number(formData.minSellingPrice) : undefined,
-        transmission: formData.transmission as any,
-        sourceType: formData.sourceType as any,
-        auctionLotType: isAuction ? (formData.auctionLotType as any) : undefined,
-        bpkbStatus: formData.bpkbStatus as any,
-        bpkbLeadDays: Number(formData.bpkbLeadDays),
-      });
-
-      if (!res.success || !res.data) {
-        throw new Error(res.error || "Gagal menyimpan unit");
-      }
-
-      onSuccess({
-        ...res.data,
-        purchasePrice: Number(res.data.purchasePrice),
-        targetSellingPrice: res.data.targetSellingPrice ? Number(res.data.targetSellingPrice) : null,
-        minSellingPrice: res.data.minSellingPrice ? Number(res.data.minSellingPrice) : null,
-        totalExpenses: 0,
-        totalHpp: Number(res.data.purchasePrice),
-        daysInInventory: 0,
-        agingCategory: "FRESH",
-      });
-    } catch (err: any) {
-      setErrorMsg(err.message || "Gagal menyimpan unit");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto shadow-2xl p-6">
-        <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-5">
-          <div>
-            <h2 className="text-lg font-bold text-[var(--ink)]">Intake Kendaraan Baru</h2>
-            <p className="text-xs text-[var(--muted)] mt-0.5">
-              Unit baru masuk status <strong>INTAKE</strong>. Setelah siap, ubah ke{" "}
-              <strong>Ready Jual</strong> agar tampil di katalog publik.
-            </p>
-          </div>
-          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] font-bold text-xl cursor-pointer">
-            ✕
-          </button>
-        </div>
-
-        {/* FLOW GUIDE */}
-        <div className="mb-4 p-3 rounded-xl bg-white border border-[var(--line)] text-xs text-[var(--ink)] shadow-xs">
-          <strong className="block mb-1.5 text-[var(--ink)]">📋 Alur Siklus &amp; Tampilan Publik:</strong>
-          <div className="flex flex-wrap items-center gap-1.5 font-medium">
-            <span className="bg-[var(--bg)] text-[var(--muted)] px-2 py-0.5 rounded-full border border-[var(--line)]">INTAKE (baru masuk)</span>
-            <span className="text-[var(--muted)]">→</span>
-            <span className="bg-[var(--bg)] text-[var(--ink)] px-2 py-0.5 rounded-full border border-[var(--line)]">IN_REPAIR (salon/bengkel)</span>
-            <span className="text-[var(--muted)]">→</span>
-            <span className="bg-[var(--bg)] text-[var(--ok)] px-2 py-0.5 rounded-full border border-[var(--line)] font-bold">READY JUAL ✅ (siap tayang 100%)</span>
-          </div>
-          <p className="mt-1.5 text-[var(--muted)] leading-relaxed">
-            💡 <strong>Stok Segera Hadir (Upcoming):</strong> Unit berstatus <em>INTAKE</em> &amp; <em>IN_REPAIR</em> otomatis tayang di katalog publik dengan 1 foto depan &amp; estimasi harga psikologis. Setelah salon &amp; inspeksi selesai, ubah status ke <strong>Ready Jual</strong> untuk membuka galeri 11 foto lengkap &amp; sertifikat inspeksi digital.
-          </p>
-        </div>
-
-        {errorMsg && (
-          <div className="mb-4 p-3 rounded-lg bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs font-semibold">
-            {errorMsg}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Plat & Sumber */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Nomor Plat *</label>
-              <input
-                required
-                type="text"
-                placeholder="Contoh: B 1234 CD"
-                value={formData.plateNumber}
-                onChange={(e) => setFormData({ ...formData, plateNumber: e.target.value.toUpperCase() })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm uppercase font-bold"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Sumber Pembelian *</label>
-              <select
-                value={formData.sourceType}
-                onChange={(e) => setFormData({ ...formData, sourceType: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              >
-                <option value="AUCTION">Balai Lelang</option>
-                <option value="BROKER">Makelar / Mediator</option>
-                <option value="DIRECT_BUY">Beli Langsung dari Pemakai</option>
-              </select>
-            </div>
-          </div>
-
-          {/* SECTION LELANG */}
-          {isAuction && (
-            <div className="bg-white border border-[var(--line)] rounded-xl p-4 space-y-3">
-              <div className="text-xs font-bold text-[var(--ink)] border-b border-[var(--line)] pb-2">
-                🏛️ Informasi Balai Lelang &amp; Estimasi BPKB
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Balai Lelang</label>
-                  <select
-                    value={formData.auctionHouse}
-                    onChange={(e) => handleAuctionHouseChange(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-                  >
-                    {Object.entries(AUCTION_HOUSE_PRESETS).map(([key, val]) => (
-                      <option key={key} value={key}>{val.label}</option>
-                    ))}
-                  </select>
-                  {currentPreset && (
-                    <p className="text-[10px] text-[var(--muted)] mt-1">📋 {currentPreset.notes}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Tipe Lot Lelang</label>
-                  <select
-                    value={formData.auctionLotType}
-                    onChange={(e) => setFormData({ ...formData, auctionLotType: e.target.value })}
-                    className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-                  >
-                    <option value="EKS_PERUSAHAAN">Eks Perusahaan ✅ (BPKB bersih, 7-14 hari)</option>
-                    <option value="EKS_TARIKAN_LEASING">Eks Tarikan Leasing ⚠️ (BPKB 14-28 hari)</option>
-                    <option value="UNKNOWN">Tidak Diketahui / Belum Konfirmasi</option>
-                  </select>
-                  {formData.auctionLotType === "EKS_TARIKAN_LEASING" && (
-                    <p className="text-[10px] text-orange-700 mt-1 font-semibold">
-                      ⚠️ Cek dulu: pajak mati, STNK hilang, tunggakan leasing sebelum ambil!
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Status BPKB Saat Ini</label>
-                  <select
-                    value={formData.bpkbStatus}
-                    onChange={(e) => setFormData({ ...formData, bpkbStatus: e.target.value })}
-                    className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-                  >
-                    <option value="PROCESS_1_2_WEEKS">Masih Diproses Balai Lelang</option>
-                    <option value="READY">BPKB Sudah di Tangan</option>
-                    <option value="MUTATION_REQUIRED">Perlu Mutasi / Balik Nama</option>
-                    <option value="LOST_NEED_REPLACEMENT">Hilang / Perlu Penggantian</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
-                    Estimasi BPKB Tiba{" "}
-                    <span className="font-normal text-[var(--muted)]">(hari kerja: otomatis dari balai)</span>
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="number"
-                      min={1}
-                      max={90}
-                      value={formData.bpkbLeadDays}
-                      onChange={(e) => setFormData({ ...formData, bpkbLeadDays: Number(e.target.value) })}
-                      className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[var(--ink)]"
-                    />
-                    <span className="text-xs text-[var(--muted)] whitespace-nowrap">hari kerja</span>
-                  </div>
-                  <p className="text-[10px] text-[var(--muted)] mt-1">
-                    Dashboard hitung countdown BPKB dari tanggal beli.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Tanggal Beli */}
-          <div>
-            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Tanggal Pembelian / Menang Lelang *</label>
-            <input
-              required
-              type="date"
-              value={formData.purchaseDate}
-              onChange={(e) => setFormData({ ...formData, purchaseDate: e.target.value })}
-              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-            />
-          </div>
-
-          {/* Merk Model Tahun */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Merk *</label>
-              <input
-                required
-                type="text"
-                placeholder="Toyota, Honda, dll"
-                value={formData.brand}
-                onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Tipe / Model *</label>
-              <input
-                required
-                type="text"
-                placeholder="Avanza Veloz 1.5, dll"
-                value={formData.model}
-                onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Tahun *</label>
-              <input
-                required
-                type="number"
-                value={formData.year}
-                onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Spesifikasi */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Transmisi</label>
-              <select
-                value={formData.transmission}
-                onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              >
-                <option value="AUTOMATIC">Automatic (AT)</option>
-                <option value="MANUAL">Manual (MT)</option>
-                <option value="CVT">CVT</option>
-                <option value="DCT">DCT</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Warna *</label>
-              <input
-                required
-                type="text"
-                placeholder="Hitam Metalik, Putih..."
-                value={formData.color}
-                onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Odometer (km)</label>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={formatThousands(formData.odometer)}
-                onChange={(e) => setFormData({ ...formData, odometer: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">CC Mesin</label>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={formatThousands(formData.engineCapacity)}
-                onChange={(e) => setFormData({ ...formData, engineCapacity: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Harga */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-[var(--line)] pt-4">
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Harga Beli (Rp) *</label>
-              <input
-                required
-                type="text"
-                inputMode="numeric"
-                placeholder="150.000.000"
-                value={formData.purchasePrice ? formatThousands(formData.purchasePrice) : ""}
-                onChange={(e) => setFormData({ ...formData, purchasePrice: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[var(--ink)]"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Target Banderol Jual</label>
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="165.000.000"
-                value={formData.targetSellingPrice ? formatThousands(formData.targetSellingPrice) : ""}
-                onChange={(e) => setFormData({ ...formData, targetSellingPrice: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm text-[var(--ink)] font-bold"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Batas Bawah Nego (Net)</label>
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="158.000.000"
-                value={formData.minSellingPrice ? formatThousands(formData.minSellingPrice) : ""}
-                onChange={(e) => setFormData({ ...formData, minSellingPrice: parseThousands(e.target.value) })}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm text-[var(--ink)] font-medium"
-              />
-            </div>
-          </div>
-
-          {/* Catatan */}
-          <div>
-            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Catatan Kondisi Unit</label>
-            <textarea
-              rows={2}
-              placeholder="Kondisi fisik, kelengkapan, hal penting lain saat ambil dari lelang..."
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm resize-none"
-            />
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--line)]">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm text-[var(--muted)] hover:text-[var(--ink)] cursor-pointer"
-            >
-              Batal
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-5 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
-            >
-              {loading ? "Menyimpan..." : "Simpan & Masukkan ke Garasi (INTAKE)"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-// ── MODAL CATAT BIAYA ──────────────────────────────────────────
-function AddExpenseModal({
-  vehicle,
-  onClose,
-  onSuccess,
-}: {
-  vehicle: VehicleItem;
-  onClose: () => void;
-  onSuccess: (amount: number) => void;
-}) {
-  const [category, setCategory] = useState("OIL_AND_SERVICE");
-  const [vendorName, setVendorName] = useState("");
-  const [amount, setAmount] = useState<number | "">("");
-  const [notes, setNotes] = useState("");
-  const [receiptUrl, setReceiptUrl] = useState<string>("");
-  const [receiptFileName, setReceiptFileName] = useState<string>("");
-  const [uploadingReceipt, setUploadingReceipt] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setReceiptFileName(file.name);
-    setUploadingReceipt(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("vehicleId", vehicle.id);
-      formData.append("uploadType", "RECEIPT");
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      if (data.success && data.fileUrl) {
-        setReceiptUrl(data.fileUrl);
-      }
-    } catch (err) {
-      console.error("Error uploading receipt:", err);
-    } finally {
-      setUploadingReceipt(false);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!amount || amount <= 0) return;
-    setLoading(true);
-
-    try {
-      const res = await createExpenseAction({
-        vehicleId: vehicle.id,
-        category: category as any,
-        vendorName: vendorName || undefined,
-        amount: Number(amount),
-        date: new Date(),
-        notes: notes || undefined,
-        receiptUrl: receiptUrl || undefined,
-      });
-
-      if (!res.success) {
-        throw new Error(res.error);
-      }
-
-      onSuccess(Number(amount));
-    } catch (err: any) {
-      setErrorMsg(err.message || "Gagal mencatat biaya");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl w-full max-w-md shadow-2xl p-6">
-        <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-4">
-          <div>
-            <h2 className="text-base font-bold text-[var(--ink)]">Catat Biaya Unit & HPP</h2>
-            <div className="text-xs text-[var(--muted)] font-semibold">
-              {vehicle.brand} {vehicle.model} ({vehicle.plateNumber})
-            </div>
-          </div>
-          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] font-bold text-xl cursor-pointer">
-            ✕
-          </button>
-        </div>
-
-        {errorMsg && (
-          <div className="mb-4 p-3 rounded-lg bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs font-semibold">
-            {errorMsg}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Kategori Biaya</label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-semibold text-[var(--ink)]"
-            >
-              <optgroup label="Pengadaan & Logistik Awal (Landed Cost)">
-                <option value="AUCTION_ADMIN_FEE">Biaya Admin Lelang Resmi</option>
-                <option value="TRANSPORT_PICKUP">Ongkos Angkut / Towing / Biaya Ambil Unit</option>
-                <option value="BROKER_COMMISSION">Komisi Makelar / Mediator</option>
-              </optgroup>
-              <optgroup label="Perbaikan & Restorasi (Maintenance)">
-                <option value="BODY_PAINT">Cat Bodi &amp; Ketok Spet</option>
-                <option value="OIL_AND_SERVICE">Servis Mesin &amp; Ganti Oli</option>
-                <option value="DETAILING_SALON">Salon, Poles, Cuci Kolong</option>
-                <option value="SPAREPARTS">Penggantian Sparepart &amp; Kaki-kaki</option>
-                <option value="TIRES_AND_WHEELS">Ganti Ban, Spooring &amp; Balancing</option>
-                <option value="ELECTRICAL">Kelistrikan, Audio &amp; AC</option>
-              </optgroup>
-              <optgroup label="Legalitas & Dokumen">
-                <option value="DOCUMENT_TAX_MUTATION">Pajak, STNK &amp; Cabut Berkas Mutasi</option>
-              </optgroup>
-              <optgroup label="Lainnya">
-                <option value="OTHER">Lain-lain / Operasional</option>
-              </optgroup>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Nominal Biaya (Rp)</label>
-            <input
-              required
-              type="text"
-              inputMode="numeric"
-              placeholder="Contoh: 1.500.000"
-              value={amount !== "" ? formatThousands(amount) : ""}
-              onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
-              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-bold text-[var(--ink)]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Nama Bengkel / Toko / Penerima</label>
-            <input
-              type="text"
-              placeholder="Contoh: Bengkel Cat Barokah / Toko Sparepart Jaya"
-              value={vendorName}
-              onChange={(e) => setVendorName(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Keterangan / Rincian Pengerjaan</label>
-            <textarea
-              rows={2}
-              placeholder="Contoh: Poles bodi + ganti oli transmisi matik"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-            />
-          </div>
-
-          {/* Upload Bukti Nota / Kuitansi Fisik */}
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-semibold text-[var(--ink)]">
-                Bukti Dukung / Foto Nota Fisik (Dianjurkan)
-              </label>
-              <span className="text-[10px] text-[var(--muted)]">Struk / Kuitansi / Bon</span>
-            </div>
-            <div className="border border-dashed border-[var(--line)] rounded-lg p-3 bg-white text-center hover:bg-[var(--bg)] transition-colors">
-              <input
-                type="file"
-                accept="image/*,application/pdf"
-                id="receiptUpload"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-              {uploadingReceipt ? (
-                <div className="text-xs text-[var(--accent)] font-semibold py-1">
-                  Mengunggah bukti nota ke server...
-                </div>
-              ) : receiptUrl ? (
-                <div className="flex items-center justify-between px-2 py-1.5 bg-[var(--bg)] border border-[var(--line)] rounded-md text-xs text-[var(--ink)] font-semibold">
-                  <span className="flex items-center gap-1.5 truncate">
-                    <span>✓</span>
-                    <span className="truncate">{receiptFileName || "Foto struk terunggah"}</span>
-                  </span>
-                  <label
-                    htmlFor="receiptUpload"
-                    className="text-[11px] text-[var(--accent)] underline cursor-pointer shrink-0 ml-2"
-                  >
-                    Ganti
-                  </label>
-                </div>
-              ) : (
-                <label htmlFor="receiptUpload" className="cursor-pointer block py-1">
-                  <div className="text-xs text-[var(--muted)]">
-                    <span className="font-bold text-[var(--accent)] underline">Pilih foto/scan nota</span> atau seret file ke sini
-                  </div>
-                  <div className="text-[10px] text-[#A8A29E] mt-0.5">JPG, PNG, atau PDF max 10MB</div>
-                </label>
-              )}
-            </div>
-            <div className="mt-1 flex items-start gap-1 text-[11px] text-[#78716C]">
-              <span>ℹ️</span>
-              <span>
-                Bukti dukung memperkuat transparansi HPP & melindungi hak bagi hasil pemodal.
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--line)]">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-[var(--muted)]">
-              Batal
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-5 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer"
-            >
-              {loading ? "Menyimpan..." : "Catat Biaya & Update HPP"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-// ── MODAL UBAH STATUS ──────────────────────────────────────────
-function UpdateStatusModal({
-  vehicle,
-  onClose,
-  onSuccess,
-}: {
-  vehicle: VehicleItem;
-  onClose: () => void;
-  onSuccess: (newStatus: string) => void;
-}) {
-  const currentStatus = vehicle.status as VehicleStatus;
-  const allStatuses: VehicleStatus[] = [
-    "INTAKE",
-    "IN_REPAIR",
-    "READY_FOR_SALE",
-    "BOOKED",
-    "AT_SHOWROOM_PENDING",
-    "SOLD_SETTLED",
-  ];
-
-  // Filter status yang sah menurut canTransition
-  const validTransitions = allStatuses.filter((s) => s !== currentStatus && canTransition(currentStatus, s));
-
-  const [targetStatus, setTargetStatus] = useState<VehicleStatus>(
-    validTransitions[0] || currentStatus
-  );
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const handleUpdate = async () => {
-    if (!targetStatus || targetStatus === currentStatus) return;
-    setLoading(true);
-
-    try {
-      const res = await updateVehicleStatusAction(vehicle.id, targetStatus);
-      if (!res.success) {
-        throw new Error(res.error);
-      }
-      onSuccess(targetStatus);
-    } catch (err: any) {
-      setErrorMsg(err.message || "Gagal mengubah status");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl w-full max-w-sm shadow-2xl p-6">
-        <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-4">
-          <h2 className="text-base font-bold text-[var(--ink)]">Ubah Status Unit</h2>
-          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] font-bold text-xl cursor-pointer">
-            ✕
-          </button>
-        </div>
-
-        {errorMsg && (
-          <div className="mb-4 p-3 rounded-lg bg-[var(--bg)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs font-semibold">
-            {errorMsg}
-          </div>
-        )}
-
-        <div className="space-y-4">
-          <div>
-            <div className="text-xs text-[var(--muted)]">Unit:</div>
-            <div className="font-bold text-sm text-[var(--ink)]">
-              {vehicle.brand} {vehicle.model} ({vehicle.plateNumber})
-            </div>
-            <div className="text-xs mt-1">
-              Status saat ini: <StatusBadge status={currentStatus} />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
-              Pilih Status Baru (Sesuai Aturan Sistem):
-            </label>
-            {validTransitions.length === 0 ? (
-              <div className="p-3 bg-[var(--bg)] rounded-lg text-xs text-[var(--muted)]">
-                Unit berstatus <strong>{currentStatus}</strong> dan tidak memiliki rute transisi langsung berikutnya.
-              </div>
-            ) : (
-              <select
-                value={targetStatus}
-                onChange={(e) => setTargetStatus(e.target.value as VehicleStatus)}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm font-semibold"
-              >
-                {validTransitions.map((s) => (
-                  <option key={s} value={s}>
-                    {s === "IN_REPAIR" && "Masuk Pengerjaan (Bengkel/Salon) — Tayang Segera Hadir"}
-                    {s === "READY_FOR_SALE" && "Siap Dipasarkan (Ready For Sale) — Tayang Lengkap"}
-                    {s === "BOOKED" && "Terima Uang Tanda Jadi (Booked / DP)"}
-                    {s === "AT_SHOWROOM_PENDING" && "Titip Jual Showroom (Pending Pelunasan)"}
-                    {s === "SOLD_SETTLED" && "Terjual Lunas (Selesai)"}
-                  </option>
-                ))}
-              </select>
-            )}
-
-            {targetStatus === "READY_FOR_SALE" && (
-              <p className="text-[11px] text-[var(--ok)] bg-[var(--bg)] p-2.5 rounded-lg border border-[var(--line)] mt-2 leading-relaxed">
-                ✅ <strong>Ready Jual:</strong> Membuka 11 foto lengkap, skor inspeksi, dan dokumen resmi di katalog publik untuk calon pembeli.
-              </p>
-            )}
-            {(targetStatus === "INTAKE" || targetStatus === "IN_REPAIR") && (
-              <p className="text-[11px] text-[var(--muted)] bg-[var(--bg)] p-2.5 rounded-lg border border-[var(--line)] mt-2 leading-relaxed">
-                ✨ <strong>Segera Hadir:</strong> Unit akan tampil di katalog publik dengan 1 foto depan dan perkiraan harga estimasi.
-              </p>
-            )}
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--line)]">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-[var(--muted)]">
-              Batal
-            </button>
-            <button
-              type="button"
-              disabled={loading || validTransitions.length === 0}
-              onClick={handleUpdate}
-              className="px-5 py-2 bg-[var(--ink)] hover:bg-[var(--accent)] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
-            >
-              {loading ? "Menyimpan..." : "Update Status"}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── MODAL UPLOAD MEDIA & DOKUMEN ──────────────────────────────
-function MediaUploadModal({
-  vehicle,
-  onClose,
-}: {
-  vehicle: VehicleItem;
-  onClose: () => void;
-}) {
-  const [uploadType, setUploadType] = useState<"PHOTO" | "DOCUMENT">("PHOTO");
-  const [photoCategory, setPhotoCategory] = useState("CONDITION_INTAKE");
-  const [docType, setDocType] = useState("STNK_SCAN");
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
-
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!file) return;
-
-    setUploading(true);
-    setMsg(null);
-
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("vehicleId", vehicle.id);
-      formData.append("uploadType", uploadType);
-      if (uploadType === "PHOTO") {
-        formData.append("category", photoCategory);
-      } else {
-        formData.append("docType", docType);
-      }
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok || data.error) {
-        throw new Error(data.error || "Gagal mengunggah file");
-      }
-
-      setMsg({ type: "success", text: "File berhasil disimpan ke server!" });
-      setFile(null);
-    } catch (err: any) {
-      setMsg({ type: "error", text: err.message || "Gagal mengunggah file" });
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-2xl w-full max-w-md shadow-2xl p-6">
-        <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-4">
-          <div>
-            <h2 className="text-base font-bold text-[var(--ink)]">Upload Media & Dokumen</h2>
-            <div className="text-xs text-[var(--muted)] font-semibold">
-              {vehicle.brand} {vehicle.model} ({vehicle.plateNumber})
-            </div>
-          </div>
-          <button onClick={onClose} className="text-[var(--muted)] hover:text-[var(--ink)] font-bold text-xl cursor-pointer">
-            ✕
-          </button>
-        </div>
-
-        {msg && (
-          <div
-            className={cn(
-              "mb-4 p-3 rounded-lg text-xs font-semibold border",
-              msg.type === "success"
-                ? "bg-[var(--bg)] border-[var(--line)] text-[var(--ok)]"
-                : "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
-            )}
-          >
-            {msg.text}
-          </div>
-        )}
-
-        {/* Tipe Upload Tab */}
-        <div className="flex gap-2 p-1 bg-[var(--bg)] rounded-lg mb-4">
-          <button
-            type="button"
-            onClick={() => setUploadType("PHOTO")}
-            className={cn(
-              "flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer",
-              uploadType === "PHOTO" ? "bg-white text-[var(--ink)] shadow-sm" : "text-[var(--muted)]"
-            )}
-          >
-            <Camera className="w-3.5 h-3.5" />
-            <span>Foto Fisik</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setUploadType("DOCUMENT")}
-            className={cn(
-              "flex-1 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center justify-center gap-1.5 cursor-pointer",
-              uploadType === "DOCUMENT" ? "bg-white text-[var(--ink)] shadow-sm" : "text-[var(--muted)]"
-            )}
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>Scan Dokumen</span>
-          </button>
-        </div>
-
-        <form onSubmit={handleUpload} className="space-y-4">
-          {uploadType === "PHOTO" ? (
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Kategori Foto</label>
-              <select
-                value={photoCategory}
-                onChange={(e) => setPhotoCategory(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              >
-                <option value="CONDITION_INTAKE">Kondisi Saat Intake (Baru Datang)</option>
-                <option value="CONDITION_BEFORE_REPAIR">Sebelum Perbaikan / Baret</option>
-                <option value="CONDITION_AFTER_REPAIR">Setelah Selesai Pengerjaan</option>
-                <option value="FINAL_LISTING">Foto Siap Tayang Katalog</option>
-                <option value="DOCUMENT_PROOF">Bukti Fisik / Nota Fisik</option>
-              </select>
-            </div>
-          ) : (
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Jenis Dokumen</label>
-              <select
-                value={docType}
-                onChange={(e) => setDocType(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-lg text-sm"
-              >
-                <option value="STNK_SCAN">Scan STNK (Pajak)</option>
-                <option value="BPKB_SCAN">Scan BPKB</option>
-                <option value="FAKTUR">Faktur Pembelian Asli</option>
-                <option value="KUITANSI">Kuitansi / Kwitansi Gesek</option>
-                <option value="KTP_PEMILIK">Fotokopi/Scan KTP Pemilik Asal</option>
-                <option value="OTHER">Dokumen Lainnya</option>
-              </select>
-            </div>
-          )}
-
-          {/* File Picker */}
-          <div>
-            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Pilih File</label>
-            <input
-              required
-              type="file"
-              accept={uploadType === "PHOTO" ? "image/*" : "image/*,application/pdf"}
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="w-full text-xs text-[var(--muted)] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[var(--ink)] file:text-white hover:file:bg-[var(--accent)] cursor-pointer"
-            />
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--line)]">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-[var(--muted)]">
-              Tutup
-            </button>
-            <button
-              type="submit"
-              disabled={uploading || !file}
-              className="flex items-center gap-1.5 px-5 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-semibold shadow-sm transition-colors cursor-pointer disabled:opacity-50"
-            >
-              <UploadCloud className="w-4 h-4" />
-              <span>{uploading ? "Mengunggah..." : "Upload Sekarang"}</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
   );
 }

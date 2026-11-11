@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 import {
   operationalExpenseSchema,
   OperationalExpenseInput,
@@ -14,6 +15,7 @@ import Decimal from "decimal.js";
 
 export async function getOperationalExpensesSummary() {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     const expenses = await prisma.operationalExpense.findMany({
       orderBy: { date: "desc" },
     });
@@ -87,9 +89,11 @@ export async function getOperationalExpensesSummary() {
 
 export async function recordOperationalExpense(
   input: OperationalExpenseInput,
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const validated = operationalExpenseSchema.parse(input);
     const amt = new Decimal(validated.amount);
 
@@ -106,7 +110,7 @@ export async function recordOperationalExpense(
           amount: amt,
           runningBalance: newBal,
           notes: `Beban Operasional: [${validated.category}] ${validated.notes || ""} ${validated.recipient ? `(Penerima: ${validated.recipient})` : ""}`.trim(),
-          createdBy: actorUserId,
+          createdBy: session.fullName || resolvedActorId,
         },
       });
 
@@ -120,14 +124,14 @@ export async function recordOperationalExpense(
           receiptUrl: validated.proofUrls && validated.proofUrls.length > 0
             ? JSON.stringify(validated.proofUrls)
             : (validated.receiptUrl || null),
-          createdBy: actorUserId,
+          createdBy: session.fullName || resolvedActorId,
           cashTransactionId: cashEntry.id,
         },
       });
 
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "CREATE",
           entityType: "OperationalExpense",
           entityId: opExpense.id,
@@ -150,9 +154,11 @@ export async function recordOperationalExpense(
 
 export async function recordOwnerDraw(
   input: OwnerDrawInput,
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const validated = ownerDrawSchema.parse(input);
     const amt = new Decimal(validated.amount);
 
@@ -172,13 +178,13 @@ export async function recordOwnerDraw(
           proofUrl: validated.proofUrls && validated.proofUrls.length > 0
             ? JSON.stringify(validated.proofUrls)
             : null,
-          createdBy: actorUserId,
+          createdBy: session.fullName || resolvedActorId,
         },
       });
 
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "CREATE",
           entityType: "CashTransaction:OwnerDraw",
           entityId: cashEntry.id,
@@ -201,9 +207,11 @@ export async function recordOwnerDraw(
 
 export async function recordOwnerEquity(
   input: OwnerEquityInput,
-  actorUserId: string = "system"
+  actorUserId?: string
 ) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
     const validated = ownerEquitySchema.parse(input);
     const amt = new Decimal(validated.amount);
 
@@ -223,13 +231,13 @@ export async function recordOwnerEquity(
           proofUrl: validated.proofUrls && validated.proofUrls.length > 0
             ? JSON.stringify(validated.proofUrls)
             : null,
-          createdBy: actorUserId,
+          createdBy: session.fullName || resolvedActorId,
         },
       });
 
       await tx.auditLog.create({
         data: {
-          actorUserId,
+          actorUserId: resolvedActorId,
           action: "CREATE",
           entityType: "CashTransaction:OwnerEquity",
           entityId: cashEntry.id,
