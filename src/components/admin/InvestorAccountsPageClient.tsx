@@ -2,11 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Users,
   Plus,
   Coins,
   ArrowDownLeft,
+  ArrowUpRight,
   Search,
   CheckCircle2,
   Car,
@@ -26,8 +28,12 @@ import {
   FileText,
   Loader2,
 } from "lucide-react";
-import { formatRupiah, formatDate, cn } from "@/lib/utils";
-import { depositInvestorCapital } from "@/app/actions/capital-ledger";
+import { formatRupiah, formatDate, cn, formatThousands, parseThousands } from "@/lib/utils";
+import {
+  depositInvestorCapital,
+  withdrawInvestorCapital,
+} from "@/app/actions/capital-ledger";
+import { ProofUploadField } from "@/components/admin/ProofUploadField";
 import { createInvestor, updateInvestor, deleteInvestor } from "@/app/actions/investor";
 import { InvestorSubNav } from "./InvestorSubNav";
 
@@ -65,8 +71,10 @@ export function InvestorAccountsPageClient({
   pendingCount,
   totalHistoryCount,
 }: InvestorAccountsProps) {
+  const router = useRouter();
   const [investorList, setInvestorList] = useState<InvestorItem[]>(investors);
   const [showDepositModal, setShowDepositModal] = useState(false);
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showInvestorModal, setShowInvestorModal] = useState(false);
   const [editingInvestor, setEditingInvestor] = useState<InvestorItem | null>(null);
   const [deletingInvestor, setDeletingInvestor] = useState<InvestorItem | null>(null);
@@ -84,6 +92,14 @@ export function InvestorAccountsPageClient({
   const [depositProofs, setDepositProofs] = useState<Array<{ id: string; url: string; name: string }>>([]);
   const [uploadingDepositProof, setUploadingDepositProof] = useState(false);
   const [uploadDepositError, setUploadDepositError] = useState("");
+
+  // Form State: Penarikan / Pencairan Dana
+  const [withdrawInvestorId, setWithdrawInvestorId] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
+  const [withdrawCategory, setWithdrawCategory] = useState<"CAPITAL_RETURN" | "PROFIT_WITHDRAWAL">("CAPITAL_RETURN");
+  const [withdrawDate, setWithdrawDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const [withdrawNotes, setWithdrawNotes] = useState("");
+  const [withdrawProofs, setWithdrawProofs] = useState<string[]>([]);
 
   // Form State: Tambah Investor
   const [newInvestorName, setNewInvestorName] = useState("");
@@ -217,8 +233,59 @@ export function InvestorAccountsPageClient({
       setDepositAmount("");
       setDepositNotes("");
       setDepositProofs([]);
+      router.refresh();
     } else {
       showNotification(res.error || "Gagal mencatat setoran modal", "error");
+    }
+  };
+
+  const openWithdrawModal = (preselectInvestorId?: string) => {
+    const targetId =
+      preselectInvestorId || investorList.find((i) => i.currentBalance > 0)?.id || investorList[0]?.id || "";
+    setWithdrawInvestorId(targetId);
+    setWithdrawAmount(0);
+    setWithdrawCategory("CAPITAL_RETURN");
+    setWithdrawDate(new Date().toISOString().split("T")[0]);
+    setWithdrawNotes("");
+    setWithdrawProofs([]);
+    setShowWithdrawModal(true);
+  };
+
+  const handleWithdrawSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!withdrawInvestorId || withdrawAmount <= 0) return;
+
+    setLoading(true);
+    const res = await withdrawInvestorCapital({
+      investorId: withdrawInvestorId,
+      amount: withdrawAmount,
+      withdrawalCategory: withdrawCategory,
+      withdrawalDate: withdrawDate || undefined,
+      notes: withdrawNotes || undefined,
+      proofUrls: withdrawProofs.length > 0 ? withdrawProofs : undefined,
+      proofUrl: withdrawProofs[0] || undefined,
+    });
+    setLoading(false);
+
+    if (res.success && res.data) {
+      setInvestorList((prev) =>
+        prev.map((inv) =>
+          inv.id === withdrawInvestorId
+            ? { ...inv, currentBalance: res.data!.newInvestorBalance }
+            : inv
+        )
+      );
+      showNotification(
+        "Pencairan dana ke pemodal berhasil dicatat di buku modal & kas rekening!",
+        "success"
+      );
+      setShowWithdrawModal(false);
+      setWithdrawAmount(0);
+      setWithdrawNotes("");
+      setWithdrawProofs([]);
+      router.refresh();
+    } else {
+      showNotification(res.error || "Gagal mencatat pencairan dana pemodal", "error");
     }
   };
 
@@ -456,6 +523,15 @@ export function InvestorAccountsPageClient({
             <span>+ Investor Baru</span>
           </Link>
 
+          <button
+            type="button"
+            onClick={() => openWithdrawModal()}
+            className="flex items-center gap-1.5 bg-white hover:bg-rose-50 border border-rose-200 text-rose-700 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+          >
+            <ArrowUpRight className="w-3.5 h-3.5" />
+            <span>Tarik / Cairkan Dana</span>
+          </button>
+
           <Link
             href="/admin/investors/deposit/new"
             className="flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-xs"
@@ -566,6 +642,16 @@ export function InvestorAccountsPageClient({
                   <span>Total Laba Diterima:</span>
                   <span className="font-bold text-[var(--ink)]">{formatRupiah(inv.totalProfitDistributed)}</span>
                 </div>
+                {inv.currentBalance > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => openWithdrawModal(inv.id)}
+                    className="w-full mt-1.5 py-1.5 px-3 rounded-xl border border-rose-200 bg-rose-50/60 hover:bg-rose-100 text-rose-700 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                    <span>Cairkan / Transfer Balik Dana</span>
+                  </button>
+                )}
               </div>
 
               {/* Alokasi Unit Aktif */}
@@ -768,6 +854,180 @@ export function InvestorAccountsPageClient({
                   className="px-5 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                 >
                   {loading ? "Menyimpan..." : "Simpan Setoran Modal"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Penarikan / Pencairan Dana Investor */}
+      {showWithdrawModal && (
+        <div
+          className="fixed inset-0 bg-black/50 z-50 backdrop-blur-xs flex items-center justify-center p-4"
+          onClick={() => setShowWithdrawModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl border border-[var(--line)] max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">
+                  Tarik / Cairkan Dana Pemodal
+                </h3>
+                <p className="text-[11px] text-[var(--muted)] mt-0.5">
+                  Otomatis memotong saldo bebas pemodal &amp; mencatat kas keluar rekening showroom.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowWithdrawModal(false)}
+                className="text-[var(--muted)] hover:text-[var(--ink)] text-lg font-bold cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleWithdrawSubmit} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
+                  Pilih Akun Pemodal *
+                </label>
+                <select
+                  required
+                  value={withdrawInvestorId}
+                  onChange={(e) => setWithdrawInvestorId(e.target.value)}
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2.5 text-sm bg-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+                >
+                  <option value="">-- Pilih Akun Pemodal --</option>
+                  {investorList.map((inv) => (
+                    <option key={inv.id} value={inv.id}>
+                      {inv.name} — Saldo Bebas: {formatRupiah(inv.currentBalance)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {(() => {
+                const selectedInv = investorList.find((i) => i.id === withdrawInvestorId);
+                if (!selectedInv) return null;
+                const avail = Math.max(0, selectedInv.currentBalance);
+                return (
+                  <div className="p-3 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-xs space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-[var(--muted)]">Saldo Bebas Bisa Ditarik:</span>
+                      <span className="font-black text-[var(--ink)]">{formatRupiah(avail)}</span>
+                    </div>
+                    {selectedInv.bankAccountNumber && (
+                      <div className="text-[11px] text-[var(--muted)]">
+                        Rekening Tujuan:{" "}
+                        <strong className="text-[var(--ink)]">
+                          {selectedInv.bankName || "Bank"} {selectedInv.bankAccountNumber}
+                          {selectedInv.bankAccountName ? ` a.n. ${selectedInv.bankAccountName}` : ""}
+                        </strong>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
+                    Jenis Pencairan *
+                  </label>
+                  <select
+                    value={withdrawCategory}
+                    onChange={(e) =>
+                      setWithdrawCategory(e.target.value as "CAPITAL_RETURN" | "PROFIT_WITHDRAWAL")
+                    }
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2.5 text-xs font-semibold bg-white"
+                  >
+                    <option value="CAPITAL_RETURN">Pengembalian Pokok Modal</option>
+                    <option value="PROFIT_WITHDRAWAL">Pencairan Laba / Profit</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
+                    Tanggal Transfer *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={withdrawDate}
+                    onChange={(e) => setWithdrawDate(e.target.value)}
+                    className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm font-semibold"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider">
+                    Nominal Pencairan (Rp) *
+                  </label>
+                  {(() => {
+                    const selectedInv = investorList.find((i) => i.id === withdrawInvestorId);
+                    if (!selectedInv || selectedInv.currentBalance <= 0) return null;
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => setWithdrawAmount(selectedInv.currentBalance)}
+                        className="text-[11px] font-bold text-[var(--accent)] hover:underline cursor-pointer"
+                      >
+                        Tarik Semua ({formatRupiah(selectedInv.currentBalance)})
+                      </button>
+                    );
+                  })()}
+                </div>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  required
+                  placeholder="Contoh: 50.000.000"
+                  value={formatThousands(withdrawAmount)}
+                  onChange={(e) => setWithdrawAmount(parseThousands(e.target.value))}
+                  className="w-full border border-[var(--line)] rounded-xl px-3.5 py-2.5 text-sm font-bold text-[var(--ink)]"
+                />
+              </div>
+
+              <ProofUploadField
+                label="Bukti Transfer Pencairan (Opsional)"
+                value={withdrawProofs}
+                onChange={setWithdrawProofs}
+                uploadType="TRANSFER_PROOF"
+                investorId={withdrawInvestorId || undefined}
+              />
+
+              <div>
+                <label className="text-xs font-bold text-[var(--ink)] uppercase tracking-wider block mb-1">
+                  Catatan Transfer
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="Contoh: Transfer pengembalian modal unit B 1275 DKS ke BCA pemodal..."
+                  value={withdrawNotes}
+                  onChange={(e) => setWithdrawNotes(e.target.value)}
+                  className="w-full border border-[var(--line)] rounded-xl px-3 py-2 text-sm"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2 border-t border-[var(--line)]">
+                <button
+                  type="button"
+                  onClick={() => setShowWithdrawModal(false)}
+                  className="px-4 py-2 border border-[var(--line)] rounded-xl text-xs font-semibold text-[var(--muted)] hover:bg-[var(--bg)] cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading || withdrawAmount <= 0 || !withdrawInvestorId}
+                  className="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+                >
+                  {loading ? "Memproses..." : "Catat Pencairan Dana"}
                 </button>
               </div>
             </form>

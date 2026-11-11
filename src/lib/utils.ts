@@ -48,6 +48,12 @@ export function parseProofUrls(proofUrl?: string | null): string[] {
   return [proofUrl];
 }
 
+export function serializeProofUrls(urls: string[]): string | null {
+  const cleaned = urls.map((u) => u.trim()).filter(Boolean);
+  if (cleaned.length === 0) return null;
+  return cleaned.length === 1 ? cleaned[0] : JSON.stringify(cleaned);
+}
+
 /**
  * Format angka atau string angka ke format ribuan dengan pemisah titik (misal: 150000000 -> "150.000.000")
  */

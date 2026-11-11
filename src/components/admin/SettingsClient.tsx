@@ -54,10 +54,12 @@ interface SettingsProps {
   auditLogs: Array<{
     id: string;
     actorUserId: string;
+    actorName?: string | null;
     action: string;
     entityType: string;
     entityId: string;
     createdAt: string | Date;
+    beforeData?: any;
     afterData?: any;
   }>;
   initialSettings?: SettingItem[];
@@ -739,35 +741,58 @@ export function SettingsClient({
 type AuditLogEntry = {
   id: string;
   actorUserId: string;
+  actorName?: string | null;
   action: string;
   entityType: string;
   entityId: string;
   createdAt: string | Date;
+  beforeData?: any;
   afterData?: any;
 };
 
 const ACTION_COLORS: Record<string, { bg: string; text: string; border: string; label: string }> = {
-  CREATE:        { bg: "bg-[var(--bg)]",  text: "text-[var(--ok)]",    border: "border-[var(--ok)]/30",   label: "Buat" },
-  UPDATE:        { bg: "bg-[var(--bg)]",  text: "text-[var(--accent)]", border: "border-[var(--line)]",   label: "Ubah" },
-  VOID:          { bg: "bg-[var(--bg)]",  text: "text-[var(--bad)]",   border: "border-[var(--bad)]/30",  label: "Batal" },
-  CORRECTION:    { bg: "bg-[var(--bg)]",  text: "text-[var(--warn)]",  border: "border-[var(--warn)]/30", label: "Koreksi" },
-  PROFIT_SHARE:  { bg: "bg-[var(--bg)]",  text: "text-[var(--ink)]",   border: "border-[var(--line)]",    label: "Bagi Hasil" },
-  SALE:          { bg: "bg-[var(--bg)]",  text: "text-[var(--ink)]",   border: "border-[var(--line)]",    label: "Penjualan" },
-  STATUS_CHANGE: { bg: "bg-[var(--bg)]",  text: "text-[var(--accent)]", border: "border-[var(--line)]",   label: "Ubah Status" },
+  CREATE:            { bg: "bg-[var(--bg)]",  text: "text-[var(--ok)]",     border: "border-[var(--ok)]/30",   label: "Buat" },
+  UPDATE:            { bg: "bg-[var(--bg)]",  text: "text-[var(--accent)]", border: "border-[var(--line)]",    label: "Ubah" },
+  DELETE:            { bg: "bg-red-50",       text: "text-red-700",         border: "border-red-200",          label: "Hapus" },
+  UPDATE_STATUS:     { bg: "bg-[var(--bg)]",  text: "text-[var(--accent)]", border: "border-[var(--line)]",    label: "Ubah Status" },
+  VOID:              { bg: "bg-[var(--bg)]",  text: "text-[var(--bad)]",    border: "border-[var(--bad)]/30",  label: "Batal" },
+  CORRECTION:        { bg: "bg-[var(--bg)]",  text: "text-[var(--warn)]",   border: "border-[var(--warn)]/30", label: "Koreksi" },
+  REVERSAL_INITIATED:{ bg: "bg-amber-50",     text: "text-amber-800",       border: "border-amber-200",        label: "Reversal Mulai" },
+  REVERSAL_COMPLETED:{ bg: "bg-amber-50",     text: "text-amber-900",       border: "border-amber-200",        label: "Reversal Selesai" },
+  PROFIT_SHARE:      { bg: "bg-[var(--bg)]",  text: "text-[var(--ink)]",    border: "border-[var(--line)]",    label: "Bagi Hasil" },
+  SALE:              { bg: "bg-[var(--bg)]",  text: "text-[var(--ink)]",    border: "border-[var(--line)]",    label: "Penjualan" },
+  STATUS_CHANGE:     { bg: "bg-[var(--bg)]",  text: "text-[var(--accent)]", border: "border-[var(--line)]",    label: "Ubah Status" },
+  LOGIN_SUCCESS:     { bg: "bg-emerald-50",   text: "text-emerald-700",     border: "border-emerald-200",      label: "Login Masuk" },
+  LOGIN_FAILED:      { bg: "bg-red-50",       text: "text-red-700",         border: "border-red-200",          label: "Login Gagal" },
 };
 
 const ENTITY_LABELS: Record<string, string> = {
-  Vehicle:            "Unit Kendaraan",
-  Expense:            "Beban Unit",
-  Sale:               "Penjualan",
-  Investment:         "Modal Investor",
-  CapitalLedger:      "Buku Modal",
-  ProfitShareRule:    "Aturan Bagi Hasil",
-  OperationalExpense: "Pengeluaran Ops",
-  CashTransaction:    "Kas Masuk/Keluar",
-  Asset:              "Aset Inventaris",
-  Setting:            "Pengaturan",
-  Investor:           "Investor",
+  Vehicle:             "Unit Kendaraan",
+  VehiclePhoto:        "Foto Kendaraan",
+  VehicleDocument:     "Dokumen Kendaraan",
+  VehicleImportBatch:  "Import Unit",
+  ExpenseImportBatch:  "Import Biaya",
+  Expense:             "Beban Unit",
+  Sale:                "Penjualan",
+  SalePayment:         "Pembayaran Jual",
+  Investment:          "Modal Investor",
+  VehicleInvestment:   "Alokasi Modal Unit",
+  CapitalLedger:       "Buku Modal Investor",
+  ProfitDistribution:  "Distribusi Laba",
+  ProfitShareRule:     "Aturan Bagi Hasil",
+  OperationalExpense:  "Pengeluaran Ops",
+  CashTransaction:     "Kas Masuk/Keluar",
+  ShowroomAsset:       "Aset Tetap",
+  Asset:               "Aset Inventaris",
+  WorkshopSupply:      "Stok Gudang Bahan",
+  WorkshopSupplyUsage: "Pakai Bahan ke Unit",
+  HistoricalSale:      "Arsip Penjualan",
+  Inspection:          "Inspeksi Fisik",
+  UserProfile:         "Pengguna / Staff",
+  SystemSetting:       "Pengaturan Sistem",
+  Setting:             "Pengaturan",
+  Investor:            "Investor",
+  Auth:                "Keamanan Login",
 };
 
 function formatDateTime(date: string | Date): string {
@@ -921,10 +946,15 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                   };
                   const entityLink = getEntityLink(log.entityType, log.entityId);
                   const isExpanded = expandedId === log.id;
-                  const hasDetail =
+                  const hasBefore =
+                    log.beforeData != null &&
+                    typeof log.beforeData === "object" &&
+                    Object.keys(log.beforeData).length > 0;
+                  const hasAfter =
                     log.afterData != null &&
                     typeof log.afterData === "object" &&
                     Object.keys(log.afterData).length > 0;
+                  const hasDetail = hasBefore || hasAfter;
 
                   return (
                     <React.Fragment key={log.id}>
@@ -969,8 +999,12 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                         <td className="py-3 px-4 text-xs text-[var(--ink)] font-medium">
                           {log.actorUserId === "SYSTEM" ? (
                             <span className="text-[var(--muted)] italic">Sistem</span>
+                          ) : log.actorName ? (
+                            <span title={log.actorUserId} className="font-semibold text-[var(--ink)]">
+                              {log.actorName}
+                            </span>
                           ) : (
-                            <span title={log.actorUserId}>
+                            <span title={log.actorUserId} className="text-[var(--muted)]">
                               {log.actorUserId.length > 20
                                 ? `${log.actorUserId.slice(0, 16)}…`
                                 : log.actorUserId}
@@ -1001,14 +1035,34 @@ function AuditLogTab({ auditLogs }: { auditLogs: AuditLogEntry[] }) {
                       {isExpanded && hasDetail && (
                         <tr className="bg-[var(--bg)]/60">
                           <td colSpan={6} className="px-6 pb-5 pt-2">
-                            <div className="bg-white border border-[var(--line)] rounded-xl p-4 shadow-2xs">
-                              <p className="text-xs font-bold text-[var(--ink)] mb-3 flex items-center gap-1.5">
-                                <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
-                                Data setelah perubahan (afterData)
-                              </p>
-                              <pre className="text-xs text-[var(--muted)] whitespace-pre-wrap break-all leading-relaxed font-mono bg-[var(--bg)] rounded-lg p-3 border border-[var(--line)] max-h-72 overflow-y-auto">
-                                {JSON.stringify(log.afterData, null, 2)}
-                              </pre>
+                            <div
+                              className={cn(
+                                "grid gap-4",
+                                hasBefore && hasAfter ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"
+                              )}
+                            >
+                              {hasBefore && (
+                                <div className="bg-white border border-[var(--line)] rounded-xl p-4 shadow-2xs">
+                                  <p className="text-xs font-bold text-[var(--muted)] mb-2 flex items-center gap-1.5">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-[var(--muted)]" />
+                                    Data Sebelumnya (beforeData)
+                                  </p>
+                                  <pre className="text-xs text-[var(--muted)] whitespace-pre-wrap break-all leading-relaxed font-mono bg-[var(--bg)] rounded-lg p-3 border border-[var(--line)] max-h-72 overflow-y-auto">
+                                    {JSON.stringify(log.beforeData, null, 2)}
+                                  </pre>
+                                </div>
+                              )}
+                              {hasAfter && (
+                                <div className="bg-white border border-[var(--line)] rounded-xl p-4 shadow-2xs">
+                                  <p className="text-xs font-bold text-[var(--ink)] mb-2 flex items-center gap-1.5">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
+                                    Data Sesudahnya (afterData)
+                                  </p>
+                                  <pre className="text-xs text-[var(--ink)] whitespace-pre-wrap break-all leading-relaxed font-mono bg-[var(--bg)] rounded-lg p-3 border border-[var(--line)] max-h-72 overflow-y-auto">
+                                    {JSON.stringify(log.afterData, null, 2)}
+                                  </pre>
+                                </div>
+                              )}
                             </div>
                           </td>
                         </tr>

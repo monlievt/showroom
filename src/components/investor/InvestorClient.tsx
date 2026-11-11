@@ -344,6 +344,7 @@ export function InvestorClient({
                 </thead>
                 <tbody className="divide-y divide-[var(--line)]">
                   {investor.ledgerEntries.map((entry) => {
+                    const isWithdrawal = Boolean(entry.notes?.includes("[PENARIKAN DANA"));
                     const isIncrease =
                       entry.type === "DEPOSIT" ||
                       entry.type === "RETURNED" ||
@@ -360,10 +361,12 @@ export function InvestorClient({
                               "text-[11px] font-bold px-2 py-0.5 rounded-full uppercase",
                               isIncrease
                                 ? "bg-emerald-100 text-emerald-800"
+                                : isWithdrawal
+                                ? "bg-rose-100 text-rose-800"
                                 : "bg-amber-100 text-amber-800"
                             )}
                           >
-                            {entry.type}
+                            {isWithdrawal ? "PENARIKAN" : entry.type}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-xs text-[var(--ink)]">

@@ -14,14 +14,17 @@ export const metadata = {
 };
 
 export default async function SettingsPage() {
-  const [logs, auditLogs, settingsRes, contactsRes, auctionHouses, telegramChatId, telegramBotToken, telegramAllowedChatIds, appPublicUrl] = await Promise.all([
+  const [logs, auditLogs, users, settingsRes, contactsRes, auctionHouses, telegramChatId, telegramBotToken, telegramAllowedChatIds, appPublicUrl] = await Promise.all([
     prisma.notificationLog.findMany({
       orderBy: { createdAt: "desc" },
       take: 100,
     }),
     prisma.auditLog.findMany({
       orderBy: { createdAt: "desc" },
-      take: 100,
+      take: 200,
+    }),
+    prisma.userProfile.findMany({
+      select: { id: true, authUserId: true, fullName: true, role: true },
     }),
     getSystemSettingsAction(),
     getAllWhatsAppContactsAction(),
@@ -31,6 +34,13 @@ export default async function SettingsPage() {
     getSettingValue("TELEGRAM_BOT_ALLOWED_CHAT_IDS"),
     getSettingValue("APP_PUBLIC_URL"),
   ]);
+
+  const userNameMap = new Map<string, string>();
+  for (const u of users) {
+    const label = `${u.fullName} (${u.role})`;
+    userNameMap.set(u.id, label);
+    userNameMap.set(u.authUserId, label);
+  }
 
   return (
     <div className="flex-1 flex flex-col min-h-screen">
@@ -56,10 +66,12 @@ export default async function SettingsPage() {
           auditLogs={auditLogs.map((a) => ({
             id: a.id,
             actorUserId: a.actorUserId,
+            actorName: userNameMap.get(a.actorUserId) || null,
             action: a.action,
             entityType: a.entityType,
             entityId: a.entityId,
             createdAt: a.createdAt,
+            beforeData: a.beforeData,
             afterData: a.afterData,
           }))}
           initialSettings={settingsRes.data || []}

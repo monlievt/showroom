@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { requireRole } from "@/lib/auth/session";
+import { formatRupiah, parseProofUrls } from "@/lib/utils";
 
 export interface CreateSupplyInput {
   name: string;
@@ -13,6 +14,18 @@ export interface CreateSupplyInput {
   costPerUnit: number;
   standardHppCharge?: number;
   location?: string;
+  photoUrl?: string | null;
+  receiptUrl?: string | null;
+  notes?: string;
+}
+
+export interface RestockSupplyInput {
+  supplyId: string;
+  addedStock: number;
+  costPerUnit?: number;
+  standardHppCharge?: number;
+  photoUrl?: string | null;
+  receiptUrl?: string | null;
   notes?: string;
 }
 
@@ -132,17 +145,24 @@ export async function createWorkshopSupplyAction(input: CreateSupplyInput, deduc
           costPerUnit: cost,
           standardHppCharge: input.standardHppCharge ? Number(input.standardHppCharge) : cost,
           location: input.location || "Rak Gudang Garasi",
+          photoUrl: input.photoUrl || null,
+          receiptUrl: input.receiptUrl || null,
           notes: input.notes,
         },
       });
 
-      // Jika potong kas, catat pengeluaran kas pembelian stok
+      // Jika potong kas, catat pengeluaran kas pembelian stok + nota
       if (deductCash && totalExpense > 0) {
         const lastTx = await tx.cashTransaction.findFirst({
           orderBy: { createdAt: "desc" },
-          select: { runningBalance: true },
+          select: { runningBalance: true, createdAt: true },
         });
         const currentBal = lastTx ? Number(lastTx.runningBalance) : 0;
+        if (currentBal < totalExpense) {
+          throw new Error(
+            `Saldo kas showroom tidak mencukupi (Tersedia: ${formatRupiah(currentBal)}, Dibutuhkan: ${formatRupiah(totalExpense)}).`
+          );
+        }
         const newBal = currentBal - totalExpense;
 
         await tx.cashTransaction.create({
@@ -151,10 +171,24 @@ export async function createWorkshopSupplyAction(input: CreateSupplyInput, deduc
             amount: totalExpense,
             runningBalance: newBal,
             notes: `Pembelian stok bahan habis pakai: ${input.name} (${stock} ${input.unit || "Pcs"} @ Rp ${cost.toLocaleString("id-ID")})`,
+            proofUrl: input.receiptUrl || null,
+            createdAt: new Date(
+              Math.max(Date.now(), lastTx ? new Date(lastTx.createdAt).getTime() + 1 : 0)
+            ),
             createdBy: actorLabel,
           },
         });
       }
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "CREATE",
+          entityType: "WorkshopSupply",
+          entityId: supply.id,
+          afterData: JSON.parse(JSON.stringify(supply)),
+        },
+      });
 
       return supply;
     });
@@ -164,6 +198,112 @@ export async function createWorkshopSupplyAction(input: CreateSupplyInput, deduc
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Gagal menambahkan stok bahan:", error);
+    return { success: false, error: error.message || "Gagal menambah stok bahan" };
+  }
+}
+
+export async function restockWorkshopSupplyAction(
+  input: RestockSupplyInput,
+  deductCash = false
+) {
+  try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Admin";
+    const addedQty = Number(input.addedStock);
+    if (!Number.isInteger(addedQty) || addedQty <= 0) {
+      throw new Error("Jumlah tambah stok minimal 1 unit.");
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const existing = await tx.workshopSupply.findUnique({
+        where: { id: input.supplyId },
+      });
+      if (!existing) {
+        throw new Error("Barang persediaan tidak ditemukan.");
+      }
+
+      const nextCost =
+        input.costPerUnit && Number(input.costPerUnit) > 0
+          ? Number(input.costPerUnit)
+          : Number(existing.costPerUnit);
+      const nextStandardHpp =
+        input.standardHppCharge && Number(input.standardHppCharge) > 0
+          ? Number(input.standardHppCharge)
+          : existing.standardHppCharge
+          ? Number(existing.standardHppCharge)
+          : nextCost;
+
+      // Gabungkan nota lama + baru bila ada nota baru
+      const oldReceipts = parseProofUrls(existing.receiptUrl);
+      const newReceipts = parseProofUrls(input.receiptUrl);
+      const mergedReceipts = Array.from(new Set([...oldReceipts, ...newReceipts]));
+      const nextReceiptUrl =
+        mergedReceipts.length === 0
+          ? null
+          : mergedReceipts.length === 1
+          ? mergedReceipts[0]
+          : JSON.stringify(mergedReceipts);
+
+      const nextPhotoUrl = input.photoUrl || existing.photoUrl || null;
+
+      const updated = await tx.workshopSupply.update({
+        where: { id: existing.id },
+        data: {
+          currentStock: { increment: addedQty },
+          costPerUnit: nextCost,
+          standardHppCharge: nextStandardHpp,
+          photoUrl: nextPhotoUrl,
+          receiptUrl: nextReceiptUrl,
+          notes: input.notes?.trim() ? input.notes.trim() : existing.notes,
+        },
+      });
+
+      const totalExpense = nextCost * addedQty;
+      if (deductCash && totalExpense > 0) {
+        const lastTx = await tx.cashTransaction.findFirst({
+          orderBy: { createdAt: "desc" },
+          select: { runningBalance: true, createdAt: true },
+        });
+        const currentBal = lastTx ? Number(lastTx.runningBalance) : 0;
+        if (currentBal < totalExpense) {
+          throw new Error(
+            `Saldo kas showroom tidak mencukupi (Tersedia: ${formatRupiah(currentBal)}, Dibutuhkan: ${formatRupiah(totalExpense)}).`
+          );
+        }
+        await tx.cashTransaction.create({
+          data: {
+            type: "OUT_OPERATIONAL",
+            amount: totalExpense,
+            runningBalance: currentBal - totalExpense,
+            notes: `Restock bahan: ${existing.name} (+${addedQty} ${existing.unit} @ Rp ${nextCost.toLocaleString("id-ID")})`,
+            proofUrl: input.receiptUrl || null,
+            createdAt: new Date(
+              Math.max(Date.now(), lastTx ? new Date(lastTx.createdAt).getTime() + 1 : 0)
+            ),
+            createdBy: actorLabel,
+          },
+        });
+      }
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "UPDATE",
+          entityType: "WorkshopSupply",
+          entityId: existing.id,
+          beforeData: JSON.parse(JSON.stringify(existing)),
+          afterData: JSON.parse(JSON.stringify(updated)),
+        },
+      });
+
+      return updated;
+    });
+
+    revalidatePath("/admin/workshop");
+    revalidatePath("/admin/finance");
+    return { success: true, data: result };
+  } catch (error: any) {
+    console.error("Gagal restock bahan:", error);
     return { success: false, error: error.message || "Gagal menambah stok bahan" };
   }
 }
@@ -247,6 +387,26 @@ export async function recordSupplyUsageAction(input: RecordUsageInput) {
         },
       });
 
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "CREATE",
+          entityType: "WorkshopSupplyUsage",
+          entityId: usage.id,
+          afterData: JSON.parse(
+            JSON.stringify({
+              supplyName: supply.name,
+              vehiclePlate: vehicle.plateNumber,
+              quantityUsed: qty,
+              unitCost,
+              chargedHpp,
+              workshopMargin,
+              remainingStock: supply.currentStock - qty,
+            })
+          ),
+        },
+      });
+
       return {
         usage,
         unitCost,
@@ -274,7 +434,7 @@ export async function recordSupplyUsageAction(input: RecordUsageInput) {
 
 export async function deleteWorkshopSupplyAction(id: string) {
   try {
-    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const usageCount = await prisma.workshopSupplyUsage.count({
       where: { supplyId: id },
     });
@@ -284,8 +444,19 @@ export async function deleteWorkshopSupplyAction(id: string) {
         error: "Barang persediaan ini tidak dapat dihapus karena sudah memiliki riwayat pemakaian unit.",
       };
     }
-    await prisma.workshopSupply.delete({
-      where: { id },
+    await prisma.$transaction(async (tx) => {
+      const existing = await tx.workshopSupply.findUnique({ where: { id } });
+      if (!existing) return;
+      await tx.workshopSupply.delete({ where: { id } });
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "DELETE",
+          entityType: "WorkshopSupply",
+          entityId: id,
+          beforeData: JSON.parse(JSON.stringify(existing)),
+        },
+      });
     });
     revalidatePath("/admin/workshop");
     return { success: true };

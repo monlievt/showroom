@@ -150,7 +150,7 @@ export async function importVehiclesAction(
       // Catat ke Audit Log
       await tx.auditLog.create({
         data: {
-          actorUserId: "ADMIN",
+          actorUserId: session.userId,
           action: "CREATE",
           entityType: "VehicleImportBatch",
           entityId: `BATCH_${Date.now()}`,
@@ -230,6 +230,20 @@ export async function importExpensesAction(rows: ParsedExpenseRow[]) {
 
         importedCount++;
       }
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "CREATE",
+          entityType: "ExpenseImportBatch",
+          entityId: `EXP_BATCH_${Date.now()}`,
+          afterData: {
+            importedCount,
+            notFoundCount: notFoundPlates.length,
+            notFoundPlates,
+          },
+        },
+      });
     });
 
     revalidatePath("/admin/inventory");

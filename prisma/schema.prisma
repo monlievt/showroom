@@ -655,6 +655,8 @@ model WorkshopSupply {
   costPerUnit       Decimal         @db.Decimal(15, 2) // Harga beli modal fisik per unit
   standardHppCharge Decimal?        @db.Decimal(15, 2) // Standar tarif alokasi HPP ke mobil (misal 500rb)
   location          String?         @default("Rak Gudang Garasi")
+  photoUrl          String?         @db.Text // Foto produk agar mekanik/staff mudah mengenali barang
+  receiptUrl        String?         @db.Text // Lampiran nota / struk pembelian stok (bisa multi-URL JSON)
   notes             String?         @db.Text
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt

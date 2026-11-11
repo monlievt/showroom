@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Car,
   Wrench,
@@ -21,15 +22,28 @@ import {
   ArrowRight,
   Package,
   History,
-  Coins
+  Coins,
+  Paperclip,
 } from "lucide-react";
-import { formatRupiah, formatDate, cn } from "@/lib/utils";
+import {
+  formatRupiah,
+  formatDate,
+  cn,
+  parseProofUrls,
+  serializeProofUrls,
+} from "@/lib/utils";
 import { createShowroomAsset, deleteShowroomAsset } from "@/app/actions/asset";
 import {
   createWorkshopSupplyAction,
+  restockWorkshopSupplyAction,
   recordSupplyUsageAction,
   deleteWorkshopSupplyAction,
 } from "@/app/actions/supplies";
+import { ProofUploadField } from "@/components/admin/ProofUploadField";
+import {
+  ProofPreviewModal,
+  type ProofPreviewItem,
+} from "@/components/admin/ProofPreviewModal";
 import { FinanceSubNav } from "./FinanceSubNav";
 
 interface AssetsInventoryProps {
@@ -69,6 +83,8 @@ interface AssetsInventoryProps {
       stockValue: number;
       isLowStock: boolean;
       location?: string | null;
+      photoUrl?: string | null;
+      receiptUrl?: string | null;
       notes?: string | null;
       usages: Array<{
         id: string;
@@ -134,8 +150,10 @@ export function AssetsInventoryPageClient({
   supplies,
   activeVehicles,
 }: AssetsInventoryProps) {
+  const router = useRouter();
   // Main Tab State
   const [activeMainTab, setActiveMainTab] = useState<"SUPPLIES" | "ASSETS" | "HISTORY">("SUPPLIES");
+  const [previewProof, setPreviewProof] = useState<ProofPreviewItem | null>(null);
 
   // Modals
   const [showAssetModal, setShowAssetModal] = useState(false);
@@ -156,7 +174,9 @@ export function AssetsInventoryPageClient({
   const [assetNotes, setAssetNotes] = useState("");
   const [assetDeductCash, setAssetDeductCash] = useState(false);
 
-  // Form State: Add Supply
+  // Form State: Add / Restock Supply
+  const [supplyModalMode, setSupplyModalMode] = useState<"NEW" | "RESTOCK">("NEW");
+  const [restockSupplyId, setRestockSupplyId] = useState("");
   const [supplyName, setSupplyName] = useState("");
   const [supplyCategory, setSupplyCategory] = useState<
     "OIL_AND_FLUIDS" | "FAST_MOVING_PARTS" | "DETAILING_CHEMICALS" | "OTHER_SUPPLIES"
@@ -167,6 +187,8 @@ export function AssetsInventoryPageClient({
   const [supplyCostPerUnit, setSupplyCostPerUnit] = useState("");
   const [supplyStandardHpp, setSupplyStandardHpp] = useState("");
   const [supplyLocation, setSupplyLocation] = useState("Rak Gudang Garasi");
+  const [supplyPhotoUrls, setSupplyPhotoUrls] = useState<string[]>([]);
+  const [supplyReceiptUrls, setSupplyReceiptUrls] = useState<string[]>([]);
   const [supplyNotes, setSupplyNotes] = useState("");
   const [supplyDeductCash, setSupplyDeductCash] = useState(false);
 
@@ -223,9 +245,67 @@ export function AssetsInventoryPageClient({
     }
   };
 
-  // Submit Supply Restock
+  const openNewSupplyModal = () => {
+    setSupplyModalMode("NEW");
+    setRestockSupplyId(supplies.items[0]?.id || "");
+    setSupplyName("");
+    setSupplyStock("");
+    setSupplyCostPerUnit("");
+    setSupplyStandardHpp("");
+    setSupplyPhotoUrls([]);
+    setSupplyReceiptUrls([]);
+    setSupplyNotes("");
+    setSupplyDeductCash(false);
+    setShowSupplyModal(true);
+  };
+
+  const openRestockModal = (item: AssetsInventoryProps["supplies"]["items"][number]) => {
+    setSupplyModalMode("RESTOCK");
+    setRestockSupplyId(item.id);
+    setSupplyStock("");
+    setSupplyCostPerUnit(String(item.costPerUnit));
+    setSupplyStandardHpp(String(item.standardHppCharge));
+    setSupplyPhotoUrls(item.photoUrl ? [item.photoUrl] : []);
+    setSupplyReceiptUrls([]);
+    setSupplyNotes("");
+    setSupplyDeductCash(false);
+    setShowSupplyModal(true);
+  };
+
+  // Submit Supply Create or Restock
   const handleSupplySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const photoUrl = supplyPhotoUrls[0] || null;
+    const receiptUrl = serializeProofUrls(supplyReceiptUrls);
+
+    if (supplyModalMode === "RESTOCK") {
+      if (!restockSupplyId || !supplyStock) return;
+      setLoading(true);
+      const res = await restockWorkshopSupplyAction(
+        {
+          supplyId: restockSupplyId,
+          addedStock: Number(supplyStock),
+          costPerUnit: supplyCostPerUnit ? Number(supplyCostPerUnit) : undefined,
+          standardHppCharge: supplyStandardHpp ? Number(supplyStandardHpp) : undefined,
+          photoUrl,
+          receiptUrl,
+          notes: supplyNotes,
+        },
+        supplyDeductCash
+      );
+      setLoading(false);
+
+      if (res.success) {
+        showNotification("Stok barang berhasil ditambahkan (restock)!", "success");
+        setShowSupplyModal(false);
+        router.refresh();
+      } else {
+        showNotification(res.error || "Gagal menambah stok", "error");
+      }
+      return;
+    }
+
     if (!supplyName || !supplyCostPerUnit || !supplyStock) return;
 
     setLoading(true);
@@ -239,6 +319,8 @@ export function AssetsInventoryPageClient({
         costPerUnit: Number(supplyCostPerUnit),
         standardHppCharge: supplyStandardHpp ? Number(supplyStandardHpp) : Number(supplyCostPerUnit),
         location: supplyLocation,
+        photoUrl,
+        receiptUrl,
         notes: supplyNotes,
       },
       supplyDeductCash
@@ -252,8 +334,11 @@ export function AssetsInventoryPageClient({
       setSupplyStock("");
       setSupplyCostPerUnit("");
       setSupplyStandardHpp("");
+      setSupplyPhotoUrls([]);
+      setSupplyReceiptUrls([]);
       setSupplyNotes("");
       setSupplyDeductCash(false);
+      router.refresh();
     } else {
       showNotification(res.error || "Gagal menambah stok", "error");
     }
@@ -556,7 +641,7 @@ export function AssetsInventoryPageClient({
         <div className="flex items-center gap-3">
           {activeMainTab === "SUPPLIES" && (
             <button
-              onClick={() => setShowSupplyModal(true)}
+              onClick={openNewSupplyModal}
               className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
@@ -602,15 +687,73 @@ export function AssetsInventoryPageClient({
                 ) : (
                   filteredSupplies.map((item) => (
                     <tr key={item.id} className="hover:bg-[var(--bg)]/60 transition-colors">
-                      {/* Nama & Lokasi */}
+                      {/* Nama & Lokasi + Foto Produk & Nota */}
                       <td className="py-3.5 px-4 align-top">
-                        <div className="font-bold text-[var(--ink)]">{item.name}</div>
-                        <div className="text-[11px] text-[var(--muted)] mt-0.5">
-                          📍 {item.location || "Rak Gudang Garasi"}
+                        <div className="flex items-start gap-3">
+                          {item.photoUrl ? (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setPreviewProof({
+                                  url: item.photoUrl!,
+                                  title: `Foto Produk • ${item.name}`,
+                                  subtitle: `${item.location || "Rak Gudang Garasi"} • Stok: ${item.currentStock} ${item.unit}`,
+                                })
+                              }
+                              className="w-11 h-11 rounded-xl border border-[var(--line)] overflow-hidden shrink-0 bg-[var(--bg)] hover:border-[var(--accent)] transition-colors cursor-pointer"
+                              title="Klik untuk memperbesar foto produk"
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={item.photoUrl}
+                                alt={item.name}
+                                className="w-full h-full object-cover"
+                              />
+                            </button>
+                          ) : (
+                            <div className="w-11 h-11 rounded-xl border border-dashed border-[var(--line)] bg-[var(--bg)] flex items-center justify-center text-[var(--muted)] shrink-0">
+                              <Package className="w-4 h-4" />
+                            </div>
+                          )}
+
+                          <div className="min-w-0">
+                            <div className="font-bold text-[var(--ink)]">{item.name}</div>
+                            <div className="text-[11px] text-[var(--muted)] mt-0.5">
+                              📍 {item.location || "Rak Gudang Garasi"}
+                            </div>
+                            {item.notes && (
+                              <div className="text-[10px] text-[#92400E] mt-0.5 italic">{item.notes}</div>
+                            )}
+                            {(() => {
+                              const receipts = parseProofUrls(item.receiptUrl);
+                              if (receipts.length === 0) return null;
+                              return (
+                                <div className="flex flex-wrap gap-1 mt-1.5">
+                                  {receipts.map((url, idx) => (
+                                    <button
+                                      key={idx}
+                                      type="button"
+                                      onClick={() =>
+                                        setPreviewProof({
+                                          url,
+                                          title:
+                                            receipts.length > 1
+                                              ? `Nota Beli #${idx + 1} • ${item.name}`
+                                              : `Nota Beli • ${item.name}`,
+                                          subtitle: `Modal: ${formatRupiah(item.costPerUnit)} / ${item.unit}`,
+                                        })
+                                      }
+                                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-[var(--line)] hover:border-[var(--accent)] text-[10px] font-semibold text-[var(--ink)] cursor-pointer"
+                                    >
+                                      <Paperclip className="w-2.5 h-2.5 text-[var(--accent)]" />
+                                      <span>{receipts.length > 1 ? `Nota #${idx + 1}` : "Lihat Nota"}</span>
+                                    </button>
+                                  ))}
+                                </div>
+                              );
+                            })()}
+                          </div>
                         </div>
-                        {item.notes && (
-                          <div className="text-[10px] text-[#92400E] mt-0.5 italic">{item.notes}</div>
-                        )}
                       </td>
 
                       {/* Kategori */}
@@ -659,15 +802,25 @@ export function AssetsInventoryPageClient({
 
                       {/* Aksi */}
                       <td className="py-3.5 px-4 align-top text-center">
-                        <div className="flex items-center justify-center gap-2">
+                        <div className="flex items-center justify-center gap-1.5 flex-wrap">
                           <button
                             onClick={() => openUsageModal(item)}
                             disabled={item.currentStock <= 0}
-                            className="px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all disabled:opacity-40 cursor-pointer flex items-center gap-1"
+                            className="px-2.5 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-xs transition-all disabled:opacity-40 cursor-pointer flex items-center gap-1"
                             title="Gunakan untuk servis mandiri mobil tertentu"
                           >
                             <ArrowRight className="w-3.5 h-3.5" />
                             <span>Pakai ke Mobil</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => openRestockModal(item)}
+                            className="px-2.5 py-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--bg)] text-[var(--ink)] text-xs font-semibold transition-colors cursor-pointer flex items-center gap-1"
+                            title="Tambah stok (restock) barang ini beserta lampiran nota baru"
+                          >
+                            <Plus className="w-3 h-3 text-[var(--accent)]" />
+                            <span>Restock</span>
                           </button>
 
                           <button
@@ -851,16 +1004,28 @@ export function AssetsInventoryPageClient({
       {showUsageModal && selectedSupplyForUsage && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[var(--line)] space-y-4">
-            <div className="border-b border-[var(--bg)] pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">
-                Pengerjaan Servis Mandiri di Garasi
-              </span>
-              <h3 className="text-lg font-black text-[var(--ink)] mt-0.5">
-                Gunakan {selectedSupplyForUsage.name}
-              </h3>
-              <p className="text-xs text-[var(--muted)]">
-                Stok tersedia saat ini: <strong>{selectedSupplyForUsage.currentStock} {selectedSupplyForUsage.unit}</strong>
-              </p>
+            <div className="border-b border-[var(--bg)] pb-3 flex items-center gap-3">
+              {selectedSupplyForUsage.photoUrl && (
+                <div className="w-12 h-12 rounded-xl border border-[var(--line)] overflow-hidden shrink-0 bg-[var(--bg)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={selectedSupplyForUsage.photoUrl}
+                    alt={selectedSupplyForUsage.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <div className="min-w-0">
+                <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">
+                  Pengerjaan Servis Mandiri di Garasi
+                </span>
+                <h3 className="text-lg font-black text-[var(--ink)] mt-0.5 truncate">
+                  Gunakan {selectedSupplyForUsage.name}
+                </h3>
+                <p className="text-xs text-[var(--muted)]">
+                  Stok tersedia saat ini: <strong>{selectedSupplyForUsage.currentStock} {selectedSupplyForUsage.unit}</strong>
+                </p>
+              </div>
             </div>
 
             <form onSubmit={handleUsageSubmit} className="space-y-4">
@@ -994,65 +1159,153 @@ export function AssetsInventoryPageClient({
 
       {/* ── MODAL 2: TAMBAH / RESTOCK BARANG HABIS PAKAI ── */}
       {showSupplyModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-[var(--line)] space-y-4">
-            <div className="border-b border-[var(--bg)] pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">
-                Gudang Persediaan Garasi
-              </span>
-              <h3 className="text-lg font-black text-[var(--ink)] mt-0.5">
-                Beli / Restock Stok Bahan Baru
-              </h3>
+        <div
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          onClick={() => setShowSupplyModal(false)}
+        >
+          <div
+            className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-[var(--line)] space-y-4 max-h-[92vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="border-b border-[var(--bg)] pb-3 flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-[var(--accent)]">
+                  Gudang Persediaan Garasi
+                </span>
+                <h3 className="text-lg font-black text-[var(--ink)] mt-0.5">
+                  {supplyModalMode === "RESTOCK"
+                    ? "Restock Stok Bahan yang Sudah Ada"
+                    : "Beli / Tambah Stok Bahan Baru"}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSupplyModal(false)}
+                className="text-[var(--muted)] hover:text-[var(--ink)] font-bold text-lg cursor-pointer"
+              >
+                ✕
+              </button>
             </div>
 
+            {supplies.items.length > 0 && (
+              <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-[var(--bg)] border border-[var(--line)]">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSupplyModalMode("NEW");
+                    setSupplyPhotoUrls([]);
+                    setSupplyReceiptUrls([]);
+                  }}
+                  className={cn(
+                    "py-2 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                    supplyModalMode === "NEW"
+                      ? "bg-white text-[var(--ink)] shadow-2xs border border-[var(--line)]"
+                      : "text-[var(--muted)] hover:text-[var(--ink)]"
+                  )}
+                >
+                  + Barang Baru
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const first =
+                      supplies.items.find((s) => s.id === restockSupplyId) || supplies.items[0];
+                    if (first) openRestockModal(first);
+                  }}
+                  className={cn(
+                    "py-2 rounded-lg text-xs font-bold transition-all cursor-pointer",
+                    supplyModalMode === "RESTOCK"
+                      ? "bg-white text-[var(--accent)] shadow-2xs border border-[var(--line)]"
+                      : "text-[var(--muted)] hover:text-[var(--ink)]"
+                  )}
+                >
+                  Restock Barang Eksisting
+                </button>
+              </div>
+            )}
+
             <form onSubmit={handleSupplySubmit} className="space-y-3.5">
-              <div>
-                <label className="block text-xs font-bold text-[var(--ink)] mb-1">Nama Barang / Part *</label>
-                <input
-                  required
-                  type="text"
-                  placeholder="Contoh: Oli Mesin Shell Helix HX7 10W-40, Filter Oli Brio, Compound 3M"
-                  value={supplyName}
-                  onChange={(e) => setSupplyName(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs sm:text-sm"
-                />
-              </div>
+              {supplyModalMode === "RESTOCK" ? (
+                <div>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">
+                    Pilih Barang yang Mau Di-restock *
+                  </label>
+                  <select
+                    required
+                    value={restockSupplyId}
+                    onChange={(e) => {
+                      const picked = supplies.items.find((s) => s.id === e.target.value);
+                      setRestockSupplyId(e.target.value);
+                      if (picked) {
+                        setSupplyCostPerUnit(String(picked.costPerUnit));
+                        setSupplyStandardHpp(String(picked.standardHppCharge));
+                        setSupplyPhotoUrls(picked.photoUrl ? [picked.photoUrl] : []);
+                      }
+                    }}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] text-xs font-semibold bg-white"
+                  >
+                    {supplies.items.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name} (Sisa stok: {item.currentStock} {item.unit})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-xs font-bold text-[var(--ink)] mb-1">
+                      Nama Barang / Part *
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="Contoh: Oli Mesin Shell Helix HX7 10W-40, Filter Oli Brio, Compound 3M"
+                      value={supplyName}
+                      onChange={(e) => setSupplyName(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs sm:text-sm"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-bold text-[var(--ink)] mb-1">Kategori *</label>
+                      <select
+                        value={supplyCategory}
+                        onChange={(e) => setSupplyCategory(e.target.value as any)}
+                        className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
+                      >
+                        <option value="OIL_AND_FLUIDS">Pelumas &amp; Oli</option>
+                        <option value="FAST_MOVING_PARTS">Filter &amp; Bohlam Lampu</option>
+                        <option value="DETAILING_CHEMICALS">Chemical Salon &amp; Poles</option>
+                        <option value="OTHER_SUPPLIES">Perlengkapan Lainnya</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[var(--ink)] mb-1">Satuan Barang</label>
+                      <select
+                        value={supplyUnit}
+                        onChange={(e) => setSupplyUnit(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
+                      >
+                        <option value="Galon">Galon (4L)</option>
+                        <option value="Pcs">Pcs / Buah</option>
+                        <option value="Botol">Botol (1L)</option>
+                        <option value="Jerigen">Jerigen (5L)</option>
+                        <option value="Liter">Liter</option>
+                        <option value="Set">Set</option>
+                      </select>
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Kategori *</label>
-                  <select
-                    value={supplyCategory}
-                    onChange={(e) => setSupplyCategory(e.target.value as any)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
-                  >
-                    <option value="OIL_AND_FLUIDS">Pelumas &amp; Oli</option>
-                    <option value="FAST_MOVING_PARTS">Filter &amp; Bohlam Lampu</option>
-                    <option value="DETAILING_CHEMICALS">Chemical Salon &amp; Poles</option>
-                    <option value="OTHER_SUPPLIES">Perlengkapan Lainnya</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Satuan Barang</label>
-                  <select
-                    value={supplyUnit}
-                    onChange={(e) => setSupplyUnit(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
-                  >
-                    <option value="Galon">Galon (4L)</option>
-                    <option value="Pcs">Pcs / Buah</option>
-                    <option value="Botol">Botol (1L)</option>
-                    <option value="Jerigen">Jerigen (5L)</option>
-                    <option value="Liter">Liter</option>
-                    <option value="Set">Set</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Jumlah Beli (Stok) *</label>
+                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">
+                    {supplyModalMode === "RESTOCK" ? "Tambah Jumlah Stok *" : "Jumlah Beli (Stok) *"}
+                  </label>
                   <input
                     required
                     type="number"
@@ -1064,16 +1317,31 @@ export function AssetsInventoryPageClient({
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Batas Alert Menipis</label>
-                  <input
-                    type="number"
-                    min={1}
-                    value={supplyMinAlert}
-                    onChange={(e) => setSupplyMinAlert(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
-                  />
-                </div>
+                {supplyModalMode === "NEW" ? (
+                  <div>
+                    <label className="block text-xs font-bold text-[var(--ink)] mb-1">
+                      Batas Alert Menipis
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      value={supplyMinAlert}
+                      onChange={(e) => setSupplyMinAlert(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-xs font-bold text-[var(--ink)] mb-1">Catatan Restock</label>
+                    <input
+                      type="text"
+                      placeholder="Contoh: Tambah beli dari toko rekanan"
+                      value={supplyNotes}
+                      onChange={(e) => setSupplyNotes(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -1105,27 +1373,47 @@ export function AssetsInventoryPageClient({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Lokasi Simpan</label>
-                  <input
-                    type="text"
-                    value={supplyLocation}
-                    onChange={(e) => setSupplyLocation(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
-                  />
-                </div>
+              {supplyModalMode === "NEW" && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-[var(--ink)] mb-1">Lokasi Simpan</label>
+                    <input
+                      type="text"
+                      value={supplyLocation}
+                      onChange={(e) => setSupplyLocation(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-[var(--ink)] mb-1">Catatan</label>
-                  <input
-                    type="text"
-                    placeholder="Grosir toko oli rekanan"
-                    value={supplyNotes}
-                    onChange={(e) => setSupplyNotes(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
-                  />
+                  <div>
+                    <label className="block text-xs font-bold text-[var(--ink)] mb-1">Catatan</label>
+                    <input
+                      type="text"
+                      placeholder="Grosir toko oli rekanan"
+                      value={supplyNotes}
+                      onChange={(e) => setSupplyNotes(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] text-xs"
+                    />
+                  </div>
                 </div>
+              )}
+
+              {/* Foto Produk & Lampiran Nota */}
+              <div className="space-y-3 pt-1 border-t border-[var(--line)]">
+                <ProofUploadField
+                  label="Foto Produk / Kemasan Barang (Opsional — Biar Mudah Dikenali)"
+                  value={supplyPhotoUrls}
+                  onChange={(urls) => setSupplyPhotoUrls(urls.slice(0, 1))}
+                  uploadType="DOCUMENT"
+                  helperText="Upload 1 foto kemasan/botol produk agar mekanik & admin mudah membedakan barang (JPG/PNG/WEBP)"
+                />
+                <ProofUploadField
+                  label="Lampiran Nota / Struk Pembelian (Opsional)"
+                  value={supplyReceiptUrls}
+                  onChange={setSupplyReceiptUrls}
+                  uploadType="RECEIPT"
+                  helperText="Bisa upload foto nota toko atau PDF invoice pembelian stok"
+                />
               </div>
 
               {/* Potong Kas */}
@@ -1155,7 +1443,11 @@ export function AssetsInventoryPageClient({
                   disabled={loading}
                   className="px-5 py-2 rounded-xl bg-[var(--accent)] hover:bg-[#92400E] text-white text-xs font-bold shadow-md transition-all cursor-pointer disabled:opacity-50"
                 >
-                  {loading ? "Menyimpan..." : "Simpan Stok Bahan"}
+                  {loading
+                    ? "Menyimpan..."
+                    : supplyModalMode === "RESTOCK"
+                    ? "Tambah Stok (Restock)"
+                    : "Simpan Stok Bahan"}
                 </button>
               </div>
             </form>
@@ -1313,6 +1605,9 @@ export function AssetsInventoryPageClient({
           </div>
         </div>
       )}
+
+      {/* Popup Pratinjau Foto Produk / Nota Pembelian */}
+      <ProofPreviewModal preview={previewProof} onClose={() => setPreviewProof(null)} />
     </div>
   );
 }

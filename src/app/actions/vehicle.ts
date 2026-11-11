@@ -8,6 +8,7 @@ import { createVehicleSchema, type CreateVehicleInput } from "@/lib/validations/
 import { canTransition, type VehicleStatus } from "@/lib/calculations/vehicle-state";
 import { calculateHpp, calculateDaysInInventory, getInventoryAgingCategory } from "@/lib/calculations/hpp";
 import { recordCapitalLedgerEntry } from "./capital-ledger";
+import { enrichExpensesWithEditAudit } from "./expense";
 import { formatRupiah } from "@/lib/utils";
 
 export async function getVehiclesAction(filters?: {
@@ -539,6 +540,13 @@ export async function getVehicleByIdAction(id: string) {
     const days = calculateDaysInInventory(vehicle.purchaseDate, now);
     const aging = getInventoryAgingCategory(days);
 
+    const enrichedExpenses = await enrichExpensesWithEditAudit(
+      vehicle.expenses.map((e: any) => ({
+        ...e,
+        amount: Number(e.amount),
+      }))
+    );
+
     return {
       success: true,
       data: {
@@ -551,10 +559,7 @@ export async function getVehicleByIdAction(id: string) {
         totalHpp: totalHpp.toNumber(),
         daysInInventory: days,
         agingCategory: aging,
-        expenses: vehicle.expenses.map((e: any) => ({
-          ...e,
-          amount: Number(e.amount),
-        })),
+        expenses: enrichedExpenses,
         investments: (vehicle.investments || []).map((inv: any) => ({
           id: inv.id,
           investorId: inv.investorId,
@@ -594,14 +599,40 @@ export async function updateVehicleTaxAction(
   taxNominal?: number | null
 ) {
   try {
-    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
-    const updated = await prisma.vehicle.update({
-      where: { id: vehicleId },
-      data: {
-        taxExpiryDate: taxExpiryDate ? new Date(taxExpiryDate) : null,
-        platExpiryDate: platExpiryDate ? new Date(platExpiryDate) : null,
-        taxNominal: taxNominal != null ? taxNominal : null,
-      },
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const updated = await prisma.$transaction(async (tx) => {
+      const existing = await tx.vehicle.findUnique({ where: { id: vehicleId } });
+      if (!existing) throw new Error("Unit kendaraan tidak ditemukan");
+
+      const next = await tx.vehicle.update({
+        where: { id: vehicleId },
+        data: {
+          taxExpiryDate: taxExpiryDate ? new Date(taxExpiryDate) : null,
+          platExpiryDate: platExpiryDate ? new Date(platExpiryDate) : null,
+          taxNominal: taxNominal != null ? taxNominal : null,
+        },
+      });
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "UPDATE",
+          entityType: "Vehicle",
+          entityId: vehicleId,
+          beforeData: {
+            taxExpiryDate: existing.taxExpiryDate,
+            platExpiryDate: existing.platExpiryDate,
+            taxNominal: existing.taxNominal ? Number(existing.taxNominal) : null,
+          },
+          afterData: {
+            taxExpiryDate: next.taxExpiryDate,
+            platExpiryDate: next.platExpiryDate,
+            taxNominal: next.taxNominal ? Number(next.taxNominal) : null,
+          },
+        },
+      });
+
+      return next;
     });
 
     revalidatePath("/admin");
@@ -616,9 +647,20 @@ export async function updateVehicleTaxAction(
 
 export async function deleteVehiclePhotoAction(photoId: string, vehicleId: string) {
   try {
-    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
-    await prisma.vehiclePhoto.delete({
-      where: { id: photoId },
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    await prisma.$transaction(async (tx) => {
+      const photo = await tx.vehiclePhoto.findUnique({ where: { id: photoId } });
+      if (!photo) return;
+      await tx.vehiclePhoto.delete({ where: { id: photoId } });
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "DELETE",
+          entityType: "VehiclePhoto",
+          entityId: vehicleId,
+          beforeData: JSON.parse(JSON.stringify(photo)),
+        },
+      });
     });
     revalidatePath(`/admin/inventory/${vehicleId}`);
     revalidatePath(`/admin/inventory/${vehicleId}/media`);
@@ -632,9 +674,20 @@ export async function deleteVehiclePhotoAction(photoId: string, vehicleId: strin
 
 export async function deleteVehicleDocumentAction(documentId: string, vehicleId: string) {
   try {
-    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
-    await prisma.vehicleDocument.delete({
-      where: { id: documentId },
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    await prisma.$transaction(async (tx) => {
+      const doc = await tx.vehicleDocument.findUnique({ where: { id: documentId } });
+      if (!doc) return;
+      await tx.vehicleDocument.delete({ where: { id: documentId } });
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "DELETE",
+          entityType: "VehicleDocument",
+          entityId: vehicleId,
+          beforeData: JSON.parse(JSON.stringify(doc)),
+        },
+      });
     });
     revalidatePath(`/admin/inventory/${vehicleId}`);
     revalidatePath(`/admin/inventory/${vehicleId}/media`);

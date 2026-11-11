@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import Decimal from "decimal.js";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
 
 export interface HistoricalSaleFilter {
   search?: string;
@@ -138,33 +139,50 @@ export async function updateHistoricalSaleAction(
   }
 ) {
   try {
-    const existing = await prisma.historicalSale.findUnique({
-      where: { id },
-    });
-    if (!existing) {
-      return { success: false, error: "Data arsip tidak ditemukan" };
-    }
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const updated = await prisma.$transaction(async (tx) => {
+      const existing = await tx.historicalSale.findUnique({
+        where: { id },
+      });
+      if (!existing) {
+        throw new Error("Data arsip tidak ditemukan");
+      }
 
-    const sellingPrice = data.sellingPrice !== undefined ? new Decimal(data.sellingPrice) : existing.sellingPrice;
-    const totalHpp = data.totalHpp !== undefined ? new Decimal(data.totalHpp) : existing.totalHpp;
-    const grossProfit = sellingPrice.minus(totalHpp);
+      const sellingPrice =
+        data.sellingPrice !== undefined ? new Decimal(data.sellingPrice) : existing.sellingPrice;
+      const totalHpp = data.totalHpp !== undefined ? new Decimal(data.totalHpp) : existing.totalHpp;
+      const grossProfit = sellingPrice.minus(totalHpp);
 
-    const updated = await prisma.historicalSale.update({
-      where: { id },
-      data: {
-        ...(data.plateNumber && { plateNumber: data.plateNumber.toUpperCase().trim() }),
-        ...(data.notes !== undefined && { notes: data.notes }),
-        ...(data.buyerName !== undefined && { buyerName: data.buyerName }),
-        ...(data.purchaseDate !== undefined && {
-          purchaseDate: data.purchaseDate ? new Date(data.purchaseDate) : null,
-        }),
-        ...(data.saleDate !== undefined && {
-          saleDate: data.saleDate ? new Date(data.saleDate) : null,
-        }),
-        sellingPrice,
-        totalHpp,
-        grossProfit,
-      },
+      const next = await tx.historicalSale.update({
+        where: { id },
+        data: {
+          ...(data.plateNumber && { plateNumber: data.plateNumber.toUpperCase().trim() }),
+          ...(data.notes !== undefined && { notes: data.notes }),
+          ...(data.buyerName !== undefined && { buyerName: data.buyerName }),
+          ...(data.purchaseDate !== undefined && {
+            purchaseDate: data.purchaseDate ? new Date(data.purchaseDate) : null,
+          }),
+          ...(data.saleDate !== undefined && {
+            saleDate: data.saleDate ? new Date(data.saleDate) : null,
+          }),
+          sellingPrice,
+          totalHpp,
+          grossProfit,
+        },
+      });
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "UPDATE",
+          entityType: "HistoricalSale",
+          entityId: id,
+          beforeData: JSON.parse(JSON.stringify(existing)),
+          afterData: JSON.parse(JSON.stringify(next)),
+        },
+      });
+
+      return next;
     });
 
     revalidatePath("/admin/archive");
@@ -177,15 +195,30 @@ export async function updateHistoricalSaleAction(
 
 export async function deleteHistoricalSaleAction(id: string) {
   try {
-    const existing = await prisma.historicalSale.findUnique({
-      where: { id },
-    });
-    if (!existing) {
-      return { success: false, error: "Data arsip tidak ditemukan" };
-    }
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const existing = await prisma.$transaction(async (tx) => {
+      const found = await tx.historicalSale.findUnique({
+        where: { id },
+      });
+      if (!found) {
+        throw new Error("Data arsip tidak ditemukan");
+      }
 
-    await prisma.historicalSale.delete({
-      where: { id },
+      await tx.historicalSale.delete({
+        where: { id },
+      });
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "DELETE",
+          entityType: "HistoricalSale",
+          entityId: id,
+          beforeData: JSON.parse(JSON.stringify(found)),
+        },
+      });
+
+      return found;
     });
 
     revalidatePath("/admin/archive");

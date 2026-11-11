@@ -7,6 +7,27 @@ import { rateLimiter } from "@/lib/security/rate-limiter";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+async function recordAuthAudit(params: {
+  actorUserId: string;
+  action: "LOGIN_SUCCESS" | "LOGIN_FAILED";
+  entityId: string;
+  details: Record<string, unknown>;
+}) {
+  try {
+    await prisma.auditLog.create({
+      data: {
+        actorUserId: params.actorUserId,
+        action: params.action,
+        entityType: "Auth",
+        entityId: params.entityId,
+        afterData: JSON.parse(JSON.stringify(params.details)),
+      },
+    });
+  } catch (auditErr) {
+    console.error("AuditLog auth write skipped:", auditErr);
+  }
+}
+
 export async function loginAction(formData: {
   identifier: string; // username, phone, or name
   pin?: string;
@@ -115,6 +136,12 @@ export async function loginAction(formData: {
 
     // ── CEK STATUS AKTIF AKUN ──
     if (userProfile && !userProfile.isActive) {
+      await recordAuthAudit({
+        actorUserId: userProfile.id,
+        action: "LOGIN_FAILED",
+        entityId: cleanIdentifier,
+        details: { role, reason: "Akun dinonaktifkan" },
+      });
       return {
         success: false,
         error: "Akun ini telah dinonaktifkan oleh administrator. Hubungi Owner untuk aktivasi.",
@@ -149,6 +176,12 @@ export async function loginAction(formData: {
     }
 
     if (!isPasswordValid) {
+      await recordAuthAudit({
+        actorUserId: userProfile?.id || cleanIdentifier,
+        action: "LOGIN_FAILED",
+        entityId: cleanIdentifier,
+        details: { role, reason: "Kata sandi salah", remainingAttempts: limitCheck.remaining },
+      });
       return {
         success: false,
         error: `Password salah. Sisa percobaan: ${limitCheck.remaining}.`,
@@ -193,6 +226,13 @@ export async function loginAction(formData: {
       role: effectiveRole,
       fullName: userProfile.fullName,
       phone: userProfile.phone,
+    });
+
+    await recordAuthAudit({
+      actorUserId: userProfile.id,
+      action: "LOGIN_SUCCESS",
+      entityId: userProfile.authUserId,
+      details: { fullName: userProfile.fullName, role: effectiveRole },
     });
 
     let redirectUrl = "/admin";

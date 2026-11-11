@@ -360,6 +360,59 @@ export async function deleteExpenseAction(expenseId: string) {
   }
 }
 
+export async function enrichExpensesWithEditAudit<
+  T extends { id: string }
+>(expenses: T[]): Promise<Array<T & { updatedAt: Date | null; updatedBy: string | null }>> {
+  if (expenses.length === 0) {
+    return [];
+  }
+
+  const updateLogs = await prisma.auditLog.findMany({
+    where: {
+      entityType: "Expense",
+      action: "UPDATE",
+      entityId: { in: expenses.map((e) => e.id) },
+    },
+    orderBy: { createdAt: "desc" },
+    select: {
+      entityId: true,
+      actorUserId: true,
+      createdAt: true,
+    },
+  });
+
+  const latestByExpenseId = new Map<string, { actorUserId: string; createdAt: Date }>();
+  for (const log of updateLogs) {
+    if (!latestByExpenseId.has(log.entityId)) {
+      latestByExpenseId.set(log.entityId, {
+        actorUserId: log.actorUserId,
+        createdAt: log.createdAt,
+      });
+    }
+  }
+
+  const actorIds = Array.from(
+    new Set(Array.from(latestByExpenseId.values()).map((entry) => entry.actorUserId))
+  );
+  const profiles =
+    actorIds.length > 0
+      ? await prisma.userProfile.findMany({
+          where: { id: { in: actorIds } },
+          select: { id: true, fullName: true },
+        })
+      : [];
+  const profileMap = new Map(profiles.map((p) => [p.id, p.fullName]));
+
+  return expenses.map((expense) => {
+    const latestEdit = latestByExpenseId.get(expense.id);
+    return {
+      ...expense,
+      updatedAt: latestEdit ? latestEdit.createdAt : null,
+      updatedBy: latestEdit ? profileMap.get(latestEdit.actorUserId) || null : null,
+    };
+  });
+}
+
 export async function getExpensesByVehicleIdAction(vehicleId: string) {
   try {
     await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
@@ -378,6 +431,13 @@ export async function getExpensesByVehicleIdAction(vehicleId: string) {
       }),
     ]);
 
+    const enrichedExpenses = await enrichExpensesWithEditAudit(
+      expenses.map((e) => ({
+        ...e,
+        amount: Number(e.amount),
+      }))
+    );
+
     const isLocked = Boolean(
       sale?.distributions.some((d) => !d.notes?.includes("[REVERSED]"))
     );
@@ -385,10 +445,7 @@ export async function getExpensesByVehicleIdAction(vehicleId: string) {
     return {
       success: true,
       isLocked,
-      data: expenses.map((e) => ({
-        ...e,
-        amount: Number(e.amount),
-      })),
+      data: enrichedExpenses,
     };
   } catch (error: unknown) {
     console.error("Error getting expenses:", error);

@@ -54,6 +54,8 @@ export interface ExpenseRecord {
   receiptUrl?: string | null;
   createdAt?: string | Date;
   createdBy?: string | null;
+  updatedAt?: string | Date | null;
+  updatedBy?: string | null;
 }
 
 export interface ExpenseVehicleSummary {
@@ -858,11 +860,21 @@ export function VehicleExpensesManager({
                           </div>
                         )}
 
-                        {item.createdAt && (
-                          <p className="text-[11px] text-[var(--muted)] pt-0.5">
-                            Diinput {formatDateTimeWib(item.createdAt)}
-                            {item.createdBy ? ` • ${item.createdBy}` : ""}
-                          </p>
+                        {(item.createdAt || item.updatedAt) && (
+                          <div className="text-[11px] text-[var(--muted)] pt-0.5 space-y-0.5">
+                            {item.createdAt && (
+                              <p>
+                                Diinput {formatDateTimeWib(item.createdAt)}
+                                {item.createdBy ? ` • ${item.createdBy}` : ""}
+                              </p>
+                            )}
+                            {item.updatedAt && (
+                              <p className="text-[var(--accent)] font-medium">
+                                Diedit {formatDateTimeWib(item.updatedAt)}
+                                {item.updatedBy ? ` • ${item.updatedBy}` : ""}
+                              </p>
+                            )}
+                          </div>
                         )}
                       </div>
 

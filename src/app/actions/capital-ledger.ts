@@ -3,7 +3,13 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/auth/session";
-import { capitalLedgerSchema, CapitalLedgerInput } from "@/lib/validations/capital-ledger";
+import {
+  capitalLedgerSchema,
+  withdrawInvestorCapitalSchema,
+  type CapitalLedgerInput,
+  type WithdrawInvestorCapitalInput,
+} from "@/lib/validations/capital-ledger";
+import { formatRupiah } from "@/lib/utils";
 import Decimal from "decimal.js";
 
 /**
@@ -165,8 +171,149 @@ export async function depositInvestorCapital(
     revalidatePath("/admin/investors");
     revalidatePath("/admin/investors/accounts");
     revalidatePath("/admin/finance");
+    revalidatePath("/investor");
     return { success: true, data: result };
   } catch (error: any) {
     return { success: false, error: error.message || "Gagal mencatat setoran modal" };
+  }
+}
+
+/**
+ * Server Action: Penarikan / Pencairan Dana Modal & Profit Pemodal ke Rekening Pemodal.
+ * Memotong saldo bebas CapitalLedger dan saldo kas rekening CashTransaction secara atomik.
+ */
+export async function withdrawInvestorCapital(
+  input: WithdrawInvestorCapitalInput,
+  actorUserId?: string
+) {
+  try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const resolvedActorId = actorUserId && actorUserId !== "system" ? actorUserId : session.userId;
+    const actorLabel = session.fullName || resolvedActorId;
+    const validated = withdrawInvestorCapitalSchema.parse(input);
+    const amt = new Decimal(validated.amount);
+    const txDate = validated.withdrawalDate ? new Date(validated.withdrawalDate) : new Date();
+
+    let resolvedProofUrl: string | null = null;
+    if (validated.proofUrls && validated.proofUrls.length > 0) {
+      resolvedProofUrl = JSON.stringify(validated.proofUrls);
+    } else if (validated.proofUrl) {
+      resolvedProofUrl = validated.proofUrl;
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const investor = await tx.investor.findUnique({
+        where: { id: validated.investorId },
+      });
+      if (!investor) {
+        throw new Error("Akun investor tidak ditemukan.");
+      }
+
+      // 1. Cek kecukupan saldo bebas investor
+      const latestLedger = await tx.capitalLedger.findFirst({
+        where: { investorId: validated.investorId },
+        orderBy: { createdAt: "desc" },
+      });
+      const prevInvestorBalance = latestLedger
+        ? new Decimal(latestLedger.runningBalance.toString())
+        : new Decimal(0);
+
+      if (prevInvestorBalance.lt(amt)) {
+        throw new Error(
+          `Saldo bebas ${investor.name} tidak mencukupi untuk dicairkan (Tersedia: ${formatRupiah(prevInvestorBalance.toNumber())}, Diminta: ${formatRupiah(amt.toNumber())}).`
+        );
+      }
+
+      // 2. Cek kecukupan saldo kas rekening showroom
+      const latestCash = await tx.cashTransaction.findFirst({
+        orderBy: { createdAt: "desc" },
+      });
+      const prevCashBalance = latestCash
+        ? new Decimal(latestCash.runningBalance.toString())
+        : new Decimal(0);
+
+      if (prevCashBalance.lt(amt)) {
+        throw new Error(
+          `Saldo kas rekening showroom tidak mencukupi untuk transfer pencairan ini (Kas tersedia: ${formatRupiah(prevCashBalance.toNumber())}, Diminta: ${formatRupiah(amt.toNumber())}).`
+        );
+      }
+
+      const categoryLabel =
+        validated.withdrawalCategory === "PROFIT_WITHDRAWAL"
+          ? "Pencairan Laba / Profit"
+          : "Pengembalian Pokok Modal";
+      const ledgerNotes = `[PENARIKAN DANA - ${categoryLabel}] ${validated.notes?.trim() || `Transfer balik ke ${investor.name}`}`;
+
+      // 3. Catat pengurangan CapitalLedger (CORRECTION bernilai negatif)
+      const ledgerEntry = await recordCapitalLedgerEntry(tx, {
+        investorId: validated.investorId,
+        type: "CORRECTION",
+        amount: amt.negated(),
+        notes: ledgerNotes,
+        proofUrl: resolvedProofUrl,
+        createdAt: txDate,
+        createdBy: actorLabel,
+      });
+
+      // 4. Catat kas keluar di CashTransaction dengan timestamp monotonik
+      const cashTime = Math.max(
+        txDate.getTime(),
+        latestCash ? new Date(latestCash.createdAt).getTime() + 1 : 0
+      );
+      const newCashBalance = prevCashBalance.minus(amt);
+      const cashType =
+        validated.withdrawalCategory === "PROFIT_WITHDRAWAL"
+          ? "OUT_PROFIT_DISTRIBUTION"
+          : "OUT_CAPITAL_RETURN";
+
+      const cashEntry = await tx.cashTransaction.create({
+        data: {
+          type: cashType,
+          amount: amt,
+          relatedLedgerId: ledgerEntry.id,
+          runningBalance: newCashBalance,
+          notes: `${categoryLabel} kepada ${investor.name}${validated.notes ? `: ${validated.notes}` : ""}`,
+          proofUrl: resolvedProofUrl,
+          createdAt: new Date(cashTime),
+          createdBy: actorLabel,
+        },
+      });
+
+      // 5. Audit Log
+      await tx.auditLog.create({
+        data: {
+          actorUserId: resolvedActorId,
+          action: "CREATE",
+          entityType: "CapitalLedger",
+          entityId: ledgerEntry.id,
+          afterData: JSON.parse(
+            JSON.stringify({
+              investorName: investor.name,
+              withdrawalCategory: validated.withdrawalCategory,
+              amount: amt.toNumber(),
+              ledger: ledgerEntry,
+              cash: cashEntry,
+            })
+          ),
+        },
+      });
+
+      return {
+        ledgerEntry,
+        cashEntry,
+        newInvestorBalance: prevInvestorBalance.minus(amt).toNumber(),
+      };
+    });
+
+    revalidatePath("/admin/investors");
+    revalidatePath("/admin/investors/accounts");
+    revalidatePath("/admin/finance");
+    revalidatePath("/investor");
+    return { success: true, data: result };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message || "Gagal mencatat pencairan dana pemodal",
+    };
   }
 }
