@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
   Camera,
   Car,
+  ChevronDown,
   ClipboardCheck,
   ExternalLink,
   Eye,
   FileText,
   Gauge,
+  MessageCircle,
   Pencil,
+  Printer,
   Receipt,
   ShieldCheck,
   Tag,
@@ -24,6 +27,7 @@ import {
 } from "lucide-react";
 import { cn, formatDate, formatRupiah } from "@/lib/utils";
 import { generateVehicleSlug } from "@/lib/utils/slug";
+import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
 import {
   VehicleExpensesManager,
   type ExpenseRecord,
@@ -175,22 +179,42 @@ function isPdfUrl(url: string): boolean {
 
 export function VehicleDetailAdminClient({
   vehicle,
+  whatsappPhone = "081234567890",
 }: {
   vehicle: VehicleDetailAdminData;
+  whatsappPhone?: string;
 }) {
   const [activeTab, setActiveTab] = useState<"media" | "expenses" | "overview">("media");
   const [totalExpenses, setTotalExpenses] = useState(vehicle.totalExpenses);
   const [expenseCount, setExpenseCount] = useState(vehicle.expenses.length);
   const [lightbox, setLightbox] = useState<{ url: string; title: string } | null>(null);
+  const [actionsOpen, setActionsOpen] = useState(false);
+  const actionsMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!lightbox) return;
+    if (!lightbox && !actionsOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLightbox(null);
+      if (e.key === "Escape") {
+        if (lightbox) setLightbox(null);
+        else if (actionsOpen) setActionsOpen(false);
+      }
+    };
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        actionsOpen &&
+        actionsMenuRef.current &&
+        !actionsMenuRef.current.contains(e.target as Node)
+      ) {
+        setActionsOpen(false);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [lightbox]);
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [lightbox, actionsOpen]);
 
   const currentTotalHpp = vehicle.purchasePrice + totalExpenses;
   const estGrossProfit =
@@ -249,21 +273,22 @@ export function VehicleDetailAdminClient({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href={`/admin/inventory/${vehicle.id}/media`}
+          <a
+            href={generateCatalogWhatsAppLink(whatsappPhone, {
+              brand: vehicle.brand,
+              model: vehicle.model,
+              year: vehicle.year,
+              plateNumber: vehicle.plateNumber,
+              targetSellingPrice: vehicle.targetSellingPrice,
+              status: vehicle.status,
+            })}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-xs font-semibold text-[var(--ink)] transition-colors"
           >
-            <Camera className="w-3.5 h-3.5 text-[var(--accent)]" />
-            <span>Upload Foto / Dokumen</span>
-          </Link>
-
-          <Link
-            href={`/admin/inspections/${vehicle.id}`}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-xs font-semibold text-[var(--ink)] transition-colors"
-          >
-            <ClipboardCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
-            <span>Cek Fisik</span>
-          </Link>
+            <MessageCircle className="w-3.5 h-3.5 text-[var(--accent)]" />
+            <span>Share WA</span>
+          </a>
 
           <Link
             href={`/admin/inventory/${vehicle.id}/status`}
@@ -273,14 +298,85 @@ export function VehicleDetailAdminClient({
             <span>Ubah Status</span>
           </Link>
 
-          <Link
-            href={`/katalog/${catalogSlug}`}
-            target="_blank"
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-xs font-semibold text-[var(--accent)] transition-colors"
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            <span>Katalog</span>
-          </Link>
+          <div className="relative" ref={actionsMenuRef}>
+            <button
+              type="button"
+              onClick={() => setActionsOpen((prev) => !prev)}
+              aria-expanded={actionsOpen}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-xs font-semibold text-[var(--ink)] transition-colors cursor-pointer"
+            >
+              <Printer className="w-3.5 h-3.5 text-[var(--accent)]" />
+              <span>Cetak &amp; Lainnya</span>
+              <ChevronDown
+                className={cn(
+                  "w-3.5 h-3.5 text-[var(--muted)] transition-transform",
+                  actionsOpen && "rotate-180"
+                )}
+              />
+            </button>
+
+            {actionsOpen && (
+              <div className="absolute right-0 mt-1.5 w-60 bg-white border border-[var(--line)] rounded-xl shadow-xl py-1.5 text-xs z-40 divide-y divide-[var(--bg)]">
+                <div className="py-1">
+                  <Link
+                    href={`/admin/inventory/${vehicle.id}/media`}
+                    onClick={() => setActionsOpen(false)}
+                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold"
+                  >
+                    <Camera className="w-4 h-4 text-[var(--accent)]" />
+                    <span>Upload Foto &amp; Dokumen</span>
+                  </Link>
+                  <Link
+                    href={`/admin/inspections/${vehicle.id}`}
+                    onClick={() => setActionsOpen(false)}
+                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold"
+                  >
+                    <ClipboardCheck className="w-4 h-4 text-[var(--accent)]" />
+                    <span>Cek Fisik &amp; Inspeksi</span>
+                  </Link>
+                </div>
+
+                <div className="py-1">
+                  <a
+                    href={`/api/pdf/workshop-dispatch/${vehicle.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setActionsOpen(false)}
+                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold"
+                  >
+                    <Wrench className="w-4 h-4 text-[var(--accent)]" />
+                    <span>Surat Jalan Bengkel (SPK)</span>
+                  </a>
+                  <a
+                    href={`/api/pdf/spec-tag/${vehicle.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setActionsOpen(false)}
+                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold"
+                  >
+                    <Tag className="w-4 h-4 text-[#7C3AED]" />
+                    <span>Cetak Tag Spion (QR)</span>
+                  </a>
+                </div>
+
+                <div className="py-1">
+                  <Link
+                    href={`/katalog/${catalogSlug}`}
+                    target="_blank"
+                    onClick={() => setActionsOpen(false)}
+                    className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--accent)] hover:bg-[var(--bg)] font-semibold"
+                  >
+                    <ExternalLink className="w-4 h-4 text-[var(--accent)]" />
+                    <span>
+                      {vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR"
+                        ? "Lihat Tampilan Segera Hadir"
+                        : "Lihat di Katalog Publik"}
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
 
           <Link
             href={`/admin/inventory/${vehicle.id}/edit`}

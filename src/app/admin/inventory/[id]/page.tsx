@@ -6,6 +6,7 @@ import {
   type VehicleDetailAdminData,
 } from "@/components/admin/VehicleDetailAdminClient";
 import { getVehicleByIdAction } from "@/app/actions/vehicle";
+import { getPublicWhatsAppContactsAction } from "@/app/actions/contact";
 
 export const dynamic = "force-dynamic";
 
@@ -20,13 +21,20 @@ export default async function AdminVehicleDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const res = await getVehicleByIdAction(id);
+  const [res, waContacts] = await Promise.all([
+    getVehicleByIdAction(id),
+    getPublicWhatsAppContactsAction(),
+  ]);
 
   if (!res.success || !res.data) {
     notFound();
   }
 
   const v = res.data as unknown as VehicleDetailAdminData;
+  const primaryWa =
+    waContacts.find((c) => c.isPrimary && c.isActive)?.phone ||
+    waContacts[0]?.phone ||
+    "081234567890";
 
   return (
     <div className="flex-1 flex flex-col min-h-screen">
@@ -35,7 +43,7 @@ export default async function AdminVehicleDetailPage({
         subtitle="Lihat foto unit, dokumen legalitas, rincian biaya HPP, cek fisik, dan alokasi pemodal dalam satu tempat."
       />
       <main className="flex-1">
-        <VehicleDetailAdminClient vehicle={v} />
+        <VehicleDetailAdminClient vehicle={v} whatsappPhone={primaryWa} />
       </main>
     </div>
   );
