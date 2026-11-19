@@ -72,7 +72,20 @@ export function InspectionBar({
   });
 
   const originalCount = zoneStatuses.filter((s) => s === "ORIGINAL").length;
-  const ariaText = `Uji mikron: ${originalCount} dari 8 zona cat original`;
+  const hasThickFiller = zoneStatuses.includes("THICK_FILLER");
+  const hasRepaint = zoneStatuses.includes("REPAINT");
+
+  let conditionSummary = "Cat 100% Ori";
+  let summaryColorClass = "text-emerald-700 font-semibold";
+  if (hasThickFiller) {
+    conditionSummary = "Ada Dempul Panel";
+    summaryColorClass = "text-[var(--bad)] font-semibold";
+  } else if (hasRepaint) {
+    conditionSummary = "Repaint Wajar";
+    summaryColorClass = "text-amber-800 font-semibold";
+  }
+
+  const ariaText = `Uji mikron: ${originalCount} dari 8 zona cat original. ${conditionSummary}`;
 
   return (
     <div className={cn("space-y-1.5", className)}>
@@ -95,8 +108,11 @@ export function InspectionBar({
         })}
       </div>
       {showText && (
-        <div className="text-[12px] text-[var(--muted)] leading-tight">
-          Inspeksi 34 titik · {plateNumber}
+        <div className="text-[12px] text-[var(--muted)] flex items-center justify-between gap-2 leading-tight">
+          <span className="truncate">Uji 34 Titik · {plateNumber}</span>
+          <span className={cn("shrink-0 text-[11px]", summaryColorClass)}>
+            {conditionSummary}
+          </span>
         </div>
       )}
     </div>

@@ -185,53 +185,89 @@ export function PublicNavbar({ initialContacts }: PublicNavbarProps) {
           )}
         </div>
 
-        {/* Mobile Menu Toggle Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-[var(--ink)] hover:bg-[var(--bg)] rounded-[var(--r-btn)] focus-visible:outline-2 focus-visible:outline-[var(--accent)]"
-          aria-label="Toggle menu"
-          aria-expanded={mobileMenuOpen}
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        {/* Mobile Header Actions (1-Tap WhatsApp + Labeled Menu Button) */}
+        <div className="flex md:hidden items-center gap-2">
+          <a
+            href={generateDirectWhatsAppLink(
+              primaryContact.phone,
+              "Halo Admin Nur Mobil, saya ingin tanya info stok unit mobil bekas."
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Chat WhatsApp Admin"
+            className="inline-flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-2 rounded-[var(--r-btn)] text-[13px] font-semibold transition-colors active:scale-95 min-h-[44px]"
+          >
+            <Phone className="w-3.5 h-3.5" />
+            <span>WA Admin</span>
+          </a>
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-[var(--ink)] bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] hover:border-[var(--line-input)] focus-visible:outline-2 focus-visible:outline-[var(--accent)] min-h-[44px] text-[13px] font-medium"
+            aria-label={mobileMenuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            <span className="font-semibold">{mobileMenuOpen ? "Tutup" : "Menu"}</span>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[var(--surface)] border-b border-[var(--line)] px-5 py-4 space-y-3">
-          <Link
-            href="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className={cn(
-              "block text-[14px] py-1.5 transition-colors",
-              pathname === "/" ? "font-semibold text-[var(--ink)]" : "text-[var(--muted)]"
-            )}
-          >
-            Beranda
-          </Link>
-          <Link
-            href="/katalog"
-            onClick={() => setMobileMenuOpen(false)}
-            className={cn(
-              "block text-[14px] py-1.5 transition-colors",
-              pathname.startsWith("/katalog") ? "font-semibold text-[var(--ink)]" : "text-[var(--muted)]"
-            )}
-          >
-            Katalog Unit
-          </Link>
-          <Link
-            href="/admin/inventory"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-[14px] py-1.5 text-[var(--muted)]"
-          >
-            Portal Internal
-          </Link>
+        <div className="md:hidden bg-[var(--surface)] border-b border-[var(--line)] px-5 py-4 space-y-4 shadow-md">
+          <div className="space-y-1">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "flex items-center justify-between px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors min-h-[44px]",
+                pathname === "/"
+                  ? "bg-[var(--bg)] font-bold text-[var(--ink)]"
+                  : "text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)]"
+              )}
+            >
+              <span>Beranda</span>
+              <span className="text-[11px] text-[var(--muted)]">Showroom &amp; Transparansi</span>
+            </Link>
+
+            <Link
+              href="/katalog"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "flex items-center justify-between px-3 py-2.5 rounded-lg text-[14px] font-medium transition-colors min-h-[44px]",
+                pathname.startsWith("/katalog")
+                  ? "bg-[var(--bg)] font-bold text-[var(--ink)]"
+                  : "text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)]"
+              )}
+            >
+              <span>Katalog Unit Ready</span>
+              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                Uji 34 Titik
+              </span>
+            </Link>
+
+            <Link
+              href="/admin/inventory"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded-lg text-[14px] font-medium text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors min-h-[44px]"
+            >
+              <span>Portal Internal / Investor</span>
+              <span className="text-[11px] text-[var(--muted)]">Login &rarr;</span>
+            </Link>
+          </div>
 
           {/* Mobile WhatsApp Section */}
-          <div className="pt-3 border-t border-[var(--line)] space-y-2">
-            <p className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider">
-              Kontak WhatsApp Showroom
-            </p>
+          <div className="pt-3 border-t border-[var(--line)] space-y-2.5">
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider">
+                Kontak Langsung Showroom
+              </p>
+              <span className="text-[10px] text-emerald-800 bg-emerald-50 px-1.5 py-0.5 rounded font-medium">
+                Online 08.00 - 20.00
+              </span>
+            </div>
+
             {contacts.map((c) => (
               <a
                 key={c.id}
@@ -242,20 +278,22 @@ export function PublicNavbar({ initialContacts }: PublicNavbarProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between gap-3 p-2.5 rounded-lg bg-[var(--bg)] border border-[var(--line)] hover:border-[var(--accent)] transition-colors"
+                className="flex items-center justify-between gap-3 p-3 rounded-lg bg-[var(--bg)] border border-[var(--line)] hover:border-[var(--accent)] transition-colors min-h-[48px]"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[13px] font-bold text-[var(--ink)] truncate">{c.name}</span>
+                    <span className="text-[14px] font-bold text-[var(--ink)] truncate">{c.name}</span>
                     {c.isPrimary && (
-                      <span className="text-[9px] font-bold text-amber-800 bg-amber-100 px-1 rounded">Utama</span>
+                      <span className="text-[9px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded">
+                        Utama
+                      </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-[var(--muted)] line-clamp-1">{c.role}</p>
+                  <p className="text-[11px] text-[var(--muted)] truncate">{c.role} · {c.phone}</p>
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[var(--accent)] text-white text-[12px] font-semibold shrink-0">
+                <div className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-emerald-700 text-white text-[12px] font-semibold shrink-0">
                   <Phone className="w-3.5 h-3.5" />
-                  <span>Chat</span>
+                  <span>Chat WA</span>
                 </div>
               </a>
             ))}
