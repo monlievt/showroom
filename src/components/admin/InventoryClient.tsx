@@ -64,7 +64,15 @@ interface VehicleItem {
   platExpiryDate?: string | Date | null;
   taxNominal?: number | null;
   stnkStatus?: string | null;
+  bpkbStatus?: string | null;
+  bpkbLeadDays?: number | null;
   notes?: string | null;
+  sale?: {
+    id: string;
+    sellingPrice: number;
+    saleDate: string | Date;
+    payments?: Array<{ amount: number }>;
+  } | null;
   investments?: Array<{
     id: string;
     investorId: string;
@@ -493,6 +501,31 @@ export function InventoryClient({
                             <span className="text-[10px] text-[var(--muted)] italic">Pajak: -</span>
                           )}
                         </div>
+
+                        {/* Status BPKB */}
+                        <div className="mt-1">
+                          {vehicle.bpkbStatus === "READY" ? (
+                            <span
+                              className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              title="BPKB On-Hand / Ready di Garasi Showroom"
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              BPKB On-Hand
+                            </span>
+                          ) : (
+                            <span
+                              className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200"
+                              title={
+                                vehicle.bpkbLeadDays
+                                  ? `Estimasi BPKB balai lelang: ${vehicle.bpkbLeadDays} hari kerja`
+                                  : "BPKB dalam proses / menunggu balai lelang"
+                              }
+                            >
+                              <Clock className="w-2.5 h-2.5 text-amber-600" />
+                              BPKB Menunggu {vehicle.bpkbLeadDays ? `(${vehicle.bpkbLeadDays}h)` : "Lelang"}
+                            </span>
+                          )}
+                        </div>
                       </td>
 
                       {/* Umur Garasi */}
@@ -854,6 +887,45 @@ export function InventoryClient({
                 <DollarSign className="w-4 h-4 text-emerald-700" />
                 <span>Catat Penjualan (Jual Unit)</span>
               </Link>
+            )}
+
+            {/* Dokumen Penjualan jika unit memiliki data penjualan */}
+            {activeDropdown.vehicle.sale && (
+              <div className="pt-1 mt-1 border-t border-[var(--bg)]">
+                <div className="px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">
+                  Cetak Dokumen Jual
+                </div>
+                <a
+                  href={`/api/pdf/invoice/${activeDropdown.vehicle.sale.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setActiveDropdown(null)}
+                  className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+                >
+                  <Receipt className="w-4 h-4 text-emerald-600" />
+                  <span>Kwitansi / Faktur Jual (PDF)</span>
+                </a>
+                <a
+                  href={`/api/pdf/bast/${activeDropdown.vehicle.sale.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setActiveDropdown(null)}
+                  className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+                >
+                  <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                  <span>BAST Serah Terima (PDF)</span>
+                </a>
+                <a
+                  href={`/api/pdf/agreement/${activeDropdown.vehicle.sale.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setActiveDropdown(null)}
+                  className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--ink)] hover:bg-[var(--bg)] font-semibold transition-colors"
+                >
+                  <FileSpreadsheet className="w-4 h-4 text-amber-600" />
+                  <span>Surat Perjanjian Jual Beli (PDF)</span>
+                </a>
+              </div>
             )}
 
             {!isSalesRole && (
