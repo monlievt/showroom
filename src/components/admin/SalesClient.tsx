@@ -92,13 +92,26 @@ interface SalesClientProps {
 export function SalesClient({ initialSales }: SalesClientProps) {
   const [sales] = useState<SaleItem[]>(initialSales);
   const [selectedFilter, setSelectedFilter] = useState<"ALL" | "PENDING_RECEIVABLES" | "SETTLED">("ALL");
-  const [buyerChannelFilter, setBuyerChannelFilter] = useState<"ALL" | "KCUNK" | "OTHER_SHOWROOM" | "DIRECT_CUSTOMER">("ALL");
+  const [buyerChannelFilter, setBuyerChannelFilter] = useState<"ALL" | "KCUNK" | "OTHER_SHOWROOM" | "AUCTION" | "DIRECT_CUSTOMER">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Breakdown pembeli
   const kcunkCount = sales.filter((s) => s.buyer.name.toLowerCase().includes("kcunk")).length;
+  const auctionCount = sales.filter(
+    (s) =>
+      s.buyer.name.toLowerCase().includes("lelang") ||
+      s.buyer.name.toLowerCase().includes("jba") ||
+      s.buyer.name.toLowerCase().includes("ibid") ||
+      s.buyer.name.toLowerCase().includes("tunas")
+  ).length;
   const otherShowroomCount = sales.filter(
-    (s) => s.buyer.isShowroom && !s.buyer.name.toLowerCase().includes("kcunk")
+    (s) =>
+      s.buyer.isShowroom &&
+      !s.buyer.name.toLowerCase().includes("kcunk") &&
+      !s.buyer.name.toLowerCase().includes("lelang") &&
+      !s.buyer.name.toLowerCase().includes("jba") &&
+      !s.buyer.name.toLowerCase().includes("ibid") &&
+      !s.buyer.name.toLowerCase().includes("tunas")
   ).length;
   const directCustomerCount = sales.filter((s) => !s.buyer.isShowroom).length;
   const kcunkPct = sales.length > 0 ? Math.round((kcunkCount / sales.length) * 100) : 0;
@@ -111,8 +124,22 @@ export function SalesClient({ initialSales }: SalesClientProps) {
 
     if (buyerChannelFilter === "KCUNK") {
       matchFilter = matchFilter && s.buyer.name.toLowerCase().includes("kcunk");
+    } else if (buyerChannelFilter === "AUCTION") {
+      matchFilter =
+        matchFilter &&
+        (s.buyer.name.toLowerCase().includes("lelang") ||
+          s.buyer.name.toLowerCase().includes("jba") ||
+          s.buyer.name.toLowerCase().includes("ibid") ||
+          s.buyer.name.toLowerCase().includes("tunas"));
     } else if (buyerChannelFilter === "OTHER_SHOWROOM") {
-      matchFilter = matchFilter && s.buyer.isShowroom && !s.buyer.name.toLowerCase().includes("kcunk");
+      matchFilter =
+        matchFilter &&
+        s.buyer.isShowroom &&
+        !s.buyer.name.toLowerCase().includes("kcunk") &&
+        !s.buyer.name.toLowerCase().includes("lelang") &&
+        !s.buyer.name.toLowerCase().includes("jba") &&
+        !s.buyer.name.toLowerCase().includes("ibid") &&
+        !s.buyer.name.toLowerCase().includes("tunas");
     } else if (buyerChannelFilter === "DIRECT_CUSTOMER") {
       matchFilter = matchFilter && !s.buyer.isShowroom;
     }
@@ -284,6 +311,20 @@ export function SalesClient({ initialSales }: SalesClientProps) {
             <span>★ Showroom Kcunk Motor</span>
             <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-200/50">
               {kcunkCount} unit ({kcunkPct}%)
+            </span>
+          </button>
+          <button
+            onClick={() => setBuyerChannelFilter("AUCTION")}
+            className={cn(
+              "px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5",
+              buyerChannelFilter === "AUCTION"
+                ? "bg-indigo-700 text-white"
+                : "bg-indigo-50 text-indigo-900 border border-indigo-200 hover:bg-indigo-100"
+            )}
+          >
+            <span>🔨 Titip Balai Lelang</span>
+            <span className="px-1.5 py-0.2 rounded text-[10px] bg-indigo-200/50">
+              {auctionCount} unit
             </span>
           </button>
           <button

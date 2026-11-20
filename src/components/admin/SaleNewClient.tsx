@@ -121,9 +121,11 @@ export function SaleNewClient({
     : 0;
 
   // Kebijakan Cash Tempo Khusus Nur Mobil
+  // DP minimal 70% hanya wajib untuk Konsumen Langsung (Retail).
+  // Untuk transaksi B2B Showroom Rekanan / Balai Lelang, tempo fleksibel sesuai kesepakatan B2B.
   const isTempo = priceNum > 0 && initialNum < priceNum;
   const minDp70 = Math.ceil(priceNum * 0.7);
-  const isDpValid = !isTempo || initialNum >= minDp70;
+  const isDpValid = saleType === "SHOWROOM" || !isTempo || initialNum >= minDp70;
   const maxDueDate = new Date(new Date(saleDate).getTime() + 30 * 24 * 60 * 60 * 1000)
     .toISOString()
     .split("T")[0];
@@ -452,12 +454,14 @@ export function SaleNewClient({
             </span>
           </div>
 
-          {/* Quick Preset Pembeli (1-Klik untuk Showroom Kcunk Motor) */}
-          <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl space-y-2">
-            <div className="flex items-center justify-between text-xs font-bold text-emerald-950">
-              <span>Pilihan Cepat Pembeli:</span>
-              <span className="text-[11px] font-normal text-emerald-800">Klik untuk isi otomatis</span>
+          {/* Quick Preset Pembeli (Kcunk Motor, Balai Lelang, Showroom Rekanan, Retail) */}
+          <div className="p-3.5 bg-stone-50 border border-[var(--line)] rounded-xl space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs font-bold text-[var(--ink)]">
+              <span>Pilihan Cepat Saluran Penjualan (1-Klik Isi Data):</span>
+              <span className="text-[11px] font-normal text-[var(--muted)]">Otomatis tentukan tipe B2B / Lelang / Retail</span>
             </div>
+
+            {/* 4 Saluran Utama */}
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
@@ -473,10 +477,50 @@ export function SaleNewClient({
                   "px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95",
                   buyerName === "Showroom Kcunk Motor"
                     ? "bg-emerald-700 text-white border border-emerald-700"
-                    : "bg-white text-emerald-900 border border-emerald-300 hover:bg-emerald-100"
+                    : "bg-emerald-50 text-emerald-900 border border-emerald-300 hover:bg-emerald-100"
                 )}
               >
                 <span>★ Showroom Kcunk Motor (Tulungagung)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSaleType("SHOWROOM");
+                  setBuyerIsShowroom(true);
+                  setBuyerName("Balai Lelang JBA Surabaya (Titip Lelang)");
+                  setBuyerPhone("0318556677");
+                  setBuyerAddress("Waru, Sidoarjo / Surabaya");
+                  setHandoverNotes("Mobil dilelangkan kembali melalui balai lelang JBA Surabaya (Re-Auction)");
+                }}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95",
+                  buyerName.toLowerCase().includes("jba")
+                    ? "bg-indigo-700 text-white border border-indigo-700"
+                    : "bg-indigo-50 text-indigo-900 border border-indigo-200 hover:bg-indigo-100"
+                )}
+              >
+                <span>🔨 Titip Lelang: JBA Surabaya</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSaleType("SHOWROOM");
+                  setBuyerIsShowroom(true);
+                  setBuyerName("Balai Lelang IBID Surabaya (Titip Lelang)");
+                  setBuyerPhone("0313812345");
+                  setBuyerAddress("Kenjeran, Surabaya");
+                  setHandoverNotes("Mobil dilelangkan kembali melalui balai lelang IBID Surabaya (Re-Auction)");
+                }}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95",
+                  buyerName.toLowerCase().includes("ibid")
+                    ? "bg-indigo-700 text-white border border-indigo-700"
+                    : "bg-indigo-50 text-indigo-900 border border-indigo-200 hover:bg-indigo-100"
+                )}
+              >
+                <span>🔨 Titip Lelang: IBID Surabaya</span>
               </button>
 
               <button
@@ -491,13 +535,39 @@ export function SaleNewClient({
                 }}
                 className={cn(
                   "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border cursor-pointer",
-                  buyerName !== "Showroom Kcunk Motor" && !buyerIsShowroom
+                  !buyerIsShowroom && buyerName === ""
                     ? "bg-[var(--ink)] text-white border-[var(--ink)]"
                     : "bg-white text-[var(--ink)] border-[var(--line)] hover:bg-[var(--bg)]"
                 )}
               >
-                <span>+ Konsumen Langsung (Retail)</span>
+                <span>👤 Konsumen Langsung (Retail)</span>
               </button>
+            </div>
+
+            {/* Rekanan Showroom Lainnya */}
+            <div className="pt-2 border-t border-[var(--line)] flex flex-wrap items-center gap-1.5 text-[11px]">
+              <span className="text-[var(--muted)] font-medium">Showroom Lainnya:</span>
+              {[
+                { name: "Showroom Auto Lancar", city: "Kediri" },
+                { name: "Showroom Berkah Mobil", city: "Malang" },
+                { name: "Showroom Barokah", city: "Blitar" },
+                { name: "Showroom Central Mobil", city: "Surabaya" },
+              ].map((sh) => (
+                <button
+                  key={sh.name}
+                  type="button"
+                  onClick={() => {
+                    setSaleType("SHOWROOM");
+                    setBuyerIsShowroom(true);
+                    setBuyerName(`${sh.name} (${sh.city})`);
+                    setBuyerAddress(`${sh.city}, Jawa Timur`);
+                    setHandoverNotes(`Penjualan B2B ke rekanan ${sh.name} ${sh.city}`);
+                  }}
+                  className="px-2 py-1 rounded bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] font-medium transition-colors cursor-pointer"
+                >
+                  {sh.name} ({sh.city})
+                </button>
+              ))}
             </div>
           </div>
 

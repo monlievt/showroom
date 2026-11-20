@@ -31,18 +31,20 @@ export const createSaleSchema = z.object({
   brokerName: z.string().optional().nullable(),
   brokerFee: z.coerce.number().nonnegative().optional().nullable(),
 }).refine((data) => {
-  // Jika bukan pembayaran lunas 100% (skema Cash Tempo Garasi)
-  const isTempo = (data.initialPaymentAmount || 0) < data.sellingPrice;
-  if (isTempo) {
-    const minDp = data.sellingPrice * 0.7;
-    // DP wajib minimal 70%
-    if ((data.initialPaymentAmount || 0) < minDp) {
-      return false;
+  // Aturan DP minimal 70% hanya berlaku khusus skema Cash Tempo Konsumen Langsung (Retail Garasi)
+  // Untuk transaksi B2B Showroom Rekanan & Balai Lelang, skema tempo mengikuti kesepakatan B2B
+  if (data.saleType === "DIRECT_CUSTOMER") {
+    const isTempo = (data.initialPaymentAmount || 0) < data.sellingPrice;
+    if (isTempo) {
+      const minDp = data.sellingPrice * 0.7;
+      if ((data.initialPaymentAmount || 0) < minDp) {
+        return false;
+      }
     }
   }
   return true;
 }, {
-  message: "Aturan Nur Mobil: Pembelian Cash Tempo wajib DP minimal 70% dari harga kesepakatan",
+  message: "Aturan Nur Mobil: Pembelian Cash Tempo Konsumen Retail wajib DP minimal 70% dari harga kesepakatan",
   path: ["initialPaymentAmount"],
 }).refine((data) => {
   const isTempo = (data.initialPaymentAmount || 0) < data.sellingPrice;

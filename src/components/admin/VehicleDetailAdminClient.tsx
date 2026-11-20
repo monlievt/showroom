@@ -417,7 +417,13 @@ export function VehicleDetailAdminClient({
                   Tgl: {formatDate(vehicle.sale.saleDate)}
                 </span>
                 <span className="text-[11px] px-2 py-0.5 rounded font-bold bg-white text-emerald-800 border border-emerald-200">
-                  {vehicle.sale.saleType === "SHOWROOM" ? "Showroom Rekanan (Kcunk)" : "Konsumen Langsung"}
+                  {vehicle.sale.buyer?.name.toLowerCase().includes("lelang") ||
+                  vehicle.sale.buyer?.name.toLowerCase().includes("jba") ||
+                  vehicle.sale.buyer?.name.toLowerCase().includes("ibid")
+                    ? "Titip Balai Lelang"
+                    : vehicle.sale.saleType === "SHOWROOM"
+                    ? "Showroom Rekanan"
+                    : "Konsumen Langsung"}
                 </span>
               </div>
               <h3 className="text-base sm:text-lg font-extrabold text-emerald-950 mt-1">
