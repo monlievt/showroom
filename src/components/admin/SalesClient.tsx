@@ -92,13 +92,30 @@ interface SalesClientProps {
 export function SalesClient({ initialSales }: SalesClientProps) {
   const [sales] = useState<SaleItem[]>(initialSales);
   const [selectedFilter, setSelectedFilter] = useState<"ALL" | "PENDING_RECEIVABLES" | "SETTLED">("ALL");
+  const [buyerChannelFilter, setBuyerChannelFilter] = useState<"ALL" | "KCUNK" | "OTHER_SHOWROOM" | "DIRECT_CUSTOMER">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Breakdown pembeli
+  const kcunkCount = sales.filter((s) => s.buyer.name.toLowerCase().includes("kcunk")).length;
+  const otherShowroomCount = sales.filter(
+    (s) => s.buyer.isShowroom && !s.buyer.name.toLowerCase().includes("kcunk")
+  ).length;
+  const directCustomerCount = sales.filter((s) => !s.buyer.isShowroom).length;
+  const kcunkPct = sales.length > 0 ? Math.round((kcunkCount / sales.length) * 100) : 0;
 
   // Filter logic
   const filteredSales = sales.filter((s) => {
     let matchFilter = true;
     if (selectedFilter === "PENDING_RECEIVABLES") matchFilter = !s.isFullyPaid;
     if (selectedFilter === "SETTLED") matchFilter = s.isFullyPaid;
+
+    if (buyerChannelFilter === "KCUNK") {
+      matchFilter = matchFilter && s.buyer.name.toLowerCase().includes("kcunk");
+    } else if (buyerChannelFilter === "OTHER_SHOWROOM") {
+      matchFilter = matchFilter && s.buyer.isShowroom && !s.buyer.name.toLowerCase().includes("kcunk");
+    } else if (buyerChannelFilter === "DIRECT_CUSTOMER") {
+      matchFilter = matchFilter && !s.buyer.isShowroom;
+    }
 
     const q = searchQuery.toLowerCase();
     const matchSearch =
@@ -195,43 +212,103 @@ export function SalesClient({ initialSales }: SalesClientProps) {
       </div>
 
       {/* ── FILTER TABS ───────────────────────────────────────── */}
-      <div className="flex items-center gap-2 border-b border-[var(--line)] pb-2">
-        <button
-          onClick={() => setSelectedFilter("ALL")}
-          className={cn(
-            "px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer",
-            selectedFilter === "ALL"
-              ? "bg-[var(--ink)] text-white shadow-sm"
-              : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]"
-          )}
-        >
-          Semua Penjualan ({sales.length})
-        </button>
-        <button
-          onClick={() => setSelectedFilter("PENDING_RECEIVABLES")}
-          className={cn(
-            "px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5",
-            selectedFilter === "PENDING_RECEIVABLES"
-              ? "bg-[var(--accent)] text-white shadow-xs"
-              : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
-          )}
-        >
-          <span>Piutang Tempo / Belum Lunas</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20">
-            {sales.filter((s) => !s.isFullyPaid).length}
+      <div className="space-y-3 border-b border-[var(--line)] pb-3">
+        {/* Row 1: Status Pembayaran */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider mr-1">
+            Status Bayar:
           </span>
-        </button>
-        <button
-          onClick={() => setSelectedFilter("SETTLED")}
-          className={cn(
-            "px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer",
-            selectedFilter === "SETTLED"
-              ? "bg-[var(--ink)] text-white shadow-xs"
-              : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
-          )}
-        >
-          Terjual Lunas ({sales.filter((s) => s.isFullyPaid).length})
-        </button>
+          <button
+            onClick={() => setSelectedFilter("ALL")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer",
+              selectedFilter === "ALL"
+                ? "bg-[var(--ink)] text-white shadow-sm"
+                : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
+            )}
+          >
+            Semua Status ({sales.length})
+          </button>
+          <button
+            onClick={() => setSelectedFilter("PENDING_RECEIVABLES")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5",
+              selectedFilter === "PENDING_RECEIVABLES"
+                ? "bg-[var(--accent)] text-white shadow-xs"
+                : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
+            )}
+          >
+            <span>Piutang Tempo / Belum Lunas</span>
+            <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20">
+              {sales.filter((s) => !s.isFullyPaid).length}
+            </span>
+          </button>
+          <button
+            onClick={() => setSelectedFilter("SETTLED")}
+            className={cn(
+              "px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer",
+              selectedFilter === "SETTLED"
+                ? "bg-[var(--ink)] text-white shadow-xs"
+                : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
+            )}
+          >
+            Terjual Lunas ({sales.filter((s) => s.isFullyPaid).length})
+          </button>
+        </div>
+
+        {/* Row 2: Saluran / Tujuan Laku (Kcunk Motor vs Retail) */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          <span className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider mr-1">
+            Tujuan Laku:
+          </span>
+          <button
+            onClick={() => setBuyerChannelFilter("ALL")}
+            className={cn(
+              "px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer",
+              buyerChannelFilter === "ALL"
+                ? "bg-stone-800 text-white"
+                : "bg-white text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
+            )}
+          >
+            Semua Pembeli ({sales.length})
+          </button>
+          <button
+            onClick={() => setBuyerChannelFilter("KCUNK")}
+            className={cn(
+              "px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5",
+              buyerChannelFilter === "KCUNK"
+                ? "bg-emerald-700 text-white"
+                : "bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100"
+            )}
+          >
+            <span>★ Showroom Kcunk Motor</span>
+            <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-200/50">
+              {kcunkCount} unit ({kcunkPct}%)
+            </span>
+          </button>
+          <button
+            onClick={() => setBuyerChannelFilter("OTHER_SHOWROOM")}
+            className={cn(
+              "px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer",
+              buyerChannelFilter === "OTHER_SHOWROOM"
+                ? "bg-[var(--accent)] text-white"
+                : "bg-white text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
+            )}
+          >
+            Showroom Rekanan Lain ({otherShowroomCount})
+          </button>
+          <button
+            onClick={() => setBuyerChannelFilter("DIRECT_CUSTOMER")}
+            className={cn(
+              "px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer",
+              buyerChannelFilter === "DIRECT_CUSTOMER"
+                ? "bg-[var(--accent)] text-white"
+                : "bg-white text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
+            )}
+          >
+            Konsumen Langsung / Retail ({directCustomerCount})
+          </button>
+        </div>
       </div>
 
       {/* ── SALES TABLE ───────────────────────────────────────── */}

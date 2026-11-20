@@ -246,6 +246,24 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
           </div>
         )}
 
+        {targetStatus === "SOLD_SETTLED" && (
+          <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-2">
+            <div className="flex items-center gap-1.5 font-bold text-amber-950">
+              <Info className="w-4 h-4 text-amber-700 shrink-0" />
+              <span>Ingin mencatat detail penjualan lengkap?</span>
+            </div>
+            <p className="leading-relaxed">
+              Jika unit ini laku terjual (misal ke <strong>Showroom Kcunk Motor</strong> atau konsumen), sangat disarankan menggunakan menu <strong>Input Penjualan Resmi</strong> agar harga deal, identitas pembeli, kwitansi, dan kas masuk otomatis tercatat rapi.
+            </p>
+            <Link
+              href={`/admin/sales/new?vehicleId=${vehicle.id}`}
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-800 text-white font-bold text-xs hover:bg-amber-900 transition-colors"
+            >
+              <span>Buka Form Penjualan Unit Ini &rarr;</span>
+            </Link>
+          </div>
+        )}
+
         <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[11px] text-[var(--muted)] flex items-center gap-2">
           <Info className="w-4 h-4 shrink-0 text-[var(--accent)]" />
           <span>

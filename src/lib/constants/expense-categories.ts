@@ -55,8 +55,8 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryOption[] = [
   },
   {
     value: "TRANSPORT_PICKUP",
-    shortLabel: "Towing / Angkut",
-    label: "Ongkos Angkut / Towing / Biaya Ambil Unit",
+    shortLabel: "Towing & BBM",
+    label: "Ongkos Angkut, Towing & Beli BBM Unit (Pertalite/Solar)",
     group: "Pengadaan & Logistik Awal (Landed Cost)",
     quickPick: true,
   },
@@ -76,8 +76,8 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryOption[] = [
   },
   {
     value: "DOCUMENT_TAX_MUTATION",
-    shortLabel: "Pajak / STNK",
-    label: "Pajak Tahunan, Kaleng, Balik Nama & STNK",
+    shortLabel: "Pajak & Cek Fisik",
+    label: "Pajak Tahunan, Cek Fisik Samsat & STNK",
     group: "Legalitas & Dokumen",
     quickPick: true,
   },

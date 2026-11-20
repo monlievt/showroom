@@ -24,6 +24,8 @@ import {
   ArrowRight,
   Calendar,
   MapPin,
+  Building2,
+  DollarSign,
 } from "lucide-react";
 import { cn, formatDate, formatRupiah } from "@/lib/utils";
 import { generateVehicleSlug } from "@/lib/utils/slug";
@@ -85,6 +87,7 @@ interface VehicleSaleInfo {
     name: string;
     phone?: string | null;
     isShowroom?: boolean;
+    address?: string | null;
   } | null;
   payments: Array<{
     id: string;
@@ -378,6 +381,16 @@ export function VehicleDetailAdminClient({
             )}
           </div>
 
+          {!vehicle.sale && vehicle.status !== "SOLD_SETTLED" && (
+            <Link
+              href={`/admin/sales/new?vehicleId=${vehicle.id}`}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-xs active:scale-95"
+            >
+              <DollarSign className="w-3.5 h-3.5" />
+              <span>Catat Penjualan</span>
+            </Link>
+          )}
+
           <Link
             href={`/admin/inventory/${vehicle.id}/edit`}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-colors"
@@ -387,6 +400,55 @@ export function VehicleDetailAdminClient({
           </Link>
         </div>
       </div>
+
+      {/* Prominent Penjualan Banner (Jika sudah laku) */}
+      {vehicle.sale && (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+              <Building2 className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[11px] font-extrabold text-emerald-800 uppercase tracking-wider bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">
+                  Unit Terjual
+                </span>
+                <span className="text-xs text-emerald-700 font-semibold">
+                  Tgl: {formatDate(vehicle.sale.saleDate)}
+                </span>
+                <span className="text-[11px] px-2 py-0.5 rounded font-bold bg-white text-emerald-800 border border-emerald-200">
+                  {vehicle.sale.saleType === "SHOWROOM" ? "Showroom Rekanan (Kcunk)" : "Konsumen Langsung"}
+                </span>
+              </div>
+              <h3 className="text-base sm:text-lg font-extrabold text-emerald-950 mt-1">
+                Laku ke: {vehicle.sale.buyer?.name || "Pembeli"}
+              </h3>
+              {vehicle.sale.buyer?.address && (
+                <p className="text-xs text-emerald-800 mt-0.5">{vehicle.sale.buyer.address}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between sm:justify-end gap-5 border-t sm:border-t-0 sm:border-l border-emerald-200 pt-3 sm:pt-0 sm:pl-5">
+            <div>
+              <div className="text-[11px] text-emerald-800 font-semibold uppercase">Harga Deal</div>
+              <div className="text-lg font-extrabold text-emerald-950">
+                {formatRupiah(vehicle.sale.sellingPrice)}
+              </div>
+              <div className="text-[11px] text-emerald-700 font-medium">
+                Kas Masuk: {formatRupiah(totalSalePaid)}
+              </div>
+            </div>
+
+            <Link
+              href="/admin/sales"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-xs shrink-0"
+            >
+              <span>Buka Penjualan &rarr;</span>
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Ringkasan Angka Modal & Harga */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">

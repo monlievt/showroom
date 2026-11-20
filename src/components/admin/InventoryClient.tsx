@@ -845,6 +845,17 @@ export function InventoryClient({
               </span>
             </Link>
 
+            {!isSalesRole && activeDropdown.vehicle.status !== "SOLD_SETTLED" && (
+              <Link
+                href={`/admin/sales/new?vehicleId=${activeDropdown.vehicle.id}`}
+                onClick={() => setActiveDropdown(null)}
+                className="flex items-center gap-2.5 px-3.5 py-2 text-emerald-700 hover:bg-emerald-50 font-bold transition-colors"
+              >
+                <DollarSign className="w-4 h-4 text-emerald-700" />
+                <span>Catat Penjualan (Jual Unit)</span>
+              </Link>
+            )}
+
             {!isSalesRole && (
               <Link
                 href={`/admin/inventory/${activeDropdown.vehicle.id}/status`}

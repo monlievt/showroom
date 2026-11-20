@@ -440,11 +440,65 @@ export function SaleNewClient({
 
         {/* SECTION 3: Identitas Pembeli */}
         <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
-            <User className="w-4 h-4 text-[var(--accent)]" />
-            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
-              3. Identitas Pembeli / Showroom
-            </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4 text-[var(--accent)]" />
+              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
+                3. Identitas Pembeli / Showroom
+              </h2>
+            </div>
+            <span className="text-[11px] font-semibold text-[var(--muted)]">
+              80% unit laku ke showroom rekanan (Kcunk Motor)
+            </span>
+          </div>
+
+          {/* Quick Preset Pembeli (1-Klik untuk Showroom Kcunk Motor) */}
+          <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-xl space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-emerald-950">
+              <span>Pilihan Cepat Pembeli:</span>
+              <span className="text-[11px] font-normal text-emerald-800">Klik untuk isi otomatis</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setSaleType("SHOWROOM");
+                  setBuyerIsShowroom(true);
+                  setBuyerName("Showroom Kcunk Motor");
+                  setBuyerPhone("08123456789");
+                  setBuyerAddress("Tulungagung, Jawa Timur");
+                  setHandoverNotes("Kirim / jual grosir ke rekanan Showroom Kcunk Motor Tulungagung");
+                }}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95",
+                  buyerName === "Showroom Kcunk Motor"
+                    ? "bg-emerald-700 text-white border border-emerald-700"
+                    : "bg-white text-emerald-900 border border-emerald-300 hover:bg-emerald-100"
+                )}
+              >
+                <span>★ Showroom Kcunk Motor (Tulungagung)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSaleType("DIRECT_CUSTOMER");
+                  setBuyerIsShowroom(false);
+                  setBuyerName("");
+                  setBuyerPhone("");
+                  setBuyerAddress("");
+                  setHandoverNotes("");
+                }}
+                className={cn(
+                  "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border cursor-pointer",
+                  buyerName !== "Showroom Kcunk Motor" && !buyerIsShowroom
+                    ? "bg-[var(--ink)] text-white border-[var(--ink)]"
+                    : "bg-white text-[var(--ink)] border-[var(--line)] hover:bg-[var(--bg)]"
+                )}
+              >
+                <span>+ Konsumen Langsung (Retail)</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -455,7 +509,7 @@ export function SaleNewClient({
               <input
                 required
                 type="text"
-                placeholder="Contoh: Bpk. Haryanto / Showroom Auto Lancar"
+                placeholder="Contoh: Showroom Kcunk Motor / Bpk. Haryanto"
                 value={buyerName}
                 onChange={(e) => setBuyerName(e.target.value)}
                 className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
@@ -478,7 +532,7 @@ export function SaleNewClient({
 
           <div>
             <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-              Alamat Lengkap Pembeli (Opsional)
+              Alamat Lengkap Pembeli / Domisili Showroom (Opsional)
             </label>
             <input
               type="text"

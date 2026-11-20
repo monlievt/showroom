@@ -21,6 +21,8 @@ import {
   ExternalLink,
   X,
   Lock,
+  Fuel,
+  Sparkles,
 } from "lucide-react";
 import {
   createExpenseAction,
@@ -110,6 +112,66 @@ function formatDateTimeWib(input?: string | Date | null): string | null {
 }
 
 type ExpenseCategoryValue = CreateExpenseInput["category"];
+
+interface QuickExpensePreset {
+  id: string;
+  label: string;
+  category: ExpenseCategoryValue;
+  vendorName: string;
+  notes: string;
+  amount: number;
+}
+
+const QUICK_EXPENSE_PRESETS: QuickExpensePreset[] = [
+  {
+    id: "bbm-100",
+    label: "⛽ BBM 100rb",
+    category: "TRANSPORT_PICKUP",
+    vendorName: "SPBU",
+    notes: "Beli Pertalite unit",
+    amount: 100000,
+  },
+  {
+    id: "bbm-200",
+    label: "⛽ BBM 200rb",
+    category: "TRANSPORT_PICKUP",
+    vendorName: "SPBU",
+    notes: "Beli Pertalite unit",
+    amount: 200000,
+  },
+  {
+    id: "bbm-300",
+    label: "⛽ BBM 300rb",
+    category: "TRANSPORT_PICKUP",
+    vendorName: "SPBU",
+    notes: "Beli Pertalite unit",
+    amount: 300000,
+  },
+  {
+    id: "cek-fisik-200",
+    label: "📋 Cek Fisik Samsat 200rb",
+    category: "DOCUMENT_TAX_MUTATION",
+    vendorName: "Samsat / Cek Fisik",
+    notes: "Cek fisik gesek nomor rangka & nomor mesin (syarat kirim Kcunk)",
+    amount: 200000,
+  },
+  {
+    id: "salon-300",
+    label: "🧽 Salon Interior 300rb",
+    category: "DETAILING_SALON",
+    vendorName: "Toko Bu Nur / Salon",
+    notes: "Salon interior & pembersihan kabin",
+    amount: 300000,
+  },
+  {
+    id: "towing-500",
+    label: "🚚 Ambil Sendiri / Towing 500rb",
+    category: "TRANSPORT_PICKUP",
+    vendorName: "Ambil Sendiri di Surabaya",
+    notes: "Biaya ambil/towing unit (Ambil Sendiri di Surabaya)",
+    amount: 500000,
+  },
+];
 
 const QUICK_PICK_CATEGORIES = EXPENSE_CATEGORIES.filter((c) => c.quickPick);
 const OTHER_CATEGORIES = EXPENSE_CATEGORIES.filter((c) => !c.quickPick);
@@ -534,6 +596,38 @@ export function VehicleExpensesManager({
             </div>
           )}
 
+          {/* Preset Biaya Cepat (1-Klik Auto-Fill BBM & Cek Fisik) */}
+          {!editingId && !isLocked && (
+            <div className="p-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl space-y-2">
+              <div className="flex items-center justify-between text-[11px] font-bold text-[var(--ink)]">
+                <span className="flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                  <span>Preset Cepat (BBM, Cek Fisik, Salon):</span>
+                </span>
+                <span className="text-[10px] text-[var(--muted)] font-normal">
+                  Klik untuk isi otomatis
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {QUICK_EXPENSE_PRESETS.map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => {
+                      setCategory(preset.category);
+                      setVendorName(preset.vendorName);
+                      setNotes(preset.notes);
+                      setAmount(preset.amount);
+                    }}
+                    className="px-2 py-1 rounded-md text-[11px] font-semibold bg-white border border-[var(--line)] hover:border-[var(--accent)] text-[var(--ink)] transition-colors shadow-2xs cursor-pointer active:scale-95"
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Quick-Pick Kategori */}
           <div className="space-y-2">
             <label className="block text-xs font-semibold text-[var(--ink)]">
@@ -607,6 +701,19 @@ export function VehicleExpensesManager({
                 onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
                 className="w-full px-3 py-2 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40 disabled:opacity-50"
               />
+              <div className="flex flex-wrap gap-1 mt-1.5">
+                {[100000, 200000, 300000, 500000, 1000000].map((quickVal) => (
+                  <button
+                    key={quickVal}
+                    type="button"
+                    disabled={isLocked}
+                    onClick={() => setAmount(quickVal)}
+                    className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-white hover:bg-stone-100 border border-[var(--line)] text-[var(--ink)] transition-colors cursor-pointer"
+                  >
+                    {quickVal >= 1000000 ? `${quickVal / 1000000}jt` : `${quickVal / 1000}rb`}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div>
