@@ -12,6 +12,7 @@ import {
   Loader2,
   Info,
   ShieldAlert,
+  DollarSign,
 } from "lucide-react";
 import { updateVehicleStatusAction } from "@/app/actions/vehicle";
 import { canTransition, type VehicleStatus } from "@/lib/calculations/vehicle-state";
@@ -247,20 +248,23 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
         )}
 
         {targetStatus === "SOLD_SETTLED" && (
-          <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-2">
+          <div className="p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-xs space-y-2.5">
             <div className="flex items-center gap-1.5 font-bold text-amber-950">
-              <Info className="w-4 h-4 text-amber-700 shrink-0" />
-              <span>Ingin mencatat detail penjualan lengkap?</span>
+              <ShieldAlert className="w-4 h-4 text-amber-700 shrink-0" />
+              <span>Unit Terjual Wajib Memiliki Catatan Penjualan Resmi</span>
             </div>
-            <p className="leading-relaxed">
-              Jika unit ini laku terjual (misal ke <strong>Showroom Kcunk Motor</strong> atau konsumen), sangat disarankan menggunakan menu <strong>Input Penjualan Resmi</strong> agar harga deal, identitas pembeli, kwitansi, dan kas masuk otomatis tercatat rapi.
+            <p className="leading-relaxed text-amber-900">
+              Status <strong>Terjual Lunas</strong> tidak boleh disimpan kosong tanpa data. Anda wajib mencatat harga kesepakatan jual, identitas pembeli (misal: <strong>Showroom Kcunk Motor</strong>, balai lelang, atau konsumen), dan rincian pembayaran kas agar kwitansi resmi, BAST, dan bagi hasil investor dapat diproses sah.
             </p>
-            <Link
-              href={`/admin/sales/new?vehicleId=${vehicle.id}`}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-800 text-white font-bold text-xs hover:bg-amber-900 transition-colors"
-            >
-              <span>Buka Form Penjualan Unit Ini &rarr;</span>
-            </Link>
+            <div>
+              <Link
+                href={`/admin/sales/new?vehicleId=${vehicle.id}`}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 transition-colors shadow-xs"
+              >
+                <DollarSign className="w-3.5 h-3.5" />
+                <span>Buka Form Penjualan Unit Ini &rarr;</span>
+              </Link>
+            </div>
           </div>
         )}
 
@@ -278,27 +282,37 @@ export function VehicleStatusClient({ vehicle }: { vehicle: VehicleSummary }) {
           href="/admin/inventory"
           className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
         >
-          Batal & Kembali
+          Batal &amp; Kembali
         </Link>
 
-        <button
-          type="button"
-          onClick={handleUpdate}
-          disabled={loading || validTransitions.length === 0}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--ink)] hover:bg-[var(--accent)] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Memperbarui Status...</span>
-            </>
-          ) : (
-            <>
-              <CheckCircle className="w-4 h-4" />
-              <span>Konfirmasi Perubahan Status</span>
-            </>
-          )}
-        </button>
+        {targetStatus === "SOLD_SETTLED" ? (
+          <Link
+            href={`/admin/sales/new?vehicleId=${vehicle.id}`}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-sm font-bold shadow-md transition-all active:scale-95"
+          >
+            <DollarSign className="w-4 h-4" />
+            <span>Lanjutkan ke Form Penjualan Resmi &rarr;</span>
+          </Link>
+        ) : (
+          <button
+            type="button"
+            onClick={handleUpdate}
+            disabled={loading || validTransitions.length === 0}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--ink)] hover:bg-[var(--accent)] text-white rounded-xl text-sm font-bold shadow-md transition-colors disabled:opacity-50 cursor-pointer"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Memperbarui Status...</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-4 h-4" />
+                <span>Konfirmasi Perubahan Status</span>
+              </>
+            )}
+          </button>
+        )}
       </div>
     </div>
   );

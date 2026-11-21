@@ -463,6 +463,13 @@ export async function updateVehicleStatusAction(vehicleId: string, toStatus: Veh
         );
       }
 
+      // Status Terjual Lunas (SOLD_SETTLED) tidak boleh diubah kosong dari menu status
+      if (toStatus === "SOLD_SETTLED") {
+        throw new Error(
+          "Status Terjual Lunas (SOLD_SETTLED) wajib dicatat melalui formulir Penjualan Resmi agar harga kesepakatan jual, identitas pembeli, kwitansi, dan kas masuk tercatat akurat."
+        );
+      }
+
       const updated = await tx.vehicle.update({
         where: { id: vehicleId },
         data: { status: toStatus },

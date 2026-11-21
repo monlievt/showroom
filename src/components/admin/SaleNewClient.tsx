@@ -56,19 +56,26 @@ const DEFAULT_CHECKLIST = [
 
 export function SaleNewClient({
   availableVehicles,
+  initialVehicleId,
 }: {
   availableVehicles: AvailableVehicle[];
+  initialVehicleId?: string;
 }) {
   const router = useRouter();
 
-  const [vehicleId, setVehicleId] = useState(availableVehicles[0]?.id || "");
+  const preselected = initialVehicleId
+    ? availableVehicles.find((v) => v.id === initialVehicleId)
+    : undefined;
+
+  const [vehicleId, setVehicleId] = useState(
+    preselected?.id || availableVehicles[0]?.id || ""
+  );
   const [saleDate, setSaleDate] = useState(
     new Date().toISOString().split("T")[0]
   );
   const [saleType, setSaleType] = useState("DIRECT_CUSTOMER");
-  const [sellingPrice, setSellingPrice] = useState<number | "">(
-    availableVehicles[0]?.targetSellingPrice || ""
-  );
+  // Default kosong ("") agar admin wajib mengetikkan harga deal hasil nego secara sadar
+  const [sellingPrice, setSellingPrice] = useState<number | "">("");
   const [dueDate, setDueDate] = useState("");
 
   const [buyerName, setBuyerName] = useState("");
@@ -200,9 +207,9 @@ export function SaleNewClient({
     }
 
     if (isTempo) {
-      if (initialNum < minDp70) {
+      if (saleType === "DIRECT_CUSTOMER" && initialNum < minDp70) {
         setErrorMsg(
-          `Kebijakan Nur Mobil: Pembelian Cash Tempo wajib DP minimal 70% (${formatRupiah(minDp70)}). Tidak melayani kredit.`
+          `Kebijakan Nur Mobil: Pembelian Cash Tempo Konsumen Retail wajib DP minimal 70% (${formatRupiah(minDp70)}). Tidak melayani kredit.`
         );
         return;
       }
@@ -329,12 +336,6 @@ export function SaleNewClient({
                 value={vehicleId}
                 onChange={(e) => {
                   setVehicleId(e.target.value);
-                  const found = availableVehicles.find(
-                    (v) => v.id === e.target.value
-                  );
-                  if (found?.targetSellingPrice) {
-                    setSellingPrice(found.targetSellingPrice);
-                  }
                 }}
                 className="w-full px-3.5 py-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               >
@@ -355,11 +356,19 @@ export function SaleNewClient({
                     </strong>
                   </span>
                   {selectedUnit.targetSellingPrice && (
-                    <span>
+                    <span className="inline-flex items-center gap-1.5">
                       Target Banderol:{" "}
                       <strong className="text-[var(--ink)]">
                         {formatRupiah(selectedUnit.targetSellingPrice)}
                       </strong>
+                      <button
+                        type="button"
+                        onClick={() => setSellingPrice(selectedUnit.targetSellingPrice!)}
+                        className="text-[10px] px-1.5 py-0.5 rounded bg-white border border-[var(--line)] text-[var(--accent)] font-bold hover:bg-[var(--bg)] cursor-pointer"
+                        title="Salin target banderol ke isian harga kesepakatan"
+                      >
+                        Gunakan Target
+                      </button>
                     </span>
                   )}
                   {selectedUnit.minSellingPrice && (
@@ -626,6 +635,55 @@ export function SaleNewClient({
             <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
               100% Cash / Tempo Internal Garasi (Non-Leasing)
             </span>
+          </div>
+
+          {/* Quick Skema Pembayaran Buttons */}
+          <div className="flex flex-wrap gap-2 pt-1 pb-1">
+            <button
+              type="button"
+              disabled={priceNum <= 0}
+              onClick={() => {
+                if (priceNum > 0) {
+                  setInitialPaymentAmount(priceNum);
+                  setDueDate("");
+                }
+              }}
+              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 disabled:opacity-50 cursor-pointer"
+            >
+              ✓ Bayar Lunas 100% {priceNum > 0 ? `(${formatRupiah(priceNum)})` : ""}
+            </button>
+
+            {saleType === "DIRECT_CUSTOMER" && priceNum > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setInitialPaymentAmount(minDp70);
+                  const d = new Date(new Date(saleDate).getTime() + 14 * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split("T")[0];
+                  setDueDate(d);
+                }}
+                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-300 hover:bg-amber-100 cursor-pointer"
+              >
+                ⏱ Min. DP 70% Tempo ({formatRupiah(minDp70)})
+              </button>
+            )}
+
+            {saleType === "SHOWROOM" && (
+              <button
+                type="button"
+                onClick={() => {
+                  setInitialPaymentAmount("");
+                  const d = new Date(new Date(saleDate).getTime() + 14 * 24 * 60 * 60 * 1000)
+                    .toISOString()
+                    .split("T")[0];
+                  setDueDate(d);
+                }}
+                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-800 border border-indigo-200 hover:bg-indigo-100 cursor-pointer"
+              >
+                ⏱ Tempo B2B Rekanan (14 Hari)
+              </button>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

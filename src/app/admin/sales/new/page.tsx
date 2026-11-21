@@ -10,7 +10,12 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminNewSalePage() {
+export default async function AdminNewSalePage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ vehicleId?: string }>;
+}) {
+  const { vehicleId } = (await searchParams) || {};
   const vehiclesResult = await getVehiclesAction();
   const allVehicles =
     vehiclesResult.success && vehiclesResult.data ? vehiclesResult.data : [];
@@ -41,7 +46,10 @@ export default async function AdminNewSalePage() {
         subtitle="Catat penjualan ke konsumen langsung atau showroom rekanan dengan sistem tempo pelunasan."
       />
       <main className="flex-1">
-        <SaleNewClient availableVehicles={availableVehicles} />
+        <SaleNewClient
+          availableVehicles={availableVehicles}
+          initialVehicleId={vehicleId}
+        />
       </main>
     </div>
   );
