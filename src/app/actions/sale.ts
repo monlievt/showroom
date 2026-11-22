@@ -638,3 +638,108 @@ export async function getSaleByIdAction(id: string) {
   }
 }
 
+/**
+ * Me-reset status penjualan kendaraan kembali ke READY_FOR_SALE dan menghapus data Sale dummy/batal.
+ */
+export async function resetVehicleSaleAction(vehicleId: string) {
+  try {
+    const session = await requireRole(["OWNER", "ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Admin";
+
+    const result = await prisma.$transaction(async (tx) => {
+      const vehicle = await tx.vehicle.findUnique({
+        where: { id: vehicleId },
+        include: {
+          sale: {
+            include: {
+              payments: true,
+              distributions: true,
+              cashTransactions: true,
+            },
+          },
+        },
+      });
+
+      if (!vehicle) {
+        throw new Error("Unit kendaraan tidak ditemukan.");
+      }
+
+      // 1. Bersihkan transaksi penjualan (Sale) jika ada
+      if (vehicle.sale) {
+        const saleId = vehicle.sale.id;
+
+        // Lepas referensi NotificationLog
+        await tx.notificationLog.updateMany({
+          where: { relatedSaleId: saleId },
+          data: { relatedSaleId: null },
+        });
+
+        // Hapus cash transactions yang berkaitan dengan penjualan ini
+        await tx.cashTransaction.deleteMany({
+          where: { relatedSaleId: saleId },
+        });
+
+        // Hapus Sale (Cascade menghapus SalePayment dan ProfitDistribution)
+        await tx.sale.delete({
+          where: { id: saleId },
+        });
+      }
+
+      // 2. Kembalikan status kendaraan ke READY_FOR_SALE
+      const updatedVehicle = await tx.vehicle.update({
+        where: { id: vehicleId },
+        data: {
+          status: "READY_FOR_SALE",
+        },
+      });
+
+      // 3. Tulis AuditLog
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "RESET_SALE",
+          entityType: "Vehicle",
+          entityId: vehicle.id,
+          beforeData: JSON.parse(
+            JSON.stringify({
+              plateNumber: vehicle.plateNumber,
+              status: vehicle.status,
+              sale: vehicle.sale
+                ? {
+                    id: vehicle.sale.id,
+                    sellingPrice: Number(vehicle.sale.sellingPrice),
+                  }
+                : null,
+            })
+          ),
+          afterData: JSON.parse(
+            JSON.stringify({
+              plateNumber: vehicle.plateNumber,
+              status: "READY_FOR_SALE",
+              sale: null,
+            })
+          ),
+        },
+      });
+
+      return updatedVehicle;
+    });
+
+    revalidatePath("/admin/inventory");
+    revalidatePath(`/admin/inventory/${vehicleId}`);
+    revalidatePath("/admin/sales");
+    revalidatePath("/admin/finance");
+    revalidatePath("/admin/investors");
+    revalidatePath("/katalog");
+    revalidatePath("/", "layout");
+
+    return {
+      success: true,
+      message: `Status unit ${result.plateNumber} berhasil di-reset kembali ke Ready Jual. Data transaksi penjualan dummy telah dibersihkan.`,
+    };
+  } catch (error: any) {
+    console.error("Error resetting vehicle sale:", error);
+    return { success: false, error: error.message || "Gagal me-reset transaksi penjualan" };
+  }
+}
+

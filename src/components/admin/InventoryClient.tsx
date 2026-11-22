@@ -29,8 +29,10 @@ import {
   Users,
   Trash2,
   Loader2,
+  RotateCcw,
 } from "lucide-react";
 import { deleteVehicleAction } from "@/app/actions/vehicle";
+import { resetVehicleSaleAction } from "@/app/actions/sale";
 import { VehicleExpensesManager } from "./VehicleExpensesManager";
 import { formatRupiah, formatDate, cn } from "@/lib/utils";
 import { generateVehicleSlug } from "@/lib/utils/slug";
@@ -114,6 +116,8 @@ export function InventoryClient({
   const [selectedVehicleForExpense, setSelectedVehicleForExpense] = useState<VehicleItem | null>(null);
   const [deleteTargetVehicle, setDeleteTargetVehicle] = useState<VehicleItem | null>(null);
   const [deletingVehicle, setDeletingVehicle] = useState(false);
+  const [resetTargetVehicle, setResetTargetVehicle] = useState<VehicleItem | null>(null);
+  const [resettingVehicle, setResettingVehicle] = useState(false);
   const [inventoryNotice, setInventoryNotice] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [mounted, setMounted] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<{
@@ -205,6 +209,37 @@ export function InventoryClient({
       text: res.message || `Unit ${deleteTargetVehicle.plateNumber} berhasil dihapus.`,
     });
     setDeleteTargetVehicle(null);
+    router.refresh();
+  };
+
+  const handleConfirmResetSale = async () => {
+    if (!resetTargetVehicle) return;
+    setResettingVehicle(true);
+    setInventoryNotice(null);
+    const res = await resetVehicleSaleAction(resetTargetVehicle.id);
+    setResettingVehicle(false);
+
+    if (!res.success) {
+      setInventoryNotice({
+        type: "error",
+        text: res.error || "Gagal me-reset penjualan unit kendaraan.",
+      });
+      setResetTargetVehicle(null);
+      return;
+    }
+
+    setVehicles((prev) =>
+      prev.map((item) =>
+        item.id === resetTargetVehicle.id
+          ? { ...item, status: "READY_FOR_SALE", sale: null }
+          : item
+      )
+    );
+    setInventoryNotice({
+      type: "success",
+      text: res.message || `Status unit ${resetTargetVehicle.plateNumber} berhasil di-reset ke Ready Jual.`,
+    });
+    setResetTargetVehicle(null);
     router.refresh();
   };
 
@@ -958,6 +993,22 @@ export function InventoryClient({
             </a>
 
             {(userRole === "OWNER" || userRole === "ADMIN") &&
+              (activeDropdown.vehicle.status === "SOLD_SETTLED" || activeDropdown.vehicle.sale) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const target = activeDropdown.vehicle;
+                    setActiveDropdown(null);
+                    setResetTargetVehicle(target);
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3.5 py-2 text-rose-700 hover:bg-rose-50 font-semibold transition-colors cursor-pointer text-left border-t border-[var(--line)] mt-1 pt-2"
+                >
+                  <RotateCcw className="w-4 h-4 text-rose-600" />
+                  <span>Reset Penjualan ke Ready</span>
+                </button>
+              )}
+
+            {(userRole === "OWNER" || userRole === "ADMIN") &&
               activeDropdown.vehicle.status !== "SOLD_SETTLED" && (
                 <button
                   type="button"
@@ -1033,6 +1084,75 @@ export function InventoryClient({
                   <>
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Ya, Hapus Unit</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Konfirmasi Reset Penjualan Unit */}
+      {resetTargetVehicle && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+          onClick={() => !resettingVehicle && setResetTargetVehicle(null)}
+        >
+          <div
+            className="bg-white border border-[var(--line)] rounded-2xl w-full max-w-md shadow-2xl p-5 sm:p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3">
+              <div className="p-2.5 rounded-xl bg-rose-100 text-rose-700 shrink-0">
+                <RotateCcw className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-sm sm:text-base font-bold text-[var(--ink)]">
+                  Reset Penjualan &amp; Kembali ke Ready?
+                </h3>
+                <p className="text-xs text-[var(--muted)]">
+                  Unit:{" "}
+                  <strong className="text-[var(--ink)]">
+                    {resetTargetVehicle.plateNumber}
+                  </strong>{" "}
+                  ({resetTargetVehicle.brand} {resetTargetVehicle.model})
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-950 space-y-1.5">
+              <p className="font-bold text-rose-950">Aksi ini akan:</p>
+              <ul className="list-disc list-inside text-[11px] text-rose-900 space-y-1 leading-relaxed">
+                <li>Menghapus data transaksi penjualan dummy / belum lengkap.</li>
+                <li>Mengembalikan status unit menjadi <strong>Ready Jual (READY_FOR_SALE)</strong>.</li>
+                <li>Data unit, biaya servis/HPP, dokumen &amp; foto tetap tersimpan aman.</li>
+              </ul>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-[var(--line)]">
+              <button
+                type="button"
+                disabled={resettingVehicle}
+                onClick={() => setResetTargetVehicle(null)}
+                className="px-4 py-2 rounded-xl border border-[var(--line)] bg-white hover:bg-[var(--bg)] text-xs font-semibold text-[var(--ink)] transition-colors cursor-pointer"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={resettingVehicle}
+                onClick={handleConfirmResetSale}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                {resettingVehicle ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Memproses...</span>
+                  </>
+                ) : (
+                  <>
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Ya, Reset ke Ready Jual</span>
                   </>
                 )}
               </button>
