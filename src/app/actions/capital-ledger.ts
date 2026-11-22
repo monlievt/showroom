@@ -127,7 +127,7 @@ export async function depositInvestorCapital(
         createdBy: session.fullName || resolvedActorId,
       });
 
-      // 2. Ambil saldo berjalan kas umum terakhir
+      // 2. Ambil saldo berjalan kas umum terakhir & pastikan timestamp monotonik agar saldo terbaru tidak tertimpa tanggal mundur
       const latestCash = await tx.cashTransaction.findFirst({
         orderBy: { createdAt: "desc" },
       });
@@ -135,6 +135,10 @@ export async function depositInvestorCapital(
         ? new Decimal(latestCash.runningBalance.toString())
         : new Decimal(0);
       const newCashBalance = prevCashBalance.plus(amt);
+      const cashTime = Math.max(
+        txDate.getTime(),
+        latestCash ? new Date(latestCash.createdAt).getTime() + 1 : 0
+      );
 
       // 3. Tulis CashTransaction IN_CAPITAL_DEPOSIT yang berpasangan
       const cashEntry = await tx.cashTransaction.create({
@@ -146,7 +150,7 @@ export async function depositInvestorCapital(
           runningBalance: newCashBalance,
           notes: `Setoran modal dari investor (Ref Ledger: ${ledgerEntry.id})`,
           proofUrl: resolvedProofUrl,
-          createdAt: txDate,
+          createdAt: new Date(cashTime),
           createdBy: session.fullName || resolvedActorId,
         },
       });

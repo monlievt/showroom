@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import Decimal from "decimal.js";
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/auth/session";
+import { normalizePlateNumber, stripPlateSpaces } from "@/lib/utils";
 
 export interface HistoricalSaleFilter {
   search?: string;
@@ -25,8 +26,12 @@ export async function getHistoricalSalesAction(filters?: HistoricalSaleFilter) {
 
     if (filters?.search) {
       const search = filters.search.trim();
+      const compact = stripPlateSpaces(search);
+      const normalized = normalizePlateNumber(search);
       where.OR = [
         { plateNumber: { contains: search } },
+        ...(compact && compact !== search ? [{ plateNumber: { contains: compact } }] : []),
+        ...(normalized && normalized !== search ? [{ plateNumber: { contains: normalized } }] : []),
         { brand: { contains: search } },
         { model: { contains: search } },
         { notes: { contains: search } },
@@ -156,7 +161,7 @@ export async function updateHistoricalSaleAction(
       const next = await tx.historicalSale.update({
         where: { id },
         data: {
-          ...(data.plateNumber && { plateNumber: data.plateNumber.toUpperCase().trim() }),
+          ...(data.plateNumber && { plateNumber: normalizePlateNumber(data.plateNumber) }),
           ...(data.notes !== undefined && { notes: data.notes }),
           ...(data.buyerName !== undefined && { buyerName: data.buyerName }),
           ...(data.purchaseDate !== undefined && {

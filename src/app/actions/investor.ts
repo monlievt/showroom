@@ -280,6 +280,20 @@ export async function deleteInvestor(id: string, actorUserId?: string) {
       };
     }
 
+    // Cek jika investor masih memiliki saldo modal mengendap (belum ditarik ke 0)
+    const latestLedger = await prisma.capitalLedger.findFirst({
+      where: { investorId: id },
+      orderBy: { createdAt: "desc" },
+      select: { runningBalance: true },
+    });
+    const currentBal = latestLedger ? Number(latestLedger.runningBalance) : 0;
+    if (currentBal !== 0) {
+      return {
+        success: false,
+        error: `Investor ${existing.name} masih memiliki saldo kas bebas Rp ${currentBal.toLocaleString("id-ID")}. Cairkan/kembalikan modalnya terlebih dahulu hingga saldo Rp 0 sebelum menghapus akun.`,
+      };
+    }
+
     await prisma.$transaction(async (tx) => {
       // 1. Bersihkan buku modal jika ada
       if (existing.ledgerEntries.length > 0) {

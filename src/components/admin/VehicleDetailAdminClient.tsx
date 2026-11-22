@@ -33,7 +33,15 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { resetVehicleSaleAction } from "@/app/actions/sale";
-import { cn, formatDate, formatRupiah } from "@/lib/utils";
+import {
+  cn,
+  formatDate,
+  formatRupiah,
+  parseProofUrls,
+  normalizePlateNumber,
+  formatVehicleTitle,
+} from "@/lib/utils";
+import { getExpenseCategoryShortLabel } from "@/lib/constants/expense-categories";
 import { generateVehicleSlug } from "@/lib/utils/slug";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
 import {
@@ -258,7 +266,21 @@ export function VehicleDetailAdminClient({
       : null;
 
   const unitPhotos = vehicle.photos.filter((p) => p.tag !== "RECEIPT_EXPENSE");
-  const receiptPhotos = vehicle.photos.filter((p) => p.tag === "RECEIPT_EXPENSE");
+
+  // Single Source of Truth: selalu ambil arsip foto nota langsung dari daftar biaya aktif (vehicle.expenses)
+  // agar nominal, kategori, dan keberadaan nota selalu 100% sinkron dengan tab Biaya & Servis.
+  const receiptPhotos = vehicle.expenses.flatMap((exp) => {
+    const urls = parseProofUrls(exp.receiptUrl);
+    const catLabel = getExpenseCategoryShortLabel(exp.category);
+    return urls.map((url, idx) => ({
+      id: `${exp.id}-${idx}`,
+      fileUrl: url,
+      title: `Nota ${catLabel}: ${exp.vendorName || "Biaya Unit"} (${formatRupiah(exp.amount)})${
+        urls.length > 1 ? ` (${idx + 1}/${urls.length})` : ""
+      }`,
+      subtitle: `${formatDate(exp.date)}${exp.notes ? ` • ${exp.notes}` : ""}`,
+    }));
+  });
   const currentInspection =
     vehicle.inspections.find((i) => i.isCurrent) ||
     vehicle.inspections[vehicle.inspections.length - 1] ||
@@ -291,7 +313,7 @@ export function VehicleDetailAdminClient({
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-xl sm:text-2xl font-extrabold text-[var(--ink)] tracking-tight">
-                {vehicle.plateNumber}
+                {normalizePlateNumber(vehicle.plateNumber)}
               </h1>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)]">
                 {STATUS_LABELS[vehicle.status] || vehicle.status}
@@ -316,7 +338,7 @@ export function VehicleDetailAdminClient({
               </span>
             </div>
             <p className="text-xs sm:text-sm text-[var(--muted)] mt-0.5">
-              {vehicle.brand} {vehicle.model} ({vehicle.year}) • {vehicle.color} •{" "}
+              {formatVehicleTitle(vehicle.brand, vehicle.model, vehicle.year)} • {vehicle.color} •{" "}
               {vehicle.transmission} • {vehicle.odometer.toLocaleString("id-ID")} km
             </p>
           </div>
@@ -724,7 +746,7 @@ export function VehicleDetailAdminClient({
         >
           <Camera className="w-4 h-4" />
           <span>
-            Foto &amp; Dokumen ({vehicle.photos.length + vehicle.documents.length})
+            Foto &amp; Dokumen ({unitPhotos.length + receiptPhotos.length + vehicle.documents.length})
           </span>
         </button>
 
@@ -1001,6 +1023,7 @@ export function VehicleDetailAdminClient({
           onExpensesChanged={(nextTotal, nextCount) => {
             setTotalExpenses(nextTotal);
             setExpenseCount(nextCount);
+            router.refresh();
           }}
         />
       )}

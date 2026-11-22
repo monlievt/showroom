@@ -5,7 +5,8 @@ import Decimal from "decimal.js";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth/session";
-import { parseProofUrls } from "@/lib/utils";
+import { parseProofUrls, sanitizeActionError } from "@/lib/utils";
+import { getExpenseCategoryShortLabel } from "@/lib/constants/expense-categories";
 import {
   createExpenseSchema,
   updateExpenseSchema,
@@ -20,12 +21,13 @@ function toJsonValue(value: unknown): Prisma.InputJsonValue {
 }
 
 function getErrorMessage(error: unknown, fallback: string): string {
-  return error instanceof Error ? error.message : fallback;
+  return sanitizeActionError(error, fallback);
 }
 
 function revalidateExpensePaths(vehicleId: string) {
   revalidatePath("/admin");
   revalidatePath("/admin/inventory");
+  revalidatePath(`/admin/inventory/${vehicleId}`);
   revalidatePath(`/admin/inventory/${vehicleId}/expenses/new`);
   revalidatePath("/admin/finance");
   revalidatePath("/admin/analytics");
@@ -66,39 +68,85 @@ async function assertVehicleExpensesEditable(tx: PrismaTx, vehicleId: string) {
   return vehicle;
 }
 
-async function archiveReceiptPhotos(
+async function syncReceiptPhotos(
   tx: PrismaTx,
   params: {
     vehicleId: string;
-    receiptUrl?: string | null;
+    previousReceiptUrl?: string | null;
+    nextReceiptUrl?: string | null;
+    excludeExpenseId?: string;
     category: string;
     vendorName?: string | null;
     amount: number;
   }
 ) {
-  const receiptUrls = parseProofUrls(params.receiptUrl);
-  if (receiptUrls.length === 0) return;
+  const prevUrls = parseProofUrls(params.previousReceiptUrl);
+  const nextUrls = parseProofUrls(params.nextReceiptUrl);
+  const nextSet = new Set(nextUrls);
+  const removedUrls = prevUrls.filter((u) => !nextSet.has(u));
 
+  // Hapus foto arsip nota lama jika tidak dipakai lagi oleh biaya lain pada unit ini
+  if (removedUrls.length > 0) {
+    const otherExpenses = await tx.expense.findMany({
+      where: {
+        vehicleId: params.vehicleId,
+        ...(params.excludeExpenseId ? { id: { not: params.excludeExpenseId } } : {}),
+      },
+      select: { receiptUrl: true },
+    });
+    const stillUsedUrls = new Set<string>();
+    for (const exp of otherExpenses) {
+      for (const u of parseProofUrls(exp.receiptUrl)) {
+        stillUsedUrls.add(u);
+      }
+    }
+    const safeToDelete = removedUrls.filter((u) => !stillUsedUrls.has(u));
+    if (safeToDelete.length > 0) {
+      await tx.vehiclePhoto.deleteMany({
+        where: {
+          vehicleId: params.vehicleId,
+          tag: "RECEIPT_EXPENSE",
+          fileUrl: { in: safeToDelete },
+        },
+      });
+    }
+  }
+
+  if (nextUrls.length === 0) return;
+
+  const categoryLabel = getExpenseCategoryShortLabel(params.category);
   const existingPhotos = await tx.vehiclePhoto.findMany({
     where: {
       vehicleId: params.vehicleId,
-      fileUrl: { in: receiptUrls },
+      tag: "RECEIPT_EXPENSE",
+      fileUrl: { in: nextUrls },
     },
-    select: { fileUrl: true },
+    select: { id: true, fileUrl: true },
   });
-  const existingSet = new Set(existingPhotos.map((p) => p.fileUrl));
-  const newUrls = receiptUrls.filter((u) => !existingSet.has(u));
+  const existingByUrl = new Map(existingPhotos.map((p) => [p.fileUrl, p.id]));
 
-  for (let i = 0; i < newUrls.length; i++) {
-    await tx.vehiclePhoto.create({
-      data: {
-        vehicleId: params.vehicleId,
-        category: "DOCUMENT_PROOF",
-        fileUrl: newUrls[i],
-        tag: "RECEIPT_EXPENSE",
-        title: `Bukti Nota ${params.category}: ${params.vendorName || "Vendor"} (Rp ${params.amount.toLocaleString("id-ID")})${newUrls.length > 1 ? ` — Foto ${i + 1}/${newUrls.length}` : ""}`,
-      },
-    });
+  for (let i = 0; i < nextUrls.length; i++) {
+    const url = nextUrls[i];
+    const nextTitle = `Nota ${categoryLabel}: ${params.vendorName || "Vendor"} (Rp ${params.amount.toLocaleString("id-ID")})${nextUrls.length > 1 ? ` (${i + 1}/${nextUrls.length})` : ""}`;
+    const existingId = existingByUrl.get(url);
+
+    if (existingId) {
+      // Sinkronkan judul agar nominal & kategori selalu cocok setelah edit
+      await tx.vehiclePhoto.update({
+        where: { id: existingId },
+        data: { title: nextTitle },
+      });
+    } else {
+      await tx.vehiclePhoto.create({
+        data: {
+          vehicleId: params.vehicleId,
+          category: "DOCUMENT_PROOF",
+          fileUrl: url,
+          tag: "RECEIPT_EXPENSE",
+          title: nextTitle,
+        },
+      });
+    }
   }
 }
 
@@ -110,12 +158,13 @@ async function recordCashBalanceDelta(
     vehicleId: string;
     expenseId?: string | null;
     notes: string;
+    proofUrl?: string | null;
     createdBy: string;
   }
 ) {
   const lastCashTx = await tx.cashTransaction.findFirst({
     orderBy: { createdAt: "desc" },
-    select: { runningBalance: true },
+    select: { runningBalance: true, createdAt: true },
   });
 
   const currentBalance = lastCashTx
@@ -127,6 +176,11 @@ async function recordCashBalanceDelta(
       ? currentBalance.minus(params.amount)
       : currentBalance.plus(params.amount);
 
+  const nextTs = Math.max(
+    Date.now(),
+    lastCashTx ? new Date(lastCashTx.createdAt).getTime() + 1 : 0
+  );
+
   await tx.cashTransaction.create({
     data: {
       type: params.direction === "OUT" ? "OUT_EXPENSE" : "IN_OTHER",
@@ -135,6 +189,8 @@ async function recordCashBalanceDelta(
       relatedExpenseId: params.expenseId ?? null,
       runningBalance: newBalance,
       notes: params.notes,
+      proofUrl: params.proofUrl || null,
+      createdAt: new Date(nextTs),
       createdBy: params.createdBy,
     },
   });
@@ -162,9 +218,10 @@ export async function createExpenseAction(input: CreateExpenseInput) {
         },
       });
 
-      await archiveReceiptPhotos(tx, {
+      await syncReceiptPhotos(tx, {
         vehicleId: validated.vehicleId,
-        receiptUrl: validated.receiptUrl,
+        nextReceiptUrl: validated.receiptUrl,
+        excludeExpenseId: expense.id,
         category: validated.category,
         vendorName: validated.vendorName,
         amount: validated.amount,
@@ -175,7 +232,8 @@ export async function createExpenseAction(input: CreateExpenseInput) {
         amount: new Decimal(validated.amount),
         vehicleId: vehicle.id,
         expenseId: expense.id,
-        notes: `Biaya ${expense.category}: ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})${validated.notes ? ` - ${validated.notes}` : ""}`,
+        notes: `Biaya ${getExpenseCategoryShortLabel(expense.category)}: ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})${validated.notes ? ` - ${validated.notes}` : ""}`,
+        proofUrl: validated.receiptUrl || null,
         createdBy: actorLabel,
       });
 
@@ -235,13 +293,23 @@ export async function updateExpenseAction(input: UpdateExpenseInput) {
         },
       });
 
-      await archiveReceiptPhotos(tx, {
+      await syncReceiptPhotos(tx, {
         vehicleId: existing.vehicleId,
-        receiptUrl: validated.receiptUrl,
+        previousReceiptUrl: existing.receiptUrl,
+        nextReceiptUrl: validated.receiptUrl,
+        excludeExpenseId: updated.id,
         category: validated.category,
         vendorName: validated.vendorName,
         amount: validated.amount,
       });
+
+      // Sinkronkan juga lampiran bukti nota pada mutasi kas terkait biaya ini
+      if ((existing.receiptUrl || null) !== (validated.receiptUrl || null)) {
+        await tx.cashTransaction.updateMany({
+          where: { relatedExpenseId: updated.id },
+          data: { proofUrl: validated.receiptUrl || null },
+        });
+      }
 
       const oldAmount = new Decimal(existing.amount.toString());
       const newAmount = new Decimal(validated.amount);
@@ -249,13 +317,15 @@ export async function updateExpenseAction(input: UpdateExpenseInput) {
 
       // Catat selisih mutasi kas agar buku kas tetap append-only dan saldo berjalan akurat
       if (!diff.isZero()) {
+        const catLabel = getExpenseCategoryShortLabel(updated.category);
         if (diff.gt(0)) {
           await recordCashBalanceDelta(tx, {
             direction: "OUT",
             amount: diff,
             vehicleId: vehicle.id,
             expenseId: updated.id,
-            notes: `Penyesuaian (+Rp ${diff.toNumber().toLocaleString("id-ID")}) edit biaya ${updated.category}: ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+            notes: `Penyesuaian (+Rp ${diff.toNumber().toLocaleString("id-ID")}) edit biaya ${catLabel}: ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+            proofUrl: validated.receiptUrl || null,
             createdBy: actorLabel,
           });
         } else {
@@ -265,7 +335,8 @@ export async function updateExpenseAction(input: UpdateExpenseInput) {
             amount: refundAmt,
             vehicleId: vehicle.id,
             expenseId: updated.id,
-            notes: `Koreksi pengurangan biaya (-Rp ${refundAmt.toNumber().toLocaleString("id-ID")}) ${updated.category}: ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+            notes: `Koreksi pengurangan biaya (-Rp ${refundAmt.toNumber().toLocaleString("id-ID")}) ${catLabel}: ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+            proofUrl: validated.receiptUrl || null,
             createdBy: actorLabel,
           });
         }
@@ -325,13 +396,24 @@ export async function deleteExpenseAction(expenseId: string) {
         data: { relatedExpenseId: null },
       });
 
+      // Hapus salinan foto arsip nota (RECEIPT_EXPENSE) agar tidak meninggalkan foto yatim di tab Foto & Dokumen
+      await syncReceiptPhotos(tx, {
+        vehicleId: existing.vehicleId,
+        previousReceiptUrl: existing.receiptUrl,
+        nextReceiptUrl: null,
+        excludeExpenseId: existing.id,
+        category: existing.category,
+        vendorName: existing.vendorName,
+        amount: oldAmount.toNumber(),
+      });
+
       // Kembalikan saldo kas sejumlah biaya yang dihapus
       await recordCashBalanceDelta(tx, {
         direction: "IN",
         amount: oldAmount,
         vehicleId: vehicle.id,
         expenseId: null,
-        notes: `Pembatalan/hapus biaya ${existing.category} (Rp ${oldAmount.toNumber().toLocaleString("id-ID")}): ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+        notes: `Pembatalan/hapus biaya ${getExpenseCategoryShortLabel(existing.category)} (Rp ${oldAmount.toNumber().toLocaleString("id-ID")}): ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
         createdBy: actorLabel,
       });
 

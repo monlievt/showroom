@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/auth/session";
 import { showroomAssetSchema, ShowroomAssetInput } from "@/lib/validations/asset";
+import { sanitizeActionError } from "@/lib/utils";
 import Decimal from "decimal.js";
 
 export async function getShowroomAssets() {
@@ -36,6 +37,7 @@ export async function getShowroomAssets() {
           condition: a.condition,
           location: a.location,
           notes: a.notes,
+          receiptUrl: a.receiptUrl,
           createdAt: a.createdAt,
         })),
         totalPurchaseCost,
@@ -62,6 +64,11 @@ export async function createShowroomAsset(
     const currVal = validated.currentValue ? new Decimal(validated.currentValue) : cost;
 
     const result = await prisma.$transaction(async (tx) => {
+      const resolvedReceiptUrl =
+        validated.proofUrls && validated.proofUrls.length > 0
+          ? JSON.stringify(validated.proofUrls)
+          : validated.receiptUrl || null;
+
       const asset = await tx.showroomAsset.create({
         data: {
           name: validated.name,
@@ -72,9 +79,7 @@ export async function createShowroomAsset(
           condition: validated.condition,
           location: validated.location || null,
           notes: validated.notes || null,
-          receiptUrl: validated.proofUrls && validated.proofUrls.length > 0
-            ? JSON.stringify(validated.proofUrls)
-            : (validated.receiptUrl || null),
+          receiptUrl: resolvedReceiptUrl,
         },
       });
 
@@ -84,13 +89,20 @@ export async function createShowroomAsset(
         });
         const prevBal = latestTx ? new Decimal(latestTx.runningBalance.toString()) : new Decimal(0);
         const newBal = prevBal.minus(cost);
+        const nextTs = Math.max(
+          Date.now(),
+          latestTx ? new Date(latestTx.createdAt).getTime() + 1 : 0
+        );
 
         await tx.cashTransaction.create({
           data: {
             type: "OUT_ASSET_PURCHASE",
             amount: cost,
+            relatedLedgerId: `ASSET:${asset.id}`,
             runningBalance: newBal,
             notes: `Pembelian Aset Showroom: ${validated.name}`,
+            proofUrl: resolvedReceiptUrl,
+            createdAt: new Date(nextTs),
             createdBy: session.fullName || session.userId,
           },
         });
@@ -155,7 +167,10 @@ export async function updateShowroomAsset(
         const hadCashPurchase = await tx.cashTransaction.findFirst({
           where: {
             type: "OUT_ASSET_PURCHASE",
-            notes: { contains: existing.name },
+            OR: [
+              { relatedLedgerId: `ASSET:${existing.id}` },
+              { notes: { contains: existing.name } },
+            ],
           },
         });
         if (hadCashPurchase) {
@@ -170,13 +185,19 @@ export async function updateShowroomAsset(
               ? new Decimal(latestTx.runningBalance.toString())
               : new Decimal(0);
             const newBal = diff.gt(0) ? prevBal.minus(diff) : prevBal.plus(diff.abs());
+            const nextTs = Math.max(
+              Date.now(),
+              latestTx ? new Date(latestTx.createdAt).getTime() + 1 : 0
+            );
 
             await tx.cashTransaction.create({
               data: {
                 type: diff.gt(0) ? "OUT_ASSET_PURCHASE" : "IN_OTHER",
                 amount: diff.abs(),
+                relatedLedgerId: `ASSET:${existing.id}`,
                 runningBalance: newBal,
                 notes: `Koreksi nilai beli aset "${nextAsset.name}" (${diff.gt(0) ? "+" : "-"}Rp ${diff.abs().toNumber().toLocaleString("id-ID")})`,
+                createdAt: new Date(nextTs),
                 createdBy: session.fullName || session.userId,
               },
             });
@@ -222,7 +243,10 @@ export async function deleteShowroomAsset(id: string) {
       const hadCashPurchase = await tx.cashTransaction.findFirst({
         where: {
           type: "OUT_ASSET_PURCHASE",
-          notes: { contains: existing.name },
+          OR: [
+            { relatedLedgerId: `ASSET:${existing.id}` },
+            { notes: { contains: existing.name } },
+          ],
         },
       });
 
@@ -234,13 +258,19 @@ export async function deleteShowroomAsset(id: string) {
           ? new Decimal(latestTx.runningBalance.toString())
           : new Decimal(0);
         const refund = new Decimal(existing.purchaseCost.toString());
+        const nextTs = Math.max(
+          Date.now(),
+          latestTx ? new Date(latestTx.createdAt).getTime() + 1 : 0
+        );
 
         await tx.cashTransaction.create({
           data: {
             type: "IN_OTHER",
             amount: refund,
+            relatedLedgerId: `ASSET:${existing.id}`,
             runningBalance: prevBal.plus(refund),
             notes: `Pembatalan/hapus aset showroom: ${existing.name}`,
+            createdAt: new Date(nextTs),
             createdBy: session.fullName || session.userId,
           },
         });

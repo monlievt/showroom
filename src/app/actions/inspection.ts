@@ -2,11 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth/session";
 import { createInspectionSchema, type CreateInspectionInput } from "@/lib/validations/inspection";
 import { calculateTotalGrade } from "@/lib/calculations/inspection";
+import { sanitizeActionError } from "@/lib/utils";
 
 export async function createInspectionAction(input: CreateInspectionInput) {
   try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
     const validated = createInspectionSchema.parse(input);
 
     const result = await prisma.$transaction(async (tx) => {
@@ -104,7 +107,7 @@ export async function createInspectionAction(input: CreateInspectionInput) {
       // 5. AuditLog
       await tx.auditLog.create({
         data: {
-          actorUserId: "admin-owner-001",
+          actorUserId: session.userId,
           action: "CREATE",
           entityType: "Inspection",
           entityId: inspection.id,
@@ -121,11 +124,12 @@ export async function createInspectionAction(input: CreateInspectionInput) {
     });
 
     revalidatePath(`/admin/inspections/${validated.vehicleId}`);
+    revalidatePath(`/admin/inventory/${validated.vehicleId}`);
     revalidatePath("/admin/inventory");
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Error creating inspection:", error);
-    return { success: false, error: error.message || "Gagal menyimpan hasil inspeksi" };
+    return { success: false, error: sanitizeActionError(error, "Gagal menyimpan hasil inspeksi") };
   }
 }
 

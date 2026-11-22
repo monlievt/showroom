@@ -98,11 +98,20 @@ export async function recordOperationalExpense(
     const amt = new Decimal(validated.amount);
 
     const result = await prisma.$transaction(async (tx) => {
+      const resolvedReceiptUrl =
+        validated.proofUrls && validated.proofUrls.length > 0
+          ? JSON.stringify(validated.proofUrls)
+          : validated.receiptUrl || null;
+
       const latestTx = await tx.cashTransaction.findFirst({
         orderBy: { createdAt: "desc" },
       });
       const prevBal = latestTx ? new Decimal(latestTx.runningBalance.toString()) : new Decimal(0);
       const newBal = prevBal.minus(amt);
+      const nextTs = Math.max(
+        Date.now(),
+        latestTx ? new Date(latestTx.createdAt).getTime() + 1 : 0
+      );
 
       const cashEntry = await tx.cashTransaction.create({
         data: {
@@ -110,6 +119,8 @@ export async function recordOperationalExpense(
           amount: amt,
           runningBalance: newBal,
           notes: `Beban Operasional: [${validated.category}] ${validated.notes || ""} ${validated.recipient ? `(Penerima: ${validated.recipient})` : ""}`.trim(),
+          proofUrl: resolvedReceiptUrl,
+          createdAt: new Date(nextTs),
           createdBy: session.fullName || resolvedActorId,
         },
       });
@@ -121,9 +132,7 @@ export async function recordOperationalExpense(
           amount: amt,
           date: validated.date,
           notes: validated.notes || null,
-          receiptUrl: validated.proofUrls && validated.proofUrls.length > 0
-            ? JSON.stringify(validated.proofUrls)
-            : (validated.receiptUrl || null),
+          receiptUrl: resolvedReceiptUrl,
           createdBy: session.fullName || resolvedActorId,
           cashTransactionId: cashEntry.id,
         },

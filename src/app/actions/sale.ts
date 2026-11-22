@@ -121,10 +121,14 @@ export async function createSaleAction(input: CreateSaleInput) {
         if (validated.initialPaymentMethod !== "TRADE_IN") {
           const lastCashTx = await tx.cashTransaction.findFirst({
             orderBy: { createdAt: "desc" },
-            select: { runningBalance: true },
+            select: { runningBalance: true, createdAt: true },
           });
           const currentBalance = lastCashTx ? Number(lastCashTx.runningBalance) : 0;
           const newBalance = currentBalance + validated.initialPaymentAmount;
+          const nextTs = Math.max(
+            Date.now(),
+            lastCashTx ? new Date(lastCashTx.createdAt).getTime() + 1 : 0
+          );
 
           await tx.cashTransaction.create({
             data: {
@@ -134,6 +138,8 @@ export async function createSaleAction(input: CreateSaleInput) {
               relatedSaleId: sale.id,
               runningBalance: newBalance,
               notes: `Penerimaan DP/Pelunasan: ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+              proofUrl: validated.paymentReceiptUrl || null,
+              createdAt: new Date(nextTs),
               createdBy: actorLabel,
             },
           });
@@ -329,10 +335,14 @@ export async function addSalePaymentAction(input: CreateSalePaymentInput) {
       if (validated.method !== "TRADE_IN") {
         const lastCashTx = await tx.cashTransaction.findFirst({
           orderBy: { createdAt: "desc" },
-          select: { runningBalance: true },
+          select: { runningBalance: true, createdAt: true },
         });
         const currentBalance = lastCashTx ? Number(lastCashTx.runningBalance) : 0;
         const newBalance = currentBalance + validated.amount;
+        const nextTs = Math.max(
+          Date.now(),
+          lastCashTx ? new Date(lastCashTx.createdAt).getTime() + 1 : 0
+        );
 
         await tx.cashTransaction.create({
           data: {
@@ -342,6 +352,8 @@ export async function addSalePaymentAction(input: CreateSalePaymentInput) {
             relatedSaleId: sale.id,
             runningBalance: newBalance,
             notes: `Pembayaran angsuran/pelunasan: ${sale.vehicle.brand} ${sale.vehicle.model} (${sale.vehicle.plateNumber})`,
+            proofUrl: validated.proofUrl || null,
+            createdAt: new Date(nextTs),
             createdBy: actorLabel,
           },
         });
