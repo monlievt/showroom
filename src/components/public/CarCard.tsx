@@ -1,7 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { formatRupiah, formatThousands } from "@/lib/utils";
+import {
+  formatRupiah,
+  formatThousands,
+  normalizePlateNumber,
+  formatVehicleTitle,
+} from "@/lib/utils";
 import { InspectionBar } from "./InspectionBar";
 
 export interface CarCardVehicle {
@@ -87,7 +92,7 @@ export function CarCard({ vehicle }: CarCardProps) {
 
         {/* Judul: Nama Unit */}
         <h4 className="text-[16px] font-bold text-[var(--ink)] leading-snug line-clamp-1 group-hover:text-[var(--accent)] transition-colors">
-          {vehicle.brand} {vehicle.model}
+          {formatVehicleTitle(vehicle.brand, vehicle.model)}
         </h4>
 
         {/* Harga */}
@@ -97,7 +102,10 @@ export function CarCard({ vehicle }: CarCardProps) {
 
         {/* Inspection Bar (8 segmen) */}
         <div className="pt-1 border-t border-[var(--line)]">
-          <InspectionBar panels={panels} plateNumber={vehicle.plateNumber} />
+          <InspectionBar
+            panels={panels}
+            plateNumber={normalizePlateNumber(vehicle.plateNumber)}
+          />
         </div>
       </div>
     </Link>

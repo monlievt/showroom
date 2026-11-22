@@ -2,10 +2,11 @@ import React from "react";
 import { AdminHeader } from "@/components/admin/AdminHeader";
 import { SaleNewClient } from "@/components/admin/SaleNewClient";
 import { getVehiclesAction } from "@/app/actions/vehicle";
+import { getBuyersAction } from "@/app/actions/sale";
 
 export const metadata = {
-  title: "Input Penjualan Unit Baru | Nur Mobil Admin",
-  description: "Form pencatatan penjualan unit mobil showroom dan penerbitan SPK/Kuitansi.",
+  title: "Catat Penjualan Unit | Nur Mobil",
+  description: "Catat transaksi jual mobil atau motor secara lunas maupun tempo.",
 };
 
 export const dynamic = "force-dynamic";
@@ -16,17 +17,35 @@ export default async function AdminNewSalePage({
   searchParams?: Promise<{ vehicleId?: string }>;
 }) {
   const { vehicleId } = (await searchParams) || {};
-  const vehiclesResult = await getVehiclesAction();
+  const [vehiclesResult, buyersResult] = await Promise.all([
+    getVehiclesAction(),
+    getBuyersAction(),
+  ]);
+
   const allVehicles =
     vehiclesResult.success && vehiclesResult.data ? vehiclesResult.data : [];
+  const savedBuyers =
+    buyersResult.success && buyersResult.data ? buyersResult.data : [];
 
+  // Cek apakah vehicleId yang dipilih di URL ternyata sudah punya transaksi penjualan aktif
+  const requestedVehicle = vehicleId
+    ? allVehicles.find((v) => v.id === vehicleId)
+    : undefined;
+  const alreadySoldInfo =
+    requestedVehicle && requestedVehicle.sale
+      ? {
+          saleId: requestedVehicle.sale.id,
+          plateNumber: requestedVehicle.plateNumber,
+          brand: requestedVehicle.brand,
+          model: requestedVehicle.model,
+          year: requestedVehicle.year,
+          isFullyPaid: requestedVehicle.isFullyPaid,
+        }
+      : null;
+
+  // Hanya tampilkan unit yang BELUM memiliki catatan penjualan dan belum lunas
   const availableVehicles = allVehicles
-    .filter(
-      (v) =>
-        v.status === "READY_FOR_SALE" ||
-        v.status === "BOOKED" ||
-        v.status === "INTAKE"
-    )
+    .filter((v) => !v.sale && v.status !== "SOLD_SETTLED")
     .map((v) => ({
       id: v.id,
       plateNumber: v.plateNumber,
@@ -42,13 +61,15 @@ export default async function AdminNewSalePage({
   return (
     <div className="flex-1 flex flex-col min-h-screen">
       <AdminHeader
-        title="Input Penjualan Unit Baru"
-        subtitle="Catat penjualan ke konsumen langsung atau showroom rekanan dengan sistem tempo pelunasan."
+        title="Catat Penjualan Unit"
+        subtitle="Isi data unit, pembeli, dan harga deal. Berkas tambahan bisa dilengkapi nanti."
       />
       <main className="flex-1">
         <SaleNewClient
           availableVehicles={availableVehicles}
+          savedBuyers={savedBuyers}
           initialVehicleId={vehicleId}
+          alreadySoldInfo={alreadySoldInfo}
         />
       </main>
     </div>

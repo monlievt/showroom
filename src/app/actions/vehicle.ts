@@ -9,7 +9,14 @@ import { canTransition, type VehicleStatus } from "@/lib/calculations/vehicle-st
 import { calculateHpp, calculateDaysInInventory, getInventoryAgingCategory } from "@/lib/calculations/hpp";
 import { recordCapitalLedgerEntry } from "./capital-ledger";
 import { enrichExpensesWithEditAudit } from "./expense";
-import { formatRupiah } from "@/lib/utils";
+import {
+  formatRupiah,
+  normalizePlateNumber,
+  stripPlateSpaces,
+  cleanVehicleModel,
+  formatReadableText,
+  sanitizeActionError,
+} from "@/lib/utils";
 
 export async function getVehiclesAction(filters?: {
   status?: string;
@@ -26,8 +33,12 @@ export async function getVehiclesAction(filters?: {
 
     if (filters?.search) {
       const search = filters.search.trim();
+      const compactSearch = stripPlateSpaces(search);
+      const normalizedSearch = normalizePlateNumber(search);
       where.OR = [
         { plateNumber: { contains: search } },
+        ...(compactSearch && compactSearch !== search ? [{ plateNumber: { contains: compactSearch } }] : []),
+        ...(normalizedSearch && normalizedSearch !== search ? [{ plateNumber: { contains: normalizedSearch } }] : []),
         { brand: { contains: search } },
         { model: { contains: search } },
       ];
@@ -176,16 +187,25 @@ export async function createVehicleAction(input: CreateVehicleInput) {
       );
     }
 
+    let cashWarning: string | undefined;
+
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Cek plat nomor duplikat
-      const existing = await tx.vehicle.findUnique({
-        where: { plateNumber: validated.plateNumber },
+      // 1. Cek plat nomor duplikat (baik format spasi maupun tanpa spasi)
+      const normalizedPlate = normalizePlateNumber(validated.plateNumber);
+      const compactPlate = stripPlateSpaces(normalizedPlate);
+      const existing = await tx.vehicle.findFirst({
+        where: {
+          OR: [
+            { plateNumber: normalizedPlate },
+            { plateNumber: compactPlate },
+          ],
+        },
       });
       if (existing) {
-        throw new Error(`Unit dengan plat nomor ${validated.plateNumber} sudah terdaftar.`);
+        throw new Error(`Unit dengan plat nomor ${normalizedPlate} sudah terdaftar di stok.`);
       }
 
-      // 1b. Cek kesiapan saldo kas showroom (anti minus)
+      // 1b. Ambil saldo kas showroom terakhir (catat peringatan bila saldo kurang, tapi tidak memblokir input)
       const lastCashTx = await tx.cashTransaction.findFirst({
         orderBy: { createdAt: "desc" },
         select: { runningBalance: true, createdAt: true },
@@ -199,9 +219,7 @@ export async function createVehicleAction(input: CreateVehicleInput) {
       );
 
       if (currentBalanceDec.lt(totalCashOut)) {
-        throw new Error(
-          `Saldo kas showroom tidak mencukupi (Tersedia: ${formatRupiah(currentBalanceDec.toNumber())}, Dibutuhkan: ${formatRupiah(totalCashOut.toNumber())}). Silakan setor modal awal di Buku Kas & Mutasi atau Daftar Akun Investor terlebih dahulu.`
-        );
+        cashWarning = `Catatan: Saldo Buku Kas (${formatRupiah(currentBalanceDec.toNumber())}) lebih kecil dari harga beli (${formatRupiah(totalCashOut.toNumber())}). Unit tetap tersimpan dan saldo kas tercatat minus sementara sampai saldo awal diisi.`;
       }
 
       // 1c. Cek saldo bebas masing-masing pemodal sebelum membuat data
@@ -263,18 +281,25 @@ export async function createVehicleAction(input: CreateVehicleInput) {
         finalNotes = finalNotes ? `${finalNotes}\n\n${checklistSummary}` : checklistSummary;
       }
 
-      // 2. Buat Vehicle
+      // 2. Buat Vehicle (rapikan format plat, merk, model, warna)
+      const cleanBrand = formatReadableText(validated.brand);
+      const cleanModel =
+        cleanVehicleModel(cleanBrand, validated.model, validated.year) ||
+        formatReadableText(validated.model);
+      const cleanColor = formatReadableText(validated.color || "Hitam");
+
       const vehicle = await tx.vehicle.create({
         data: {
-          plateNumber: validated.plateNumber,
-          brand: validated.brand,
-          model: validated.model,
+          plateNumber: normalizedPlate,
+          brand: cleanBrand,
+          model: cleanModel,
           year: validated.year,
-          color: validated.color,
+          color: cleanColor,
           odometer: validated.odometer,
           transmission: validated.transmission,
           engineCapacity: validated.engineCapacity,
           sourceType: validated.sourceType,
+          status: validated.initialStatus || "INTAKE",
           auctionHouse: validated.auctionHouse,
           auctionLotType: validated.auctionLotType,
           purchasePrice: validated.purchasePrice,
@@ -433,14 +458,26 @@ export async function createVehicleAction(input: CreateVehicleInput) {
       return vehicle;
     });
 
+    revalidatePath("/admin");
     revalidatePath("/admin/inventory");
     revalidatePath("/admin/finance");
     revalidatePath("/admin/investors");
     revalidatePath("/admin/investors/accounts");
-    return { success: true, data: result };
+    revalidatePath("/katalog");
+    return {
+      success: true,
+      data: {
+        ...result,
+        purchasePrice: Number(result.purchasePrice),
+        targetSellingPrice: result.targetSellingPrice ? Number(result.targetSellingPrice) : null,
+        minSellingPrice: result.minSellingPrice ? Number(result.minSellingPrice) : null,
+        taxNominal: result.taxNominal ? Number(result.taxNominal) : null,
+      },
+      warning: cashWarning,
+    };
   } catch (error: any) {
     console.error("Error creating vehicle:", error);
-    return { success: false, error: error.message || "Gagal menambahkan unit baru" };
+    return { success: false, error: sanitizeActionError(error, "Gagal menambahkan unit baru") };
   }
 }
 
@@ -450,23 +487,33 @@ export async function updateVehicleStatusAction(vehicleId: string, toStatus: Veh
     const result = await prisma.$transaction(async (tx) => {
       const vehicle = await tx.vehicle.findUnique({
         where: { id: vehicleId },
+        include: {
+          sale: { select: { id: true } },
+        },
       });
       if (!vehicle) {
-        throw new Error("Unit tidak ditemukan");
+        throw new Error("Unit tidak ditemukan.");
       }
 
       // Validasi State Machine
       const currentStatus = vehicle.status as VehicleStatus;
       if (!canTransition(currentStatus, toStatus)) {
         throw new Error(
-          `Perubahan status dari ${currentStatus} ke ${toStatus} tidak diizinkan oleh sistem.`
+          `Perubahan status dari ${currentStatus} ke ${toStatus} tidak diizinkan.`
+        );
+      }
+
+      // Cegah status berubah balik ke READY_FOR_SALE sementara record Sale masih aktif (mencegah bug Sale_vehicleId_key)
+      if (vehicle.sale && toStatus === "READY_FOR_SALE") {
+        throw new Error(
+          "Unit ini masih memiliki catatan penjualan aktif (DP/Tempo). Gunakan tombol 'Batalkan Penjualan' di halaman detail penjualan agar buku kas dan status tetap sinkron."
         );
       }
 
       // Status Terjual Lunas (SOLD_SETTLED) tidak boleh diubah kosong dari menu status
       if (toStatus === "SOLD_SETTLED") {
         throw new Error(
-          "Status Terjual Lunas (SOLD_SETTLED) wajib dicatat melalui formulir Penjualan Resmi agar harga kesepakatan jual, identitas pembeli, kwitansi, dan kas masuk tercatat akurat."
+          "Status Terjual Lunas wajib dicatat melalui menu Penjualan agar harga jual, pembeli, dan kas masuk tercatat rapi."
         );
       }
 
@@ -490,11 +537,14 @@ export async function updateVehicleStatusAction(vehicleId: string, toStatus: Veh
       return updated;
     });
 
+    revalidatePath("/admin");
     revalidatePath("/admin/inventory");
+    revalidatePath(`/admin/inventory/${vehicleId}`);
+    revalidatePath("/katalog");
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Error updating vehicle status:", error);
-    return { success: false, error: error.message || "Gagal mengubah status unit" };
+    return { success: false, error: sanitizeActionError(error, "Gagal mengubah status unit") };
   }
 }
 
@@ -756,10 +806,15 @@ export async function updateVehicleAction(
 
       const updateData: any = {};
       if (data.plateNumber) {
-        updateData.plateNumber = data.plateNumber.trim().toUpperCase().replace(/\s+/g, "");
+        updateData.plateNumber = normalizePlateNumber(data.plateNumber);
       }
-      if (data.brand !== undefined) updateData.brand = data.brand.trim();
-      if (data.model !== undefined) updateData.model = data.model.trim();
+      if (data.brand !== undefined) updateData.brand = formatReadableText(data.brand);
+      if (data.model !== undefined) {
+        const refBrand = data.brand !== undefined ? data.brand : existing.brand;
+        const refYear = data.year !== undefined ? Number(data.year) : existing.year;
+        updateData.model =
+          cleanVehicleModel(refBrand, data.model, refYear) || formatReadableText(data.model);
+      }
       if (data.year !== undefined) updateData.year = Number(data.year);
       if (data.color !== undefined) updateData.color = data.color.trim();
       if (data.odometer !== undefined) updateData.odometer = Number(data.odometer);

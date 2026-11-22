@@ -413,6 +413,7 @@ export async function recordSupplyUsageAction(input: RecordUsageInput) {
         chargedHpp,
         workshopMargin,
         remainingStock: supply.currentStock - qty,
+        vehiclePlate: vehicle.plateNumber,
       };
     });
 
@@ -424,7 +425,7 @@ export async function recordSupplyUsageAction(input: RecordUsageInput) {
     return {
       success: true,
       data: result,
-      message: `Berhasil! Stok terpotong ${qty} unit. HPP Mobil ${input.vehicleId} bertambah Rp ${chargedHpp.toLocaleString("id-ID")}. Laba jasa mandiri showroom: Rp ${result.workshopMargin.toLocaleString("id-ID")}.`,
+      message: `Berhasil! Stok terpotong ${qty} unit. Modal unit ${result.vehiclePlate} bertambah Rp ${chargedHpp.toLocaleString("id-ID")}.`,
     };
   } catch (error: any) {
     console.error("Gagal mencatat pemakaian barang habis pakai:", error);

@@ -3,13 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth/session";
-import { 
-  createSaleSchema, 
-  createSalePaymentSchema, 
-  type CreateSaleInput, 
-  type CreateSalePaymentInput 
+import {
+  createSaleSchema,
+  updateSaleSchema,
+  createSalePaymentSchema,
+  type CreateSaleInput,
+  type UpdateSaleInput,
+  type CreateSalePaymentInput,
 } from "@/lib/validations/sale";
 import { calculateSaleSettlement, getReceivableDueDateStatus } from "@/lib/calculations/sale";
+import { sanitizeActionError, stripPlateSpaces } from "@/lib/utils";
 
 export async function createSaleAction(input: CreateSaleInput) {
   try {
@@ -18,10 +21,18 @@ export async function createSaleAction(input: CreateSaleInput) {
     const validated = createSaleSchema.parse(input);
 
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Cek unit kendaraan
+      // 1. Cek unit kendaraan & pastikan belum punya transaksi penjualan aktif
       const vehicle = await tx.vehicle.findUnique({
         where: { id: validated.vehicleId },
-        select: { id: true, brand: true, model: true, plateNumber: true, status: true },
+        select: {
+          id: true,
+          brand: true,
+          model: true,
+          plateNumber: true,
+          status: true,
+          notes: true,
+          sale: { select: { id: true } },
+        },
       });
       if (!vehicle) {
         throw new Error("Unit kendaraan tidak ditemukan.");
@@ -29,35 +40,51 @@ export async function createSaleAction(input: CreateSaleInput) {
       if (vehicle.status === "SOLD_SETTLED") {
         throw new Error("Unit kendaraan ini sudah terjual lunas sebelumnya.");
       }
+      if (vehicle.sale) {
+        throw new Error(
+          "Unit ini sudah memiliki catatan penjualan aktif (DP/Tempo). Buka menu Penjualan untuk mencatat pelunasan atau mengubah transaksi."
+        );
+      }
 
-      // 2. Buat atau cari Buyer
+      // 2. Buat atau cari Buyer (hindari duplikasi untuk showroom/pembeli langganan)
+      const normalizedPhone = validated.buyerPhone?.replace(/\s+/g, "").trim() || null;
+      const trimmedBuyerName = validated.buyerName.trim();
       let buyerId: string;
-      if (validated.buyerPhone) {
-        const existingBuyer = await tx.buyer.findFirst({
-          where: { phone: validated.buyerPhone },
+
+      let existingBuyer = normalizedPhone
+        ? await tx.buyer.findFirst({ where: { phone: normalizedPhone } })
+        : null;
+
+      if (!existingBuyer) {
+        existingBuyer = await tx.buyer.findFirst({
+          where: { name: trimmedBuyerName },
         });
-        if (existingBuyer) {
-          buyerId = existingBuyer.id;
-        } else {
-          const newBuyer = await tx.buyer.create({
-            data: {
-              name: validated.buyerName,
-              phone: validated.buyerPhone,
-              isShowroom: validated.buyerIsShowroom,
-              address: validated.buyerAddress,
-              notes: validated.buyerNotes,
-            },
+      }
+
+      if (existingBuyer) {
+        buyerId = existingBuyer.id;
+        // Perbarui nomor WA / alamat jika sebelumnya kosong atau berubah
+        const buyerPatch: Record<string, any> = {};
+        if (normalizedPhone && normalizedPhone !== existingBuyer.phone) {
+          buyerPatch.phone = normalizedPhone;
+        }
+        if (validated.buyerAddress && validated.buyerAddress !== existingBuyer.address) {
+          buyerPatch.address = validated.buyerAddress;
+        }
+        if (Object.keys(buyerPatch).length > 0) {
+          await tx.buyer.update({
+            where: { id: existingBuyer.id },
+            data: buyerPatch,
           });
-          buyerId = newBuyer.id;
         }
       } else {
         const newBuyer = await tx.buyer.create({
           data: {
-            name: validated.buyerName,
-            phone: validated.buyerPhone,
+            name: trimmedBuyerName,
+            phone: normalizedPhone,
             isShowroom: validated.buyerIsShowroom,
-            address: validated.buyerAddress,
-            notes: validated.buyerNotes,
+            address: validated.buyerAddress || null,
+            notes: validated.buyerNotes || null,
           },
         });
         buyerId = newBuyer.id;
@@ -129,10 +156,11 @@ export async function createSaleAction(input: CreateSaleInput) {
       if (validated.handoverOdometer && validated.handoverOdometer > 0) {
         vehicleUpdateData.odometer = validated.handoverOdometer;
       }
-      if (validated.handoverNotes) {
-        vehicleUpdateData.notes = vehicle.plateNumber 
-          ? `Serah terima: ${validated.handoverNotes}` 
-          : validated.handoverNotes;
+      if (validated.handoverNotes && validated.handoverNotes.trim()) {
+        const handoverLine = `[Serah Terima] ${validated.handoverNotes.trim()}`;
+        vehicleUpdateData.notes = vehicle.notes
+          ? `${vehicle.notes}\n\n${handoverLine}`
+          : handoverLine;
       }
 
       await tx.vehicle.update({
@@ -140,50 +168,47 @@ export async function createSaleAction(input: CreateSaleInput) {
         data: vehicleUpdateData,
       });
 
-      // 6. Simpan Dokumen Legalitas & Foto Serah Terima (Jika diunggah)
+      // 6. Simpan Dokumen Legalitas & Foto Serah Terima (hindari duplikat jika /api/upload sudah membuat record)
       if (validated.handoverPhotoUrl) {
-        await tx.vehiclePhoto.create({
-          data: {
-            vehicleId: validated.vehicleId,
-            category: "DOCUMENT_PROOF",
-            tag: "HANDOVER_DELIVERY",
-            title: "Foto Serah Terima Unit & Kunci ke Konsumen",
-            fileUrl: validated.handoverPhotoUrl,
-          },
+        const existsPhoto = await tx.vehiclePhoto.findFirst({
+          where: { vehicleId: validated.vehicleId, fileUrl: validated.handoverPhotoUrl },
+          select: { id: true },
         });
+        if (!existsPhoto) {
+          await tx.vehiclePhoto.create({
+            data: {
+              vehicleId: validated.vehicleId,
+              category: "DOCUMENT_PROOF",
+              tag: "HANDOVER_DELIVERY",
+              title: "Foto Serah Terima Unit & Kunci ke Konsumen",
+              fileUrl: validated.handoverPhotoUrl,
+            },
+          });
+        }
       }
 
-      if (validated.bastDocUrl) {
-        await tx.vehicleDocument.create({
-          data: {
-            vehicleId: validated.vehicleId,
-            type: "OTHER",
-            fileUrl: validated.bastDocUrl,
-            uploadedBy: "Admin (BAST Bertandatangan)",
-          },
-        });
-      }
+      const docsToArchive: Array<{ url?: string | null; type: "OTHER" | "KUITANSI" | "KTP_PEMILIK"; label: string }> = [
+        { url: validated.bastDocUrl, type: "OTHER", label: `${actorLabel} (BAST)` },
+        { url: validated.paymentReceiptUrl, type: "KUITANSI", label: `${actorLabel} (Bukti Bayar)` },
+        { url: validated.buyerIdCardUrl, type: "KTP_PEMILIK", label: `${actorLabel} (KTP Pembeli)` },
+      ];
 
-      if (validated.paymentReceiptUrl) {
-        await tx.vehicleDocument.create({
-          data: {
-            vehicleId: validated.vehicleId,
-            type: "KUITANSI",
-            fileUrl: validated.paymentReceiptUrl,
-            uploadedBy: "Admin (Bukti Pelunasan)",
-          },
+      for (const docItem of docsToArchive) {
+        if (!docItem.url) continue;
+        const existsDoc = await tx.vehicleDocument.findFirst({
+          where: { vehicleId: validated.vehicleId, fileUrl: docItem.url },
+          select: { id: true },
         });
-      }
-
-      if (validated.buyerIdCardUrl) {
-        await tx.vehicleDocument.create({
-          data: {
-            vehicleId: validated.vehicleId,
-            type: "KTP_PEMILIK",
-            fileUrl: validated.buyerIdCardUrl,
-            uploadedBy: "Admin (KTP Pembeli)",
-          },
-        });
+        if (!existsDoc) {
+          await tx.vehicleDocument.create({
+            data: {
+              vehicleId: validated.vehicleId,
+              type: docItem.type,
+              fileUrl: docItem.url,
+              uploadedBy: docItem.label,
+            },
+          });
+        }
       }
 
       // 7. Catat Beban Komisi Makelar / Perantara (Jika Ada)
@@ -241,14 +266,21 @@ export async function createSaleAction(input: CreateSaleInput) {
       return sale;
     });
 
+    revalidatePath("/admin");
     revalidatePath("/admin/sales");
     revalidatePath("/admin/inventory");
     revalidatePath("/admin/finance");
-    revalidatePath("/admin/dashboard");
-    return { success: true, data: result };
+    revalidatePath("/katalog");
+    return {
+      success: true,
+      data: {
+        ...result,
+        sellingPrice: Number(result.sellingPrice),
+      },
+    };
   } catch (error: any) {
     console.error("Error creating sale:", error);
-    return { success: false, error: error.message || "Gagal mencatat penjualan unit" };
+    return { success: false, error: sanitizeActionError(error, "Gagal mencatat penjualan unit") };
   }
 }
 
@@ -357,14 +389,15 @@ export async function addSalePaymentAction(input: CreateSalePaymentInput) {
       };
     });
 
+    revalidatePath("/admin");
     revalidatePath("/admin/sales");
+    revalidatePath(`/admin/sales/${validated.saleId}`);
     revalidatePath("/admin/inventory");
     revalidatePath("/admin/finance");
-    revalidatePath("/admin/dashboard");
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Error adding sale payment:", error);
-    return { success: false, error: error.message || "Gagal mencatat pembayaran" };
+    return { success: false, error: sanitizeActionError(error, "Gagal mencatat pembayaran") };
   }
 }
 
@@ -496,9 +529,11 @@ export async function getSalesAction(filters?: {
 
     if (filters?.search) {
       const q = filters.search.toLowerCase();
+      const compactQ = stripPlateSpaces(filters.search);
       filtered = filtered.filter(
         (s) =>
           s.vehicle.plateNumber.toLowerCase().includes(q) ||
+          (compactQ && stripPlateSpaces(s.vehicle.plateNumber).includes(compactQ)) ||
           s.vehicle.brand.toLowerCase().includes(q) ||
           s.vehicle.model.toLowerCase().includes(q) ||
           s.buyer.name.toLowerCase().includes(q) ||
@@ -639,7 +674,279 @@ export async function getSaleByIdAction(id: string) {
 }
 
 /**
- * Me-reset status penjualan kendaraan kembali ke READY_FOR_SALE dan menghapus data Sale dummy/batal.
+ * Ambil daftar pembeli & showroom rekanan yang tersimpan di database untuk pilihan cepat.
+ */
+export async function getBuyersAction() {
+  try {
+    await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const buyers = await prisma.buyer.findMany({
+      include: {
+        _count: { select: { sales: true } },
+      },
+      orderBy: [{ isShowroom: "desc" }, { createdAt: "desc" }],
+    });
+
+    const sorted = buyers
+      .map((b) => ({
+        id: b.id,
+        name: b.name,
+        phone: b.phone || "",
+        isShowroom: b.isShowroom,
+        address: b.address || "",
+        salesCount: b._count.sales,
+      }))
+      .sort((a, b) => b.salesCount - a.salesCount || Number(b.isShowroom) - Number(a.isShowroom));
+
+    return { success: true, data: sorted };
+  } catch (error: any) {
+    console.error("Error fetching buyers:", error);
+    return { success: false, error: sanitizeActionError(error, "Gagal memuat daftar pembeli"), data: [] };
+  }
+}
+
+/**
+ * Perbarui informasi transaksi penjualan (harga deal, tanggal, jatuh tempo, data pembeli).
+ */
+export async function updateSaleAction(input: UpdateSaleInput) {
+  try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const validated = updateSaleSchema.parse(input);
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const sale = await tx.sale.findUnique({
+        where: { id: validated.saleId },
+        include: {
+          payments: true,
+          distributions: true,
+          buyer: true,
+          vehicle: true,
+        },
+      });
+
+      if (!sale) {
+        throw new Error("Transaksi penjualan tidak ditemukan.");
+      }
+
+      const hasActiveDistribution = sale.distributions.some(
+        (d) => !d.notes?.includes("[REVERSED]")
+      );
+      if (hasActiveDistribution) {
+        throw new Error(
+          "Transaksi ini sudah selesai bagi hasil ke investor sehingga tidak bisa diedit. Lakukan pembatalan bagi hasil terlebih dahulu jika perlu koreksi."
+        );
+      }
+
+      await tx.buyer.update({
+        where: { id: sale.buyerId },
+        data: {
+          name: validated.buyerName,
+          phone: validated.buyerPhone || null,
+          address: validated.buyerAddress || null,
+          isShowroom: validated.buyerIsShowroom,
+        },
+      });
+
+      const nextSale = await tx.sale.update({
+        where: { id: sale.id },
+        data: {
+          saleDate: validated.saleDate,
+          saleType: validated.saleType,
+          sellingPrice: validated.sellingPrice,
+          dueDate: validated.dueDate ?? null,
+        },
+      });
+
+      const settlement = calculateSaleSettlement(validated.sellingPrice, sale.payments);
+      const nextStatus = settlement.isFullyPaid
+        ? "SOLD_SETTLED"
+        : validated.saleType === "SHOWROOM"
+        ? "AT_SHOWROOM_PENDING"
+        : "BOOKED";
+
+      await tx.vehicle.update({
+        where: { id: sale.vehicleId },
+        data: { status: nextStatus },
+      });
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "UPDATE",
+          entityType: "Sale",
+          entityId: sale.id,
+          beforeData: {
+            sellingPrice: Number(sale.sellingPrice),
+            saleDate: sale.saleDate,
+            saleType: sale.saleType,
+            dueDate: sale.dueDate,
+            buyerName: sale.buyer.name,
+          } as any,
+          afterData: {
+            sellingPrice: validated.sellingPrice,
+            saleDate: validated.saleDate,
+            saleType: validated.saleType,
+            dueDate: validated.dueDate ?? null,
+            buyerName: validated.buyerName,
+          } as any,
+        },
+      });
+
+      return nextSale;
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/sales");
+    revalidatePath(`/admin/sales/${validated.saleId}`);
+    revalidatePath("/admin/inventory");
+    revalidatePath("/katalog");
+
+    return {
+      success: true,
+      data: {
+        ...updated,
+        sellingPrice: Number(updated.sellingPrice),
+      },
+    };
+  } catch (error: any) {
+    console.error("Error updating sale:", error);
+    return { success: false, error: sanitizeActionError(error, "Gagal memperbarui transaksi penjualan") };
+  }
+}
+
+/**
+ * Batalkan transaksi penjualan secara rapi & aman terhadap Buku Kas (append-only).
+ * mode:
+ * - VOID_MISTAKE : Salah input (balikkan seluruh kas masuk & kembalikan unit ke Siap Jual)
+ * - REFUND_CASH  : Pembeli batal & uang DP/bayar dikembalikan (catat kas keluar pengembalian)
+ * - FORFEIT_DP   : Pembeli batal & uang DP hangus (kas tetap utuh sebagai pendapatan showroom)
+ */
+export async function cancelSaleAction(
+  saleId: string,
+  options: {
+    mode: "VOID_MISTAKE" | "REFUND_CASH" | "FORFEIT_DP";
+    reason?: string;
+  }
+) {
+  try {
+    const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    const actorLabel = session.fullName || "Owner/Admin";
+
+    const result = await prisma.$transaction(async (tx) => {
+      const sale = await tx.sale.findUnique({
+        where: { id: saleId },
+        include: {
+          vehicle: true,
+          payments: true,
+          distributions: true,
+          cashTransactions: true,
+        },
+      });
+
+      if (!sale) {
+        throw new Error("Transaksi penjualan tidak ditemukan.");
+      }
+
+      const hasActiveDistribution = sale.distributions.some(
+        (d) => !d.notes?.includes("[REVERSED]")
+      );
+      if (hasActiveDistribution) {
+        throw new Error(
+          "Transaksi ini sudah selesai bagi hasil ke investor. Lakukan reversal bagi hasil dulu di menu Investor sebelum membatalkan penjualan."
+        );
+      }
+
+      // Hitung total uang riil masuk dari penjualan ini (non trade-in)
+      const totalCashIn = sale.cashTransactions
+        .filter((c) => c.type === "IN_SALE_PAYMENT")
+        .reduce((acc, c) => acc + Number(c.amount), 0);
+
+      // Catat pembalikan kas secara append-only (tidak menghapus baris lama agar runningBalance tetap akurat)
+      if (totalCashIn > 0 && options.mode !== "FORFEIT_DP") {
+        const lastCashTx = await tx.cashTransaction.findFirst({
+          orderBy: { createdAt: "desc" },
+          select: { runningBalance: true, createdAt: true },
+        });
+        const currentBal = lastCashTx ? Number(lastCashTx.runningBalance) : 0;
+        const nextTs = Math.max(
+          Date.now(),
+          lastCashTx ? new Date(lastCashTx.createdAt).getTime() + 1 : 0
+        );
+        const noteLabel =
+          options.mode === "REFUND_CASH"
+            ? `Pengembalian DP/Bayar (Batal Jual): ${sale.vehicle.brand} ${sale.vehicle.model} (${sale.vehicle.plateNumber})${options.reason ? ` - ${options.reason}` : ""}`
+            : `Koreksi Batal Input Penjualan: ${sale.vehicle.brand} ${sale.vehicle.model} (${sale.vehicle.plateNumber})${options.reason ? ` - ${options.reason}` : ""}`;
+
+        await tx.cashTransaction.create({
+          data: {
+            type: "OUT_OTHER",
+            amount: totalCashIn,
+            relatedVehicleId: sale.vehicleId,
+            runningBalance: currentBal - totalCashIn,
+            notes: noteLabel,
+            createdAt: new Date(nextTs),
+            createdBy: actorLabel,
+          },
+        });
+      }
+
+      // Lepaskan relasi FK ke Sale sebelum menghapus record Sale agar unit bisa dijual lagi
+      await tx.notificationLog.updateMany({
+        where: { relatedSaleId: sale.id },
+        data: { relatedSaleId: null },
+      });
+      await tx.cashTransaction.updateMany({
+        where: { relatedSaleId: sale.id },
+        data: { relatedSaleId: null },
+      });
+
+      await tx.sale.delete({ where: { id: sale.id } });
+
+      const updatedVehicle = await tx.vehicle.update({
+        where: { id: sale.vehicleId },
+        data: { status: "READY_FOR_SALE" },
+      });
+
+      await tx.auditLog.create({
+        data: {
+          actorUserId: session.userId,
+          action: "CANCEL_SALE",
+          entityType: "Sale",
+          entityId: sale.id,
+          beforeData: {
+            plateNumber: sale.vehicle.plateNumber,
+            sellingPrice: Number(sale.sellingPrice),
+            totalCashIn,
+          } as any,
+          afterData: {
+            mode: options.mode,
+            reason: options.reason || null,
+            nextVehicleStatus: "READY_FOR_SALE",
+          } as any,
+        },
+      });
+
+      return updatedVehicle;
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/sales");
+    revalidatePath("/admin/inventory");
+    revalidatePath(`/admin/inventory/${result.id}`);
+    revalidatePath("/admin/finance");
+    revalidatePath("/katalog");
+
+    return {
+      success: true,
+      message: `Penjualan unit ${result.plateNumber} dibatalkan dan unit kembali ke status Siap Jual.`,
+    };
+  } catch (error: any) {
+    console.error("Error cancelling sale:", error);
+    return { success: false, error: sanitizeActionError(error, "Gagal membatalkan penjualan") };
+  }
+}
+
+/**
+ * Me-reset status penjualan kendaraan kembali ke READY_FOR_SALE dengan koreksi kas append-only.
  */
 export async function resetVehicleSaleAction(vehicleId: string) {
   try {
@@ -664,28 +971,63 @@ export async function resetVehicleSaleAction(vehicleId: string) {
         throw new Error("Unit kendaraan tidak ditemukan.");
       }
 
-      // 1. Bersihkan transaksi penjualan (Sale) jika ada
       if (vehicle.sale) {
         const saleId = vehicle.sale.id;
+        const hasActiveDistribution = vehicle.sale.distributions.some(
+          (d) => !d.notes?.includes("[REVERSED]")
+        );
+        if (hasActiveDistribution) {
+          throw new Error(
+            "Unit ini sudah selesai bagi hasil investor. Batalkan bagi hasil dulu di menu Investor sebelum reset penjualan."
+          );
+        }
 
-        // Lepas referensi NotificationLog
+        // Hitung selisih bersih kas dari sale ini (IN - OUT) dan buat jurnal pembalik append-only
+        let netIn = 0;
+        for (const c of vehicle.sale.cashTransactions) {
+          const amt = Number(c.amount);
+          if (c.type.startsWith("IN_")) netIn += amt;
+          else if (c.type.startsWith("OUT_")) netIn -= amt;
+        }
+
+        if (netIn !== 0) {
+          const lastCashTx = await tx.cashTransaction.findFirst({
+            orderBy: { createdAt: "desc" },
+            select: { runningBalance: true, createdAt: true },
+          });
+          const curBal = lastCashTx ? Number(lastCashTx.runningBalance) : 0;
+          const nextTs = Math.max(
+            Date.now(),
+            lastCashTx ? new Date(lastCashTx.createdAt).getTime() + 1 : 0
+          );
+
+          await tx.cashTransaction.create({
+            data: {
+              type: netIn > 0 ? "OUT_OTHER" : "IN_OTHER",
+              amount: Math.abs(netIn),
+              relatedVehicleId: vehicle.id,
+              runningBalance: curBal - netIn,
+              notes: `Koreksi Reset Penjualan: ${vehicle.brand} ${vehicle.model} (${vehicle.plateNumber})`,
+              createdAt: new Date(nextTs),
+              createdBy: actorLabel,
+            },
+          });
+        }
+
         await tx.notificationLog.updateMany({
           where: { relatedSaleId: saleId },
           data: { relatedSaleId: null },
         });
-
-        // Hapus cash transactions yang berkaitan dengan penjualan ini
-        await tx.cashTransaction.deleteMany({
+        await tx.cashTransaction.updateMany({
           where: { relatedSaleId: saleId },
+          data: { relatedSaleId: null },
         });
 
-        // Hapus Sale (Cascade menghapus SalePayment dan ProfitDistribution)
         await tx.sale.delete({
           where: { id: saleId },
         });
       }
 
-      // 2. Kembalikan status kendaraan ke READY_FOR_SALE
       const updatedVehicle = await tx.vehicle.update({
         where: { id: vehicleId },
         data: {
@@ -693,7 +1035,6 @@ export async function resetVehicleSaleAction(vehicleId: string) {
         },
       });
 
-      // 3. Tulis AuditLog
       await tx.auditLog.create({
         data: {
           actorUserId: session.userId,
@@ -725,6 +1066,7 @@ export async function resetVehicleSaleAction(vehicleId: string) {
       return updatedVehicle;
     });
 
+    revalidatePath("/admin");
     revalidatePath("/admin/inventory");
     revalidatePath(`/admin/inventory/${vehicleId}`);
     revalidatePath("/admin/sales");
@@ -735,11 +1077,11 @@ export async function resetVehicleSaleAction(vehicleId: string) {
 
     return {
       success: true,
-      message: `Status unit ${result.plateNumber} berhasil di-reset kembali ke Ready Jual. Data transaksi penjualan dummy telah dibersihkan.`,
+      message: `Status unit ${result.plateNumber} dikembalikan ke Siap Jual dan kas telah disesuaikan.`,
     };
   } catch (error: any) {
     console.error("Error resetting vehicle sale:", error);
-    return { success: false, error: error.message || "Gagal me-reset transaksi penjualan" };
+    return { success: false, error: sanitizeActionError(error, "Gagal me-reset transaksi penjualan") };
   }
 }
 

@@ -3,14 +3,43 @@
  */
 
 export function cleanNumber(val: any): number {
-  if (typeof val === "number") return val;
+  if (typeof val === "number") return Number.isFinite(val) ? val : 0;
   if (!val) return 0;
-  const cleaned = String(val)
-    .replace(/[^\d,-]/g, "")
-    .replace(/\./g, "")
-    .replace(/,/g, ".");
-  const num = Number(cleaned);
-  return isNaN(num) ? 0 : num;
+
+  let raw = String(val)
+    .replace(/Rp\.?/gi, "")
+    .replace(/\s+/g, "")
+    .replace(/[^\d.,-]/g, "");
+
+  if (!raw || raw === "-") return 0;
+
+  const dots = (raw.match(/\./g) || []).length;
+  const commas = (raw.match(/,/g) || []).length;
+
+  if (dots > 0 && commas > 0) {
+    if (raw.lastIndexOf(",") > raw.lastIndexOf(".")) {
+      // Format Indonesia: 150.000.000,50
+      raw = raw.replace(/\./g, "").replace(",", ".");
+    } else {
+      // Format Inggris: 150,000,000.50
+      raw = raw.replace(/,/g, "");
+    }
+  } else if (commas > 1) {
+    // Ribuan dengan koma: 150,000,000
+    raw = raw.replace(/,/g, "");
+  } else if (dots > 1) {
+    // Ribuan dengan titik: 150.000.000
+    raw = raw.replace(/\./g, "");
+  } else if (commas === 1) {
+    const parts = raw.split(",");
+    raw = parts[1].length === 3 ? parts.join("") : parts.join(".");
+  } else if (dots === 1) {
+    const parts = raw.split(".");
+    raw = parts[1].length === 3 ? parts.join("") : raw;
+  }
+
+  const num = Number(raw);
+  return Number.isFinite(num) ? num : 0;
 }
 
 export function cleanDate(val: any): Date {

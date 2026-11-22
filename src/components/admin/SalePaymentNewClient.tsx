@@ -26,7 +26,15 @@ import {
 } from "lucide-react";
 import { addSalePaymentAction } from "@/app/actions/sale";
 import { executeProfitDistribution } from "@/app/actions/finance";
-import { formatRupiah, formatDate } from "@/lib/utils";
+import {
+  formatRupiah,
+  formatDate,
+  formatThousands,
+  parseThousands,
+  getTodayWibDateString,
+  normalizePlateNumber,
+  formatVehicleTitle,
+} from "@/lib/utils";
 import { ProofUploadField } from "@/components/admin/ProofUploadField";
 
 interface AvailableVehicle {
@@ -92,9 +100,7 @@ export function SalePaymentNewClient({
   const router = useRouter();
 
   const [amount, setAmount] = useState<number | "">(sale.remainingAmount);
-  const [paidAt, setPaidAt] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [paidAt, setPaidAt] = useState(() => getTodayWibDateString());
   const [method, setMethod] = useState("TRANSFER");
   const [tradeInVehicleId, setTradeInVehicleId] = useState("");
   const [notes, setNotes] = useState("");
@@ -183,25 +189,15 @@ export function SalePaymentNewClient({
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/admin/sales"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
-          >
-            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
-            <span>Kembali ke Penjualan</span>
-          </Link>
-          <div>
-            <h1 className="text-xl font-bold text-[var(--ink)]">
-              Catat Pembayaran Masuk / Pelunasan
-            </h1>
-            <p className="text-xs text-[var(--muted)]">
-              Pencatatan angsuran tempo atau pelunasan penjualan unit mobil.
-            </p>
-          </div>
-        </div>
+      {/* Navigasi Kembali */}
+      <div>
+        <Link
+          href="/admin/sales"
+          className="inline-flex items-center gap-2 px-3.5 py-2 min-h-[44px] rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
+          <span>Kembali ke Penjualan</span>
+        </Link>
       </div>
 
       {/* Info Card Unit & Buyer */}
@@ -211,12 +207,12 @@ export function SalePaymentNewClient({
             <Car className="w-6 h-6" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="font-extrabold text-base text-[var(--ink)]">
-                {sale.vehicle.brand} {sale.vehicle.model}
+                {formatVehicleTitle(sale.vehicle.brand, sale.vehicle.model, sale.vehicle.year)}
               </span>
               <span className="text-xs font-mono font-bold text-[var(--accent)] bg-white px-2 py-0.5 rounded border border-[var(--line)]">
-                {sale.vehicle.plateNumber}
+                {normalizePlateNumber(sale.vehicle.plateNumber)}
               </span>
             </div>
             <div className="text-xs text-[var(--muted)] mt-1 flex items-center gap-2">
@@ -279,24 +275,29 @@ export function SalePaymentNewClient({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Nominal Pembayaran Masuk (Rp) *
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-xs font-semibold text-[var(--ink)]">
+                  Nominal Pembayaran Masuk (Rp) *
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setAmount(sale.remainingAmount)}
+                  className="text-[11px] font-bold text-[var(--accent)] hover:underline cursor-pointer"
+                >
+                  Lunasi Penuh
+                </button>
+              </div>
               <input
                 required
-                type="number"
-                min={1}
-                max={sale.remainingAmount}
-                value={amount}
-                onChange={(e) =>
-                  setAmount(
-                    e.target.value === "" ? "" : Number(e.target.value)
-                  )
-                }
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                type="text"
+                inputMode="numeric"
+                placeholder="Contoh: 50.000.000"
+                value={amount !== "" ? formatThousands(amount) : ""}
+                onChange={(e) => setAmount(parseThousands(e.target.value) || "")}
+                className="w-full px-3.5 py-2.5 min-h-[46px] bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
               />
               <span className="text-[10px] text-[var(--muted)] mt-1 block">
-                Maksimal sisa piutang: {formatRupiah(sale.remainingAmount)}
+                Sisa tagihan: {formatRupiah(sale.remainingAmount)}
               </span>
             </div>
 

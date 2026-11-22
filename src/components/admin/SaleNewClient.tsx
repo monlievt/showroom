@@ -1,37 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Car,
-  DollarSign,
   User,
-  Calendar,
   AlertTriangle,
   CheckCircle,
   Loader2,
-  FileCheck,
-  TrendingUp,
-  ShieldAlert,
-  ShieldCheck,
-  Camera,
-  FileText,
+  ChevronDown,
   Upload,
-  CheckSquare,
-  Square,
   Trash2,
   Eye,
-  FileUp,
-  Users,
-  Gauge,
-  ClipboardCheck,
-  Receipt,
-  FileBadge,
+  CheckSquare,
+  Square,
+  Info,
 } from "lucide-react";
 import { createSaleAction } from "@/app/actions/sale";
-import { formatRupiah, cn, formatThousands, parseThousands } from "@/lib/utils";
+import {
+  formatRupiah,
+  cn,
+  formatThousands,
+  parseThousands,
+  normalizePlateNumber,
+  formatVehicleTitle,
+  getTodayWibDateString,
+} from "@/lib/utils";
 
 interface AvailableVehicle {
   id: string;
@@ -45,23 +41,62 @@ interface AvailableVehicle {
   status: string;
 }
 
+interface SavedBuyer {
+  id: string;
+  name: string;
+  phone: string;
+  isShowroom: boolean;
+  address: string;
+  salesCount: number;
+}
+
+interface AlreadySoldInfo {
+  saleId: string;
+  plateNumber: string;
+  brand: string;
+  model: string;
+  year: number;
+  isFullyPaid: boolean;
+}
+
 const DEFAULT_CHECKLIST = [
-  { id: "BPKB_ORIGINAL", label: "BPKB Asli & Faktur Pembelian Asli" },
-  { id: "STNK_ORIGINAL", label: "STNK Asli & Bukti Pajak Berjalan" },
-  { id: "SPK_BAST_SIGNED", label: "BAST Bertandatangan & Bermeterai" },
-  { id: "SPARE_KEY", label: "Kunci Cadangan / Serep (2 Pcs Lengkap)" },
-  { id: "MANUAL_BOOK", label: "Buku Manual & Buku Rekam Servis" },
-  { id: "SPARE_TIRE_TOOLKIT", label: "Ban Serep, Dongkrak & Tool Kit Lengkap" },
+  { id: "BPKB_ORIGINAL", label: "BPKB Asli & Faktur" },
+  { id: "STNK_ORIGINAL", label: "STNK Asli & Pajak" },
+  { id: "SPK_BAST_SIGNED", label: "BAST Bertandatangan" },
+  { id: "SPARE_KEY", label: "Kunci Cadangan" },
+  { id: "MANUAL_BOOK", label: "Buku Manual / Servis" },
+  { id: "SPARE_TIRE_TOOLKIT", label: "Ban Serep & Dongkrak" },
 ];
+
+const FALLBACK_PARTNERS = [
+  { name: "Showroom Kcunk Motor", address: "Tulungagung, Jawa Timur", isShowroom: true },
+  { name: "Balai Lelang JBA Surabaya", address: "Sidoarjo / Surabaya", isShowroom: true },
+  { name: "Balai Lelang IBID Surabaya", address: "Surabaya", isShowroom: true },
+];
+
+function addDaysToDateStr(dateStr: string, days: number): string {
+  const d = new Date(`${dateStr}T00:00:00`);
+  if (isNaN(d.getTime())) return dateStr;
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
 
 export function SaleNewClient({
   availableVehicles,
+  savedBuyers = [],
   initialVehicleId,
+  alreadySoldInfo = null,
 }: {
   availableVehicles: AvailableVehicle[];
+  savedBuyers?: SavedBuyer[];
   initialVehicleId?: string;
+  alreadySoldInfo?: AlreadySoldInfo | null;
 }) {
   const router = useRouter();
+  const topRef = useRef<HTMLDivElement>(null);
 
   const preselected = initialVehicleId
     ? availableVehicles.find((v) => v.id === initialVehicleId)
@@ -70,44 +105,36 @@ export function SaleNewClient({
   const [vehicleId, setVehicleId] = useState(
     preselected?.id || availableVehicles[0]?.id || ""
   );
-  const [saleDate, setSaleDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
-  const [saleType, setSaleType] = useState("DIRECT_CUSTOMER");
-  // Default kosong ("") agar admin wajib mengetikkan harga deal hasil nego secara sadar
+  const [saleDate, setSaleDate] = useState(() => getTodayWibDateString());
+  const [saleType, setSaleType] = useState<"DIRECT_CUSTOMER" | "SHOWROOM">("SHOWROOM");
   const [sellingPrice, setSellingPrice] = useState<number | "">("");
-  const [dueDate, setDueDate] = useState("");
 
   const [buyerName, setBuyerName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
-  const [buyerIsShowroom, setBuyerIsShowroom] = useState(false);
+  const [buyerIsShowroom, setBuyerIsShowroom] = useState(true);
   const [buyerAddress, setBuyerAddress] = useState("");
 
-  const [initialPaymentAmount, setInitialPaymentAmount] = useState<number | "">(
-    ""
-  );
+  // Mode pembayaran sederhana: LUNAS vs TEMPO
+  const [paymentMode, setPaymentMode] = useState<"LUNAS" | "TEMPO">("LUNAS");
+  const [initialPaymentAmount, setInitialPaymentAmount] = useState<number | "">("");
   const [initialPaymentMethod, setInitialPaymentMethod] = useState("TRANSFER");
+  const [dueDate, setDueDate] = useState(() => addDaysToDateStr(getTodayWibDateString(), 14));
 
-  // State Serah Terima Fisik & Dokumen Legalitas
+  // Bagian opsional (dilipat secara default agar tidak membingungkan di HP)
+  const [showOptional, setShowOptional] = useState(false);
   const [handoverOdometer, setHandoverOdometer] = useState<number | "">("");
   const [handoverPhotoUrl, setHandoverPhotoUrl] = useState("");
   const [bastDocUrl, setBastDocUrl] = useState("");
   const [paymentReceiptUrl, setPaymentReceiptUrl] = useState("");
   const [buyerIdCardUrl, setBuyerIdCardUrl] = useState("");
   const [handoverChecklist, setHandoverChecklist] = useState<string[]>([
-    "BPKB_ORIGINAL",
     "STNK_ORIGINAL",
-    "SPK_BAST_SIGNED",
     "SPARE_KEY",
-    "SPARE_TIRE_TOOLKIT",
   ]);
   const [handoverNotes, setHandoverNotes] = useState("");
-
-  // State Komisi Makelar / Mediator
   const [brokerName, setBrokerName] = useState("");
   const [brokerFee, setBrokerFee] = useState<number | "">("");
 
-  // Upload loading states
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingBast, setUploadingBast] = useState(false);
   const [uploadingReceipt, setUploadingReceipt] = useState(false);
@@ -118,29 +145,54 @@ export function SaleNewClient({
   const [successMsg, setSuccessMsg] = useState("");
 
   const selectedUnit = availableVehicles.find((v) => v.id === vehicleId);
-
   const priceNum = Number(sellingPrice) || 0;
-  const initialNum = Number(initialPaymentAmount) || 0;
+  const effectiveInitialPay =
+    paymentMode === "LUNAS" ? priceNum : Number(initialPaymentAmount) || 0;
   const brokerFeeNum = Number(brokerFee) || 0;
-  const remainingPiutang = Math.max(0, priceNum - initialNum);
+  const remainingPiutang = Math.max(0, priceNum - effectiveInitialPay);
   const estimatedGrossProfit = selectedUnit
     ? priceNum - selectedUnit.totalHpp - brokerFeeNum
     : 0;
 
-  // Kebijakan Cash Tempo Khusus Nur Mobil
-  // DP minimal 70% hanya wajib untuk Konsumen Langsung (Retail).
-  // Untuk transaksi B2B Showroom Rekanan / Balai Lelang, tempo fleksibel sesuai kesepakatan B2B.
-  const isTempo = priceNum > 0 && initialNum < priceNum;
+  // Peringatan lembut (tidak memblokir simpan)
   const minDp70 = Math.ceil(priceNum * 0.7);
-  const isDpValid = saleType === "SHOWROOM" || !isTempo || initialNum >= minDp70;
-  const maxDueDate = new Date(new Date(saleDate).getTime() + 30 * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .split("T")[0];
+  const showLowDpWarning =
+    paymentMode === "TEMPO" &&
+    saleType === "DIRECT_CUSTOMER" &&
+    priceNum > 0 &&
+    effectiveInitialPay < minDp70;
 
-  // Helper upload file langsung ke /api/upload
+  const diffTempoDays =
+    paymentMode === "TEMPO" && dueDate
+      ? Math.ceil(
+          (new Date(`${dueDate}T00:00:00`).getTime() -
+            new Date(`${saleDate}T00:00:00`).getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      : 0;
+  const showLongTempoWarning = paymentMode === "TEMPO" && diffTempoDays > 30;
+
+  // Gabungkan rekanan dari database + fallback bila database buyer masih kosong
+  const quickPartners =
+    savedBuyers.length > 0
+      ? savedBuyers.slice(0, 6)
+      : FALLBACK_PARTNERS.map((p, idx) => ({
+          id: `fallback-${idx}`,
+          name: p.name,
+          phone: "",
+          address: p.address,
+          isShowroom: p.isShowroom,
+          salesCount: 0,
+        }));
+
+  const showError = (msg: string) => {
+    setErrorMsg(msg);
+    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const handleFileUpload = async (
     file: File,
-    uploadType: "PHOTO" | "DOCUMENT" | "RECEIPT",
+    uploadType: "PHOTO" | "DOCUMENT",
     setLoadingState: (val: boolean) => void,
     setUrlState: (url: string) => void,
     docType?: string,
@@ -148,7 +200,7 @@ export function SaleNewClient({
     title?: string
   ) => {
     if (!vehicleId) {
-      setErrorMsg("Pilih unit kendaraan terlebih dahulu sebelum mengunggah file.");
+      showError("Pilih unit kendaraan terlebih dahulu sebelum unggah berkas.");
       return;
     }
     setLoadingState(true);
@@ -163,23 +215,18 @@ export function SaleNewClient({
         formData.append("category", "DOCUMENT_PROOF");
         if (tag) formData.append("tag", tag);
         if (title) formData.append("title", title);
-      } else {
-        if (docType) formData.append("docType", docType);
+      } else if (docType) {
+        formData.append("docType", docType);
       }
 
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok || data.error) {
         throw new Error(data.error || "Gagal mengunggah file");
       }
-
       setUrlState(data.fileUrl);
     } catch (err: any) {
-      setErrorMsg(err.message || "Gagal mengunggah file");
+      showError(err.message || "Gagal mengunggah file");
     } finally {
       setLoadingState(false);
     }
@@ -194,38 +241,16 @@ export function SaleNewClient({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!vehicleId) {
-      setErrorMsg("Pilih unit kendaraan yang dijual");
+      showError("Pilih unit kendaraan yang terjual terlebih dahulu.");
       return;
     }
     if (!sellingPrice || Number(sellingPrice) <= 0) {
-      setErrorMsg("Harga kesepakatan jual harus diisi");
+      showError("Isi harga jual terlebih dahulu.");
       return;
     }
     if (!buyerName.trim()) {
-      setErrorMsg("Nama pembeli / showroom wajib diisi");
+      showError("Isi nama pembeli atau showroom terlebih dahulu.");
       return;
-    }
-
-    if (isTempo) {
-      if (saleType === "DIRECT_CUSTOMER" && initialNum < minDp70) {
-        setErrorMsg(
-          `Kebijakan Nur Mobil: Pembelian Cash Tempo Konsumen Retail wajib DP minimal 70% (${formatRupiah(minDp70)}). Tidak melayani kredit.`
-        );
-        return;
-      }
-      if (!dueDate) {
-        setErrorMsg("Tanggal jatuh tempo pelunasan wajib diisi untuk transaksi tempo.");
-        return;
-      }
-      const saleTime = new Date(saleDate).getTime();
-      const dueTime = new Date(dueDate).getTime();
-      const diffDays = Math.ceil((dueTime - saleTime) / (1000 * 60 * 60 * 24));
-      if (diffDays > 30 || diffDays < 0) {
-        setErrorMsg(
-          "Kebijakan Nur Mobil: Batas jatuh tempo Cash Tempo maksimal 30 hari (1 bulan) dari tanggal transaksi."
-        );
-        return;
-      }
     }
 
     setLoading(true);
@@ -234,1064 +259,740 @@ export function SaleNewClient({
     try {
       const res = await createSaleAction({
         vehicleId,
-        saleDate: new Date(saleDate),
-        saleType: saleType as any,
+        saleDate: new Date(`${saleDate}T12:00:00+07:00`),
+        saleType,
         sellingPrice: Number(sellingPrice),
-        dueDate: dueDate ? new Date(dueDate) : undefined,
-        buyerName,
-        buyerPhone: buyerPhone || undefined,
+        dueDate:
+          paymentMode === "TEMPO" && dueDate
+            ? new Date(`${dueDate}T12:00:00+07:00`)
+            : undefined,
+        buyerName: buyerName.trim(),
+        buyerPhone: buyerPhone.trim() || undefined,
         buyerIsShowroom,
-        buyerAddress: buyerAddress || undefined,
-        initialPaymentAmount: initialPaymentAmount
-          ? Number(initialPaymentAmount)
-          : 0,
+        buyerAddress: buyerAddress.trim() || undefined,
+        initialPaymentAmount: effectiveInitialPay,
         initialPaymentMethod,
         handoverOdometer: handoverOdometer ? Number(handoverOdometer) : undefined,
         handoverPhotoUrl: handoverPhotoUrl || undefined,
         bastDocUrl: bastDocUrl || undefined,
         paymentReceiptUrl: paymentReceiptUrl || undefined,
         buyerIdCardUrl: buyerIdCardUrl || undefined,
-        handoverChecklist,
-        handoverNotes: handoverNotes || undefined,
-        brokerName: brokerName || undefined,
+        handoverChecklist: showOptional ? handoverChecklist : [],
+        handoverNotes: handoverNotes.trim() || undefined,
+        brokerName: brokerName.trim() || undefined,
         brokerFee: brokerFee ? Number(brokerFee) : undefined,
       });
 
       if (!res.success) {
-        throw new Error(res.error || "Gagal mencatat penjualan unit");
+        throw new Error(res.error || "Gagal menyimpan penjualan.");
       }
 
-      setSuccessMsg(
-        "Transaksi penjualan berhasil dicatat! Mengalihkan ke Buku Penjualan..."
-      );
+      setSuccessMsg("Penjualan berhasil disimpan! Membuka daftar penjualan...");
       setTimeout(() => {
         router.push("/admin/sales");
         router.refresh();
-      }, 1000);
+      }, 700);
     } catch (err: any) {
-      setErrorMsg(err.message || "Gagal mencatat transaksi penjualan");
+      showError(err.message || "Gagal menyimpan transaksi penjualan.");
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-6">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-4">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/admin/sales"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors shadow-xs"
-          >
-            <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
-            <span>Kembali ke Penjualan</span>
-          </Link>
-          <div>
-            <h1 className="text-xl font-bold text-[var(--ink)]">
-              Input Penjualan Unit Baru
-            </h1>
-            <p className="text-xs text-[var(--muted)]">
-              Pencatatan transaksi jual retail langsung atau lempar ke showroom rekanan (tempo 2 minggu).
-            </p>
-          </div>
-        </div>
+    <div ref={topRef} className="p-4 sm:p-6 max-w-3xl mx-auto space-y-5">
+      {/* Navigasi Kembali Ringkas */}
+      <div>
+        <Link
+          href="/admin/sales"
+          className="inline-flex items-center gap-2 px-3.5 py-2 min-h-[44px] rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)] font-semibold text-xs transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 text-[var(--muted)]" />
+          <span>Kembali ke Penjualan</span>
+        </Link>
       </div>
 
-      {/* Notifications */}
+      {/* Info Jika Unit dari URL Ternyata Sudah Pernah Dijual */}
+      {alreadySoldInfo && (
+        <div className="p-4 rounded-xl bg-[var(--warn-light)] border border-[var(--warn)]/40 text-sm space-y-3">
+          <div className="flex items-start gap-2.5">
+            <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+            <div>
+              <div className="font-bold text-[var(--ink)]">
+                Unit {normalizePlateNumber(alreadySoldInfo.plateNumber)} (
+                {formatVehicleTitle(
+                  alreadySoldInfo.brand,
+                  alreadySoldInfo.model,
+                  alreadySoldInfo.year
+                )}
+                ) sudah memiliki catatan penjualan.
+              </div>
+              <p className="text-xs text-[var(--muted)] mt-1">
+                {alreadySoldInfo.isFullyPaid
+                  ? "Unit ini sudah lunas. Anda bisa melihat detail atau mencetak kuitansi."
+                  : "Unit ini masih dalam status tempo / DP. Lanjutkan di halaman pembayaran untuk mencatat pelunasan."}
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {!alreadySoldInfo.isFullyPaid && (
+              <Link
+                href={`/admin/sales/${alreadySoldInfo.saleId}/payment`}
+                className="inline-flex items-center justify-center px-4 py-2.5 min-h-[44px] rounded-lg bg-[var(--accent)] text-white text-xs font-bold"
+              >
+                Catat Pelunasan / Cicilan
+              </Link>
+            )}
+            <Link
+              href={`/admin/sales/${alreadySoldInfo.saleId}`}
+              className="inline-flex items-center justify-center px-4 py-2.5 min-h-[44px] rounded-lg bg-white border border-[var(--line)] text-[var(--ink)] text-xs font-bold"
+            >
+              Lihat / Edit Transaksi Ini
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Banner Error / Sukses */}
       {errorMsg && (
-        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 shrink-0 text-red-600" />
+        <div className="p-4 rounded-xl bg-[var(--bad-light)] border border-[var(--bad)]/30 text-[var(--bad)] text-xs sm:text-sm font-semibold flex items-start gap-2.5">
+          <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 shrink-0 text-[var(--accent)]" />
+        <div className="p-4 rounded-xl bg-[var(--ok-light)] border border-[var(--ok)]/30 text-[var(--ok)] text-xs sm:text-sm font-semibold flex items-center gap-2.5">
+          <CheckCircle className="w-4 h-4 shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* SECTION 1: Pilih Unit Kendaraan */}
-        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* ── 1. PILIH UNIT ── */}
+        <section className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4 sm:p-5 space-y-3">
+          <div className="flex items-center gap-2">
             <Car className="w-4 h-4 text-[var(--accent)]" />
-            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
-              1. Pilih Unit Kendaraan Siap Jual
-            </h2>
+            <h2 className="text-sm font-bold text-[var(--ink)]">1. Pilih Unit yang Terjual</h2>
           </div>
 
           {availableVehicles.length === 0 ? (
-            <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-semibold">
-              Tidak ada unit yang berstatus Ready Jual atau Booked di inventori saat ini.
+            <div className="p-4 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-xs sm:text-sm text-[var(--muted)]">
+              Belum ada unit tersedia untuk dijual. Pastikan unit sudah masuk di menu{" "}
+              <Link href="/admin/inventory" className="text-[var(--accent)] font-bold underline">
+                Stok Unit
+              </Link>
+              .
             </div>
           ) : (
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Unit Kendaraan *
-              </label>
+            <div className="space-y-2.5">
               <select
                 required
                 value={vehicleId}
-                onChange={(e) => {
-                  setVehicleId(e.target.value);
-                }}
-                className="w-full px-3.5 py-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                onChange={(e) => setVehicleId(e.target.value)}
+                className="w-full px-3.5 py-2.5 min-h-[48px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm font-semibold text-[var(--ink)]"
               >
                 {availableVehicles.map((v) => (
                   <option key={v.id} value={v.id}>
-                    {v.plateNumber} — {v.brand} {v.model} ({v.year}) • HPP:{" "}
-                    {formatRupiah(v.totalHpp)}
+                    {normalizePlateNumber(v.plateNumber)} |{" "}
+                    {formatVehicleTitle(v.brand, v.model, v.year)} (Modal:{" "}
+                    {formatRupiah(v.totalHpp)})
                   </option>
                 ))}
               </select>
 
               {selectedUnit && (
-                <div className="flex flex-wrap items-center gap-4 text-xs mt-3 p-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-[var(--muted)]">
-                  <span>
-                    HPP Berjalan:{" "}
-                    <strong className="text-[var(--ink)]">
-                      {formatRupiah(selectedUnit.totalHpp)}
-                    </strong>
-                  </span>
-                  {selectedUnit.targetSellingPrice && (
-                    <span className="inline-flex items-center gap-1.5">
-                      Target Banderol:{" "}
-                      <strong className="text-[var(--ink)]">
-                        {formatRupiah(selectedUnit.targetSellingPrice)}
-                      </strong>
-                      <button
-                        type="button"
-                        onClick={() => setSellingPrice(selectedUnit.targetSellingPrice!)}
-                        className="text-[10px] px-1.5 py-0.5 rounded bg-white border border-[var(--line)] text-[var(--accent)] font-bold hover:bg-[var(--bg)] cursor-pointer"
-                        title="Salin target banderol ke isian harga kesepakatan"
-                      >
-                        Gunakan Target
-                      </button>
-                    </span>
-                  )}
-                  {selectedUnit.minSellingPrice && (
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs p-3 bg-[var(--bg)] border border-[var(--line)] rounded-xl">
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-[var(--muted)]">
                     <span>
-                      Batas Nego Net:{" "}
+                      Total Modal:{" "}
                       <strong className="text-[var(--ink)]">
-                        {formatRupiah(selectedUnit.minSellingPrice)}
+                        {formatRupiah(selectedUnit.totalHpp)}
                       </strong>
                     </span>
+                    {selectedUnit.targetSellingPrice && (
+                      <span>
+                        Harga Web:{" "}
+                        <strong className="text-[var(--ink)]">
+                          {formatRupiah(selectedUnit.targetSellingPrice)}
+                        </strong>
+                      </span>
+                    )}
+                  </div>
+                  {selectedUnit.targetSellingPrice && (
+                    <button
+                      type="button"
+                      onClick={() => setSellingPrice(selectedUnit.targetSellingPrice!)}
+                      className="px-3 py-1.5 min-h-[36px] rounded-lg bg-white border border-[var(--line)] text-[var(--accent)] font-bold text-xs hover:bg-[var(--surface)] cursor-pointer"
+                    >
+                      Pakai Harga Web
+                    </button>
                   )}
                 </div>
               )}
             </div>
           )}
-        </div>
+        </section>
 
-        {/* SECTION 2: Nilai Transaksi & Jalur */}
-        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center gap-2 border-b border-[var(--line)] pb-3">
-            <DollarSign className="w-4 h-4 text-[var(--accent)]" />
-            <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
-              2. Harga Kesepakatan & Jalur Penjualan
-            </h2>
+        {/* ── 2. PEMBELI / SHOWROOM ── */}
+        <section className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4 sm:p-5 space-y-3.5">
+          <div className="flex items-center gap-2">
+            <User className="w-4 h-4 text-[var(--accent)]" />
+            <h2 className="text-sm font-bold text-[var(--ink)]">2. Pembeli / Showroom</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {/* Toggle Tipe Pembeli */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setSaleType("SHOWROOM");
+                setBuyerIsShowroom(true);
+              }}
+              className={cn(
+                "px-3 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-bold border transition-colors cursor-pointer",
+                saleType === "SHOWROOM"
+                  ? "bg-[var(--accent)] text-white border-[var(--accent)]"
+                  : "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
+              )}
+            >
+              Showroom / Rekanan
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setSaleType("DIRECT_CUSTOMER");
+                setBuyerIsShowroom(false);
+              }}
+              className={cn(
+                "px-3 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-bold border transition-colors cursor-pointer",
+                saleType === "DIRECT_CUSTOMER"
+                  ? "bg-[var(--accent)] text-white border-[var(--accent)]"
+                  : "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
+              )}
+            >
+              Pembeli Langsung
+            </button>
+          </div>
+
+          {/* Pilihan Cepat Rekanan Tersimpan */}
+          {quickPartners.length > 0 && (
+            <div className="space-y-1.5">
+              <div className="text-xs text-[var(--muted)] font-medium">
+                Pilih cepat langganan:
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {quickPartners.map((partner) => {
+                  const active = buyerName === partner.name;
+                  return (
+                    <button
+                      key={partner.id}
+                      type="button"
+                      onClick={() => {
+                        setSaleType(partner.isShowroom ? "SHOWROOM" : "DIRECT_CUSTOMER");
+                        setBuyerIsShowroom(partner.isShowroom);
+                        setBuyerName(partner.name);
+                        setBuyerPhone(partner.phone || "");
+                        setBuyerAddress(partner.address || "");
+                      }}
+                      className={cn(
+                        "px-3 py-2 min-h-[40px] rounded-lg text-xs font-semibold border transition-colors cursor-pointer",
+                        active
+                          ? "bg-[var(--ink)] text-white border-[var(--ink)]"
+                          : "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)] hover:border-[var(--accent)]"
+                      )}
+                    >
+                      {partner.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Jalur Penjualan *
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                Nama Pembeli / Showroom *
               </label>
-              <select
-                value={saleType}
-                onChange={(e) => {
-                  setSaleType(e.target.value);
-                  setBuyerIsShowroom(e.target.value === "SHOWROOM");
-                }}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-              >
-                <option value="DIRECT_CUSTOMER">
-                  Konsumen Langsung (Retail)
-                </option>
-                <option value="SHOWROOM">
-                  Showroom Rekanan (Wholesale / Tempo)
-                </option>
-              </select>
-              <span className="text-[10px] text-[var(--muted)] mt-1 block">
-                Showroom tempo biasanya lunas 7-14 hari
-              </span>
+              <input
+                required
+                type="text"
+                placeholder="Contoh: Showroom Kcunk Motor / Pak Budi"
+                value={buyerName}
+                onChange={(e) => setBuyerName(e.target.value)}
+                className="w-full px-3.5 py-2.5 min-h-[46px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm font-medium text-[var(--ink)]"
+              />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Harga Kesepakatan Jual (Rp) *
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                Nomor WhatsApp (Opsional)
+              </label>
+              <input
+                type="tel"
+                inputMode="tel"
+                placeholder="Contoh: 082142502419"
+                value={buyerPhone}
+                onChange={(e) => setBuyerPhone(e.target.value)}
+                className="w-full px-3.5 py-2.5 min-h-[46px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm text-[var(--ink)]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+              Kota / Alamat (Opsional)
+            </label>
+            <input
+              type="text"
+              placeholder="Contoh: Tulungagung"
+              value={buyerAddress}
+              onChange={(e) => setBuyerAddress(e.target.value)}
+              className="w-full px-3.5 py-2.5 min-h-[46px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm text-[var(--ink)]"
+            />
+          </div>
+        </section>
+
+        {/* ── 3. HARGA JUAL & PEMBAYARAN ── */}
+        <section className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4 sm:p-5 space-y-4">
+          <h2 className="text-sm font-bold text-[var(--ink)]">3. Harga Deal &amp; Pembayaran</h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                Harga Jual Deal (Rp) *
               </label>
               <input
                 required
                 type="text"
                 inputMode="numeric"
-                placeholder="Contoh: 165.000.000"
+                placeholder="Contoh: 154.000.000"
                 value={sellingPrice !== "" ? formatThousands(sellingPrice) : ""}
                 onChange={(e) => setSellingPrice(parseThousands(e.target.value) || "")}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                className="w-full px-3.5 py-2.5 min-h-[48px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-base font-bold text-[var(--ink)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Tanggal Transaksi / SPK *
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                Tanggal Jual *
               </label>
               <input
                 required
                 type="date"
                 value={saleDate}
                 onChange={(e) => setSaleDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* SECTION 3: Identitas Pembeli */}
-        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--line)] pb-3">
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-[var(--accent)]" />
-              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
-                3. Identitas Pembeli / Showroom
-              </h2>
-            </div>
-            <span className="text-[11px] font-semibold text-[var(--muted)]">
-              80% unit laku ke showroom rekanan (Kcunk Motor)
-            </span>
-          </div>
-
-          {/* Quick Preset Pembeli (Kcunk Motor, Balai Lelang, Showroom Rekanan, Retail) */}
-          <div className="p-3.5 bg-stone-50 border border-[var(--line)] rounded-xl space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs font-bold text-[var(--ink)]">
-              <span>Pilihan Cepat Saluran Penjualan (1-Klik Isi Data):</span>
-              <span className="text-[11px] font-normal text-[var(--muted)]">Otomatis tentukan tipe B2B / Lelang / Retail</span>
-            </div>
-
-            {/* 4 Saluran Utama */}
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setSaleType("SHOWROOM");
-                  setBuyerIsShowroom(true);
-                  setBuyerName("Showroom Kcunk Motor");
-                  setBuyerPhone("08123456789");
-                  setBuyerAddress("Tulungagung, Jawa Timur");
-                  setHandoverNotes("Kirim / jual grosir ke rekanan Showroom Kcunk Motor Tulungagung");
-                }}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95",
-                  buyerName === "Showroom Kcunk Motor"
-                    ? "bg-emerald-700 text-white border border-emerald-700"
-                    : "bg-emerald-50 text-emerald-900 border border-emerald-300 hover:bg-emerald-100"
-                )}
-              >
-                <span>★ Showroom Kcunk Motor (Tulungagung)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setSaleType("SHOWROOM");
-                  setBuyerIsShowroom(true);
-                  setBuyerName("Balai Lelang JBA Surabaya (Titip Lelang)");
-                  setBuyerPhone("0318556677");
-                  setBuyerAddress("Waru, Sidoarjo / Surabaya");
-                  setHandoverNotes("Mobil dilelangkan kembali melalui balai lelang JBA Surabaya (Re-Auction)");
-                }}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95",
-                  buyerName.toLowerCase().includes("jba")
-                    ? "bg-indigo-700 text-white border border-indigo-700"
-                    : "bg-indigo-50 text-indigo-900 border border-indigo-200 hover:bg-indigo-100"
-                )}
-              >
-                <span>🔨 Titip Lelang: JBA Surabaya</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setSaleType("SHOWROOM");
-                  setBuyerIsShowroom(true);
-                  setBuyerName("Balai Lelang IBID Surabaya (Titip Lelang)");
-                  setBuyerPhone("0313812345");
-                  setBuyerAddress("Kenjeran, Surabaya");
-                  setHandoverNotes("Mobil dilelangkan kembali melalui balai lelang IBID Surabaya (Re-Auction)");
-                }}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer active:scale-95",
-                  buyerName.toLowerCase().includes("ibid")
-                    ? "bg-indigo-700 text-white border border-indigo-700"
-                    : "bg-indigo-50 text-indigo-900 border border-indigo-200 hover:bg-indigo-100"
-                )}
-              >
-                <span>🔨 Titip Lelang: IBID Surabaya</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setSaleType("DIRECT_CUSTOMER");
-                  setBuyerIsShowroom(false);
-                  setBuyerName("");
-                  setBuyerPhone("");
-                  setBuyerAddress("");
-                  setHandoverNotes("");
-                }}
-                className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border cursor-pointer",
-                  !buyerIsShowroom && buyerName === ""
-                    ? "bg-[var(--ink)] text-white border-[var(--ink)]"
-                    : "bg-white text-[var(--ink)] border-[var(--line)] hover:bg-[var(--bg)]"
-                )}
-              >
-                <span>👤 Konsumen Langsung (Retail)</span>
-              </button>
-            </div>
-
-            {/* Rekanan Showroom Lainnya */}
-            <div className="pt-2 border-t border-[var(--line)] flex flex-wrap items-center gap-1.5 text-[11px]">
-              <span className="text-[var(--muted)] font-medium">Showroom Lainnya:</span>
-              {[
-                { name: "Showroom Auto Lancar", city: "Kediri" },
-                { name: "Showroom Berkah Mobil", city: "Malang" },
-                { name: "Showroom Barokah", city: "Blitar" },
-                { name: "Showroom Central Mobil", city: "Surabaya" },
-              ].map((sh) => (
-                <button
-                  key={sh.name}
-                  type="button"
-                  onClick={() => {
-                    setSaleType("SHOWROOM");
-                    setBuyerIsShowroom(true);
-                    setBuyerName(`${sh.name} (${sh.city})`);
-                    setBuyerAddress(`${sh.city}, Jawa Timur`);
-                    setHandoverNotes(`Penjualan B2B ke rekanan ${sh.name} ${sh.city}`);
-                  }}
-                  className="px-2 py-1 rounded bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] font-medium transition-colors cursor-pointer"
-                >
-                  {sh.name} ({sh.city})
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Nama Pembeli / Nama Showroom *
-              </label>
-              <input
-                required
-                type="text"
-                placeholder="Contoh: Showroom Kcunk Motor / Bpk. Haryanto"
-                value={buyerName}
-                onChange={(e) => setBuyerName(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Nomor WhatsApp / HP
-              </label>
-              <input
-                type="text"
-                placeholder="Contoh: 081234567890"
-                value={buyerPhone}
-                onChange={(e) => setBuyerPhone(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                className="w-full px-3.5 py-2.5 min-h-[48px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm font-medium text-[var(--ink)]"
               />
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-              Alamat Lengkap Pembeli / Domisili Showroom (Opsional)
-            </label>
-            <input
-              type="text"
-              placeholder="Alamat KTP atau domisili showroom rekanan..."
-              value={buyerAddress}
-              onChange={(e) => setBuyerAddress(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-            />
-          </div>
-        </div>
-
-        {/* SECTION 4: Pembayaran Awal (DP) & Jatuh Tempo */}
-        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[var(--accent)]" />
-              <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
-                4. Pembayaran Awal (DP) & Ketentuan Cash Tempo
-              </h2>
-            </div>
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-md bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
-              100% Cash / Tempo Internal Garasi (Non-Leasing)
-            </span>
-          </div>
-
-          {/* Quick Skema Pembayaran Buttons */}
-          <div className="flex flex-wrap gap-2 pt-1 pb-1">
+          {/* 2 Tombol Besar: Lunas vs Tempo */}
+          <div className="grid grid-cols-2 gap-2.5">
             <button
               type="button"
-              disabled={priceNum <= 0}
               onClick={() => {
-                if (priceNum > 0) {
-                  setInitialPaymentAmount(priceNum);
-                  setDueDate("");
-                }
+                setPaymentMode("LUNAS");
+                setInitialPaymentAmount(priceNum || "");
               }}
-              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 disabled:opacity-50 cursor-pointer"
-            >
-              ✓ Bayar Lunas 100% {priceNum > 0 ? `(${formatRupiah(priceNum)})` : ""}
-            </button>
-
-            {saleType === "DIRECT_CUSTOMER" && priceNum > 0 && (
-              <button
-                type="button"
-                onClick={() => {
-                  setInitialPaymentAmount(minDp70);
-                  const d = new Date(new Date(saleDate).getTime() + 14 * 24 * 60 * 60 * 1000)
-                    .toISOString()
-                    .split("T")[0];
-                  setDueDate(d);
-                }}
-                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-300 hover:bg-amber-100 cursor-pointer"
-              >
-                ⏱ Min. DP 70% Tempo ({formatRupiah(minDp70)})
-              </button>
-            )}
-
-            {saleType === "SHOWROOM" && (
-              <button
-                type="button"
-                onClick={() => {
-                  setInitialPaymentAmount("");
-                  const d = new Date(new Date(saleDate).getTime() + 14 * 24 * 60 * 60 * 1000)
-                    .toISOString()
-                    .split("T")[0];
-                  setDueDate(d);
-                }}
-                className="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-50 text-indigo-800 border border-indigo-200 hover:bg-indigo-100 cursor-pointer"
-              >
-                ⏱ Tempo B2B Rekanan (14 Hari)
-              </button>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Nominal DP / Pembayaran Masuk (Rp) *
-              </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="Contoh: 105.000.000"
-                value={initialPaymentAmount !== "" ? formatThousands(initialPaymentAmount) : ""}
-                onChange={(e) => setInitialPaymentAmount(parseThousands(e.target.value) || "")}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-bold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-              />
-              <span className="text-[10px] text-[var(--muted)] mt-1 block">
-                {priceNum > 0 && (
-                  <>
-                    Min. DP 70% Tempo: <strong>{formatRupiah(minDp70)}</strong>
-                  </>
-                )}
-              </span>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Metode Pembayaran
-              </label>
-              <select
-                value={initialPaymentMethod}
-                onChange={(e) => setInitialPaymentMethod(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-              >
-                <option value="TRANSFER">Transfer Bank (BCA Rekening Showroom)</option>
-                <option value="CASH">Uang Tunai (Cash di Garasi)</option>
-                <option value="TRADE_IN">Tukar Tambah (Trade-In Unit)</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Target Jatuh Tempo Pelunasan {isTempo && <span className="text-red-500">*</span>}
-              </label>
-              <input
-                type="date"
-                min={saleDate}
-                max={maxDueDate}
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-              />
-              <span className="text-[10px] text-[var(--muted)] mt-1 block">
-                Batas maksimal 30 hari (s/d {maxDueDate})
-              </span>
-            </div>
-          </div>
-
-          {/* Banner Kebijakan Cash Tempo Khusus Nur Mobil */}
-          {isTempo && (
-            <div className="space-y-2 pt-1">
-              {!isDpValid ? (
-                <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-start gap-2.5">
-                  <ShieldAlert className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="font-bold block">DP Kurang dari Batas Minimal 70%!</strong>
-                    <p className="mt-0.5 text-[11px] leading-relaxed">
-                      Sesuai aturan garasi Nur Mobil, pembelian tempo wajib membayar DP minimal 70% ({formatRupiah(minDp70)}). Sisa maksimal 30% ({formatRupiah(priceNum - minDp70)}) diselesaikan dalam 30 hari.
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs flex items-start gap-2.5">
-                  <ShieldCheck className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="font-bold block">
-                      Ketentuan Jaminan Dokumen Cash Tempo Nur Mobil
-                    </strong>
-                    <p className="mt-0.5 text-[11px] text-[var(--muted)] leading-relaxed">
-                      Asli BPKB dan Asli STNK <strong>wajib ditahan di brankas showroom</strong> sampai sisa pelunasan 100% diterima. Konsumen hanya memegang Surat Jalan resmi sementara.
-                    </p>
-                  </div>
-                </div>
+              className={cn(
+                "px-3 py-3 min-h-[50px] rounded-xl text-xs sm:text-sm font-bold border transition-colors cursor-pointer",
+                paymentMode === "LUNAS"
+                  ? "bg-[var(--ok)] text-white border-[var(--ok)]"
+                  : "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
               )}
-            </div>
-          )}
-        </div>
+            >
+              Bayar Lunas
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setPaymentMode("TEMPO");
+                if (!dueDate) setDueDate(addDaysToDateStr(saleDate, 14));
+              }}
+              className={cn(
+                "px-3 py-3 min-h-[50px] rounded-xl text-xs sm:text-sm font-bold border transition-colors cursor-pointer",
+                paymentMode === "TEMPO"
+                  ? "bg-[var(--accent)] text-white border-[var(--accent)]"
+                  : "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
+              )}
+            >
+              DP / Tempo
+            </button>
+          </div>
 
-        {/* SECTION 4: Serah Terima, Berkas Legalitas & Checklist Keluar */}
-        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
-          <div className="flex items-center justify-between border-b border-[var(--line)] pb-3 flex-wrap gap-2">
-            <div className="flex items-center gap-2">
-              <ClipboardCheck className="w-5 h-5 text-[var(--accent)]" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {paymentMode === "TEMPO" && (
               <div>
-                <h2 className="text-sm font-bold text-[var(--ink)] uppercase tracking-wider">
-                  4. Berkas Legalitas, Dokumen Tanda Tangan & Serah Terima
-                </h2>
-                <p className="text-[11px] text-[var(--muted)]">
-                  Unggah berkas BAST bermeterai, bukti kuitansi pelunasan, foto serah kunci, dan verifikasi checklist berkas asli.
-                </p>
-              </div>
-            </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
-              SOP Serah Terima Nur Mobil
-            </span>
-          </div>
-
-          {/* 4A. GRID UPLOAD BERKAS BUKTI & FOTO */}
-          <div>
-            <label className="block text-xs font-bold text-[var(--ink)] mb-3 flex items-center gap-1.5">
-              <FileUp className="w-4 h-4 text-[var(--accent)]" />
-              <span>Arsip Dokumen Fisik & Foto Bukti Transaksi</span>
-            </label>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* 1. Foto Serah Terima */}
-              <div className="border border-[var(--line)] rounded-xl p-3.5 bg-[var(--bg)] flex flex-col justify-between space-y-3">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                      <Camera className="w-3.5 h-3.5 text-[var(--accent)]" />
-                      <span>Foto Serah Terima</span>
-                    </span>
-                    {handoverPhotoUrl && (
-                      <span className="text-[9px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full">
-                        ✓ Terunggah
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[10px] text-[var(--muted)] leading-snug">
-                    Foto konsumen & kunci mobil saat serah terima unit di showroom / rumah.
-                  </p>
-                </div>
-
-                {handoverPhotoUrl ? (
-                  <div className="space-y-2">
-                    <div className="h-24 w-full rounded-lg overflow-hidden border border-[var(--line)] relative bg-black/5">
-                      <img
-                        src={handoverPhotoUrl}
-                        alt="Serah Terima"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setHandoverPhotoUrl("")}
-                      className="w-full py-1 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded border border-red-200 flex items-center justify-center gap-1"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                      <span>Hapus / Ganti</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-[var(--bg)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
-                      {uploadingPhoto ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
-                      ) : (
-                        <Upload className="w-4 h-4 text-[var(--accent)]" />
-                      )}
-                      <span className="text-[11px] font-bold text-[var(--ink)]">
-                        {uploadingPhoto ? "Mengunggah..." : "Pilih Foto Unit"}
-                      </span>
-                      <span className="text-[9px] text-[var(--muted)]">JPG / PNG / WebP</span>
-                      <input
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp"
-                        className="hidden"
-                        disabled={uploadingPhoto}
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            handleFileUpload(
-                              file,
-                              "PHOTO",
-                              setUploadingPhoto,
-                              setHandoverPhotoUrl,
-                              undefined,
-                              "HANDOVER_DELIVERY",
-                              "Foto Serah Terima Unit ke Pembeli"
-                            );
-                          }
-                        }}
-                      />
-                    </label>
-                  </div>
-                )}
-              </div>
-
-              {/* 2. Scan BAST Bertandatangan */}
-              <div className="border border-[var(--line)] rounded-xl p-3.5 bg-[var(--bg)] flex flex-col justify-between space-y-3">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                      <FileBadge className="w-3.5 h-3.5 text-[var(--accent)]" />
-                      <span>BAST Bertandatangan</span>
-                    </span>
-                    {bastDocUrl && (
-                      <span className="text-[9px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full">
-                        ✓ Terunggah
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[10px] text-[var(--muted)] leading-snug">
-                    Scan Berita Acara Serah Terima (BAST) bermeterai 10.000 yang ditandatangani.
-                  </p>
-                </div>
-
-                {bastDocUrl ? (
-                  <div className="space-y-2">
-                    <div className="p-2 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-center">
-                      <span className="text-[11px] font-bold text-[var(--ink)] block truncate">
-                        BAST Tersimpan
-                      </span>
-                      <a
-                        href={bastDocUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[10px] text-[var(--accent)] hover:underline inline-flex items-center gap-1 mt-1 font-semibold"
-                      >
-                        <Eye className="w-3 h-3" />
-                        <span>Buka Berkas</span>
-                      </a>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setBastDocUrl("")}
-                      className="w-full py-1 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded border border-red-200 flex items-center justify-center gap-1"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                      <span>Hapus / Ganti</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-[var(--bg)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
-                      {uploadingBast ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
-                      ) : (
-                        <Upload className="w-4 h-4 text-[var(--accent)]" />
-                      )}
-                      <span className="text-[11px] font-bold text-[var(--ink)]">
-                        {uploadingBast ? "Mengunggah..." : "Upload File BAST"}
-                      </span>
-                      <span className="text-[9px] text-[var(--muted)]">PDF / JPG / PNG</span>
-                      <input
-                        type="file"
-                        accept="application/pdf,image/jpeg,image/png,image/webp"
-                        className="hidden"
-                        disabled={uploadingBast}
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            handleFileUpload(
-                              file,
-                              "DOCUMENT",
-                              setUploadingBast,
-                              setBastDocUrl,
-                              "OTHER"
-                            );
-                          }
-                        }}
-                      />
-                    </label>
-                  </div>
-                )}
-              </div>
-
-              {/* 3. Kuitansi / Bukti Bayar */}
-              <div className="border border-[var(--line)] rounded-xl p-3.5 bg-[var(--bg)] flex flex-col justify-between space-y-3">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                      <Receipt className="w-3.5 h-3.5 text-[var(--accent)]" />
-                      <span>Bukti Pelunasan / Kuitansi</span>
-                    </span>
-                    {paymentReceiptUrl && (
-                      <span className="text-[9px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full">
-                        ✓ Terunggah
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[10px] text-[var(--muted)] leading-snug">
-                    Slip transfer rekening BCA showroom atau kuitansi fisik cap lunas.
-                  </p>
-                </div>
-
-                {paymentReceiptUrl ? (
-                  <div className="space-y-2">
-                    <div className="p-2 rounded-lg bg-[var(--bg)] border border-[var(--line)] text-center">
-                      <span className="text-[11px] font-bold text-[var(--ink)] block truncate">
-                        Bukti Bayar Tersimpan
-                      </span>
-                      <a
-                        href={paymentReceiptUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[10px] text-[var(--accent)] hover:underline inline-flex items-center gap-1 mt-1 font-semibold"
-                      >
-                        <Eye className="w-3 h-3" />
-                        <span>Buka Berkas</span>
-                      </a>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentReceiptUrl("")}
-                      className="w-full py-1 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded border border-red-200 flex items-center justify-center gap-1"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                      <span>Hapus / Ganti</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-[var(--bg)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
-                      {uploadingReceipt ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
-                      ) : (
-                        <Upload className="w-4 h-4 text-[var(--accent)]" />
-                      )}
-                      <span className="text-[11px] font-bold text-[var(--ink)]">
-                        {uploadingReceipt ? "Mengunggah..." : "Upload Slip / Kuitansi"}
-                      </span>
-                      <span className="text-[9px] text-[var(--muted)]">PDF / JPG / PNG</span>
-                      <input
-                        type="file"
-                        accept="application/pdf,image/jpeg,image/png,image/webp"
-                        className="hidden"
-                        disabled={uploadingReceipt}
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            handleFileUpload(
-                              file,
-                              "DOCUMENT",
-                              setUploadingReceipt,
-                              setPaymentReceiptUrl,
-                              "KUITANSI"
-                            );
-                          }
-                        }}
-                      />
-                    </label>
-                  </div>
-                )}
-              </div>
-
-              {/* 4. Foto KTP Pembeli */}
-              <div className="border border-[var(--line)] rounded-xl p-3.5 bg-[var(--bg)] flex flex-col justify-between space-y-3">
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-[var(--accent)]" />
-                      <span>Foto KTP Pembeli</span>
-                    </span>
-                    {buyerIdCardUrl && (
-                      <span className="text-[9px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full">
-                        ✓ Terunggah
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[10px] text-[var(--muted)] leading-snug">
-                    Arsip identitas resmi pembeli untuk lapor jual Samsat & balik nama.
-                  </p>
-                </div>
-
-                {buyerIdCardUrl ? (
-                  <div className="space-y-2">
-                    <div className="h-24 w-full rounded-lg overflow-hidden border border-[var(--line)] relative bg-black/5">
-                      <img
-                        src={buyerIdCardUrl}
-                        alt="KTP Pembeli"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setBuyerIdCardUrl("")}
-                      className="w-full py-1 text-[11px] font-semibold text-red-600 hover:bg-red-50 rounded border border-red-200 flex items-center justify-center gap-1"
-                    >
-                      <Trash2 className="w-3 h-3" />
-                      <span>Hapus / Ganti</span>
-                    </button>
-                  </div>
-                ) : (
-                  <div>
-                    <label className="w-full py-2.5 px-3 border border-dashed border-[var(--line)] hover:border-[var(--accent)] rounded-xl bg-white hover:bg-[var(--bg)] flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors text-center">
-                      {uploadingKtp ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
-                      ) : (
-                        <Upload className="w-4 h-4 text-[var(--accent)]" />
-                      )}
-                      <span className="text-[11px] font-bold text-[var(--ink)]">
-                        {uploadingKtp ? "Mengunggah..." : "Upload Foto KTP"}
-                      </span>
-                      <span className="text-[9px] text-[var(--muted)]">JPG / PNG / WebP</span>
-                      <input
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp"
-                        className="hidden"
-                        disabled={uploadingKtp}
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            handleFileUpload(
-                              file,
-                              "DOCUMENT",
-                              setUploadingKtp,
-                              setBuyerIdCardUrl,
-                              "KTP_PEMILIK"
-                            );
-                          }
-                        }}
-                      />
-                    </label>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* 4B. ODOMETER TERAKHIR & CATATAN SERAH TERIMA */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-[var(--line)]">
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5 flex items-center gap-1.5">
-                <Gauge className="w-3.5 h-3.5 text-[var(--accent)]" />
-                <span>Odometer Terakhir Saat Serah Terima (KM)</span>
-              </label>
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="Contoh: 19.850"
-                value={handoverOdometer !== "" ? formatThousands(handoverOdometer) : ""}
-                onChange={(e) => setHandoverOdometer(parseThousands(e.target.value) || "")}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-semibold text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-              />
-              <span className="text-[10px] text-[var(--muted)] mt-1 block">
-                Patokan pasti batas klaim garansi toko (misal: 1 bulan / 1.000 KM).
-              </span>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1.5">
-                Catatan Kondisi Unit Saat Keluar Garasi
-              </label>
-              <input
-                type="text"
-                placeholder="Contoh: Bensin terisi 1/2 tangki, sudah salon wax, garansi s/d 20.850 KM."
-                value={handoverNotes}
-                onChange={(e) => setHandoverNotes(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--line)] rounded-xl text-sm font-normal text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-              />
-              <span className="text-[10px] text-[var(--muted)] mt-1 block">
-                Catatan khusus penyerahan unit kepada pembeli.
-              </span>
-            </div>
-          </div>
-
-          {/* 4C. CHECKLIST KELENGKAPAN BERKAS ASLI & DOKUMEN */}
-          <div className="pt-2 border-t border-[var(--line)]">
-            <label className="block text-xs font-bold text-[var(--ink)] mb-2 flex items-center gap-1.5">
-              <ClipboardCheck className="w-4 h-4 text-[var(--accent)]" />
-              <span>Checklist Berkas Asli & Kelengkapan yang Diserahkan</span>
-            </label>
-            <p className="text-[11px] text-[var(--muted)] mb-3">
-              Centang item kelengkapan yang diserahterimakan langsung ke tangan konsumen.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-              {DEFAULT_CHECKLIST.map((item) => {
-                const isChecked = handoverChecklist.includes(item.id);
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => toggleChecklistItem(item.id)}
-                    className={cn(
-                      "flex items-center gap-2.5 p-2.5 rounded-xl border text-left text-xs font-semibold transition-all cursor-pointer",
-                      isChecked
-                        ? "bg-white border-[var(--accent)] text-[var(--ink)] shadow-xs"
-                        : "bg-[var(--bg)] border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)]"
-                    )}
-                  >
-                    {isChecked ? (
-                      <CheckSquare className="w-4 h-4 text-[var(--accent)] shrink-0" />
-                    ) : (
-                      <Square className="w-4 h-4 text-[var(--muted)] shrink-0" />
-                    )}
-                    <span>{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* 4D. KOMISI MAKELAR / MEDIATOR (JIKA ADA) */}
-          <div className="pt-2 border-t border-[var(--line)] bg-[var(--bg)] p-3.5 rounded-xl border border-[var(--line)]">
-            <div className="flex items-center gap-2 mb-2">
-              <Users className="w-4 h-4 text-[var(--accent)]" />
-              <span className="text-xs font-bold text-[var(--ink)]">
-                Komisi Makelar / Perantara Penjualan (Opsional)
-              </span>
-            </div>
-            <p className="text-[11px] text-[var(--muted)] mb-3">
-              Jika penjualan melalui perantara, masukkan nama & komisi. Sistem otomatis memotong laba bersih transaksi.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">
-                  Nama Makelar / Mediator
-                </label>
-                <input
-                  type="text"
-                  placeholder="Contoh: Pak Bambang (Mediator Malang)"
-                  value={brokerName}
-                  onChange={(e) => setBrokerName(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-xl text-xs font-medium text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">
-                  Nominal Komisi Makelar (Rp)
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                  Uang Masuk / DP Sekarang (Rp)
                 </label>
                 <input
                   type="text"
                   inputMode="numeric"
-                  placeholder="Contoh: 1.500.000"
-                  value={brokerFee !== "" ? formatThousands(brokerFee) : ""}
-                  onChange={(e) => setBrokerFee(parseThousands(e.target.value) || "")}
-                  className="w-full px-3 py-2 bg-white border border-[var(--line)] rounded-xl text-xs font-bold text-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+                  placeholder="0 jika belum ada DP"
+                  value={
+                    initialPaymentAmount !== "" ? formatThousands(initialPaymentAmount) : ""
+                  }
+                  onChange={(e) =>
+                    setInitialPaymentAmount(parseThousands(e.target.value) || "")
+                  }
+                  className="w-full px-3.5 py-2.5 min-h-[46px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm font-bold text-[var(--ink)]"
                 />
-                {brokerFeeNum > 0 && (
-                  <span className="text-[10px] text-[var(--accent)] mt-1 block font-semibold">
-                    Komisi: {formatRupiah(brokerFeeNum)} (memotong laba kotor)
-                  </span>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                Cara Bayar
+              </label>
+              <select
+                value={initialPaymentMethod}
+                onChange={(e) => setInitialPaymentMethod(e.target.value)}
+                className="w-full px-3.5 py-2.5 min-h-[46px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm font-medium text-[var(--ink)]"
+              >
+                <option value="TRANSFER">Transfer Bank</option>
+                <option value="CASH">Tunai (Cash)</option>
+                <option value="TRADE_IN">Tukar Tambah</option>
+              </select>
+            </div>
+
+            {paymentMode === "TEMPO" && (
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                  Jatuh Tempo Pelunasan
+                </label>
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  className="w-full px-3.5 py-2.5 min-h-[46px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm text-[var(--ink)]"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Peringatan lembut (tidak memblokir) */}
+          {(showLowDpWarning || showLongTempoWarning) && (
+            <div className="p-3 rounded-xl bg-[var(--warn-light)] border border-[var(--warn)]/40 text-xs text-amber-900 flex items-start gap-2">
+              <Info className="w-4 h-4 shrink-0 mt-0.5 text-amber-700" />
+              <div className="space-y-0.5">
+                {showLowDpWarning && (
+                  <p>
+                    Catatan: DP pembeli langsung di bawah 70% ({formatRupiah(minDp70)}). Anda tetap bisa menyimpan jika memang sudah sepakat.
+                  </p>
                 )}
+                {showLongTempoWarning && (
+                  <p>
+                    Catatan: Jarak jatuh tempo lebih dari 30 hari ({diffTempoDays} hari). Anda tetap bisa menyimpan jika memang disepakati.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* ── 4. OPSIONAL: DOKUMEN, CEKLIST & MAKELAR (DILIPAT) ── */}
+        <section className="bg-[var(--surface)] border border-[var(--line)] rounded-xl overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setShowOptional((prev) => !prev)}
+            className="w-full px-4 sm:px-5 py-3.5 min-h-[52px] flex items-center justify-between gap-2 text-left hover:bg-[var(--bg)] transition-colors cursor-pointer"
+          >
+            <div>
+              <div className="text-sm font-bold text-[var(--ink)]">
+                Lengkapi Berkas, Catatan &amp; Komisi Makelar (Opsional)
+              </div>
+              <div className="text-xs text-[var(--muted)]">
+                Bisa dilewati jika sedang buru-buru.
+              </div>
+            </div>
+            <ChevronDown
+              className={cn(
+                "w-5 h-5 text-[var(--muted)] transition-transform duration-200 shrink-0",
+                showOptional && "rotate-180"
+              )}
+            />
+          </button>
+
+          {showOptional && (
+            <div className="p-4 sm:p-5 border-t border-[var(--line)] space-y-5">
+              {/* Upload Berkas */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <UploadCard
+                  title="Foto Serah Terima"
+                  url={handoverPhotoUrl}
+                  uploading={uploadingPhoto}
+                  accept="image/jpeg,image/png,image/webp"
+                  onClear={() => setHandoverPhotoUrl("")}
+                  onSelect={(file) =>
+                    handleFileUpload(
+                      file,
+                      "PHOTO",
+                      setUploadingPhoto,
+                      setHandoverPhotoUrl,
+                      undefined,
+                      "HANDOVER_DELIVERY",
+                      "Foto Serah Terima Unit"
+                    )
+                  }
+                />
+                <UploadCard
+                  title="Bukti Transfer / Kuitansi"
+                  url={paymentReceiptUrl}
+                  uploading={uploadingReceipt}
+                  accept="application/pdf,image/jpeg,image/png,image/webp"
+                  onClear={() => setPaymentReceiptUrl("")}
+                  onSelect={(file) =>
+                    handleFileUpload(
+                      file,
+                      "DOCUMENT",
+                      setUploadingReceipt,
+                      setPaymentReceiptUrl,
+                      "KUITANSI"
+                    )
+                  }
+                />
+                <UploadCard
+                  title="Scan BAST"
+                  url={bastDocUrl}
+                  uploading={uploadingBast}
+                  accept="application/pdf,image/jpeg,image/png,image/webp"
+                  onClear={() => setBastDocUrl("")}
+                  onSelect={(file) =>
+                    handleFileUpload(file, "DOCUMENT", setUploadingBast, setBastDocUrl, "OTHER")
+                  }
+                />
+                <UploadCard
+                  title="Foto KTP Pembeli"
+                  url={buyerIdCardUrl}
+                  uploading={uploadingKtp}
+                  accept="image/jpeg,image/png,image/webp"
+                  onClear={() => setBuyerIdCardUrl("")}
+                  onSelect={(file) =>
+                    handleFileUpload(
+                      file,
+                      "DOCUMENT",
+                      setUploadingKtp,
+                      setBuyerIdCardUrl,
+                      "KTP_PEMILIK"
+                    )
+                  }
+                />
+              </div>
+
+              {/* Odometer & Catatan */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                    KM Terakhir (Opsional)
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="Contoh: 45.000"
+                    value={handoverOdometer !== "" ? formatThousands(handoverOdometer) : ""}
+                    onChange={(e) => setHandoverOdometer(parseThousands(e.target.value) || "")}
+                    className="w-full px-3.5 py-2.5 min-h-[44px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm text-[var(--ink)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                    Catatan Serah Terima
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Contoh: BPKB menyusul minggu depan"
+                    value={handoverNotes}
+                    onChange={(e) => setHandoverNotes(e.target.value)}
+                    className="w-full px-3.5 py-2.5 min-h-[44px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm text-[var(--ink)]"
+                  />
+                </div>
+              </div>
+
+              {/* Checklist Berkas */}
+              <div className="space-y-2">
+                <div className="text-xs font-semibold text-[var(--ink)]">
+                  Kelengkapan yang Diserahkan
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {DEFAULT_CHECKLIST.map((item) => {
+                    const checked = handoverChecklist.includes(item.id);
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => toggleChecklistItem(item.id)}
+                        className={cn(
+                          "flex items-center gap-2 p-2.5 min-h-[44px] rounded-xl border text-left text-xs font-medium cursor-pointer",
+                          checked
+                            ? "bg-white border-[var(--accent)] text-[var(--ink)]"
+                            : "bg-[var(--bg)] border-[var(--line)] text-[var(--muted)]"
+                        )}
+                      >
+                        {checked ? (
+                          <CheckSquare className="w-4 h-4 text-[var(--accent)] shrink-0" />
+                        ) : (
+                          <Square className="w-4 h-4 text-[var(--muted)] shrink-0" />
+                        )}
+                        <span>{item.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Komisi Makelar */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-[var(--line)]">
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                    Nama Makelar / Perantara
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Kosongkan jika tanpa makelar"
+                    value={brokerName}
+                    onChange={(e) => setBrokerName(e.target.value)}
+                    className="w-full px-3.5 py-2.5 min-h-[44px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm text-[var(--ink)]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                    Komisi Makelar (Rp)
+                  </label>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="Contoh: 1.500.000"
+                    value={brokerFee !== "" ? formatThousands(brokerFee) : ""}
+                    onChange={(e) => setBrokerFee(parseThousands(e.target.value) || "")}
+                    className="w-full px-3.5 py-2.5 min-h-[44px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm font-bold text-[var(--ink)]"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* ── RINGKASAN TRANSAKSI ── */}
+        <div className="bg-[var(--ink)] text-white rounded-xl p-4 sm:p-5 space-y-3">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="text-xs text-white/75 font-medium">Total Harga Jual</span>
+            <span className="text-xl sm:text-2xl font-extrabold">{formatRupiah(priceNum)}</span>
+          </div>
+          <div className="grid grid-cols-3 gap-2 pt-3 border-t border-white/15 text-xs">
+            <div>
+              <div className="text-[11px] text-white/65">Uang Masuk</div>
+              <div className="font-bold mt-0.5">{formatRupiah(effectiveInitialPay)}</div>
+            </div>
+            <div>
+              <div className="text-[11px] text-white/65">Sisa Tagihan</div>
+              <div className="font-bold mt-0.5">{formatRupiah(remainingPiutang)}</div>
+            </div>
+            <div>
+              <div className="text-[11px] text-white/65">Perkiraan Laba</div>
+              <div
+                className={cn(
+                  "font-bold mt-0.5",
+                  estimatedGrossProfit < 0 ? "text-red-300" : "text-emerald-300"
+                )}
+              >
+                {formatRupiah(estimatedGrossProfit)}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Live Transaction Summary Card */}
-        <div className="bg-[var(--ink)] text-white rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-5">
-          <div className="space-y-1">
-            <span className="text-xs uppercase tracking-wider text-white/60 font-semibold block flex items-center gap-1.5">
-              <FileCheck className="w-4 h-4 text-white/80" />
-              <span>Ringkasan Kesepakatan Transaksi</span>
-            </span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-extrabold text-white">
-                {formatRupiah(priceNum)}
-              </span>
-              <span className="text-xs text-white/70">total harga jual</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-4 border-t md:border-t-0 md:border-l border-white/20 pt-4 md:pt-0 md:pl-6 text-right">
-            <div>
-              <span className="text-[10px] text-white/60 block">DP Masuk</span>
-              <span className="text-xs font-bold text-white">
-                {formatRupiah(initialNum)}
-              </span>
-            </div>
-            <div>
-              <span className="text-[10px] text-white/60 block">Sisa Piutang</span>
-              <span className="text-xs font-bold text-white/90">
-                {formatRupiah(remainingPiutang)}
-              </span>
-            </div>
-            <div>
-              <span className="text-[10px] text-white/60 block">Estimasi Gross Profit</span>
-              <span className="text-xs font-bold text-white flex items-center justify-end gap-1">
-                <TrendingUp className="w-3 h-3 text-white/70" />
-                {formatRupiah(estimatedGrossProfit)}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 bg-[var(--bg)] border border-[var(--line)] rounded-2xl p-4">
+        {/* ── TOMBOL SIMPAN ── */}
+        <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-1">
           <Link
             href="/admin/sales"
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg)] transition-colors shadow-xs"
+            className="w-full sm:w-auto px-5 py-3 min-h-[48px] rounded-xl border border-[var(--line)] bg-white text-center text-sm font-semibold text-[var(--muted)] hover:text-[var(--ink)] flex items-center justify-center"
           >
-            Batal & Kembali
+            Batal
           </Link>
 
           <button
             type="submit"
             disabled={loading || availableVehicles.length === 0}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold disabled:opacity-50 cursor-pointer"
           >
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Menyimpan Transaksi...</span>
+                <span>Menyimpan...</span>
               </>
             ) : (
               <>
                 <CheckCircle className="w-4 h-4" />
-                <span>Simpan Penjualan & Terbitkan Kuitansi</span>
+                <span>Simpan Penjualan</span>
               </>
             )}
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+function UploadCard({
+  title,
+  url,
+  uploading,
+  accept,
+  onSelect,
+  onClear,
+}: {
+  title: string;
+  url: string;
+  uploading: boolean;
+  accept: string;
+  onSelect: (file: File) => void;
+  onClear: () => void;
+}) {
+  return (
+    <div className="border border-[var(--line)] rounded-xl p-3 bg-[var(--bg)] space-y-2">
+      <div className="text-xs font-bold text-[var(--ink)]">{title}</div>
+      {url ? (
+        <div className="flex items-center justify-between gap-2">
+          <a
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:underline"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span>Lihat berkas</span>
+          </a>
+          <button
+            type="button"
+            onClick={onClear}
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 min-h-[36px] rounded-lg border border-red-200 bg-white text-red-600 text-xs font-semibold cursor-pointer"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Hapus</span>
+          </button>
+        </div>
+      ) : (
+        <label className="w-full py-2.5 px-3 min-h-[44px] border border-dashed border-[var(--line-input)] rounded-lg bg-white flex items-center justify-center gap-2 cursor-pointer text-xs font-semibold text-[var(--ink)]">
+          {uploading ? (
+            <Loader2 className="w-4 h-4 animate-spin text-[var(--accent)]" />
+          ) : (
+            <Upload className="w-4 h-4 text-[var(--accent)]" />
+          )}
+          <span>{uploading ? "Mengunggah..." : "Pilih file / foto"}</span>
+          <input
+            type="file"
+            accept={accept}
+            className="hidden"
+            disabled={uploading}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) onSelect(file);
+            }}
+          />
+        </label>
+      )}
     </div>
   );
 }

@@ -3,122 +3,34 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import {
-  Sparkles,
-  Bot,
-  Car,
-  AlertTriangle,
-  Clock,
-  CheckCircle2,
-  Wallet,
-  ArrowRight,
-  Send,
-  Building,
-  Wrench,
-  FileText,
-  TrendingUp,
-  RefreshCw,
-  ExternalLink,
-  Layers,
-  ShoppingBag,
-  HelpCircle,
   Plus,
-  Coins,
-  Power,
-  Gavel,
-  BarChart3,
-  TrendingDown,
-  CalendarClock,
-  BadgeCheck,
-  ShieldAlert,
-  Receipt,
-  ArrowUpCircle,
-  ArrowDownCircle,
+  Car,
+  ReceiptText,
+  Wallet,
+  Clock,
+  AlertTriangle,
   MessageCircle,
-  BellRing,
-  Target,
-  Compass,
-  Activity,
-  Check,
-  CheckSquare,
-  ShieldCheck,
+  ExternalLink,
+  ChevronDown,
+  RefreshCw,
+  Send,
+  Wrench,
+  CheckCircle2,
+  FileText,
 } from "lucide-react";
-import { formatRupiah, cn } from "@/lib/utils";
+import {
+  formatRupiah,
+  cn,
+  normalizePlateNumber,
+  formatVehicleTitle,
+} from "@/lib/utils";
 import { generateReceivableReminderLink } from "@/lib/utils/whatsapp";
 import {
   DashboardOperationalData,
-  BusinessPatternAnalytics,
   ExecutiveAiOrchestration,
   generateExecutiveAiBriefing,
   askAiShowroomAdvisor,
 } from "@/app/actions/ai-assistant";
-import { toggleSystemSettingAction } from "@/app/actions/setting";
-
-function parseInlineFormatting(str: string): React.ReactNode[] {
-  const parts = str.split(/(\*\*[^*]+\*\*)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return (
-        <strong key={i} className="text-[var(--ink)] font-bold">
-          {part.slice(2, -2)}
-        </strong>
-      );
-    }
-    return part;
-  });
-}
-
-function renderExecutiveFormattedText(text: string) {
-  if (!text) return null;
-  const lines = text.split("\n");
-  return (
-    <div className="space-y-2 text-xs sm:text-sm text-[var(--ink)] leading-relaxed">
-      {lines.map((line, idx) => {
-        const trimmed = line.trim();
-        if (!trimmed) return <div key={idx} className="h-1.5" />;
-        if (trimmed.startsWith("### ")) {
-          return (
-            <h4 key={idx} className="text-[var(--accent)] font-bold text-sm sm:text-base pt-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0" />
-              <span>{trimmed.replace(/^###\s*/, "")}</span>
-            </h4>
-          );
-        }
-        if (trimmed.startsWith("## ")) {
-          return (
-            <h3 key={idx} className="text-[var(--ink)] font-bold text-base sm:text-lg pt-3 border-b border-[var(--line)] pb-1">
-              {trimmed.replace(/^##\s*/, "")}
-            </h3>
-          );
-        }
-        if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
-          return (
-            <div key={idx} className="flex items-start gap-2 pl-2">
-              <span className="text-[var(--accent)] font-bold mt-1 text-xs shrink-0">•</span>
-              <p className="text-[var(--muted)] flex-1 leading-relaxed">
-                {parseInlineFormatting(trimmed.replace(/^[-*]\s*/, ""))}
-              </p>
-            </div>
-          );
-        }
-        if (/^\d+\.\s/.test(trimmed)) {
-          return (
-            <div key={idx} className="flex items-start gap-2 pl-2">
-              <span className="text-[var(--accent)] font-bold text-xs mt-0.5 shrink-0">{trimmed.match(/^\d+\./)?.[0]}</span>
-              <p className="text-[var(--muted)] flex-1 leading-relaxed">
-                {parseInlineFormatting(trimmed.replace(/^\d+\.\s*/, ""))}
-              </p>
-            </div>
-          );
-        }
-        return (
-          <p key={idx} className="text-[var(--muted)] leading-relaxed">
-            {parseInlineFormatting(trimmed)}
-          </p>
-        );
-      })}
-    </div>
-  );
-}
 
 interface DashboardClientProps {
   initialData: DashboardOperationalData;
@@ -132,77 +44,26 @@ export function DashboardClient({
   initialData,
   initialOrchestration,
   hasGeminiKey,
-  geminiKeySet = false,
-  geminiEnabled = true,
 }: DashboardClientProps) {
-  const [data, setData] = useState<DashboardOperationalData>(initialData);
-  const [activeGemini, setActiveGemini] = useState(hasGeminiKey);
-  const [keyPresent, setKeyPresent] = useState(geminiKeySet || hasGeminiKey);
-  const [isEnablingGemini, setIsEnablingGemini] = useState(false);
+  const data = initialData;
 
-  // Fallback Orchestration
-  const fallbackOrchestration: ExecutiveAiOrchestration = {
-    healthScore: 88,
-    healthStatus: "PRIMA",
-    headline: "Kondisi Operasional Garasi Siap Terorkestrasi.",
-    executiveSummary: "Memuat orkestrasi data operasional showroom...",
-    generatedAt: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) + " WIB",
-    metrics: {
-      cashRunwayDays: initialData.cashflowProjection?.cashRunwayDays || 45,
-      cashRunwayVerdict: "Aman",
-      projectedNet14DaysRupiah: initialData.cashflowProjection?.netCashflow14Days || 0,
-      safeBuyingUnits: initialData.buyingPowerRecommendation?.recommendedUnits || 0,
-      safeBuyingMaxBudget: initialData.buyingPowerRecommendation?.recommendedBudget || 0,
-      bpkbPendingRiskCount: initialData.auctionPipeline?.unitsBpkbArrivingSoon?.length || 0,
-      taxAlertCount: (initialData.taxAlertSummary?.overdueCount || 0) + (initialData.taxAlertSummary?.expiringSoonCount || 0),
-    },
-    directiveActions: [],
-    auctionStrategy: {
-      canBuy: (initialData.buyingPowerRecommendation?.recommendedUnits || 0) > 0,
-      recommendedUnits: initialData.buyingPowerRecommendation?.recommendedUnits || 0,
-      recommendedMaxBudgetRupiah: initialData.buyingPowerRecommendation?.recommendedBudget || 0,
-      targetSegment: initialData.buyingPowerRecommendation?.targetSegment || "LMPV",
-      preferredHouse: "IBID / JBA",
-      tacticalAdvice: initialData.buyingPowerRecommendation?.advice || "",
-    },
-    salesAcceleration: {
-      headline: "Optimalkan unit ready di garasi",
-      tactics: ["Terapkan SOP Cash Tempo DP 70% & 30 hari"],
-    },
-    riskMitigation: {
-      bpkbStatus: "Masa tunggu BPKB terkendali",
-      taxStatus: "Pantau STNK di Radar Pajak",
-      receivableStatus: "Tagih piutang tempo secara berkala",
-    },
-    fullBriefingText: "Memuat laporan eksekutif...",
-  };
-
-  // AI Orchestration & Briefing State
-  const [orchestration, setOrchestration] = useState<ExecutiveAiOrchestration>(
-    initialOrchestration || fallbackOrchestration
+  const [aiPanelOpen, setAiPanelOpen] = useState(false);
+  const [orchestration, setOrchestration] = useState<ExecutiveAiOrchestration | undefined>(
+    initialOrchestration
   );
-  const [orchestrationTab, setOrchestrationTab] = useState<
-    "DIRECTIVE" | "AUCTION" | "SALES" | "FULL_BRIEFING"
-  >("DIRECTIVE");
   const [briefingLoading, setBriefingLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
-
-  const handleQuickEnableGemini = async () => {
-    setIsEnablingGemini(true);
-    setAiError(null);
-    const res = await toggleSystemSettingAction("GEMINI_ENABLED", true);
-    setIsEnablingGemini(false);
-    if (res.success) {
-      setActiveGemini(true);
-    } else {
-      setAiError(res.error || "Gagal mengaktifkan Gemini");
-    }
-  };
-
-  // Interactive AI Question State
   const [question, setQuestion] = useState("");
   const [askingAi, setAskingAi] = useState(false);
   const [aiAnswer, setAiAnswer] = useState<string | null>(null);
+
+  const totalPiutang = data.pendingReceivables.reduce(
+    (sum, item) => sum + item.remainingAmount,
+    0
+  );
+  const totalInProgress = data.intakeCount + data.inRepairCount;
+  const criticalTaxUnits = data.taxAlertSummary?.criticalUnits || [];
+  const waitingBpkbUnits = data.auctionPipeline?.unitsBpkbArrivingSoon || [];
 
   const handleGenerateBriefing = async () => {
     setBriefingLoading(true);
@@ -212,1502 +73,430 @@ export function DashboardClient({
     if (res.success && res.orchestration) {
       setOrchestration(res.orchestration);
     } else if (res.error) {
-      setAiError(res.error || "Gagal menghasilkan briefing AI.");
+      setAiError(res.error || "Gagal memuat ringkasan AI.");
     }
   };
 
   const handleAskAi = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim()) return;
-
     setAskingAi(true);
     setAiAnswer(null);
     setAiError(null);
     const res = await askAiShowroomAdvisor(question);
     setAskingAi(false);
-
     if (res.success && res.answer) {
       setAiAnswer(res.answer);
     } else {
-      setAiError(res.error || "Gagal berkonsultasi dengan AI.");
+      setAiError(res.error || "Gagal menghubungi asisten AI.");
     }
   };
 
-  const handlePresetQuestion = (preset: string) => {
-    setQuestion(preset);
-  };
-
-  const cf = data.cashflowProjection;
-  const ap = data.auctionPipeline;
-  const netPositive = cf.netCashflow14Days >= 0;
-
   return (
-    <div className="space-y-8">
-      {/* ── 1. AI EXECUTIVE BRIEFING & DASHBOARD ORCHESTRATION ── */}
-      <div className="rounded-[var(--r-card)] bg-[var(--surface)] text-[var(--ink)] p-5 sm:p-6 shadow-xs border border-[var(--line)] space-y-6">
-        <div className="space-y-6">
-          {/* Header Panel */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--line)] pb-5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-[var(--r-btn)] bg-[var(--accent)] text-white flex items-center justify-center shadow-xs shrink-0">
-                <Sparkles className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-[18px] font-bold tracking-tight text-[var(--ink)]">
-                    Orkestrasi Intelijen AI &amp; Command Center
-                  </h2>
-                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
-                    Gemini 2.5 Flash
-                  </span>
-                </div>
-                <p className="text-[13px] text-[var(--muted)] mt-0.5">
-                  Diagnosis kesehatan showroom, prioritas garasi, dan panduan kulakan lelang real-time.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleGenerateBriefing}
-                disabled={briefingLoading}
-                className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2 rounded-[var(--r-btn)] text-[13px] font-semibold transition-colors cursor-pointer disabled:opacity-50"
-              >
-                <RefreshCw className={cn("w-3.5 h-3.5", briefingLoading && "animate-spin")} />
-                <span>{briefingLoading ? "Mengorkestrasi..." : "Analisis & Orkestrasi AI"}</span>
-              </button>
+    <div className="space-y-6">
+      {/* ── 1. AKSI CEPAT HARIAN (1-TAP DI HP) ── */}
+      <section aria-label="Aksi cepat harian" className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <Link
+          href="/admin/inventory/new"
+          className="flex items-center justify-center sm:justify-start gap-3 px-4 py-3.5 min-h-[54px] rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-bold text-sm shadow-xs transition-colors active:scale-[0.99]"
+        >
+          <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+            <Plus className="w-5 h-5" />
+          </div>
+          <div className="text-left">
+            <div className="leading-tight">Catat Unit Masuk</div>
+            <div className="text-[11px] font-normal text-white/80">
+              Input beli &amp; tayang web
             </div>
           </div>
+        </Link>
 
-          {/* AI Error Notification Banner */}
-          {aiError && (
-            <div className="bg-red-950/80 border border-red-700/60 rounded-[var(--r-card)] p-4 text-xs text-red-200 flex items-start justify-between gap-3 shadow-md animate-in fade-in">
-              <div className="flex items-start gap-2.5">
-                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="font-bold text-red-100 block">Pemberitahuan Asisten AI:</strong>
-                  <p className="mt-0.5 leading-relaxed">{aiError}</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setAiError(null)}
-                className="text-xs text-red-300 hover:text-white underline shrink-0 cursor-pointer font-bold px-2 py-0.5"
-              >
-                Tutup
-              </button>
-            </div>
-          )}
-
-          {/* ── EXECUTIVE HEALTH SCORE & STRATEGIC OVERVIEW ── */}
-          <div className="bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-card)] p-5 space-y-4">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-4 border-b border-[var(--line)]">
-              {/* Left: Health Score Card */}
-              <div className="flex items-center gap-4">
-                <div
-                  className={cn(
-                    "w-14 h-14 rounded-[var(--r-btn)] flex flex-col items-center justify-center border-2 shrink-0 bg-white shadow-xs",
-                    orchestration.healthStatus === "PRIMA"
-                      ? "border-[var(--ok)] text-[var(--ok)]"
-                      : orchestration.healthStatus === "WASPADA"
-                      ? "border-[var(--warn)] text-[var(--warn)]"
-                      : "border-[var(--bad)] text-[var(--bad)]"
-                  )}
-                >
-                  <span className="text-xl font-bold leading-none">{orchestration.healthScore}</span>
-                  <span className="text-[9px] uppercase tracking-wider font-bold mt-0.5">/ 100</span>
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={cn(
-                        "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border",
-                        orchestration.healthStatus === "PRIMA"
-                          ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
-                          : orchestration.healthStatus === "WASPADA"
-                          ? "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
-                          : "bg-[var(--bg)] text-[var(--bad)] border-[var(--bad)]/30"
-                      )}
-                    >
-                      Status: {orchestration.healthStatus}
-                    </span>
-                    <span className="text-[12px] text-[var(--muted)] font-medium">
-                      Diperbarui {orchestration.generatedAt}
-                    </span>
-                  </div>
-                  <h3 className="text-sm sm:text-base font-bold text-[var(--ink)] mt-1 leading-snug">
-                    {orchestration.headline}
-                  </h3>
-                </div>
-              </div>
-
-              {/* Right: Quick Metric Pills */}
-              <div className="grid grid-cols-3 gap-2 shrink-0">
-                <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] px-3 py-2 text-center shadow-xs">
-                  <div className="text-[10px] text-[var(--muted)] font-semibold uppercase tracking-wider">Runway Kas</div>
-                  <div className="text-xs sm:text-sm font-bold text-[var(--ink)] mt-0.5">
-                    {orchestration.metrics.cashRunwayDays} Hari
-                  </div>
-                  <div className="text-[10px] text-[var(--ok)] font-medium">
-                    {orchestration.metrics.cashRunwayVerdict}
-                  </div>
-                </div>
-
-                <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] px-3 py-2 text-center shadow-xs">
-                  <div className="text-[10px] text-[var(--muted)] font-semibold uppercase tracking-wider">Daya Beli</div>
-                  <div className="text-xs sm:text-sm font-bold text-[var(--accent)] mt-0.5">
-                    {orchestration.metrics.safeBuyingUnits} Unit
-                  </div>
-                  <div className="text-[10px] text-[var(--muted)] font-medium truncate max-w-[90px]">
-                    Maks {formatRupiah(orchestration.metrics.safeBuyingMaxBudget)}
-                  </div>
-                </div>
-
-                <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] px-3 py-2 text-center shadow-xs">
-                  <div className="text-[10px] text-[var(--muted)] font-semibold uppercase tracking-wider">Alarm Kritis</div>
-                  <div
-                    className={cn(
-                      "text-xs sm:text-sm font-bold mt-0.5",
-                      orchestration.metrics.taxAlertCount > 0 ? "text-[var(--bad)]" : "text-[var(--ok)]"
-                    )}
-                  >
-                    {orchestration.metrics.taxAlertCount} Pajak
-                  </div>
-                  <div className="text-[10px] text-[var(--muted)] font-medium">
-                    {orchestration.metrics.bpkbPendingRiskCount} BPKB Tiba
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Executive Summary paragraph */}
-            <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed font-normal">
-              {orchestration.executiveSummary}
-            </p>
-
-            {/* ── TABS SELECTOR ── */}
-            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[var(--line)]">
-              <button
-                type="button"
-                onClick={() => setOrchestrationTab("DIRECTIVE")}
-                className={cn(
-                  "px-3.5 py-1.5 rounded-[var(--r-btn)] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer",
-                  orchestrationTab === "DIRECTIVE"
-                    ? "bg-[var(--accent)] text-white font-bold"
-                    : "bg-white text-[var(--muted)] hover:text-[var(--ink)] border border-[var(--line)]"
-                )}
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Kartu Aksi Prioritas ({orchestration.directiveActions.length})</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setOrchestrationTab("AUCTION")}
-                className={cn(
-                  "px-3.5 py-1.5 rounded-[var(--r-btn)] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer",
-                  orchestrationTab === "AUCTION"
-                    ? "bg-[var(--accent)] text-white font-bold"
-                    : "bg-white text-[var(--muted)] hover:text-[var(--ink)] border border-[var(--line)]"
-                )}
-              >
-                <Gavel className="w-3.5 h-3.5" />
-                <span>Panduan Kulakan Lelang</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setOrchestrationTab("SALES")}
-                className={cn(
-                  "px-3.5 py-1.5 rounded-[var(--r-btn)] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer",
-                  orchestrationTab === "SALES"
-                    ? "bg-[var(--accent)] text-white font-bold"
-                    : "bg-white text-[var(--muted)] hover:text-[var(--ink)] border border-[var(--line)]"
-                )}
-              >
-                <TrendingUp className="w-3.5 h-3.5" />
-                <span>Akselerasi Penjualan</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setOrchestrationTab("FULL_BRIEFING")}
-                className={cn(
-                  "px-3.5 py-1.5 rounded-[var(--r-btn)] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer",
-                  orchestrationTab === "FULL_BRIEFING"
-                    ? "bg-[var(--accent)] text-white font-bold"
-                    : "bg-white text-[var(--muted)] hover:text-[var(--ink)] border border-[var(--line)]"
-                )}
-              >
-                <FileText className="w-3.5 h-3.5" />
-                <span>Laporan Eksekutif Lengkap</span>
-              </button>
-            </div>
-
-            {/* ── TAB CONTENT ── */}
-            {orchestrationTab === "DIRECTIVE" && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 pt-2 animate-in fade-in">
-                {orchestration.directiveActions.map((action) => (
-                  <div
-                    key={action.id}
-                    className={cn(
-                      "rounded-[var(--r-btn)] p-4 border flex flex-col justify-between transition-colors bg-white shadow-xs",
-                      action.priority === "CRITICAL"
-                        ? "border-[var(--bad)]/40"
-                        : action.priority === "HIGH"
-                        ? "border-[var(--warn)]/40"
-                        : "border-[var(--line)]"
-                    )}
-                  >
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--muted)]">
-                          {action.category.replace("_", " ")}
-                        </span>
-                        <span
-                          className={cn(
-                            "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border",
-                            action.priority === "CRITICAL"
-                              ? "bg-[var(--bg)] text-[var(--bad)] border-[var(--bad)]/30"
-                              : action.priority === "HIGH"
-                              ? "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
-                              : "bg-[var(--bg)] text-[var(--accent)] border-[var(--line)]"
-                          )}
-                        >
-                          {action.badgeText}
-                        </span>
-                      </div>
-                      <h4 className="text-xs sm:text-sm font-bold text-[var(--ink)] leading-snug">
-                        {action.title}
-                      </h4>
-                      <p className="text-xs text-[var(--muted)] leading-relaxed">
-                        {action.description}
-                      </p>
-                    </div>
-
-                    <div className="pt-3 mt-3 border-t border-[var(--line)]">
-                      <Link
-                        href={action.actionHref}
-                        className="inline-flex items-center justify-between w-full text-xs font-semibold text-[var(--accent)] hover:underline transition-colors"
-                      >
-                        <span>{action.actionLabel}</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {orchestrationTab === "AUCTION" && (
-              <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] p-5 space-y-4 animate-in fade-in shadow-xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--line)]">
-                  <div className="flex items-center gap-2.5">
-                    <Gavel className="w-5 h-5 text-[var(--accent)]" />
-                    <div>
-                      <h4 className="text-sm font-bold text-[var(--ink)]">
-                        Rekomendasi Kulakan Balai Lelang
-                      </h4>
-                      <p className="text-xs text-[var(--muted)]">
-                        Strategi berbasis histori balai favorit dan margin kotor riil garasi.
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-xs font-bold px-3 py-1 rounded-full border shrink-0",
-                      orchestration.auctionStrategy.canBuy
-                        ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
-                        : "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
-                    )}
-                  >
-                    {orchestration.auctionStrategy.canBuy ? "Aman Kulakan Hari Ini" : "Tunda Kulakan Sementara"}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="bg-[var(--bg)] border border-[var(--line)] p-3 rounded-[var(--r-btn)]">
-                    <span className="text-[10px] text-[var(--muted)] uppercase font-semibold">Target Segmen</span>
-                    <p className="text-xs sm:text-sm font-bold text-[var(--ink)] mt-0.5">
-                      {orchestration.auctionStrategy.targetSegment}
-                    </p>
-                  </div>
-                  <div className="bg-[var(--bg)] border border-[var(--line)] p-3 rounded-[var(--r-btn)]">
-                    <span className="text-[10px] text-[var(--muted)] uppercase font-semibold">Batas Hammer Aman</span>
-                    <p className="text-xs sm:text-sm font-bold text-[var(--accent)] mt-0.5">
-                      {formatRupiah(orchestration.auctionStrategy.recommendedMaxBudgetRupiah)}
-                    </p>
-                  </div>
-                  <div className="bg-[var(--bg)] border border-[var(--line)] p-3 rounded-[var(--r-btn)]">
-                    <span className="text-[10px] text-[var(--muted)] uppercase font-semibold">Balai Prioritas</span>
-                    <p className="text-xs sm:text-sm font-bold text-[var(--ink)] mt-0.5">
-                      {orchestration.auctionStrategy.preferredHouse}
-                    </p>
-                  </div>
-                </div>
-
-                <p className="text-xs text-[var(--muted)] leading-relaxed bg-[var(--bg)] p-3.5 rounded-[var(--r-btn)] border border-[var(--line)]">
-                  {orchestration.auctionStrategy.tacticalAdvice}
-                </p>
-
-                <div className="flex justify-end pt-1">
-                  <Link
-                    href="/admin/inventory/new"
-                    className="inline-flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-semibold px-4 py-2 rounded-[var(--r-btn)] transition-colors"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Input Unit Hasil Lelang Baru</span>
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {orchestrationTab === "SALES" && (
-              <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] p-5 space-y-4 animate-in fade-in shadow-xs">
-                <div className="pb-3 border-b border-[var(--line)]">
-                  <h4 className="text-sm font-bold text-[var(--ink)] flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-[var(--ok)]" />
-                    <span>{orchestration.salesAcceleration.headline}</span>
-                  </h4>
-                </div>
-
-                <div className="space-y-2.5">
-                  {orchestration.salesAcceleration.tactics.map((tactic, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 bg-[var(--bg)] p-3 rounded-[var(--r-btn)] border border-[var(--line)]">
-                      <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0 mt-0.5" />
-                      <p className="text-xs text-[var(--ink)] leading-relaxed">{tactic}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex justify-end pt-1">
-                  <Link
-                    href="/admin/inventory?status=READY_FOR_SALE"
-                    className="inline-flex items-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-semibold px-4 py-2 rounded-[var(--r-btn)] transition-colors"
-                  >
-                    <span>Buka Daftar Unit Siap Jual</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {orchestrationTab === "FULL_BRIEFING" && (
-              <div className="bg-white border border-[var(--line)] rounded-[var(--r-btn)] p-5 animate-in fade-in shadow-xs">
-                {renderExecutiveFormattedText(orchestration.fullBriefingText)}
-              </div>
-            )}
+        <Link
+          href="/admin/sales/new"
+          className="flex items-center justify-center sm:justify-start gap-3 px-4 py-3.5 min-h-[54px] rounded-xl bg-[var(--ok)] hover:opacity-95 text-white font-bold text-sm shadow-xs transition-opacity active:scale-[0.99]"
+        >
+          <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+            <ReceiptText className="w-5 h-5" />
           </div>
-
-          {/* ── INTERACTIVE Q&A INPUT WITH AI ADVISOR ── */}
-          <div className="space-y-3 pt-2">
-            <form onSubmit={handleAskAi} className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Tanya asisten AI (contoh: 'Ada yang tawarin Avanza 2019 harga 135jt eks perusahaan, aman ambil gak dengan kas sekarang?')"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                className="flex-1 bg-white border border-[var(--line-input)] rounded-[var(--r-btn)] px-4 py-2.5 text-xs sm:text-sm text-[var(--ink)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
-              />
-              <button
-                type="submit"
-                disabled={askingAi || !question.trim()}
-                className="bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-4 py-2.5 rounded-[var(--r-btn)] font-semibold text-xs transition-colors shrink-0 disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>{askingAi ? "Menganalisa..." : "Tanya AI"}</span>
-              </button>
-            </form>
-
-            {/* Quick Prompt Presets */}
-            <div className="flex flex-wrap items-center gap-2 text-[11px] text-[var(--muted)]">
-              <span className="font-semibold">Contoh pertanyaan:</span>
-              <button
-                type="button"
-                onClick={() =>
-                  handlePresetQuestion(
-                    "Berapa unit dan segmen apa yang paling aman kita kulakan di lelang hari ini berdasarkan sisa kas BCA?"
-                  )
-                }
-                className="bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-2.5 py-1 rounded-[var(--r-btn)] transition-colors cursor-pointer"
-              >
-                Daya Kulakan Kas Hari Ini
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  handlePresetQuestion(
-                    "Bagaimana rekomendasi penyesuaian harga dan strategi penjualan untuk mobil yang sudah di atas 30 hari di garasi?"
-                  )
-                }
-                className="bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-2.5 py-1 rounded-[var(--r-btn)] transition-colors cursor-pointer"
-              >
-                Strategi Unit Macet
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  handlePresetQuestion(
-                    "Ada unit eks tarikan leasing ditawarkan di lelang besok, apa risiko yang perlu saya pertimbangkan soal BPKB dan dokumennya?"
-                  )
-                }
-                className="bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-2.5 py-1 rounded-[var(--r-btn)] transition-colors cursor-pointer"
-              >
-                Risiko Eks Leasing
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  handlePresetQuestion(
-                    "Piutang saya yang mana yang sudah mendekati 2 minggu dan perlu segera saya tagih hari ini?"
-                  )
-                }
-                className="bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--muted)] hover:text-[var(--ink)] px-2.5 py-1 rounded-[var(--r-btn)] transition-colors cursor-pointer"
-              >
-                Piutang Mana Ditagih?
-              </button>
+          <div className="text-left">
+            <div className="leading-tight">Catat Penjualan</div>
+            <div className="text-[11px] font-normal text-white/85">
+              Jual lunas atau tempo
             </div>
-
-            {/* Answer Box */}
-            {aiAnswer && (
-              <div className="bg-white border border-[var(--line)] rounded-[var(--r-card)] p-5 text-xs sm:text-sm text-[var(--ink)] space-y-3 mt-3 shadow-xs animate-in fade-in">
-                <div className="flex items-center justify-between border-b border-[var(--line)] pb-2">
-                  <span className="flex items-center gap-2 text-[var(--accent)] font-bold text-xs uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    Keputusan Strategis AI Advisor
-                  </span>
-                  <span className="text-[11px] text-[var(--muted)]">Berdasarkan data riil showroom</span>
-                </div>
-                <div>{renderExecutiveFormattedText(aiAnswer)}</div>
-              </div>
-            )}
           </div>
-        </div>
-      </div>
+        </Link>
 
-      {/* ── ALARM PROAKTIF PIUTANG TEMPO 14 HARI (ACTIONABLE REMINDER) ── */}
-      {(() => {
-        const urgentReceivables =
-          data.pendingReceivables?.filter(
-            (r) =>
-              r.dueCategory === "OVERDUE" ||
-              r.dueCategory === "DUE_TODAY" ||
-              r.dueCategory === "DUE_SOON" ||
-              r.daysSinceSale >= 10
-          ) || [];
+        <Link
+          href="/admin/finance/cash/new"
+          className="flex items-center justify-center sm:justify-start gap-3 px-4 py-3.5 min-h-[54px] rounded-xl bg-[var(--surface)] hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] font-bold text-sm shadow-xs transition-colors active:scale-[0.99]"
+        >
+          <div className="w-8 h-8 rounded-lg bg-[var(--bg)] border border-[var(--line)] flex items-center justify-center shrink-0">
+            <Wallet className="w-4 h-4 text-[var(--accent)]" />
+          </div>
+          <div className="text-left">
+            <div className="leading-tight">Catat Kas Masuk / Keluar</div>
+            <div className="text-[11px] font-normal text-[var(--muted)]">
+              Setor modal atau operasional
+            </div>
+          </div>
+        </Link>
+      </section>
 
-        if (urgentReceivables.length === 0) return null;
+      {/* ── 2. RINGKASAN 4 ANGKA UTAMA ── */}
+      <section aria-label="Ringkasan utama" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Link
+          href="/admin/inventory?status=READY_FOR_SALE"
+          className="bg-[var(--surface)] border border-[var(--line)] hover:border-[var(--accent)] rounded-xl p-4 transition-colors block"
+        >
+          <div className="flex items-center justify-between gap-2 text-[var(--muted)]">
+            <span className="text-xs font-semibold">Siap Jual (Web)</span>
+            <Car className="w-4 h-4 text-[var(--ok)] shrink-0" />
+          </div>
+          <div className="mt-2 flex items-baseline gap-1.5">
+            <span className="text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
+              {data.readyCount}
+            </span>
+            <span className="text-xs text-[var(--muted)]">unit</span>
+          </div>
+          <div className="text-[11px] text-[var(--accent)] font-semibold mt-1">
+            Lihat stok &rsaquo;
+          </div>
+        </Link>
 
-        const totalUrgentAmount = urgentReceivables.reduce(
-          (sum, r) => sum + r.remainingAmount,
-          0
-        );
-        const hasOverdue = urgentReceivables.some((r) => r.dueCategory === "OVERDUE");
+        <Link
+          href="/admin/sales"
+          className="bg-[var(--surface)] border border-[var(--line)] hover:border-[var(--accent)] rounded-xl p-4 transition-colors block"
+        >
+          <div className="flex items-center justify-between gap-2 text-[var(--muted)]">
+            <span className="text-xs font-semibold">Belum Lunas</span>
+            <Clock className="w-4 h-4 text-[var(--warn)] shrink-0" />
+          </div>
+          <div className="mt-2 text-lg sm:text-xl font-extrabold text-[var(--ink)] truncate">
+            {formatRupiah(totalPiutang)}
+          </div>
+          <div className="text-[11px] text-[var(--muted)] mt-1">
+            {data.pendingReceivables.length} unit masih tempo
+          </div>
+        </Link>
 
-        return (
+        <Link
+          href="/admin/finance"
+          className="bg-[var(--surface)] border border-[var(--line)] hover:border-[var(--accent)] rounded-xl p-4 transition-colors block"
+        >
+          <div className="flex items-center justify-between gap-2 text-[var(--muted)]">
+            <span className="text-xs font-semibold">Saldo Kas</span>
+            <Wallet className="w-4 h-4 text-[var(--accent)] shrink-0" />
+          </div>
           <div
             className={cn(
-              "rounded-[var(--r-card)] p-5 border shadow-sm transition-all relative overflow-hidden bg-white border-[var(--line)]"
+              "mt-2 text-lg sm:text-xl font-extrabold truncate",
+              data.cashBalance < 0 ? "text-[var(--bad)]" : "text-[var(--ink)]"
             )}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--line)]">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-[var(--r-btn)] flex items-center justify-center shrink-0 shadow-xs bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)]">
-                  <BellRing className="w-5 h-5 " />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-extrabold text-sm sm:text-base text-[var(--ink)] tracking-tight">
-                      Alarm Pelunasan Cash Tempo Garasi ({urgentReceivables.length} Tagihan Butuh Tindakan)
-                    </h3>
-                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-[var(--bg)] text-[var(--ink)] border-[var(--line)] shadow-2xs">
-                      Total: {formatRupiah(totalUrgentAmount)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-[var(--muted)] mt-0.5">
-                    Kebijakan Nur Mobil: Cash Tempo maksimal 30 hari. BPKB dan STNK asli tetap ditahan di brankas showroom hingga pelunasan sisa 30% diterima penuh.
-                  </p>
-                </div>
-              </div>
-
-              <Link
-                href="/admin/sales"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[var(--ink)] bg-white hover:bg-[var(--bg)] border border-[var(--line)] px-3 py-1.5 rounded-[var(--r-btn)] transition-colors shrink-0 shadow-xs"
-              >
-                <span>Lihat Semua Penjualan</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-4">
-              {urgentReceivables.map((r) => {
-                const waLink = r.buyerPhone
-                  ? generateReceivableReminderLink(r.buyerPhone, {
-                      buyerName: r.buyerName,
-                      brand: r.vehicleBrand || "Mobil",
-                      model: r.vehicleModel || "",
-                      plateNumber: r.vehiclePlate,
-                      remainingAmount: r.remainingAmount,
-                      dueDate: r.dueDate,
-                    })
-                  : null;
-
-                const isOverdue = r.dueCategory === "OVERDUE";
-                const isToday = r.dueCategory === "DUE_TODAY";
-
-                return (
-                  <div
-                    key={r.id}
-                    className="bg-white rounded-[var(--r-btn)] p-3.5 border border-[var(--line)] shadow-xs flex flex-col justify-between gap-3 hover:border-[var(--accent)] transition-colors"
-                  >
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-extrabold text-xs text-[var(--ink)] truncate">
-                          {r.vehiclePlate} · {r.vehicleBrand} {r.vehicleModel}
-                        </span>
-                        <span
-                          className={cn(
-                            "text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0",
-                            isOverdue
-                              ? "bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30"
-                              : isToday
-                              ? "bg-[var(--bg)] text-[var(--warn)] border border-[var(--warn)]/30"
-                              : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]"
-                          )}
-                        >
-                          {isOverdue
-                            ? `Lewat ${Math.abs(r.daysRemaining)} Hari`
-                            : isToday
-                            ? "Tempo Hari Ini"
-                            : `${r.daysRemaining} Hari Lagi`}
-                        </span>
-                      </div>
-
-                      <div className="text-xs text-[var(--muted)] flex items-center justify-between">
-                        <span>
-                          Pembeli: <strong className="text-[var(--ink)]">{r.buyerName}</strong>
-                        </span>
-                        <span className="text-[11px] text-[var(--muted)]">
-                          {r.daysSinceSale} hari lalu
-                        </span>
-                      </div>
-
-                      <div className="bg-[var(--bg)] rounded-lg p-2 flex items-center justify-between border border-[var(--line)]">
-                        <span className="text-[11px] text-[var(--muted)] font-medium">Sisa Piutang:</span>
-                        <span className="font-black text-sm text-[var(--ink)]">
-                          {formatRupiah(r.remainingAmount)}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 pt-1 border-t border-[var(--line)]">
-                      {waLink ? (
-                        <a
-                          href={waLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-bold text-xs py-2 px-3 rounded-lg shadow-xs transition-colors cursor-pointer"
-                        >
-                          <MessageCircle className="w-3.5 h-3.5" />
-                          <span>Kirim WA Tagihan (1-Klik)</span>
-                        </a>
-                      ) : (
-                        <span className="flex-1 text-[11px] text-[var(--muted)] italic text-center py-1">
-                          No HP belum diisi
-                        </span>
-                      )}
-                      <Link
-                        href="/admin/sales"
-                        title="Catat Pelunasan"
-                        className="p-2 rounded-lg bg-white border border-[var(--line)] hover:bg-[var(--bg)] text-[var(--ink)] text-xs font-bold transition-colors"
-                      >
-                        <Receipt className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            {formatRupiah(data.cashBalance)}
           </div>
-        );
-      })()}
+          <div className="text-[11px] text-[var(--muted)] mt-1">
+            Lihat buku kas &rsaquo;
+          </div>
+        </Link>
 
-      {/* ── 2. FUNNEL STATUS OPERASIONAL & BENGKEL GARASI ── */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
+        <Link
+          href="/admin/inventory"
+          className="bg-[var(--surface)] border border-[var(--line)] hover:border-[var(--accent)] rounded-xl p-4 transition-colors block"
+        >
+          <div className="flex items-center justify-between gap-2 text-[var(--muted)]">
+            <span className="text-xs font-semibold">Baru / Bengkel</span>
+            <Wrench className="w-4 h-4 text-[var(--muted)] shrink-0" />
+          </div>
+          <div className="mt-2 flex items-baseline gap-1.5">
+            <span className="text-2xl sm:text-3xl font-extrabold text-[var(--ink)]">
+              {totalInProgress}
+            </span>
+            <span className="text-xs text-[var(--muted)]">unit</span>
+          </div>
+          <div className="text-[11px] text-[var(--muted)] mt-1">
+            Total stok aktif: {data.totalActiveVehicles} unit
+          </div>
+        </Link>
+      </section>
+
+      {/* ── 3. TAGIHAN TEMPO YANG BELUM LUNAS ── */}
+      <section className="bg-[var(--surface)] border border-[var(--line)] rounded-xl overflow-hidden">
+        <div className="px-4 sm:px-5 py-3.5 border-b border-[var(--line)] flex items-center justify-between gap-2">
           <div>
-            <h3 className="text-base sm:text-lg font-black text-[var(--ink)] tracking-tight">
-              Funnel Status Operasional & Workshop Garasi
-            </h3>
+            <h2 className="text-sm sm:text-base font-bold text-[var(--ink)]">
+              Tagihan Belum Lunas ({data.pendingReceivables.length})
+            </h2>
             <p className="text-xs text-[var(--muted)]">
-              Monitoring alur fisik unit mulai dari penerimaan, perbaikan cat & salon poles, hingga dokumen siap jual.
+              Catat pelunasan atau kirim pengingat lewat WhatsApp.
             </p>
           </div>
           <Link
-            href="/admin/inventory"
-            className="text-xs font-bold text-[var(--accent)] hover:underline flex items-center gap-1"
+            href="/admin/sales"
+            className="text-xs font-semibold text-[var(--accent)] hover:underline shrink-0"
           >
-            <span>Buka Inventori Lengkap</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            Lihat semua
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {/* 1. Total Unit di Garasi */}
-          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
-            <div className="flex items-center justify-between text-[var(--muted)]">
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Di Garasi</span>
-              <Car className="w-4 h-4 text-[var(--accent)]" />
-            </div>
-            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
-              {data.totalActiveVehicles}{" "}
-              <span className="text-xs font-semibold text-[var(--muted)]">/ {data.garageCapacity}</span>
-            </div>
-            <div className="w-full bg-[var(--bg)] h-1.5 rounded-full overflow-hidden mt-1">
+        {data.pendingReceivables.length === 0 ? (
+          <div className="p-5 flex items-center gap-3 text-sm text-[var(--muted)]">
+            <CheckCircle2 className="w-5 h-5 text-[var(--ok)] shrink-0" />
+            <span>Semua transaksi penjualan sudah lunas. Tidak ada tagihan tertunggak.</span>
+          </div>
+        ) : (
+          <div className="divide-y divide-[var(--line)]">
+            {data.pendingReceivables.slice(0, 6).map((item) => (
               <div
-                className="bg-[var(--accent)] h-full rounded-full transition-all"
-                style={{
-                  width: `${Math.min(100, (data.totalActiveVehicles / data.garageCapacity) * 100)}%`,
-                }}
-              />
-            </div>
-            <p className="text-[10px] text-[var(--muted)] pt-0.5">{data.emptyGarageSlots} slot kosong</p>
-          </div>
-
-          {/* 2. Ready Siap Jual */}
-          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
-            <div className="flex items-center justify-between text-[var(--ok)]">
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Siap Jual</span>
-              <CheckCircle2 className="w-4 h-4 text-[var(--ok)]" />
-            </div>
-            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
-              {data.readyCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
-            </div>
-            <p className="text-[10px] text-[var(--muted)]">Tayang di katalog publik</p>
-          </div>
-
-          {/* 3. Belum Salon & Poles */}
-          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
-            <div className="flex items-center justify-between text-[var(--warn)]">
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Belum Poles</span>
-              <Wrench className="w-4 h-4 text-[var(--warn)]" />
-            </div>
-            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
-              {data.pendingSalonCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
-            </div>
-            <p className="text-[10px] text-[var(--muted)]">Butuh salon & detailing</p>
-          </div>
-
-          {/* 4. Sedang / Butuh Cat */}
-          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
-            <div className="flex items-center justify-between text-[var(--accent)]">
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">Perbaikan Cat</span>
-              <Layers className="w-4 h-4 text-[var(--accent)]" />
-            </div>
-            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
-              {data.pendingPaintCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
-            </div>
-            <p className="text-[10px] text-[var(--muted)]">Di bengkel body repair</p>
-          </div>
-
-          {/* 5. Alarm BPKB Tertahan */}
-          <div className="bg-white p-4 rounded-[var(--r-card)] border border-[var(--line)] shadow-xs space-y-1">
-            <div className="flex items-center justify-between text-[var(--accent)]">
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">BPKB Tertahan</span>
-              <FileText className="w-4 h-4 text-[var(--accent)]" />
-            </div>
-            <div className="text-2xl font-black text-[var(--ink)] tracking-tight">
-              {data.pendingBpkbCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
-            </div>
-            <p className="text-[10px] text-[var(--muted)]">Proses leasing/penjual</p>
-          </div>
-
-          {/* 6. Unit Macet (>45 Hari) */}
-          <div
-            className={cn(
-              "p-4 rounded-[var(--r-card)] border shadow-xs space-y-1 transition-all",
-              data.stagnantCount > 0
-                ? "bg-rose-50 border-rose-200 text-rose-800"
-                : "bg-white border-[var(--line)]"
-            )}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">
-                Macet (&gt;45 Hari)
-              </span>
-              <AlertTriangle
-                className={cn(
-                  "w-4 h-4",
-                  data.stagnantCount > 0 ? "text-rose-600 " : "text-[var(--muted)]"
-                )}
-              />
-            </div>
-            <div
-              className={cn(
-                "text-2xl font-black tracking-tight",
-                data.stagnantCount > 0 ? "text-rose-800" : "text-[var(--ink)]"
-              )}
-            >
-              {data.stagnantCount} <span className="text-xs font-semibold text-[var(--muted)]">Unit</span>
-            </div>
-            <p
-              className={cn(
-                "text-[10px]",
-                data.stagnantCount > 0 ? "text-rose-700 font-bold" : "text-[var(--muted)]"
-              )}
-            >
-              {data.stagnantCount > 0 ? "Perlu evaluasi harga" : "Arus perputaran sehat"}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 3. AUCTION PIPELINE & CASH FLOW PROJECTION ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        {/* ── AUCTION PIPELINE ── */}
-        <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
-          <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center gap-3 bg-[var(--bg)] border-b border-[var(--line)]">
-            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shrink-0 shadow-2xs">
-              <Gavel className="w-4.5 h-4.5" />
-            </div>
-            <div>
-              <h3 className="font-extrabold text-sm text-[var(--ink)]">Auction Pipeline</h3>
-              <p className="text-[11px] text-[var(--muted)]">
-                80% beli lelang · 90% eks perusahaan (BPKB 7-14 hari)
-              </p>
-            </div>
-          </div>
-
-          <div className="p-5 space-y-4">
-            {/* 3 Stat Cards */}
-            <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-3 space-y-1">
-                <div className="text-xl font-black text-[var(--ink)]">{ap.totalAuctionUnits}</div>
-                <div className="text-[10px] text-[var(--muted)] font-semibold leading-tight">Unit dari Lelang</div>
-              </div>
-              <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-3 space-y-1 border border-[var(--line)]">
-                <div className="text-xl font-black text-[var(--ok)]">{ap.eksPerusahaanCount}</div>
-                <div className="text-[10px] text-[var(--muted)] font-semibold leading-tight">
-                  Eks Perusahaan
-                  <br />
-                  <span className="font-normal text-[var(--ok)]">(aman)</span>
-                </div>
-              </div>
-              <div
-                className={cn(
-                  "rounded-[var(--r-btn)] p-3 space-y-1 border",
-                  ap.eksTarikLeasingCount > 0
-                    ? "bg-[var(--bg)] border-[var(--warn)]/30"
-                    : "bg-[var(--bg)] border-[var(--line)]"
-                )}
+                key={item.id}
+                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
-                <div
-                  className={cn(
-                    "text-xl font-black",
-                    ap.eksTarikLeasingCount > 0 ? "text-[var(--warn)]" : "text-[var(--ink)]"
-                  )}
-                >
-                  {ap.eksTarikLeasingCount}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-sm text-[var(--ink)]">
+                      {normalizePlateNumber(item.vehiclePlate)}
+                    </span>
+                    <span className="text-xs text-[var(--muted)]">
+                      {formatVehicleTitle(item.vehicleBrand, item.vehicleModel)}
+                    </span>
+                    {item.dueCategory === "OVERDUE" && (
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[var(--bad-light)] text-[var(--bad)]">
+                        Lewat tempo
+                      </span>
+                    )}
+                    {(item.dueCategory === "DUE_TODAY" || item.dueCategory === "DUE_SOON") && (
+                      <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[var(--warn-light)] text-amber-800">
+                        Segera jatuh tempo
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-xs text-[var(--muted)] mt-1">
+                    Pembeli: <strong className="text-[var(--ink)]">{item.buyerName}</strong>
+                    {" • "}
+                    Sisa:{" "}
+                    <strong className="text-[var(--bad)]">
+                      {formatRupiah(item.remainingAmount)}
+                    </strong>
+                  </div>
                 </div>
-                <div
-                  className={cn(
-                    "text-[10px] font-semibold leading-tight",
-                    ap.eksTarikLeasingCount > 0 ? "text-[var(--warn)]" : "text-[var(--muted)]"
+
+                <div className="flex items-center gap-2 shrink-0">
+                  {item.buyerPhone && (
+                    <a
+                      href={generateReceivableReminderLink(item.buyerPhone, {
+                        buyerName: item.buyerName,
+                        brand: item.vehicleBrand,
+                        model: item.vehicleModel,
+                        plateNumber: normalizePlateNumber(item.vehiclePlate),
+                        remainingAmount: item.remainingAmount,
+                        dueDate: item.dueDate || null,
+                      })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 min-h-[44px] rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--line)]/50 text-xs font-semibold text-[var(--ink)]"
+                    >
+                      <MessageCircle className="w-4 h-4 text-[var(--ok)]" />
+                      <span>WA Tagih</span>
+                    </a>
                   )}
-                >
-                  Eks Leasing
-                  <br />
-                  <span className="font-normal">
-                    {ap.eksTarikLeasingCount > 0 ? "(pantau dok.)" : "(nihil)"}
-                  </span>
+                  <Link
+                    href={`/admin/sales/${item.id}/payment`}
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold"
+                  >
+                    <span>Terima Bayar</span>
+                  </Link>
                 </div>
               </div>
-            </div>
+            ))}
+          </div>
+        )}
+      </section>
 
-            {/* BPKB Estimasi Tiba */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-[var(--ink)]">
-                <CalendarClock className="w-3.5 h-3.5 text-[var(--accent)]" />
-                <span>BPKB Estimasi Tiba dalam 7 Hari</span>
-                <span className="ml-auto text-[10px] bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] px-2 py-0.5 rounded-full font-bold shadow-2xs">
-                  {ap.unitsBpkbArrivingSoon.length} Unit
-                </span>
+      {/* ── 4. PENGINGAT PAJAK & BPKB (HANYA TAMPIL JIKA ADA YANG PERLU DICEK) ── */}
+      {(criticalTaxUnits.length > 0 || waitingBpkbUnits.length > 0) && (
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {criticalTaxUnits.length > 0 && (
+            <div className="bg-[var(--surface)] border border-[var(--line)] rounded-xl overflow-hidden">
+              <div className="px-4 py-3 border-b border-[var(--line)] flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-[var(--bad)] shrink-0" />
+                <h3 className="text-sm font-bold text-[var(--ink)]">
+                  Pajak STNK Mati / Mepet ({criticalTaxUnits.length})
+                </h3>
               </div>
-
-              {ap.unitsBpkbArrivingSoon.length === 0 ? (
-                <div className="text-[11px] text-[var(--muted)] text-center py-3 bg-[var(--bg)] rounded-[var(--r-btn)]">
-                  <CheckCircle2 className="w-5 h-5 text-[var(--ok)] mx-auto mb-1" />
-                  Tidak ada BPKB yang diperkirakan tiba dalam 7 hari ke depan
-                </div>
-              ) : (
-                <div className="space-y-1.5">
-                  {ap.unitsBpkbArrivingSoon.map((u, i) => (
-                    <div
-                      key={i}
+              <div className="divide-y divide-[var(--line)]">
+                {criticalTaxUnits.slice(0, 4).map((u) => (
+                  <Link
+                    key={u.id}
+                    href={`/admin/inventory/${u.id}`}
+                    className="p-3.5 flex items-center justify-between gap-3 hover:bg-[var(--bg)] transition-colors"
+                  >
+                    <div className="min-w-0">
+                      <div className="text-sm font-bold text-[var(--ink)] truncate">
+                        {normalizePlateNumber(u.plateNumber)}
+                      </div>
+                      <div className="text-xs text-[var(--muted)] truncate">
+                        {formatVehicleTitle(u.brand, u.model, u.year)}
+                      </div>
+                    </div>
+                    <span
                       className={cn(
-                        "flex items-center justify-between text-xs rounded-[var(--r-btn)] px-3 py-2.5 border",
-                        u.estimatedBpkbArrivalDays <= 0
-                          ? "bg-[var(--bg)] border-[var(--bad)]/30 text-[var(--bad)]"
-                          : u.estimatedBpkbArrivalDays <= 2
-                          ? "bg-[var(--bg)] border-[var(--warn)]/30 text-[var(--warn)]"
-                          : "bg-[var(--bg)] border-[var(--line)] text-[var(--ink)]"
+                        "text-xs font-bold px-2.5 py-1 rounded shrink-0",
+                        u.status === "OVERDUE"
+                          ? "bg-[var(--bad-light)] text-[var(--bad)]"
+                          : "bg-[var(--warn-light)] text-amber-800"
                       )}
                     >
-                      <div>
-                        <span className="font-bold">{u.plateNumber}</span>
-                        <span className="text-[10px] ml-2 opacity-80">
-                          {u.name.length > 25 ? u.name.substring(0, 25) + "..." : u.name}
-                        </span>
-                        <span className="text-[10px] block opacity-70">
-                          {u.auctionLotType === "EKS_PERUSAHAAN" ? "Eks Perusahaan" : "Eks Leasing"}
-                        </span>
-                      </div>
-                      <span className="font-black text-sm whitespace-nowrap">
-                        {u.estimatedBpkbArrivalDays <= 0
-                          ? "⚠️ Terlambat"
-                          : `${u.estimatedBpkbArrivalDays}h lagi`}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Info Benchmark */}
-            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] px-3 py-2 text-[10px] text-[var(--muted)] flex gap-4">
-              <div className="flex items-center gap-1.5">
-                <BadgeCheck className="w-3.5 h-3.5 text-[var(--ok)] shrink-0" />
-                <span>
-                  <strong>Eks Perusahaan:</strong> BPKB ~7-14 hari
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <ShieldAlert className="w-3.5 h-3.5 text-[var(--warn)] shrink-0" />
-                <span>
-                  <strong>Eks Leasing:</strong> BPKB ~14-28 hari
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── CASH FLOW PROJECTION 14 HARI ── */}
-        <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
-          <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center gap-3 bg-[var(--bg)] border-b border-[var(--line)]">
-            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shrink-0 shadow-2xs">
-              <BarChart3 className="w-4.5 h-4.5" />
-            </div>
-            <div>
-              <h3 className="font-extrabold text-sm text-[var(--ink)]">Proyeksi Arus Kas 14 Hari</h3>
-              <p className="text-[11px] text-[var(--muted)]">
-                70% pembeli bayar lunas dalam 2 minggu · Tagih hari ke-12
-              </p>
-            </div>
-          </div>
-
-          <div className="p-5 space-y-4">
-            {/* Kasflow Overview */}
-            <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] p-3 space-y-1">
-                <ArrowUpCircle className="w-4 h-4 text-[var(--ok)] mx-auto" />
-                <div className="text-sm font-black text-[var(--ink)]">
-                  {formatRupiah(cf.projectedCashIn14Days)}
-                </div>
-                <div className="text-[10px] text-[var(--ok)] font-semibold">Masuk (Est.)</div>
-              </div>
-              <div className="bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] p-3 space-y-1">
-                <ArrowDownCircle className="w-4 h-4 text-[var(--bad)] mx-auto" />
-                <div className="text-sm font-black text-[var(--bad)]">
-                  {formatRupiah(cf.projectedCashOut14Days)}
-                </div>
-                <div className="text-[10px] text-[var(--bad)] font-semibold">Keluar (Est.)</div>
-              </div>
-              <div className="bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] p-3 space-y-1">
-                <TrendingUp
-                  className={cn("w-4 h-4 mx-auto", netPositive ? "text-[var(--ok)]" : "text-[var(--bad)]")}
-                />
-                <div
-                  className={cn(
-                    "text-sm font-black",
-                    netPositive ? "text-[var(--ok)]" : "text-[var(--bad)]"
-                  )}
-                >
-                  {netPositive ? "+" : ""}
-                  {formatRupiah(Math.abs(cf.netCashflow14Days))}
-                </div>
-                <div className="text-[10px] text-[var(--muted)] font-semibold">
-                  Net Cashflow
-                </div>
-              </div>
-            </div>
-
-            {/* Cash Runway */}
-            <div
-              className={cn(
-                "rounded-[var(--r-btn)] px-4 py-3 flex items-center justify-between border",
-                cf.cashRunwayDays > 90
-                  ? "bg-[var(--bg)] border-[var(--ok)]/30"
-                  : cf.cashRunwayDays > 30
-                  ? "bg-[var(--bg)] border-[var(--warn)]/30"
-                  : "bg-[var(--bg)] border-[var(--bad)]/30"
-              )}
-            >
-              <div>
-                <span className="text-xs font-bold text-[var(--ink)]">Cash Runway (tanpa pemasukan)</span>
-                <p className="text-[10px] text-[var(--muted)] mt-0.5">
-                  Dari saldo kas BCA {formatRupiah(data.cashBalance)}
-                </p>
-              </div>
-              <div className="text-right">
-                <div
-                  className={cn(
-                    "text-xl font-black",
-                    cf.cashRunwayDays > 90
-                      ? "text-[var(--ok)]"
-                      : cf.cashRunwayDays > 30
-                      ? "text-[var(--warn)]"
-                      : "text-[var(--bad)]"
-                  )}
-                >
-                  {cf.cashRunwayDays >= 999 ? "∞" : cf.cashRunwayDays}
-                </div>
-                <div className="text-[10px] text-[var(--muted)]">hari</div>
-              </div>
-            </div>
-
-            {/* Piutang Mendekati 2 Minggu */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-[var(--ink)]">
-                <Receipt className="w-3.5 h-3.5 text-[var(--accent)]" />
-                <span>Piutang Mendekati 2 Minggu (Tagih Sekarang)</span>
-              </div>
-              {cf.pendingSettlements.filter((p) => p.isLikelyClearingSoon).length === 0 ? (
-                <div className="text-[11px] text-[var(--muted)] text-center py-3 bg-[var(--bg)] rounded-[var(--r-btn)]">
-                  <CheckCircle2 className="w-5 h-5 text-[var(--ok)] mx-auto mb-1" />
-                  Tidak ada piutang yang mendekati 2 minggu
-                </div>
-              ) : (
-                <div className="space-y-1.5">
-                  {cf.pendingSettlements
-                    .filter((p) => p.isLikelyClearingSoon)
-                    .slice(0, 4)
-                    .map((p, i) => {
-                      const matchRec = data.pendingReceivables?.find(
-                        (r) => r.vehiclePlate === p.vehiclePlate
-                      );
-                      const waLink = matchRec?.buyerPhone
-                        ? generateReceivableReminderLink(matchRec.buyerPhone, {
-                            buyerName: matchRec.buyerName,
-                            brand: matchRec.vehicleBrand || "Mobil",
-                            model: matchRec.vehicleModel || "",
-                            plateNumber: matchRec.vehiclePlate,
-                            remainingAmount: p.amount,
-                            dueDate: matchRec.dueDate,
-                          })
-                        : null;
-
-                      return (
-                        <div
-                          key={i}
-                          className="flex items-center justify-between bg-[var(--bg)] border border-[var(--line)] rounded-[var(--r-btn)] px-3 py-2 text-xs gap-2"
-                        >
-                          <div className="truncate">
-                            <span className="font-bold text-[var(--ink)]">{p.vehiclePlate}</span>
-                            <span className="text-[10px] text-[var(--muted)] ml-1.5">{p.buyerName}</span>
-                            <span className="text-[10px] text-[var(--warn)] ml-1.5 font-semibold">
-                              · {p.daysSinceSale} hari lalu
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="font-black text-[var(--ink)] whitespace-nowrap">
-                              {formatRupiah(p.amount)}
-                            </span>
-                            {waLink && (
-                              <a
-                                href={waLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title="Kirim WA Tagihan"
-                                className="p-1 rounded-md bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white transition-colors cursor-pointer"
-                              >
-                                <MessageCircle className="w-3.5 h-3.5" />
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              )}
-            </div>
-
-            {/* Burn Rate Info */}
-            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] px-3 py-2 text-[10px] text-[var(--muted)] flex items-center justify-between">
-              <span>Biaya Operasional Bulanan (avg 3 bln):</span>
-              <span className="font-bold text-[var(--ink)]">
-                {formatRupiah(cf.monthlyOperationalBurn)} / bln
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 4. KALKULATOR DAYA BELI KAS (BUYING POWER & RUNWAY KULAKAN) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Card Ringkasan Arus Kas */}
-        <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between text-[var(--muted)]">
-            <span className="text-xs font-bold uppercase tracking-wider">Saldo Kas Rekening BCA</span>
-            <Wallet className="w-5 h-5 text-[var(--accent)]" />
-          </div>
-          <div>
-            <div className="text-3xl font-black text-[var(--ink)] tracking-tight">
-              {formatRupiah(data.cashBalance)}
-            </div>
-            <p className="text-xs text-[var(--ok)] font-medium mt-1">Kas riil on-hand di rekening bank BCA</p>
-          </div>
-
-          <div className="pt-3 border-t border-[var(--line)] space-y-2 text-xs">
-            <div className="flex justify-between text-[var(--muted)]">
-              <span>Total Modal Terikat di Stok (HPP):</span>
-              <span className="font-bold text-[var(--ink)]">{formatRupiah(data.totalInventoryHpp)}</span>
-            </div>
-            <div className="flex justify-between text-[var(--muted)]">
-              <span>Cadangan Kas Operasional (Aman):</span>
-              <span className="font-bold text-[var(--warn)]">
-                {formatRupiah(data.buyingPowerRecommendation.reserveFund)}
-              </span>
-            </div>
-            <div className="flex justify-between text-[var(--muted)]">
-              <span>Dana Maksimal Kulakan Baru:</span>
-              <span className="font-black text-[var(--ok)] text-sm">
-                {formatRupiah(data.buyingPowerRecommendation.recommendedBudget)}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Card Rekomendasi Keputusan Kulakan */}
-        <div className="lg:col-span-2 bg-white border border-[var(--line)] rounded-[var(--r-card)] p-6 shadow-xs space-y-3 flex flex-col justify-between">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-[var(--ink)]">
-              <Coins className="w-5 h-5 text-[var(--accent)]" />
-              <h4 className="font-extrabold text-sm uppercase tracking-wider text-[var(--ink)]">
-                Rekomendasi Keputusan Kulakan Unit Baru
-              </h4>
-            </div>
-
-            <p className="text-xs text-[var(--muted)] leading-relaxed">
-              {data.buyingPowerRecommendation.advice}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <div className="bg-[var(--bg)] p-3.5 rounded-[var(--r-btn)] border border-[var(--line)] space-y-1">
-              <span className="text-[10px] font-bold uppercase text-[var(--muted)] block">Rekomendasi Jumlah Unit:</span>
-              <span className="text-lg font-black text-[var(--ink)]">
-                {data.buyingPowerRecommendation.recommendedUnits > 0
-                  ? `Beli ${data.buyingPowerRecommendation.recommendedUnits} Mobil`
-                  : "Tunda Kulakan"}
-              </span>
-              <span className="text-[11px] text-[var(--muted)] block">
-                {data.emptyGarageSlots} slot garasi masih tersedia
-              </span>
-            </div>
-
-            <div className="bg-[var(--bg)] p-3.5 rounded-[var(--r-btn)] border border-[var(--line)] space-y-1">
-              <span className="text-[10px] font-bold uppercase text-[var(--muted)] block">Target Segmen Disarankan:</span>
-              <span className="text-xs font-bold text-[var(--ink)] block truncate">
-                {data.buyingPowerRecommendation.targetSegment}
-              </span>
-              <span className="text-[11px] text-[var(--ok)] font-semibold block">
-                Fokus perputaran &lt; 20 hari
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 5. DAFTAR PERHATIAN MENDESAK HARI INI (ACTION ITEMS) ── */}
-      <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)]">
-          <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-[var(--accent)]" />
-            <h3 className="font-bold text-sm text-[var(--ink)]">
-              Mobil Perlu Perhatian Mendesak (BPKB Belum Datang / Mendekati Macet)
-            </h3>
-          </div>
-          <span className="text-xs text-[var(--muted)] font-semibold">{data.urgentVehicles.length} Unit</span>
-        </div>
-
-        {data.urgentVehicles.length === 0 ? (
-          <div className="p-8 text-center text-[var(--muted)] text-xs">
-            <CheckCircle2 className="w-8 h-8 text-[var(--ok)] mx-auto mb-2 opacity-80" />
-            Semua unit dalam kondisi aman. Tidak ada BPKB tertahan atau unit macet kritis.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[var(--line)]">
-                <tr>
-                  <th className="py-3 px-4">Plat & Unit</th>
-                  <th className="py-3 px-4">Umur di Garasi</th>
-                  <th className="py-3 px-4">Status & Isu Utama</th>
-                  <th className="py-3 px-4 text-right">HPP</th>
-                  <th className="py-3 px-4 text-right">Target Harga</th>
-                  <th className="py-3 px-4 text-right">Tindakan</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--line)]">
-                {data.urgentVehicles.map((v) => (
-                  <tr key={v.id} className="hover:bg-[var(--bg)] transition-colors">
-                    <td className="py-3.5 px-4">
-                      <span className="font-bold text-[var(--ink)] block">{v.plateNumber}</span>
-                      <span className="text-xs text-[var(--muted)]">{v.name}</span>
-                    </td>
-
-                    <td className="py-3.5 px-4 whitespace-nowrap">
-                      <span
-                        className={cn(
-                          "inline-flex items-center gap-1 font-bold text-xs",
-                          v.days > 45 ? "text-[var(--bad)]" : "text-[var(--warn)]"
-                        )}
-                      >
-                        <Clock className="w-3.5 h-3.5" />
-                        {v.days} Hari
-                      </span>
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <span className="text-xs text-[var(--ink)] font-medium block">{v.urgentReason}</span>
-                    </td>
-
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap font-medium text-[var(--muted)]">
-                      {formatRupiah(v.hpp)}
-                    </td>
-
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap font-black text-[var(--ink)]">
-                      {formatRupiah(v.targetPrice)}
-                    </td>
-
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                      <Link
-                        href={`/admin/inventory`}
-                        className="inline-flex items-center gap-1 text-xs text-[var(--accent)] hover:underline font-bold"
-                      >
-                        <span>Kelola Unit</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </td>
-                  </tr>
+                      {u.daysRemaining < 0
+                        ? `Mati ${Math.abs(u.daysRemaining)} hari`
+                        : `Sisa ${u.daysRemaining} hari`}
+                    </span>
+                  </Link>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-      {/* ── 5B. RADAR ALARM PAJAK STNK & PLAT KALENG (H-30 HARI & OVERDUE) ── */}
-      <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-[var(--line)] flex flex-wrap items-center justify-between gap-3 bg-[var(--bg)] border-b border-[var(--line)]">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shrink-0 shadow-2xs">
-              <CalendarClock className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-extrabold text-sm text-[var(--ink)]">
-                  Radar Alarm Pajak STNK & Plat Kaleng (PKB)
-                </h3>
-                {data.taxAlertSummary.overdueCount > 0 && (
-                  <span className="px-2 py-0.5 rounded-full bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30 text-[10px] font-bold animate-pulse shadow-2xs">
-                    {data.taxAlertSummary.overdueCount} Overdue
-                  </span>
-                )}
               </div>
-              <p className="text-[11px] text-[var(--muted)]">
-                Pantauan masa berlaku pajak tahunan garasi untuk cegah tilang razia dan kendala saat serah terima
-              </p>
+            </div>
+          )}
+
+          {waitingBpkbUnits.length > 0 && (
+            <div className="bg-[var(--surface)] border border-[var(--line)] rounded-xl overflow-hidden">
+              <div className="px-4 py-3 border-b border-[var(--line)] flex items-center gap-2">
+                <FileText className="w-4 h-4 text-[var(--accent)] shrink-0" />
+                <h3 className="text-sm font-bold text-[var(--ink)]">
+                  BPKB Masih Menunggu ({waitingBpkbUnits.length})
+                </h3>
+              </div>
+              <div className="divide-y divide-[var(--line)]">
+                {waitingBpkbUnits.slice(0, 4).map((u) => (
+                  <div
+                    key={u.plateNumber}
+                    className="p-3.5 flex items-center justify-between gap-3"
+                  >
+                    <div className="min-w-0">
+                      <div className="text-sm font-bold text-[var(--ink)] truncate">
+                        {normalizePlateNumber(u.plateNumber)}
+                      </div>
+                      <div className="text-xs text-[var(--muted)] truncate">{u.name}</div>
+                    </div>
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] shrink-0">
+                      {u.estimatedBpkbArrivalDays <= 0
+                        ? "Sudah waktunya ambil"
+                        : `± ${u.estimatedBpkbArrivalDays} hari lagi`}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ── 5. PINTASAN KATALOG WEB PUBLIK ── */}
+      <section className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div className="text-sm font-bold text-[var(--ink)]">
+            Katalog Web Publik Nur Mobil
+          </div>
+          <p className="text-xs text-[var(--muted)] mt-0.5">
+            Semua unit berstatus Siap Jual otomatis tampil di website agar mudah dibagikan ke pembeli.
+          </p>
+        </div>
+        <Link
+          href="/katalog"
+          target="_blank"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-lg border border-[var(--line)] bg-[var(--bg)] hover:bg-[var(--line)]/50 text-xs font-bold text-[var(--ink)] shrink-0"
+        >
+          <ExternalLink className="w-4 h-4 text-[var(--accent)]" />
+          <span>Buka Katalog Web</span>
+        </Link>
+      </section>
+
+      {/* ── 6. ASISTEN AI & ANALISA LANJUTAN (DILIPAT / OPSIONAL) ── */}
+      <section className="bg-[var(--surface)] border border-[var(--line)] rounded-xl overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setAiPanelOpen((prev) => !prev)}
+          className="w-full px-4 sm:px-5 py-3.5 min-h-[52px] flex items-center justify-between gap-3 text-left hover:bg-[var(--bg)] transition-colors cursor-pointer"
+        >
+          <div>
+            <div className="text-sm font-bold text-[var(--ink)]">
+              Analisa Lanjutan &amp; Asisten AI (Opsional)
+            </div>
+            <div className="text-xs text-[var(--muted)]">
+              Buka jika ingin melihat saran kulakan atau bertanya ke asisten AI.
             </div>
           </div>
+          <ChevronDown
+            className={cn(
+              "w-5 h-5 text-[var(--muted)] transition-transform duration-200 shrink-0",
+              aiPanelOpen && "rotate-180"
+            )}
+          />
+        </button>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30">
-              🔴 {data.taxAlertSummary.overdueCount} Lewat Jatuh Tempo
-            </span>
-            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--warn)] border border-[var(--warn)]/30">
-              🟡 {data.taxAlertSummary.expiringSoonCount} Kritis H-30
-            </span>
-            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--ok)] border border-[var(--ok)]/30">
-              🟢 {data.taxAlertSummary.safeCount} Pajak Hidup
-            </span>
-            {data.taxAlertSummary.unknownCount > 0 && (
-              <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)]">
-                ⚪ {data.taxAlertSummary.unknownCount} Belum Diisi
-              </span>
+        {aiPanelOpen && (
+          <div className="p-4 sm:p-5 border-t border-[var(--line)] space-y-4 bg-[var(--bg)]/40">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="text-xs text-[var(--muted)]">
+                {orchestration?.headline || "Klik tombol di samping untuk memuat analisa kondisi stok & kas."}
+              </div>
+              <button
+                type="button"
+                onClick={handleGenerateBriefing}
+                disabled={briefingLoading || !hasGeminiKey}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold disabled:opacity-50 cursor-pointer shrink-0"
+              >
+                <RefreshCw className={cn("w-4 h-4", briefingLoading && "animate-spin")} />
+                <span>{briefingLoading ? "Memuat analisa..." : "Muat Analisa AI"}</span>
+              </button>
+            </div>
+
+            {!hasGeminiKey && (
+              <div className="text-xs text-[var(--muted)] bg-white border border-[var(--line)] rounded-lg p-3">
+                Kunci API Gemini belum diaktifkan. Anda bisa mengaturnya di menu{" "}
+                <Link href="/admin/settings" className="text-[var(--accent)] font-semibold underline">
+                  Pengaturan &amp; Notifikasi
+                </Link>
+                .
+              </div>
+            )}
+
+            {aiError && (
+              <div className="p-3 rounded-lg bg-[var(--bad-light)] border border-[var(--bad)]/30 text-xs text-[var(--bad)] font-medium">
+                {aiError}
+              </div>
+            )}
+
+            {orchestration?.executiveSummary && (
+              <div className="p-4 rounded-lg bg-white border border-[var(--line)] text-xs sm:text-sm text-[var(--ink)] leading-relaxed whitespace-pre-line">
+                {orchestration.executiveSummary}
+              </div>
+            )}
+
+            <form onSubmit={handleAskAi} className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="text"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder="Tanya tentang stok, kas, atau saran harga jual..."
+                className="flex-1 px-3.5 py-2.5 min-h-[44px] bg-white border border-[var(--line)] rounded-lg text-sm text-[var(--ink)]"
+              />
+              <button
+                type="submit"
+                disabled={askingAi || !question.trim() || !hasGeminiKey}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] rounded-lg bg-[var(--ink)] text-white text-xs font-bold disabled:opacity-50 cursor-pointer"
+              >
+                <Send className="w-4 h-4" />
+                <span>{askingAi ? "Mengirim..." : "Tanya AI"}</span>
+              </button>
+            </form>
+
+            {aiAnswer && (
+              <div className="p-4 rounded-lg bg-white border border-[var(--line)] text-xs sm:text-sm text-[var(--ink)] leading-relaxed whitespace-pre-line">
+                {aiAnswer}
+              </div>
             )}
           </div>
-        </div>
-
-        {data.taxAlertSummary.criticalUnits.length === 0 ? (
-          <div className="p-8 text-center text-[var(--muted)] text-xs">
-            <CheckCircle2 className="w-8 h-8 text-[var(--ok)] mx-auto mb-2 opacity-80" />
-            <strong className="block text-[var(--ink)] font-bold mb-1">
-              Seluruh Pajak Unit Pajangan Aman!
-            </strong>
-            Tidak ada unit inventori aktif yang pajaknya mati ataupun mendekati jatuh tempo dalam 30 hari ke depan.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-[var(--bg)] text-[var(--muted)] uppercase text-[10px] sm:text-[11px] font-bold tracking-wider border-b border-[var(--line)]">
-                <tr>
-                  <th className="py-3 px-4">Plat & Unit Kendaraan</th>
-                  <th className="py-3 px-4">Status & Sisa Waktu</th>
-                  <th className="py-3 px-4">Jatuh Tempo Pajak Tahunan</th>
-                  <th className="py-3 px-4">Kaleng (5 Tahunan)</th>
-                  <th className="py-3 px-4 text-right">Estimasi Biaya PKB</th>
-                  <th className="py-3 px-4 text-right">Tindakan</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--line)]">
-                {data.taxAlertSummary.criticalUnits.map((u) => {
-                  const isOverdue = u.status === "OVERDUE";
-                  const taxDateFormatted = new Intl.DateTimeFormat("id-ID", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  }).format(new Date(u.taxExpiryDate));
-
-                  const platDateFormatted = u.platExpiryDate
-                    ? new Intl.DateTimeFormat("id-ID", {
-                        month: "short",
-                        year: "numeric",
-                      }).format(new Date(u.platExpiryDate))
-                    : "-";
-
-                  return (
-                    <tr key={u.id} className="hover:bg-[var(--bg)] transition-colors">
-                      <td className="py-3.5 px-4">
-                        <span className="font-bold text-[var(--ink)] block">{u.plateNumber}</span>
-                        <span className="text-xs text-[var(--muted)]">
-                          {u.brand} {u.model} ({u.year})
-                        </span>
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        {isOverdue ? (
-                          <span className="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md bg-[var(--bg)] text-[var(--bad)] border border-[var(--bad)]/30">
-                            <ShieldAlert className="w-3.5 h-3.5 text-[var(--bad)]" />
-                            Lewat {Math.abs(u.daysRemaining)} Hari
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 font-bold text-xs px-2.5 py-1 rounded-md bg-[var(--bg)] text-[var(--warn)] border border-[var(--warn)]/30">
-                            <Clock className="w-3.5 h-3.5 text-[var(--warn)]" />
-                            Sisa {u.daysRemaining} Hari
-                          </span>
-                        )}
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span className="font-semibold text-[var(--ink)]">{taxDateFormatted}</span>
-                      </td>
-
-                      <td className="py-3.5 px-4 whitespace-nowrap text-[var(--muted)]">
-                        <span>{platDateFormatted}</span>
-                      </td>
-
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap font-bold text-[var(--ink)]">
-                        {u.taxNominal ? formatRupiah(u.taxNominal) : "-"}
-                      </td>
-
-                      <td className="py-3.5 px-4 text-right whitespace-nowrap">
-                        <Link
-                          href={`/admin/inventory`}
-                          className="inline-flex items-center gap-1 text-xs text-[var(--accent)] hover:underline font-bold"
-                        >
-                          <span>Proses Samsat</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
         )}
-      </div>
-
-      {/* ── 6. BUSINESS PATTERN ANALYTICS — dari data nyata yang diinput user ── */}
-      <div className="bg-white rounded-[var(--r-card)] border border-[var(--line)] shadow-xs overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-[var(--line)] flex items-center justify-between bg-[var(--bg)] border-b border-[var(--line)]">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-[var(--r-btn)] bg-[var(--bg)] border border-[var(--line)] text-[var(--accent)] flex items-center justify-center shrink-0 shadow-2xs">
-              <BarChart3 className="w-4.5 h-4.5" />
-            </div>
-            <div>
-              <h3 className="font-extrabold text-sm text-[var(--ink)]">Analisa Pola Bisnis Nyata</h3>
-              <p className="text-[11px] text-[var(--muted)]">
-                Dihitung langsung dari semua data yang Anda input — bukan asumsi
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href="/admin/analytics"
-              className="text-xs font-bold text-[var(--accent)] hover:text-[var(--accent-hover)] bg-white hover:bg-[var(--bg)] border border-[var(--line)] px-3 py-1.5 rounded-xl shadow-2xs flex items-center gap-1.5 transition-colors"
-            >
-              <span>Buka Timeline &amp; Analitik Lengkap</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-            <span
-              className={cn(
-                "text-[10px] font-bold px-2.5 py-1 rounded-full border hidden sm:inline-block",
-                data.businessPatterns.totalHistoricalVehicles >= 5
-                  ? "bg-[var(--bg)] text-[var(--ok)] border-[var(--ok)]/30"
-                  : "bg-[var(--bg)] text-[var(--warn)] border-[var(--warn)]/30"
-              )}
-            >
-              {data.businessPatterns.dataQualityNote.startsWith("✅") ? "✅ Data Andal" : "⚠️ Butuh Lebih Banyak Data"}
-            </span>
-          </div>
-        </div>
-
-        <div className="p-5 space-y-5">
-          {/* Data Quality Note */}
-          <div className="text-xs text-[var(--muted)] bg-[var(--bg)] rounded-[var(--r-btn)] px-4 py-3 leading-relaxed">
-            {data.businessPatterns.dataQualityNote}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Siklus Rata-rata */}
-            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-4 space-y-1">
-              <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
-                <Clock className="w-3 h-3" /> Siklus Rata-rata
-              </div>
-              <div className="text-2xl font-black text-[var(--ink)]">
-                {data.businessPatterns.avgTotalCycleDays > 0 ? data.businessPatterns.avgTotalCycleDays : "-"}
-              </div>
-              <div className="text-[11px] text-[var(--muted)]">hari beli → terjual</div>
-              {data.businessPatterns.avgTotalCycleDays > 0 && (
-                <div className="text-[10px] text-[var(--muted)]">
-                  Intake→Siap: ~{data.businessPatterns.avgDaysIntakeToReady}h | Siap→Jual: ~{data.businessPatterns.avgDaysReadyToSold}h
-                </div>
-              )}
-            </div>
-
-            {/* Rata-rata Payment Lag */}
-            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-4 space-y-1">
-              <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
-                <Receipt className="w-3 h-3" /> Payment Lag Nyata
-              </div>
-              <div className="text-2xl font-black text-[var(--ink)]">
-                {data.businessPatterns.avgPaymentLagDays > 0 ? data.businessPatterns.avgPaymentLagDays : "-"}
-              </div>
-              <div className="text-[11px] text-[var(--muted)]">hari rata-rata lunas</div>
-              {data.businessPatterns.avgPaymentLagDays > 0 && (
-                <div className="text-[10px] text-[var(--muted)]">
-                  {data.businessPatterns.pctPaidWithin14Days}% lunas dalam 14 hari · {data.businessPatterns.pctPaidWithin7Days}% dalam 7 hari
-                </div>
-              )}
-            </div>
-
-            {/* Rata-rata Margin */}
-            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-4 space-y-1">
-              <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
-                <TrendingUp className="w-3 h-3" /> Avg Margin / Unit
-              </div>
-              <div className="text-2xl font-black text-[var(--ink)]">
-                {data.businessPatterns.avgGrossMarginRupiah > 0
-                  ? formatRupiah(data.businessPatterns.avgGrossMarginRupiah)
-                  : "-"}
-              </div>
-              <div className="text-[11px] text-[var(--muted)]">
-                {data.businessPatterns.avgGrossMarginPct > 0 ? `${data.businessPatterns.avgGrossMarginPct}% margin kotor` : "belum ada data"}
-              </div>
-            </div>
-
-            {/* % dari Lelang */}
-            <div className="bg-[var(--bg)] rounded-[var(--r-btn)] p-4 space-y-1">
-              <div className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider flex items-center gap-1">
-                <Gavel className="w-3 h-3" /> % Beli dari Lelang
-              </div>
-              <div className="text-2xl font-black text-[var(--ink)]">
-                {data.businessPatterns.totalHistoricalVehicles > 0 ? `${data.businessPatterns.pctFromAuction}%` : "-"}
-              </div>
-              <div className="text-[11px] text-[var(--muted)]">
-                {data.businessPatterns.pctEksPerusahaan > 0
-                  ? `${data.businessPatterns.pctEksPerusahaan}% eks perusahaan`
-                  : "dari total unit historis"}
-              </div>
-            </div>
-          </div>
-
-          {/* Baris kedua: Top Balai Lelang + Unit Tercepat Laku + Merk Terlaris */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Balai lelang favorit dari data nyata */}
-            <div className="space-y-2">
-              <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                <Gavel className="w-3.5 h-3.5 text-[var(--accent)]" />
-                Balai Lelang Favorit (Data Nyata)
-              </div>
-              {data.businessPatterns.topAuctionHouses.length === 0 ? (
-                <p className="text-[11px] text-[var(--muted)] italic">Belum ada data balai lelang tercatat</p>
-              ) : (
-                <div className="space-y-1">
-                  {data.businessPatterns.topAuctionHouses.map((h, i) => (
-                    <div key={i} className="flex items-center justify-between text-xs">
-                      <span className="text-[var(--ink)] font-medium">{h.name}</span>
-                      <span className="text-[var(--muted)]">{h.count}x ({h.pct}%)</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Unit tercepat laku */}
-            <div className="space-y-2">
-              <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5 text-[var(--ok)]" />
-                Unit Tercepat Laku (Histori)
-              </div>
-              {data.businessPatterns.fastestSegments.length === 0 ? (
-                <p className="text-[11px] text-[var(--muted)] italic">Belum ada data penjualan cukup</p>
-              ) : (
-                <div className="space-y-1">
-                  {data.businessPatterns.fastestSegments.slice(0, 4).map((s, i) => (
-                    <div key={i} className="flex items-center justify-between text-xs">
-                      <span className="text-[var(--ink)] font-medium">{s.brandModel}</span>
-                      <span className="text-[var(--ok)] font-bold">{s.avgDays} hari</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Merk paling menguntungkan */}
-            <div className="space-y-2">
-              <div className="text-xs font-bold text-[var(--ink)] flex items-center gap-1.5">
-                <Coins className="w-3.5 h-3.5 text-[var(--accent)]" />
-                Margin Terbaik per Merk
-              </div>
-              {data.businessPatterns.mostProfitableBrands.length === 0 ? (
-                <p className="text-[11px] text-[var(--muted)] italic">Belum ada data penjualan cukup</p>
-              ) : (
-                <div className="space-y-1">
-                  {data.businessPatterns.mostProfitableBrands.slice(0, 4).map((b, i) => (
-                    <div key={i} className="flex items-center justify-between text-xs">
-                      <span className="text-[var(--ink)] font-medium">{b.brand}</span>
-                      <span className="text-[var(--ink)] font-bold">{formatRupiah(b.avgMargin)}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

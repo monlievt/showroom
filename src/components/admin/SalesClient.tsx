@@ -2,24 +2,29 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { 
-  DollarSign, 
-  Receipt, 
-  Clock, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Plus, 
-  Search, 
-  Printer, 
-  MessageCircle, 
+import {
+  DollarSign,
+  Receipt,
+  Clock,
+  AlertTriangle,
+  CheckCircle2,
+  Plus,
+  Search,
+  Printer,
+  MessageCircle,
   UserCheck,
   Building2,
-  FileText,
-  ClipboardCheck,
-  HeartHandshake,
   Coins,
+  Pencil,
 } from "lucide-react";
-import { formatRupiah, formatDate, cn } from "@/lib/utils";
+import {
+  formatRupiah,
+  formatDate,
+  cn,
+  normalizePlateNumber,
+  stripPlateSpaces,
+  formatVehicleTitle,
+} from "@/lib/utils";
 import { generateReceivableReminderLink } from "@/lib/utils/whatsapp";
 
 interface SaleItem {
@@ -92,277 +97,295 @@ interface SalesClientProps {
 export function SalesClient({ initialSales }: SalesClientProps) {
   const [sales] = useState<SaleItem[]>(initialSales);
   const [selectedFilter, setSelectedFilter] = useState<"ALL" | "PENDING_RECEIVABLES" | "SETTLED">("ALL");
-  const [buyerChannelFilter, setBuyerChannelFilter] = useState<"ALL" | "KCUNK" | "OTHER_SHOWROOM" | "AUCTION" | "DIRECT_CUSTOMER">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Breakdown pembeli
-  const kcunkCount = sales.filter((s) => s.buyer.name.toLowerCase().includes("kcunk")).length;
-  const auctionCount = sales.filter(
-    (s) =>
-      s.buyer.name.toLowerCase().includes("lelang") ||
-      s.buyer.name.toLowerCase().includes("jba") ||
-      s.buyer.name.toLowerCase().includes("ibid") ||
-      s.buyer.name.toLowerCase().includes("tunas")
-  ).length;
-  const otherShowroomCount = sales.filter(
-    (s) =>
-      s.buyer.isShowroom &&
-      !s.buyer.name.toLowerCase().includes("kcunk") &&
-      !s.buyer.name.toLowerCase().includes("lelang") &&
-      !s.buyer.name.toLowerCase().includes("jba") &&
-      !s.buyer.name.toLowerCase().includes("ibid") &&
-      !s.buyer.name.toLowerCase().includes("tunas")
-  ).length;
-  const directCustomerCount = sales.filter((s) => !s.buyer.isShowroom).length;
-  const kcunkPct = sales.length > 0 ? Math.round((kcunkCount / sales.length) * 100) : 0;
-
-  // Filter logic
   const filteredSales = sales.filter((s) => {
     let matchFilter = true;
     if (selectedFilter === "PENDING_RECEIVABLES") matchFilter = !s.isFullyPaid;
     if (selectedFilter === "SETTLED") matchFilter = s.isFullyPaid;
 
-    if (buyerChannelFilter === "KCUNK") {
-      matchFilter = matchFilter && s.buyer.name.toLowerCase().includes("kcunk");
-    } else if (buyerChannelFilter === "AUCTION") {
-      matchFilter =
-        matchFilter &&
-        (s.buyer.name.toLowerCase().includes("lelang") ||
-          s.buyer.name.toLowerCase().includes("jba") ||
-          s.buyer.name.toLowerCase().includes("ibid") ||
-          s.buyer.name.toLowerCase().includes("tunas"));
-    } else if (buyerChannelFilter === "OTHER_SHOWROOM") {
-      matchFilter =
-        matchFilter &&
-        s.buyer.isShowroom &&
-        !s.buyer.name.toLowerCase().includes("kcunk") &&
-        !s.buyer.name.toLowerCase().includes("lelang") &&
-        !s.buyer.name.toLowerCase().includes("jba") &&
-        !s.buyer.name.toLowerCase().includes("ibid") &&
-        !s.buyer.name.toLowerCase().includes("tunas");
-    } else if (buyerChannelFilter === "DIRECT_CUSTOMER") {
-      matchFilter = matchFilter && !s.buyer.isShowroom;
-    }
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return matchFilter;
 
-    const q = searchQuery.toLowerCase();
+    const compactQ = stripPlateSpaces(searchQuery);
     const matchSearch =
       s.vehicle.plateNumber.toLowerCase().includes(q) ||
+      (compactQ && stripPlateSpaces(s.vehicle.plateNumber).includes(compactQ)) ||
       s.vehicle.brand.toLowerCase().includes(q) ||
       s.vehicle.model.toLowerCase().includes(q) ||
       s.buyer.name.toLowerCase().includes(q) ||
-      (s.buyer.phone && s.buyer.phone.includes(q));
+      Boolean(s.buyer.phone && s.buyer.phone.includes(q));
 
     return matchFilter && matchSearch;
   });
 
-  // KPI Calculations
   const totalOmset = sales.reduce((acc, s) => acc + s.sellingPrice, 0);
   const totalDanaMasuk = sales.reduce((acc, s) => acc + s.paidAmount, 0);
   const totalSisaPiutang = sales.reduce((acc, s) => acc + s.remainingAmount, 0);
   const totalPendingUnits = sales.filter((s) => !s.isFullyPaid).length;
+  const totalSettledUnits = sales.filter((s) => s.isFullyPaid).length;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
-      {/* ── KPI SUMMARY CARDS ─────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
-        <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-5 shadow-sm">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-5 max-w-7xl mx-auto">
+      {/* ── RINGKASAN 4 ANGKA ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4">
           <div className="flex items-center justify-between text-[var(--muted)]">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Omset Penjualan</span>
-            <DollarSign className="w-5 h-5 text-[var(--accent)]" />
+            <span className="text-xs font-semibold">Total Penjualan</span>
+            <DollarSign className="w-4 h-4 text-[var(--accent)] shrink-0" />
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-bold text-[var(--ink)]">{formatRupiah(totalOmset)}</span>
-            <div className="text-[11px] text-[var(--muted)] mt-0.5">{sales.length} transaksi tercatat</div>
+          <div className="mt-2 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
+            {formatRupiah(totalOmset)}
+          </div>
+          <div className="text-[11px] text-[var(--muted)] mt-0.5">
+            {sales.length} unit terjual
           </div>
         </div>
 
-        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 shadow-xs">
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4">
           <div className="flex items-center justify-between text-[var(--muted)]">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Kas Masuk (Lunas/DP)</span>
-            <CheckCircle2 className="w-5 h-5 text-[var(--accent)]" />
+            <span className="text-xs font-semibold">Uang Masuk</span>
+            <CheckCircle2 className="w-4 h-4 text-[var(--ok)] shrink-0" />
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-bold text-[var(--ink)]">{formatRupiah(totalDanaMasuk)}</span>
-            <div className="text-[11px] text-[var(--muted)] mt-0.5">Sudah masuk buku kas</div>
+          <div className="mt-2 text-base sm:text-xl font-extrabold text-[var(--ink)] truncate">
+            {formatRupiah(totalDanaMasuk)}
+          </div>
+          <div className="text-[11px] text-[var(--muted)] mt-0.5">Sudah diterima</div>
+        </div>
+
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4">
+          <div className="flex items-center justify-between text-[var(--muted)]">
+            <span className="text-xs font-semibold">Belum Lunas</span>
+            <Clock className="w-4 h-4 text-[var(--warn)] shrink-0" />
+          </div>
+          <div className="mt-2 text-base sm:text-xl font-extrabold text-[var(--bad)] truncate">
+            {formatRupiah(totalSisaPiutang)}
+          </div>
+          <div className="text-[11px] text-[var(--muted)] mt-0.5">
+            {totalPendingUnits} unit tempo
           </div>
         </div>
 
-        <div className="bg-white border border-[var(--line)] rounded-2xl p-5 shadow-xs">
+        <div className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4">
           <div className="flex items-center justify-between text-[var(--muted)]">
-            <span className="text-xs font-semibold uppercase tracking-wider">Sisa Piutang Berjalan</span>
-            <Clock className="w-5 h-5 text-[var(--accent)]" />
+            <span className="text-xs font-semibold">Sudah Lunas</span>
+            <Receipt className="w-4 h-4 text-[var(--ink)] shrink-0" />
           </div>
-          <div className="mt-3">
-            <span className="text-2xl font-bold text-[var(--ink)]">{formatRupiah(totalSisaPiutang)}</span>
-            <div className="text-[11px] text-[var(--muted)] font-medium mt-0.5">
-              Dari {totalPendingUnits} unit belum lunas
-            </div>
+          <div className="mt-2 text-2xl font-extrabold text-[var(--ink)]">
+            {totalSettledUnits}
           </div>
-        </div>
-
-        <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-5 shadow-sm">
-          <div className="flex items-center justify-between text-[var(--muted)]">
-            <span className="text-xs font-semibold uppercase tracking-wider">Unit Lunas (Settled)</span>
-            <Receipt className="w-5 h-5 text-[var(--ink)]" />
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-[var(--ink)]">
-              {sales.filter((s) => s.isFullyPaid).length}
-            </span>
-            <span className="text-xs text-[var(--muted)]">siap bagi hasil</span>
-          </div>
+          <div className="text-[11px] text-[var(--muted)] mt-0.5">unit lunas 100%</div>
         </div>
       </div>
 
-      {/* ── TOOLBAR & ACTIONS ─────────────────────────────────── */}
-      <div className="bg-[var(--bg)] border border-[var(--line)] rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        {/* Search */}
-        <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[var(--muted)] absolute left-3 top-1/2 -translate-y-1/2" />
+      {/* ── PENCARIAN & TOMBOL CATAT PENJUALAN ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-[var(--muted)] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Cari plat nomor, nama pembeli, showroom rekanan..."
+            placeholder="Cari plat nomor, mobil, atau nama pembeli..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-[var(--bg)] border border-[var(--line)] rounded-lg text-sm text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/40"
+            className="w-full pl-10 pr-4 py-2.5 min-h-[46px] bg-[var(--surface)] border border-[var(--line-input)] rounded-xl text-sm text-[var(--ink)]"
           />
         </div>
 
-        {/* Action Button: Input Penjualan */}
         <Link
           href="/admin/sales/new"
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-[var(--accent)] hover:bg-[#92400E] text-white rounded-lg text-sm font-bold shadow-sm transition-colors"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[46px] bg-[var(--ok)] hover:opacity-95 text-white rounded-xl text-sm font-bold shadow-xs transition-opacity shrink-0"
         >
           <Plus className="w-4 h-4" />
-          <span>Input Penjualan Unit Baru</span>
+          <span>Catat Penjualan Baru</span>
         </Link>
       </div>
 
-      {/* ── FILTER TABS ───────────────────────────────────────── */}
-      <div className="space-y-3 border-b border-[var(--line)] pb-3">
-        {/* Row 1: Status Pembayaran */}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider mr-1">
-            Status Bayar:
-          </span>
+      {/* ── TAB FILTER STATUS BAYAR ── */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        {[
+          { key: "ALL" as const, label: `Semua (${sales.length})` },
+          { key: "PENDING_RECEIVABLES" as const, label: `Belum Lunas (${totalPendingUnits})` },
+          { key: "SETTLED" as const, label: `Lunas (${totalSettledUnits})` },
+        ].map((tab) => (
           <button
-            onClick={() => setSelectedFilter("ALL")}
+            key={tab.key}
+            type="button"
+            onClick={() => setSelectedFilter(tab.key)}
             className={cn(
-              "px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer",
-              selectedFilter === "ALL"
-                ? "bg-[var(--ink)] text-white shadow-sm"
-                : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
+              "px-4 py-2 min-h-[40px] rounded-xl text-xs font-bold whitespace-nowrap border transition-colors cursor-pointer",
+              selectedFilter === tab.key
+                ? "bg-[var(--ink)] text-white border-[var(--ink)]"
+                : "bg-[var(--surface)] text-[var(--muted)] border-[var(--line)] hover:text-[var(--ink)]"
             )}
           >
-            Semua Status ({sales.length})
+            {tab.label}
           </button>
-          <button
-            onClick={() => setSelectedFilter("PENDING_RECEIVABLES")}
-            className={cn(
-              "px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5",
-              selectedFilter === "PENDING_RECEIVABLES"
-                ? "bg-[var(--accent)] text-white shadow-xs"
-                : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
-            )}
-          >
-            <span>Piutang Tempo / Belum Lunas</span>
-            <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20">
-              {sales.filter((s) => !s.isFullyPaid).length}
-            </span>
-          </button>
-          <button
-            onClick={() => setSelectedFilter("SETTLED")}
-            className={cn(
-              "px-3.5 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer",
-              selectedFilter === "SETTLED"
-                ? "bg-[var(--ink)] text-white shadow-xs"
-                : "bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
-            )}
-          >
-            Terjual Lunas ({sales.filter((s) => s.isFullyPaid).length})
-          </button>
-        </div>
-
-        {/* Row 2: Saluran / Tujuan Laku (Kcunk Motor vs Retail) */}
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          <span className="text-[11px] font-bold text-[var(--muted)] uppercase tracking-wider mr-1">
-            Tujuan Laku:
-          </span>
-          <button
-            onClick={() => setBuyerChannelFilter("ALL")}
-            className={cn(
-              "px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer",
-              buyerChannelFilter === "ALL"
-                ? "bg-stone-800 text-white"
-                : "bg-white text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
-            )}
-          >
-            Semua Pembeli ({sales.length})
-          </button>
-          <button
-            onClick={() => setBuyerChannelFilter("KCUNK")}
-            className={cn(
-              "px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5",
-              buyerChannelFilter === "KCUNK"
-                ? "bg-emerald-700 text-white"
-                : "bg-emerald-50 text-emerald-900 border border-emerald-200 hover:bg-emerald-100"
-            )}
-          >
-            <span>★ Showroom Kcunk Motor</span>
-            <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-200/50">
-              {kcunkCount} unit ({kcunkPct}%)
-            </span>
-          </button>
-          <button
-            onClick={() => setBuyerChannelFilter("AUCTION")}
-            className={cn(
-              "px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5",
-              buyerChannelFilter === "AUCTION"
-                ? "bg-indigo-700 text-white"
-                : "bg-indigo-50 text-indigo-900 border border-indigo-200 hover:bg-indigo-100"
-            )}
-          >
-            <span>🔨 Titip Balai Lelang</span>
-            <span className="px-1.5 py-0.2 rounded text-[10px] bg-indigo-200/50">
-              {auctionCount} unit
-            </span>
-          </button>
-          <button
-            onClick={() => setBuyerChannelFilter("OTHER_SHOWROOM")}
-            className={cn(
-              "px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer",
-              buyerChannelFilter === "OTHER_SHOWROOM"
-                ? "bg-[var(--accent)] text-white"
-                : "bg-white text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
-            )}
-          >
-            Showroom Rekanan Lain ({otherShowroomCount})
-          </button>
-          <button
-            onClick={() => setBuyerChannelFilter("DIRECT_CUSTOMER")}
-            className={cn(
-              "px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer",
-              buyerChannelFilter === "DIRECT_CUSTOMER"
-                ? "bg-[var(--accent)] text-white"
-                : "bg-white text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)]"
-            )}
-          >
-            Konsumen Langsung / Retail ({directCustomerCount})
-          </button>
-        </div>
+        ))}
       </div>
 
-      {/* ── SALES TABLE ───────────────────────────────────────── */}
-      <div className="bg-white border border-[var(--line)] rounded-2xl overflow-hidden shadow-xs">
+      {/* ── TAMPILAN KARTU DI HP (< md) ── */}
+      <div className="md:hidden space-y-3">
+        {filteredSales.length === 0 ? (
+          <div className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-8 text-center text-sm text-[var(--muted)]">
+            Belum ada data penjualan yang cocok.
+          </div>
+        ) : (
+          filteredSales.map((sale) => {
+            const plate = normalizePlateNumber(sale.vehicle.plateNumber);
+            const title = formatVehicleTitle(
+              sale.vehicle.brand,
+              sale.vehicle.model,
+              sale.vehicle.year
+            );
+
+            return (
+              <div
+                key={sale.id}
+                className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4 space-y-3"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="font-extrabold text-base text-[var(--ink)]">{plate}</div>
+                    <div className="text-xs text-[var(--muted)] mt-0.5">{title}</div>
+                  </div>
+                  <span
+                    className={cn(
+                      "px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0",
+                      sale.isFullyPaid
+                        ? "bg-[var(--ok-light)] text-[var(--ok)]"
+                        : "bg-[var(--warn-light)] text-amber-800"
+                    )}
+                  >
+                    {sale.isFullyPaid ? "Lunas" : "Tempo / DP"}
+                  </span>
+                </div>
+
+                <div className="text-xs text-[var(--muted)] flex items-center gap-1.5 flex-wrap">
+                  {sale.buyer.isShowroom ? (
+                    <Building2 className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
+                  ) : (
+                    <UserCheck className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
+                  )}
+                  <strong className="text-[var(--ink)]">{sale.buyer.name}</strong>
+                  <span>• {formatDate(sale.saleDate)}</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-xs">
+                  <div>
+                    <div className="text-[11px] text-[var(--muted)]">Harga Jual</div>
+                    <div className="font-bold text-[var(--ink)] mt-0.5">
+                      {formatRupiah(sale.sellingPrice)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-[var(--muted)]">
+                      {sale.isFullyPaid ? "Laba Kotor" : "Sisa Tagihan"}
+                    </div>
+                    <div
+                      className={cn(
+                        "font-bold mt-0.5",
+                        sale.isFullyPaid
+                          ? sale.grossProfit < 0
+                            ? "text-[var(--bad)]"
+                            : "text-[var(--ok)]"
+                          : "text-[var(--bad)]"
+                      )}
+                    >
+                      {sale.isFullyPaid
+                        ? formatRupiah(sale.grossProfit)
+                        : formatRupiah(sale.remainingAmount)}
+                    </div>
+                  </div>
+                </div>
+
+                {!sale.isFullyPaid && (
+                  <div className="space-y-1.5">
+                    <div className="w-full bg-[var(--line)] h-2 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-[var(--accent)]"
+                        style={{ width: `${sale.percentagePaid}%` }}
+                      />
+                    </div>
+                    <ReceivableBadge dueStatus={sale.dueStatus} dueDate={sale.dueDate} />
+                  </div>
+                )}
+
+                {sale.isFullyPaid && sale.profitDistributionStatus === "READY_FOR_DISTRIBUTION" && (
+                  <Link
+                    href="/admin/investors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] text-white text-xs font-bold"
+                  >
+                    <Coins className="w-3.5 h-3.5" />
+                    <span>Siap Bagi Hasil Investor</span>
+                  </Link>
+                )}
+
+                {/* Tombol Aksi Berlabel Jelas (Min 44px) */}
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  {!sale.isFullyPaid ? (
+                    <Link
+                      href={`/admin/sales/${sale.id}/payment`}
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--accent)] text-white text-xs font-bold"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Terima Bayar</span>
+                    </Link>
+                  ) : (
+                    <a
+                      href={`/api/pdf/invoice/${sale.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--accent)] text-white text-xs font-bold"
+                    >
+                      <Printer className="w-4 h-4" />
+                      <span>Cetak Kuitansi</span>
+                    </a>
+                  )}
+
+                  <Link
+                    href={`/admin/sales/${sale.id}`}
+                    className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-bold"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                    <span>Detail / Edit</span>
+                  </Link>
+
+                  {!sale.isFullyPaid && sale.buyer.phone && (
+                    <a
+                      href={generateReceivableReminderLink(sale.buyer.phone, {
+                        buyerName: sale.buyer.name,
+                        brand: sale.vehicle.brand,
+                        model: sale.vehicle.model,
+                        plateNumber: plate,
+                        remainingAmount: sale.remainingAmount,
+                        dueDate: sale.dueDate ? formatDate(sale.dueDate) : null,
+                      })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--ok-light)] border border-[var(--ok)]/30 text-[var(--ok)] text-xs font-bold"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Kirim Pengingat WA</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* ── TAMPILAN TABEL DI DESKTOP (>= md) ── */}
+      <div className="hidden md:block bg-[var(--surface)] border border-[var(--line)] rounded-xl overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
               <tr className="bg-[var(--bg)] border-b border-[var(--line)] text-xs font-bold uppercase text-[var(--muted)]">
-                <th className="py-3.5 px-4">Tanggal & Jalur</th>
-                <th className="py-3.5 px-4">Unit Mobil</th>
-                <th className="py-3.5 px-4">Pembeli / Showroom</th>
-                <th className="py-3.5 px-4">Harga Kesepakatan</th>
-                <th className="py-3.5 px-4 w-60">Status Pelunasan</th>
+                <th className="py-3.5 px-4">Tanggal</th>
+                <th className="py-3.5 px-4">Unit</th>
+                <th className="py-3.5 px-4">Pembeli</th>
+                <th className="py-3.5 px-4">Harga Jual</th>
+                <th className="py-3.5 px-4 w-56">Status Bayar</th>
                 <th className="py-3.5 px-4 text-right">Aksi</th>
               </tr>
             </thead>
@@ -370,180 +393,140 @@ export function SalesClient({ initialSales }: SalesClientProps) {
               {filteredSales.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-[var(--muted)]">
-                    Tidak ada transaksi penjualan yang cocok dengan filter saat ini.
+                    Belum ada transaksi penjualan yang cocok.
                   </td>
                 </tr>
               ) : (
                 filteredSales.map((sale) => {
+                  const plate = normalizePlateNumber(sale.vehicle.plateNumber);
+                  const title = formatVehicleTitle(
+                    sale.vehicle.brand,
+                    sale.vehicle.model,
+                    sale.vehicle.year
+                  );
+
                   return (
                     <tr key={sale.id} className="hover:bg-[var(--bg)]/50 transition-colors">
-                      {/* Tanggal & Jalur */}
                       <td className="py-4 px-4 align-top text-xs">
                         <div className="font-bold text-[var(--ink)]">{formatDate(sale.saleDate)}</div>
-                        <span className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
-                          {sale.saleType === "SHOWROOM" ? "Showroom Rekanan" : "Konsumen Langsung"}
+                        <span className="inline-block mt-1 px-2 py-0.5 rounded bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] text-[11px] font-medium">
+                          {sale.saleType === "SHOWROOM" ? "Showroom" : "Pembeli Langsung"}
                         </span>
                       </td>
 
-                      {/* Unit Mobil */}
                       <td className="py-4 px-4 align-top">
-                        <div className="font-bold text-base text-[var(--ink)]">{sale.vehicle.plateNumber}</div>
-                        <div className="text-xs text-[var(--muted)]">
-                          {sale.vehicle.brand} {sale.vehicle.model} ({sale.vehicle.year})
-                        </div>
+                        <div className="font-bold text-sm text-[var(--ink)]">{plate}</div>
+                        <div className="text-xs text-[var(--muted)]">{title}</div>
                       </td>
 
-                      {/* Pembeli */}
                       <td className="py-4 px-4 align-top text-xs">
-                        <div className="font-bold text-[var(--ink)] flex items-center gap-1.5">
-                          {sale.buyer.isShowroom ? <Building2 className="w-3.5 h-3.5 text-[var(--accent)]" /> : <UserCheck className="w-3.5 h-3.5 text-[var(--accent)]" />}
-                          <span>{sale.buyer.name}</span>
-                        </div>
+                        <div className="font-bold text-[var(--ink)]">{sale.buyer.name}</div>
                         {sale.buyer.phone && (
                           <div className="text-[var(--muted)] mt-0.5">{sale.buyer.phone}</div>
                         )}
-                        {sale.buyer.address && (
-                          <div className="text-[11px] text-[var(--muted)] truncate max-w-xs mt-0.5">{sale.buyer.address}</div>
-                        )}
                       </td>
 
-                      {/* Harga Jual & Estimasi Laba */}
                       <td className="py-4 px-4 align-top text-xs">
-                        <div className="font-bold text-base text-[var(--ink)]">
+                        <div className="font-bold text-sm text-[var(--ink)]">
                           {formatRupiah(sale.sellingPrice)}
                         </div>
-                        <div className="text-[11px] text-[var(--muted)] font-semibold mt-0.5">
-                          Laba Kotor: +{formatRupiah(sale.grossProfit)}
+                        <div
+                          className={cn(
+                            "text-[11px] font-semibold mt-0.5",
+                            sale.grossProfit < 0 ? "text-[var(--bad)]" : "text-[var(--ok)]"
+                          )}
+                        >
+                          Laba: {formatRupiah(sale.grossProfit)}
                         </div>
                       </td>
 
-                      {/* Progress Pelunasan */}
                       <td className="py-4 px-4 align-top text-xs">
                         <div className="flex items-center justify-between font-bold mb-1">
-                          <span className={sale.isFullyPaid ? "text-[var(--ink)]" : "text-[var(--accent)]"}>
-                            {sale.isFullyPaid ? "Lunas 100%" : `Kurang ${formatRupiah(sale.remainingAmount)}`}
+                          <span className={sale.isFullyPaid ? "text-[var(--ok)]" : "text-[var(--bad)]"}>
+                            {sale.isFullyPaid
+                              ? "Lunas 100%"
+                              : `Kurang ${formatRupiah(sale.remainingAmount)}`}
                           </span>
-                          <span className="text-[11px] text-[var(--muted)]">{sale.percentagePaid}%</span>
+                          <span className="text-[11px] text-[var(--muted)]">
+                            {sale.percentagePaid}%
+                          </span>
                         </div>
-
-                        {/* Progress Bar */}
                         <div className="w-full bg-[var(--line)] h-2 rounded-full overflow-hidden">
                           <div
                             className={cn(
-                              "h-full transition-all duration-500",
-                              sale.isFullyPaid ? "bg-[var(--ink)]" : "bg-[var(--accent)]"
+                              "h-full",
+                              sale.isFullyPaid ? "bg-[var(--ok)]" : "bg-[var(--accent)]"
                             )}
                             style={{ width: `${sale.percentagePaid}%` }}
                           />
                         </div>
-
-                        {/* Due Date Indicator or Profit Distribution Status */}
                         {!sale.isFullyPaid ? (
-                          <div className="mt-1.5 flex items-center gap-1">
+                          <div className="mt-1.5">
                             <ReceivableBadge dueStatus={sale.dueStatus} dueDate={sale.dueDate} />
                           </div>
                         ) : (
-                          <div className="mt-1.5 flex items-center gap-1 flex-wrap">
-                            {sale.profitDistributionStatus === "READY_FOR_DISTRIBUTION" && (
+                          sale.profitDistributionStatus === "READY_FOR_DISTRIBUTION" && (
+                            <div className="mt-1.5">
                               <Link
                                 href="/admin/investors"
-                                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[var(--accent)] text-white shadow-xs hover:bg-[var(--accent-hover)] transition-colors"
-                                title="Unit didanai investor & belum dibagikan labanya. Klik untuk bagi hasil."
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--accent)] text-white text-[11px] font-bold"
                               >
                                 <Coins className="w-3 h-3" />
-                                <span>Siap Bagi Hasil ({sale.investorNames?.join(", ") || "Investor"})</span>
+                                <span>Siap Bagi Hasil</span>
                               </Link>
-                            )}
-                            {sale.profitDistributionStatus === "DISTRIBUTED" && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)]">
-                                <CheckCircle2 className="w-3 h-3 text-[var(--muted)]" />
-                                <span>Bagi Hasil Selesai</span>
-                              </span>
-                            )}
-                            {sale.profitDistributionStatus === "OWNER_ONLY" && (
-                              <span className="text-[10px] text-[var(--muted)]">
-                                100% Modal Showroom
-                              </span>
-                            )}
-                          </div>
+                            </div>
+                          )
                         )}
                       </td>
 
-                      {/* Aksi */}
                       <td className="py-4 px-4 align-top text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          {/* Tombol Cepat Bagi Hasil Investor jika Lunas & Siap Bagi Hasil */}
-                          {sale.isFullyPaid && sale.profitDistributionStatus === "READY_FOR_DISTRIBUTION" && (
-                            <Link
-                              href="/admin/investors"
-                              className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
-                              title="Bagi Hasil ke Investor Sekarang"
-                            >
-                              <HeartHandshake className="w-4 h-4" />
-                            </Link>
-                          )}
-
-                          {/* Tombol Catat Pembayaran */}
+                        <div className="flex items-center justify-end gap-1.5 flex-wrap">
                           {!sale.isFullyPaid && (
                             <Link
                               href={`/admin/sales/${sale.id}/payment`}
-                              className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
-                              title="Catat Pembayaran Masuk / Angsuran"
+                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold"
                             >
-                              <Plus className="w-4 h-4" />
+                              <Plus className="w-3.5 h-3.5" />
+                              <span>Bayar</span>
                             </Link>
                           )}
 
-                          {/* Tombol Unduh Kuitansi PDF */}
+                          <Link
+                            href={`/admin/sales/${sale.id}`}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--bg)] text-[var(--ink)] text-xs font-semibold"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                            <span>Detail</span>
+                          </Link>
+
                           <a
                             href={`/api/pdf/invoice/${sale.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
-                            title="Cetak Kuitansi / Faktur Pembayaran (Meterai)"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--bg)] text-[var(--ink)] text-xs font-semibold"
+                            title="Cetak Kuitansi PDF"
                           >
-                            <Printer className="w-4 h-4" />
+                            <Printer className="w-3.5 h-3.5" />
+                            <span>Kuitansi</span>
                           </a>
 
-                          {/* Tombol Unduh Surat Perjanjian Jual Beli (SPK & S&K) */}
-                          <a
-                            href={`/api/pdf/agreement/${sale.id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
-                            title="Cetak Surat Perjanjian Jual Beli (SPK & Syarat Ketentuan)"
-                          >
-                            <FileText className="w-4 h-4" />
-                          </a>
-
-                          {/* Tombol Unduh BAST Serah Terima Kendaraan */}
-                          <a
-                            href={`/api/pdf/bast/${sale.id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
-                            title="Cetak Berita Acara Serah Terima (BAST)"
-                          >
-                            <ClipboardCheck className="w-4 h-4" />
-                          </a>
-
-                          {/* Click-to-WA Reminder */}
                           {!sale.isFullyPaid && sale.buyer.phone && (
                             <a
                               href={generateReceivableReminderLink(sale.buyer.phone, {
                                 buyerName: sale.buyer.name,
                                 brand: sale.vehicle.brand,
                                 model: sale.vehicle.model,
-                                plateNumber: sale.vehicle.plateNumber,
+                                plateNumber: plate,
                                 remainingAmount: sale.remainingAmount,
                                 dueDate: sale.dueDate ? formatDate(sale.dueDate) : null,
                               })}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1.5 rounded-lg border border-[var(--line)] bg-white hover:bg-[var(--accent)] hover:text-white text-[var(--ink)] transition-colors shadow-xs"
-                              title="Kirim Reminder WA Tagihan"
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[var(--ok)]/30 bg-[var(--ok-light)] text-[var(--ok)] text-xs font-semibold"
+                              title="Kirim pengingat lewat WhatsApp"
                             >
-                              <MessageCircle className="w-4 h-4" />
+                              <MessageCircle className="w-3.5 h-3.5" />
+                              <span>WA</span>
                             </a>
                           )}
                         </div>
@@ -560,7 +543,6 @@ export function SalesClient({ initialSales }: SalesClientProps) {
   );
 }
 
-// ── BADGE RECEIVABLE DUE DATE ──────────────────────────────────
 function ReceivableBadge({
   dueStatus,
   dueDate,
@@ -570,24 +552,24 @@ function ReceivableBadge({
 }) {
   if (dueStatus.status === "OVERDUE") {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--bad)] bg-[var(--bg)] px-2 py-0.5 rounded border border-[var(--bad)]/30 animate-pulse">
+      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--bad)] bg-[var(--bad-light)] px-2 py-0.5 rounded">
         <AlertTriangle className="w-3 h-3" />
-        Lewat Jatuh Tempo ({Math.abs(dueStatus.daysRemaining || 0)} hari)
+        Lewat tempo ({Math.abs(dueStatus.daysRemaining || 0)} hari)
       </span>
     );
   }
   if (dueStatus.status === "DUE_SOON") {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--warn)] bg-[var(--bg)] px-2 py-0.5 rounded border border-[var(--warn)]/30">
+      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-[var(--warn-light)] px-2 py-0.5 rounded">
         <Clock className="w-3 h-3" />
-        Jatuh Tempo H-{dueStatus.daysRemaining}
+        Jatuh tempo {dueStatus.daysRemaining} hari lagi
       </span>
     );
   }
   if (dueStatus.status === "ON_SCHEDULE" && dueDate) {
     return (
-      <span className="text-[10px] text-[var(--muted)]">
-        Jatuh Tempo: {formatDate(dueDate)}
+      <span className="text-[11px] text-[var(--muted)]">
+        Jatuh tempo: {formatDate(dueDate)}
       </span>
     );
   }

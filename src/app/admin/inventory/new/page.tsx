@@ -5,8 +5,8 @@ import { getInvestors } from "@/app/actions/investor";
 import { getCashBalanceSummary } from "@/app/actions/cash-transaction";
 
 export const metadata = {
-  title: "Intake Kendaraan Baru | Nur Mobil Admin",
-  description: "Form pendaftaran unit baru masuk ke inventori garasi Showroom Nur Mobil.",
+  title: "Catat Unit Masuk | Nur Mobil",
+  description: "Tambah mobil atau motor baru ke stok sekaligus tayangkan di katalog web.",
 };
 
 export default async function AdminNewVehiclePage() {
@@ -23,8 +23,8 @@ export default async function AdminNewVehiclePage() {
   return (
     <div className="flex-1 flex flex-col min-h-screen">
       <AdminHeader
-        title="Intake Unit Kendaraan Baru"
-        subtitle="Daftarkan kendaraan yang baru dimenangkan dari balai lelang atau dibeli langsung."
+        title="Catat Unit Masuk"
+        subtitle="Isi data pokok unit, harga beli, dan foto jika ingin langsung tayang di web."
       />
       <main className="flex-1">
         <VehicleNewClient

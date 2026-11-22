@@ -9,17 +9,17 @@ export const createSaleSchema = z.object({
   sellingPrice: z.coerce.number().positive("Harga jual wajib lebih besar dari 0"),
   dueDate: z.coerce.date().optional().nullable(),
   // Data Pembeli (Buyer)
-  buyerName: z.string().min(2, "Nama pembeli / showroom rekanan wajib diisi"),
-  buyerPhone: z.string().optional().nullable(),
+  buyerName: z.string().trim().min(2, "Nama pembeli / showroom rekanan wajib diisi"),
+  buyerPhone: z.string().trim().optional().nullable(),
   buyerIsShowroom: z.boolean().default(false),
-  buyerAddress: z.string().optional().nullable(),
-  buyerNotes: z.string().optional().nullable(),
+  buyerAddress: z.string().trim().optional().nullable(),
+  buyerNotes: z.string().trim().optional().nullable(),
   // Pembayaran Awal / Tanda Jadi (Opsional saat deal)
   initialPaymentAmount: z.coerce.number().nonnegative().optional().default(0),
   initialPaymentMethod: z.string().default("TRANSFER"),
   tradeInVehicleId: z.string().uuid().optional().nullable(),
   initialPaymentNotes: z.string().optional().nullable(),
-  // Serah Terima Fisik & Dokumen Legalitas (Opsional / Rekomendasi saat deal)
+  // Serah Terima Fisik & Dokumen Legalitas (Opsional)
   handoverOdometer: z.coerce.number().nonnegative().optional().nullable(),
   handoverPhotoUrl: z.string().optional().nullable(),
   bastDocUrl: z.string().optional().nullable(),
@@ -30,42 +30,23 @@ export const createSaleSchema = z.object({
   // Komisi Makelar / Mediator (Jika Ada)
   brokerName: z.string().optional().nullable(),
   brokerFee: z.coerce.number().nonnegative().optional().nullable(),
-}).refine((data) => {
-  // Aturan DP minimal 70% hanya berlaku khusus skema Cash Tempo Konsumen Langsung (Retail Garasi)
-  // Untuk transaksi B2B Showroom Rekanan & Balai Lelang, skema tempo mengikuti kesepakatan B2B
-  if (data.saleType === "DIRECT_CUSTOMER") {
-    const isTempo = (data.initialPaymentAmount || 0) < data.sellingPrice;
-    if (isTempo) {
-      const minDp = data.sellingPrice * 0.7;
-      if ((data.initialPaymentAmount || 0) < minDp) {
-        return false;
-      }
-    }
-  }
-  return true;
-}, {
-  message: "Aturan Nur Mobil: Pembelian Cash Tempo Konsumen Retail wajib DP minimal 70% dari harga kesepakatan",
-  path: ["initialPaymentAmount"],
-}).refine((data) => {
-  const isTempo = (data.initialPaymentAmount || 0) < data.sellingPrice;
-  if (isTempo) {
-    if (!data.dueDate) return false;
-    const saleTime = new Date(data.saleDate).getTime();
-    const dueTime = new Date(data.dueDate).getTime();
-    const diffDays = Math.ceil((dueTime - saleTime) / (1000 * 60 * 60 * 24));
-    // Tempo maksimal 30 hari (1 bulan)
-    if (diffDays > 30 || diffDays < 0) {
-      return false;
-    }
-  }
-  return true;
-}, {
-  message: "Aturan Nur Mobil: Batas jatuh tempo Cash Tempo maksimal 30 hari (1 bulan)",
-  path: ["dueDate"],
 });
 
 export type CreateSaleInput = z.input<typeof createSaleSchema>;
 
+export const updateSaleSchema = z.object({
+  saleId: z.string().uuid("ID transaksi penjualan tidak valid"),
+  saleDate: z.coerce.date(),
+  saleType: SaleChannelEnum,
+  sellingPrice: z.coerce.number().positive("Harga jual wajib lebih besar dari 0"),
+  dueDate: z.coerce.date().optional().nullable(),
+  buyerName: z.string().trim().min(2, "Nama pembeli / showroom wajib diisi"),
+  buyerPhone: z.string().trim().optional().nullable(),
+  buyerAddress: z.string().trim().optional().nullable(),
+  buyerIsShowroom: z.boolean().default(false),
+});
+
+export type UpdateSaleInput = z.input<typeof updateSaleSchema>;
 
 export const createSalePaymentSchema = z.object({
   saleId: z.string().uuid("ID transaksi penjualan tidak valid"),

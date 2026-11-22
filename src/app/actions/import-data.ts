@@ -34,6 +34,7 @@ export interface ParsedExpenseRow {
 }
 
 import { cleanNumber, cleanDate } from "@/lib/utils/spreadsheet-parser";
+import { normalizePlateNumber, cleanVehicleModel, formatReadableText } from "@/lib/utils";
 
 /**
  * Impor Massal Data Kendaraan dari Spreadsheet
@@ -63,10 +64,19 @@ export async function importVehiclesAction(
           continue;
         }
 
-        const cleanPlate = row.plateNumber.trim().toUpperCase();
+        const cleanPlate = normalizePlateNumber(row.plateNumber);
+        const cleanBrand = formatReadableText(row.brand);
+        const yearNum = Number(row.year) || new Date().getFullYear();
+        const cleanModel =
+          cleanVehicleModel(cleanBrand, row.model, yearNum) || formatReadableText(row.model);
 
-        const existing = await tx.vehicle.findUnique({
-          where: { plateNumber: cleanPlate },
+        const existing = await tx.vehicle.findFirst({
+          where: {
+            OR: [
+              { plateNumber: cleanPlate },
+              { plateNumber: cleanPlate.replace(/\s+/g, "") },
+            ],
+          },
         });
 
         const purchaseDate = cleanDate(row.purchaseDate);
@@ -79,10 +89,11 @@ export async function importVehiclesAction(
             await tx.vehicle.update({
               where: { id: existing.id },
               data: {
-                brand: row.brand.trim(),
-                model: row.model.trim(),
+                plateNumber: cleanPlate,
+                brand: cleanBrand,
+                model: cleanModel,
                 year: Number(row.year) || existing.year,
-                color: row.color?.trim() || existing.color,
+                color: row.color?.trim() ? formatReadableText(row.color) : existing.color,
                 odometer: cleanNumber(row.odometer) || existing.odometer,
                 transmission: row.transmission || existing.transmission,
                 engineCapacity: cleanNumber(row.engineCapacity) || existing.engineCapacity,
@@ -106,10 +117,10 @@ export async function importVehiclesAction(
         const newVehicle = await tx.vehicle.create({
           data: {
             plateNumber: cleanPlate,
-            brand: row.brand.trim(),
-            model: row.model.trim(),
-            year: Number(row.year) || new Date().getFullYear(),
-            color: row.color?.trim() || "Hitam",
+            brand: cleanBrand,
+            model: cleanModel,
+            year: yearNum,
+            color: row.color?.trim() ? formatReadableText(row.color) : "Hitam",
             odometer: cleanNumber(row.odometer) || 10000,
             transmission: row.transmission || "AUTOMATIC",
             engineCapacity: cleanNumber(row.engineCapacity) || 1500,
@@ -206,9 +217,14 @@ export async function importExpensesAction(rows: ParsedExpenseRow[]) {
       for (const row of rows) {
         if (!row.plateNumber || !row.amount) continue;
 
-        const cleanPlate = row.plateNumber.trim().toUpperCase();
-        const vehicle = await tx.vehicle.findUnique({
-          where: { plateNumber: cleanPlate },
+        const cleanPlate = normalizePlateNumber(row.plateNumber);
+        const vehicle = await tx.vehicle.findFirst({
+          where: {
+            OR: [
+              { plateNumber: cleanPlate },
+              { plateNumber: cleanPlate.replace(/\s+/g, "") },
+            ],
+          },
         });
 
         if (!vehicle) {

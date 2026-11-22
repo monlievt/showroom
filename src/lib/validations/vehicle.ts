@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizePlateNumber } from "@/lib/utils";
 
 export const TransmissionTypeEnum = z.enum(["AUTOMATIC", "MANUAL", "CVT", "DCT"]);
 export const SourceTypeEnum = z.enum(["AUCTION", "BROKER", "DIRECT_BUY"]);
@@ -23,19 +24,24 @@ export const createVehicleSchema = z.object({
     .string()
     .min(3, "Nomor plat minimal 3 karakter")
     .max(15, "Nomor plat maksimal 15 karakter")
-    .transform((val) => val.toUpperCase().trim()),
-  brand: z.string().min(2, "Merk mobil wajib diisi"),
-  model: z.string().min(2, "Tipe/model mobil wajib diisi"),
+    .transform((val) => normalizePlateNumber(val)),
+  brand: z.string().trim().min(2, "Merk kendaraan wajib diisi"),
+  model: z.string().trim().min(2, "Tipe/model kendaraan wajib diisi"),
   year: z.coerce
     .number()
     .int()
     .min(1990, "Tahun pembuatan minimal 1990")
     .max(new Date().getFullYear() + 1, "Tahun pembuatan tidak valid"),
-  color: z.string().min(2, "Warna mobil wajib diisi"),
-  odometer: z.coerce.number().int().nonnegative("Odometer tidak boleh negatif"),
-  transmission: TransmissionTypeEnum,
-  engineCapacity: z.coerce.number().int().positive("Kapasitas mesin wajib diisi"),
+  color: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) => (v && v.length >= 2 ? v : "Hitam")),
+  odometer: z.coerce.number().int().nonnegative("Odometer tidak boleh negatif").default(0),
+  transmission: TransmissionTypeEnum.default("AUTOMATIC"),
+  engineCapacity: z.coerce.number().int().positive("Kapasitas mesin wajib diisi").default(1500),
   sourceType: SourceTypeEnum.default("AUCTION"),
+  initialStatus: z.enum(["INTAKE", "IN_REPAIR", "READY_FOR_SALE"]).optional().default("INTAKE"),
   auctionHouse: z.string().optional().nullable(),
   auctionLotType: AuctionLotTypeEnum.optional().nullable(),
   auctionAdminFee: z.coerce.number().nonnegative().optional().nullable(),

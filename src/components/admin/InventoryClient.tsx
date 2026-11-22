@@ -30,11 +30,19 @@ import {
   Trash2,
   Loader2,
   RotateCcw,
+  Globe,
 } from "lucide-react";
-import { deleteVehicleAction } from "@/app/actions/vehicle";
+import { deleteVehicleAction, updateVehicleStatusAction } from "@/app/actions/vehicle";
 import { resetVehicleSaleAction } from "@/app/actions/sale";
 import { VehicleExpensesManager } from "./VehicleExpensesManager";
-import { formatRupiah, formatDate, cn } from "@/lib/utils";
+import {
+  formatRupiah,
+  formatDate,
+  cn,
+  normalizePlateNumber,
+  stripPlateSpaces,
+  formatVehicleTitle,
+} from "@/lib/utils";
 import { generateVehicleSlug } from "@/lib/utils/slug";
 import { generateCatalogWhatsAppLink } from "@/lib/utils/whatsapp";
 
@@ -69,6 +77,11 @@ interface VehicleItem {
   bpkbStatus?: string | null;
   bpkbLeadDays?: number | null;
   notes?: string | null;
+  photos?: Array<{
+    id: string;
+    fileUrl: string;
+    category: string;
+  }>;
   sale?: {
     id: string;
     sellingPrice: number;
@@ -87,30 +100,35 @@ interface VehicleItem {
 
 interface InventoryClientProps {
   initialVehicles: VehicleItem[];
+  initialStatus?: string;
   userRole?: string;
   whatsappPhone?: string;
 }
 
 const STATUS_FILTERS = [
-  { label: "Semua Unit", value: "ALL" },
-  { label: "Intake Baru", value: "INTAKE" },
-  { label: "Pengerjaan / Bengkel", value: "IN_REPAIR" },
-  { label: "Ready Jual", value: "READY_FOR_SALE" },
-  { label: "Booked (DP Masuk)", value: "BOOKED" },
-  { label: "Titip Showroom", value: "AT_SHOWROOM_PENDING" },
+  { label: "Semua", value: "ALL" },
+  { label: "Siap Jual (Web)", value: "READY_FOR_SALE" },
+  { label: "Baru Masuk", value: "INTAKE" },
+  { label: "Bengkel", value: "IN_REPAIR" },
+  { label: "DP / Booked", value: "BOOKED" },
+  { label: "Tempo Showroom", value: "AT_SHOWROOM_PENDING" },
   { label: "Terjual Lunas", value: "SOLD_SETTLED" },
 ];
 
 export function InventoryClient({
   initialVehicles,
+  initialStatus = "ALL",
   userRole = "ADMIN",
   whatsappPhone = "081234567890",
 }: InventoryClientProps) {
   const router = useRouter();
   const isSalesRole = userRole === "SALES";
   const [vehicles, setVehicles] = useState<VehicleItem[]>(initialVehicles);
-  const [selectedStatus, setSelectedStatus] = useState("ALL");
+  const [selectedStatus, setSelectedStatus] = useState(
+    STATUS_FILTERS.some((f) => f.value === initialStatus) ? initialStatus : "ALL"
+  );
   const [searchQuery, setSearchQuery] = useState("");
+  const [publishingId, setPublishingId] = useState<string | null>(null);
 
   // Modal Kelola Biaya & Hapus Unit
   const [selectedVehicleForExpense, setSelectedVehicleForExpense] = useState<VehicleItem | null>(null);
@@ -171,15 +189,45 @@ export function InventoryClient({
     }
   };
 
-  // Filter calculation
+  // Filter calculation (pencarian plat fleksibel pakai/tanpa spasi)
   const filteredVehicles = vehicles.filter((v) => {
     const matchStatus = selectedStatus === "ALL" || v.status === selectedStatus;
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return matchStatus;
+    const compactQ = stripPlateSpaces(searchQuery);
     const matchSearch =
-      v.plateNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.model.toLowerCase().includes(searchQuery.toLowerCase());
+      v.plateNumber.toLowerCase().includes(q) ||
+      (compactQ && stripPlateSpaces(v.plateNumber).includes(compactQ)) ||
+      v.brand.toLowerCase().includes(q) ||
+      v.model.toLowerCase().includes(q);
     return matchStatus && matchSearch;
   });
+
+  const handleQuickPublish = async (vehicle: VehicleItem) => {
+    setPublishingId(vehicle.id);
+    setInventoryNotice(null);
+    const res = await updateVehicleStatusAction(vehicle.id, "READY_FOR_SALE");
+    setPublishingId(null);
+
+    if (!res.success) {
+      setInventoryNotice({
+        type: "error",
+        text: res.error || "Gagal menayangkan unit ke katalog web.",
+      });
+      return;
+    }
+
+    setVehicles((prev) =>
+      prev.map((item) =>
+        item.id === vehicle.id ? { ...item, status: "READY_FOR_SALE" } : item
+      )
+    );
+    setInventoryNotice({
+      type: "success",
+      text: `${normalizePlateNumber(vehicle.plateNumber)} sekarang berstatus Siap Jual & tayang di web katalog.`,
+    });
+    router.refresh();
+  };
 
   // KPI Calculations
   const activeUnits = vehicles.filter((v) => v.status !== "SOLD_SETTLED");
@@ -319,33 +367,20 @@ export function InventoryClient({
 
         {!isSalesRole && (
           <div className="flex flex-wrap items-center gap-2">
-            {/* Action Button: Gudang Bahan Habis Pakai & Servis Mandiri */}
-            <Link
-              href="/admin/workshop"
-              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-lg text-sm font-semibold shadow-xs transition-colors"
-              title="Kelola persediaan oli, filter, bohlam, salon & alokasikan servis mandiri"
-            >
-              <Droplet className="w-4 h-4 text-[var(--accent)]" />
-              <span>Gudang Bahan &amp; Servis Mandiri</span>
-            </Link>
-
-            {/* Action Button: Import Spreadsheet */}
             <Link
               href="/admin/inventory/import"
-              className="flex items-center justify-center gap-1.5 px-3.5 py-2 bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-lg text-sm font-semibold shadow-xs transition-colors"
-              title="Import data mobil lama dari file spreadsheet / Excel / CSV"
+              className="hidden sm:inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 min-h-[44px] bg-white hover:bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] rounded-xl text-xs font-semibold transition-colors"
             >
               <FileSpreadsheet className="w-4 h-4 text-[var(--muted)]" />
-              <span>Import Spreadsheet</span>
+              <span>Import Excel</span>
             </Link>
 
-            {/* Action Button: Intake Unit Baru */}
             <Link
               href="/admin/inventory/new"
-              className="flex items-center justify-center gap-2 px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-lg text-sm font-semibold shadow-xs transition-colors"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 min-h-[46px] bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-xl text-sm font-bold shadow-xs transition-colors"
             >
               <Plus className="w-4 h-4" />
-              <span>Intake Unit Baru</span>
+              <span>Catat Unit Masuk</span>
             </Link>
           </div>
         )}
@@ -402,8 +437,202 @@ export function InventoryClient({
         })}
       </div>
 
-      {/* ── VEHICLES TABLE ────────────────────────────────────── */}
-      <div className="bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] overflow-hidden shadow-xs">
+      {/* ── TAMPILAN KARTU DI HP (< md) ───────────────────────── */}
+      <div className="md:hidden space-y-3">
+        {filteredVehicles.length === 0 ? (
+          <div className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-8 text-center text-sm text-[var(--muted)]">
+            Tidak ada unit yang cocok dengan pencarian saat ini.
+          </div>
+        ) : (
+          filteredVehicles.map((vehicle) => {
+            const plate = normalizePlateNumber(vehicle.plateNumber);
+            const title = formatVehicleTitle(vehicle.brand, vehicle.model, vehicle.year);
+            const thumb = vehicle.photos?.[0]?.fileUrl;
+            const slug = generateVehicleSlug(vehicle);
+
+            return (
+              <div
+                key={vehicle.id}
+                className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4 space-y-3"
+              >
+                <div className="flex items-start gap-3">
+                  <Link
+                    href={isSalesRole ? `/katalog/${slug}` : `/admin/inventory/${vehicle.id}`}
+                    className="w-18 h-18 rounded-xl overflow-hidden bg-[var(--bg)] border border-[var(--line)] shrink-0 flex items-center justify-center"
+                  >
+                    {thumb ? (
+                      <img src={thumb} alt={title} className="w-full h-full object-cover" />
+                    ) : (
+                      <CarFront className="w-7 h-7 text-[var(--muted)]" />
+                    )}
+                  </Link>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <Link
+                        href={isSalesRole ? `/katalog/${slug}` : `/admin/inventory/${vehicle.id}`}
+                        className="font-extrabold text-base text-[var(--ink)] tracking-tight leading-snug"
+                      >
+                        {plate}
+                      </Link>
+                      <StatusBadge status={vehicle.status} />
+                    </div>
+                    <div className="text-xs font-medium text-[var(--muted)] mt-0.5 truncate">
+                      {title}
+                    </div>
+                    <div className="text-[11px] text-[var(--muted)] mt-1 flex items-center gap-2 flex-wrap">
+                      <span>{vehicle.color}</span>
+                      <span>• {vehicle.daysInInventory} hari</span>
+                      {vehicle.bpkbStatus === "READY" ? (
+                        <span className="text-[var(--ok)] font-semibold">• BPKB Ada</span>
+                      ) : (
+                        <span className="text-amber-700 font-semibold">• BPKB Proses</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Harga Modal & Target Web */}
+                <div className="grid grid-cols-2 gap-2 p-3 rounded-xl bg-[var(--bg)] border border-[var(--line)] text-xs">
+                  {!isSalesRole && (
+                    <div>
+                      <div className="text-[11px] text-[var(--muted)]">Total Modal</div>
+                      <div className="font-bold text-[var(--ink)] mt-0.5">
+                        {formatRupiah(vehicle.totalHpp)}
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-[11px] text-[var(--muted)]">Harga di Web</div>
+                    <div className="font-bold text-[var(--ink)] mt-0.5">
+                      {vehicle.targetSellingPrice
+                        ? formatRupiah(vehicle.targetSellingPrice)
+                        : "Belum diisi"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tombol Aksi Besar Sesuai Kondisi Unit */}
+                {!isSalesRole ? (
+                  <div className="grid grid-cols-2 gap-2">
+                    {(vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR") && (
+                      <button
+                        type="button"
+                        disabled={publishingId === vehicle.id}
+                        onClick={() => handleQuickPublish(vehicle)}
+                        className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--ok)] text-white text-xs font-bold cursor-pointer disabled:opacity-50"
+                      >
+                        {publishingId === vehicle.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Globe className="w-4 h-4" />
+                        )}
+                        <span>Tayangkan di Web (Siap Jual)</span>
+                      </button>
+                    )}
+
+                    {vehicle.status === "READY_FOR_SALE" && !vehicle.sale && (
+                      <Link
+                        href={`/admin/sales/new?vehicleId=${vehicle.id}`}
+                        className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--ok)] text-white text-xs font-bold"
+                      >
+                        <DollarSign className="w-4 h-4" />
+                        <span>Catat Jual Unit Ini</span>
+                      </Link>
+                    )}
+
+                    {vehicle.sale && vehicle.status !== "SOLD_SETTLED" && (
+                      <Link
+                        href={`/admin/sales/${vehicle.sale.id}/payment`}
+                        className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--accent)] text-white text-xs font-bold"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Terima Bayar / Pelunasan</span>
+                      </Link>
+                    )}
+
+                    {vehicle.status === "SOLD_SETTLED" && vehicle.sale && (
+                      <a
+                        href={`/api/pdf/invoice/${vehicle.sale.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--accent)] text-white text-xs font-bold"
+                      >
+                        <Receipt className="w-4 h-4" />
+                        <span>Cetak Kuitansi PDF</span>
+                      </a>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedVehicleForExpense(vehicle)}
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold cursor-pointer"
+                    >
+                      <Receipt className="w-3.5 h-3.5 text-[var(--accent)]" />
+                      <span>Biaya ({vehicle.expenseCount ?? vehicle.expenses?.length ?? 0})</span>
+                    </button>
+
+                    <Link
+                      href={`/admin/inventory/${vehicle.id}/media`}
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--bg)] border border-[var(--line)] text-[var(--ink)] text-xs font-semibold"
+                    >
+                      <Camera className="w-3.5 h-3.5 text-[var(--accent)]" />
+                      <span>Foto Web</span>
+                    </Link>
+
+                    <Link
+                      href={`/admin/inventory/${vehicle.id}`}
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-white border border-[var(--line)] text-[var(--ink)] text-xs font-semibold"
+                    >
+                      <Eye className="w-3.5 h-3.5 text-[var(--muted)]" />
+                      <span>Detail</span>
+                    </Link>
+
+                    <Link
+                      href={`/katalog/${slug}`}
+                      target="_blank"
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-white border border-[var(--line)] text-[var(--accent)] text-xs font-semibold"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>Lihat Web</span>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href={`/katalog/${slug}`}
+                      target="_blank"
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--accent)] text-white text-xs font-bold"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>Lihat Katalog</span>
+                    </Link>
+                    <a
+                      href={generateCatalogWhatsAppLink(whatsappPhone, {
+                        brand: vehicle.brand,
+                        model: vehicle.model,
+                        year: vehicle.year,
+                        plateNumber: plate,
+                        targetSellingPrice: vehicle.targetSellingPrice,
+                        status: vehicle.status,
+                      })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 px-3 py-2.5 min-h-[44px] rounded-xl bg-[var(--ok-light)] border border-[var(--ok)]/30 text-[var(--ok)] text-xs font-bold"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Share WA</span>
+                    </a>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* ── VEHICLES TABLE (DESKTOP >= md) ────────────────────── */}
+      <div className="hidden md:block bg-[var(--surface)] border border-[var(--line)] rounded-[var(--r-card)] overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
             <thead>
@@ -451,10 +680,10 @@ export function InventoryClient({
                       {/* Plat & Brand */}
                       <td className="py-4 px-4 align-top">
                         <div className="font-bold text-base text-[var(--ink)] tracking-tight">
-                          {vehicle.plateNumber}
+                          {normalizePlateNumber(vehicle.plateNumber)}
                         </div>
                         <div className="text-xs font-medium text-[var(--muted)]">
-                          {vehicle.brand} {vehicle.model}
+                          {formatVehicleTitle(vehicle.brand, vehicle.model, vehicle.year)}
                         </div>
                         <div className="text-[11px] text-[var(--muted)]/80 mt-1">
                           Sumber: <span className="font-semibold text-[var(--ink)]">{vehicle.sourceType}</span>
@@ -651,43 +880,58 @@ export function InventoryClient({
                       <td className="py-4 px-4 align-top text-right">
                         <div className="flex items-center justify-end gap-2 relative">
                           {/* 1. Tombol Aksi Utama Kontekstual Sesuai Status Mobil */}
-                          {!isSalesRole && vehicle.status === "INTAKE" && (
-                            <Link
-                              href={`/admin/inspections/${vehicle.id}`}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0"
-                              title="Mulai Cek Fisik & Inspeksi"
-                            >
-                              <ClipboardCheck className="w-3.5 h-3.5" />
-                              <span>Cek Fisik</span>
-                            </Link>
-                          )}
-
-                          {!isSalesRole && vehicle.status === "IN_REPAIR" && (
+                          {!isSalesRole && (vehicle.status === "INTAKE" || vehicle.status === "IN_REPAIR") && (
                             <button
                               type="button"
-                              onClick={() => setSelectedVehicleForExpense(vehicle)}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0 cursor-pointer"
-                              title="Lihat, edit, atau catat biaya servis / sparepart"
+                              disabled={publishingId === vehicle.id}
+                              onClick={() => handleQuickPublish(vehicle)}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--ok)] hover:opacity-95 text-white text-xs font-bold shadow-xs transition-opacity shrink-0 cursor-pointer disabled:opacity-50"
+                              title="Ubah ke Siap Jual agar langsung tayang di katalog web"
                             >
-                              <Receipt className="w-3.5 h-3.5" />
-                              <span>Biaya / Servis</span>
+                              {publishingId === vehicle.id ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : (
+                                <Globe className="w-3.5 h-3.5" />
+                              )}
+                              <span>Tayang Web</span>
                             </button>
                           )}
 
-                          {vehicle.status === "READY_FOR_SALE" && (
+                          {!isSalesRole && vehicle.status === "READY_FOR_SALE" && !vehicle.sale && (
+                            <Link
+                              href={`/admin/sales/new?vehicleId=${vehicle.id}`}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--ok)] hover:opacity-95 text-white text-xs font-bold shadow-xs transition-opacity shrink-0"
+                              title="Catat penjualan unit ini"
+                            >
+                              <DollarSign className="w-3.5 h-3.5" />
+                              <span>Jual Unit</span>
+                            </Link>
+                          )}
+
+                          {isSalesRole && vehicle.status === "READY_FOR_SALE" && (
                             <a
                               href={`/api/pdf/spec-tag/${vehicle.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0"
-                              title="Cetak Tag Gantung Spion Ber-QR Code"
                             >
                               <Tag className="w-3.5 h-3.5" />
                               <span>Tag Spion</span>
                             </a>
                           )}
 
-                          {!isSalesRole && (vehicle.status === "BOOKED" || vehicle.status === "AT_SHOWROOM_PENDING") && (
+                          {!isSalesRole && vehicle.sale && vehicle.status !== "SOLD_SETTLED" && (
+                            <Link
+                              href={`/admin/sales/${vehicle.sale.id}/payment`}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-bold shadow-xs transition-all shrink-0"
+                              title="Catat pelunasan atau cicilan masuk"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                              <span>Terima Bayar</span>
+                            </Link>
+                          )}
+
+                          {!isSalesRole && !vehicle.sale && (vehicle.status === "BOOKED" || vehicle.status === "AT_SHOWROOM_PENDING") && (
                             <Link
                               href={`/admin/inventory/${vehicle.id}/status`}
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--ink)] hover:bg-[#2c3746] text-white text-xs font-bold shadow-xs transition-all shrink-0"
@@ -913,7 +1157,7 @@ export function InventoryClient({
               </span>
             </Link>
 
-            {!isSalesRole && activeDropdown.vehicle.status !== "SOLD_SETTLED" && (
+            {!isSalesRole && !activeDropdown.vehicle.sale && activeDropdown.vehicle.status !== "SOLD_SETTLED" && (
               <Link
                 href={`/admin/sales/new?vehicleId=${activeDropdown.vehicle.id}`}
                 onClick={() => setActiveDropdown(null)}
@@ -921,6 +1165,25 @@ export function InventoryClient({
               >
                 <DollarSign className="w-4 h-4 text-emerald-700" />
                 <span>Catat Penjualan (Jual Unit)</span>
+              </Link>
+            )}
+
+            {!isSalesRole && activeDropdown.vehicle.sale && (
+              <Link
+                href={
+                  activeDropdown.vehicle.status === "SOLD_SETTLED"
+                    ? `/admin/sales/${activeDropdown.vehicle.sale.id}`
+                    : `/admin/sales/${activeDropdown.vehicle.sale.id}/payment`
+                }
+                onClick={() => setActiveDropdown(null)}
+                className="flex items-center gap-2.5 px-3.5 py-2 text-[var(--accent)] hover:bg-[var(--bg)] font-bold transition-colors"
+              >
+                <DollarSign className="w-4 h-4 text-[var(--accent)]" />
+                <span>
+                  {activeDropdown.vehicle.status === "SOLD_SETTLED"
+                    ? "Lihat / Edit Penjualan"
+                    : "Terima Bayar / Pelunasan"}
+                </span>
               </Link>
             )}
 

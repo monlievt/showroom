@@ -15,9 +15,9 @@ export default async function AdminSalesPage() {
   const sales = salesResult.success && salesResult.data ? salesResult.data : [];
   const allVehicles = vehiclesResult.success && vehiclesResult.data ? vehiclesResult.data : [];
 
-  // Kendaraan yang siap dijual (READY_FOR_SALE atau BOOKED)
+  // Hanya unit yang belum memiliki catatan penjualan & belum lunas
   const availableVehicles = allVehicles
-    .filter((v) => v.status === "READY_FOR_SALE" || v.status === "BOOKED" || v.status === "INTAKE")
+    .filter((v) => !v.sale && v.status !== "SOLD_SETTLED")
     .map((v) => ({
       id: v.id,
       plateNumber: v.plateNumber,
@@ -33,8 +33,8 @@ export default async function AdminSalesPage() {
   return (
     <div className="flex-1 flex flex-col min-h-screen">
       <AdminHeader
-        title="Penjualan & Buku Piutang"
-        subtitle="Pencatatan transaksi jual (retail & showroom tempo), mutasi pembayaran bertahap, kuitansi PDF resmi, dan tukar tambah."
+        title="Penjualan & Tagihan"
+        subtitle="Catat unit laku, pantau sisa tagihan tempo, terima pelunasan, dan cetak kuitansi."
       />
 
       <main className="flex-1">

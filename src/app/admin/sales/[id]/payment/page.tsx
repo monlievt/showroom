@@ -4,6 +4,7 @@ import { AdminHeader } from "@/components/admin/AdminHeader";
 import { SalePaymentNewClient } from "@/components/admin/SalePaymentNewClient";
 import { getSaleByIdAction } from "@/app/actions/sale";
 import { getVehiclesAction } from "@/app/actions/vehicle";
+import { normalizePlateNumber, formatVehicleTitle } from "@/lib/utils";
 
 export const metadata = {
   title: "Catat Pembayaran Masuk | Nur Mobil Admin",
@@ -41,8 +42,8 @@ export default async function AdminSalePaymentPage({
   return (
     <div className="flex-1 flex flex-col min-h-screen">
       <AdminHeader
-        title={`Catat Pembayaran — ${sale.vehicle.brand} ${sale.vehicle.model} (${sale.vehicle.plateNumber})`}
-        subtitle={`Pembeli: ${sale.buyer.name} • Sisa Piutang Berjalan.`}
+        title={`Terima Bayar ${normalizePlateNumber(sale.vehicle.plateNumber)}`}
+        subtitle={`${formatVehicleTitle(sale.vehicle.brand, sale.vehicle.model, sale.vehicle.year)} • Pembeli: ${sale.buyer.name}`}
       />
       <main className="flex-1">
         <SalePaymentNewClient
