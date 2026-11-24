@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/auth/session";
 import { vehicleInvestmentSchema, VehicleInvestmentInput } from "@/lib/validations/investment";
 import { recordCapitalLedgerEntry } from "./capital-ledger";
+import { sanitizeActionError } from "@/lib/utils";
 import Decimal from "decimal.js";
 
 export async function addVehicleInvestment(
@@ -73,7 +74,7 @@ export async function addVehicleInvestment(
     revalidatePath(`/admin/inventory`);
     return { success: true, data: result };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal mencatat investasi unit" };
+    return { success: false, error: sanitizeActionError(error, "Gagal mencatat investasi unit") };
   }
 }
 
@@ -232,6 +233,6 @@ export async function saveVehicleInvestmentsAction(
     return { success: true, data: result };
   } catch (error: any) {
     console.error("Error saving vehicle investments:", error);
-    return { success: false, error: error.message || "Gagal menyimpan alokasi investor" };
+    return { success: false, error: sanitizeActionError(error, "Gagal menyimpan alokasi investor") };
   }
 }

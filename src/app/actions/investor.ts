@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/auth/session";
 import { investorSchema, InvestorInput } from "@/lib/validations/investor";
+import { sanitizeActionError } from "@/lib/utils";
 import Decimal from "decimal.js";
 
 export async function getInvestors() {
@@ -33,6 +34,7 @@ export async function getInvestors() {
           select: {
             calculatedAmount: true,
             isPaid: true,
+            notes: true,
           },
         },
       },
@@ -44,10 +46,9 @@ export async function getInvestors() {
       data: investors.map((inv) => {
         const latestLedger = inv.ledgerEntries[0];
         const currentBalance = latestLedger ? Number(latestLedger.runningBalance) : 0;
-        const totalProfitDistributed = inv.distributions.reduce(
-          (sum, d) => sum + Number(d.calculatedAmount),
-          0
-        );
+        const totalProfitDistributed = inv.distributions
+          .filter((d) => d.isPaid && !d.notes?.includes("[REVERSED]"))
+          .reduce((sum, d) => sum + Number(d.calculatedAmount), 0);
 
         return {
           id: inv.id,
@@ -136,7 +137,7 @@ export async function createInvestor(input: InvestorInput, actorUserId?: string)
     revalidatePath("/admin/finance");
     return { success: true, data: investor };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal membuat profil investor" };
+    return { success: false, error: sanitizeActionError(error, "Gagal membuat profil investor") };
   }
 }
 
@@ -190,7 +191,7 @@ export async function updateInvestor(
     revalidatePath("/admin/finance");
     return { success: true, data: updated };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal memperbarui data investor" };
+    return { success: false, error: sanitizeActionError(error, "Gagal memperbarui data investor") };
   }
 }
 
@@ -334,7 +335,7 @@ export async function deleteInvestor(id: string, actorUserId?: string) {
     return { success: true, message: `Akun investor ${existing.name} berhasil dihapus.` };
   } catch (error: any) {
     console.error("Error deleting investor:", error);
-    return { success: false, error: error.message || "Gagal menghapus akun investor" };
+    return { success: false, error: sanitizeActionError(error, "Gagal menghapus akun investor") };
   }
 }
 

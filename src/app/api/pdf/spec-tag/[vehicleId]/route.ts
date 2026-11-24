@@ -5,6 +5,9 @@ import QRCode from "qrcode";
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/auth/session";
 import { SpecTagPdfDocument } from "@/components/pdf/SpecTagPdfDocument";
+import { getPublicWhatsAppContactsAction } from "@/app/actions/contact";
+import { generateVehicleSlug } from "@/lib/utils/slug";
+import { normalizePlateNumber, cleanVehicleModel, formatReadableText } from "@/lib/utils";
 
 export async function GET(
   req: NextRequest,
@@ -19,9 +22,12 @@ export async function GET(
     const host = req.headers.get("host") || "localhost:3000";
     const proto = req.headers.get("x-forwarded-proto") || "http";
 
-    const vehicle = await prisma.vehicle.findUnique({
-      where: { id: vehicleId },
-    });
+    const [vehicle, waContacts] = await Promise.all([
+      prisma.vehicle.findUnique({
+        where: { id: vehicleId },
+      }),
+      getPublicWhatsAppContactsAction(),
+    ]);
 
     if (!vehicle) {
       return NextResponse.json(
@@ -30,7 +36,17 @@ export async function GET(
       );
     }
 
-    const catalogUrl = `${proto}://${host}/catalog/${vehicle.id}`;
+    const slug = generateVehicleSlug({
+      plateNumber: vehicle.plateNumber,
+      brand: vehicle.brand,
+      model: vehicle.model,
+      year: vehicle.year,
+    });
+    const catalogUrl = `${proto}://${host}/katalog/${slug}`;
+    const primaryContact =
+      waContacts.find((c) => c.isPrimary && c.isActive) ||
+      waContacts.find((c) => c.isActive);
+    const phoneHotline = primaryContact?.phone || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "-";
 
     // Generate QR Code data URL
     const qrDataUrl = await QRCode.toDataURL(catalogUrl, {
@@ -46,9 +62,9 @@ export async function GET(
       React.createElement(SpecTagPdfDocument, {
         data: {
           vehicle: {
-            plateNumber: vehicle.plateNumber,
-            brand: vehicle.brand,
-            model: vehicle.model,
+            plateNumber: normalizePlateNumber(vehicle.plateNumber),
+            brand: formatReadableText(vehicle.brand),
+            model: cleanVehicleModel(vehicle.brand, vehicle.model, vehicle.year) || vehicle.model,
             year: vehicle.year,
             color: vehicle.color,
             odometer: vehicle.odometer,
@@ -60,7 +76,7 @@ export async function GET(
           qrDataUrl,
           catalogUrl,
           showroomName: "NUR MOBIL",
-          phoneHotline: "0812-3456-7890",
+          phoneHotline,
         },
       }) as any
     );

@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { generateVehicleSlug, extractPlateCandidates } from "@/lib/utils/slug";
+import { normalizePlateNumber, stripPlateSpaces, cleanVehicleModel, formatReadableText } from "@/lib/utils";
 
 export interface PublicCatalogFilter {
   brand?: string;
@@ -69,10 +70,15 @@ export async function getPublicCatalog(filters?: PublicCatalogFilter) {
     }
 
     if (filters?.query) {
+      const q = filters.query.trim();
+      const compactQ = stripPlateSpaces(q);
+      const normalizedQ = normalizePlateNumber(q);
       where.OR = [
-        { brand: { contains: filters.query } },
-        { model: { contains: filters.query } },
-        { plateNumber: { contains: filters.query } },
+        { brand: { contains: q } },
+        { model: { contains: q } },
+        { plateNumber: { contains: q } },
+        ...(compactQ && compactQ !== q ? [{ plateNumber: { contains: compactQ } }] : []),
+        ...(normalizedQ && normalizedQ !== q ? [{ plateNumber: { contains: normalizedQ } }] : []),
       ];
     }
 
@@ -139,9 +145,9 @@ export async function getPublicCatalog(filters?: PublicCatalogFilter) {
         return {
           id: v.id,
           slug: safeSlug,
-          plateNumber: v.plateNumber,
-          brand: v.brand,
-          model: v.model,
+          plateNumber: normalizePlateNumber(v.plateNumber),
+          brand: formatReadableText(v.brand),
+          model: cleanVehicleModel(v.brand, v.model, v.year) || formatReadableText(v.model),
           year: v.year,
           color: v.color,
           odometer: v.odometer,
@@ -234,9 +240,9 @@ export async function getShowroomHomepageData() {
         return {
           id: v.id,
           slug: safeSlug,
-          plateNumber: v.plateNumber,
-          brand: v.brand,
-          model: v.model,
+          plateNumber: normalizePlateNumber(v.plateNumber),
+          brand: formatReadableText(v.brand),
+          model: cleanVehicleModel(v.brand, v.model, v.year) || formatReadableText(v.model),
           year: v.year,
           color: v.color,
           odometer: v.odometer,

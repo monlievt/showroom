@@ -9,6 +9,7 @@ import {
   SingleProfitShareRuleInput,
 } from "@/lib/validations/profit-share-rule";
 import Decimal from "decimal.js";
+import { sanitizeActionError } from "@/lib/utils";
 
 export async function getActiveProfitShareRules() {
   try {
@@ -91,6 +92,6 @@ export async function saveProfitShareRules(
     revalidatePath("/admin/finance");
     return { success: true, data: result };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal menyimpan aturan bagi hasil" };
+    return { success: false, error: sanitizeActionError(error, "Gagal menyimpan aturan bagi hasil") };
   }
 }

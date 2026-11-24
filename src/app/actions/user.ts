@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { requireRole } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { UserRole } from "@prisma/client";
+import { sanitizeActionError } from "@/lib/utils";
 
 export interface UserItem {
   id: string;
@@ -174,7 +175,7 @@ export async function createUserAction(formData: {
 
     return { success: true, message: `Pengguna '${newUser.fullName}' berhasil ditambahkan.` };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal membuat pengguna baru" };
+    return { success: false, error: sanitizeActionError(error, "Gagal membuat pengguna baru") };
   }
 }
 
@@ -274,7 +275,7 @@ export async function updateUserAction(formData: {
 
     return { success: true, message: `Data pengguna '${updated.fullName}' berhasil diperbarui.` };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal memperbarui pengguna" };
+    return { success: false, error: sanitizeActionError(error, "Gagal memperbarui pengguna") };
   }
 }
 
@@ -328,6 +329,6 @@ export async function deleteUserAction(id: string) {
 
     return { success: true, message: `Pengguna '${targetUser.fullName}' berhasil dihapus.` };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal menghapus pengguna" };
+    return { success: false, error: sanitizeActionError(error, "Gagal menghapus pengguna") };
   }
 }

@@ -12,6 +12,7 @@ import {
   OwnerEquityInput,
 } from "@/lib/validations/operational-expense";
 import Decimal from "decimal.js";
+import { sanitizeActionError } from "@/lib/utils";
 
 export async function getOperationalExpensesSummary() {
   try {
@@ -156,7 +157,7 @@ export async function recordOperationalExpense(
   } catch (error: any) {
     return {
       success: false,
-      error: error.message || "Gagal mencatat beban operasional",
+      error: sanitizeActionError(error, "Gagal mencatat beban operasional"),
     };
   }
 }
@@ -209,7 +210,7 @@ export async function recordOwnerDraw(
   } catch (error: any) {
     return {
       success: false,
-      error: error.message || "Gagal mencatat penarikan pribadi (Prive)",
+      error: sanitizeActionError(error, "Gagal mencatat penarikan pribadi (Prive)"),
     };
   }
 }
@@ -262,7 +263,7 @@ export async function recordOwnerEquity(
   } catch (error: any) {
     return {
       success: false,
-      error: error.message || "Gagal mencatat setoran modal pribadi",
+      error: sanitizeActionError(error, "Gagal mencatat setoran modal pribadi"),
     };
   }
 }

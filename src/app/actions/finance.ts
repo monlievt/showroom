@@ -9,6 +9,7 @@ import {
   RuleData,
 } from "@/lib/calculations/profit-share";
 import { recordCapitalLedgerEntry } from "./capital-ledger";
+import { sanitizeActionError } from "@/lib/utils";
 import Decimal from "decimal.js";
 
 export async function getFinanceSummary() {
@@ -39,14 +40,16 @@ export async function getFinanceSummary() {
       0
     );
 
-    // 3. Total profit yang sudah dibagikan
+    // 3. Total profit yang sudah dibagikan (abaikan distribusi yang sudah di-reverse)
     const paidDistributions = await prisma.profitDistribution.findMany({
       where: {
+        isPaid: true,
         calculatedAmount: { gt: 0 },
       },
       select: {
         calculatedAmount: true,
         beneficiaryType: true,
+        notes: true,
       },
     });
 
@@ -55,6 +58,7 @@ export async function getFinanceSummary() {
     let totalInvestorProfit = 0;
 
     for (const d of paidDistributions) {
+      if (d.notes?.includes("[REVERSED]")) continue;
       const amt = Number(d.calculatedAmount);
       totalProfitPaid += amt;
       if (d.beneficiaryType === "OWNER") {
@@ -82,7 +86,9 @@ export async function getFinanceSummary() {
     const pendingDistributions = sales.filter((s) => {
       const paid = s.payments.reduce((sum, p) => sum + Number(p.amount), 0);
       const isLunas = paid >= Number(s.sellingPrice);
-      const hasDistributed = s.distributions.length > 0 && !s.distributions[0].notes?.includes("[REVERSED]");
+      const hasDistributed = s.distributions.some(
+        (d) => !d.notes?.includes("[REVERSED]")
+      );
       return isLunas && !hasDistributed;
     });
 
@@ -148,7 +154,7 @@ export async function getFinanceSummary() {
       },
     };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal mengambil ringkasan keuangan" };
+    return { success: false, error: sanitizeActionError(error, "Gagal mengambil ringkasan keuangan") };
   }
 }
 
@@ -322,7 +328,7 @@ export async function executeProfitDistribution(
     revalidatePath("/admin/sales");
     return { success: true, data: execution };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal mengeksekusi pembagian laba" };
+    return { success: false, error: sanitizeActionError(error, "Gagal mengeksekusi pembagian laba") };
   }
 }
 
@@ -427,7 +433,7 @@ export async function reverseDistribution(
     revalidatePath("/admin/sales");
     return { success: true, data: result };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal melakukan reversal distribusi" };
+    return { success: false, error: sanitizeActionError(error, "Gagal melakukan reversal distribusi") };
   }
 }
 

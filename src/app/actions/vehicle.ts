@@ -17,6 +17,7 @@ import {
   formatReadableText,
   sanitizeActionError,
 } from "@/lib/utils";
+import { deleteUploadFileIfUnused } from "@/lib/utils/file-cleanup";
 
 export async function getVehiclesAction(filters?: {
   status?: string;
@@ -705,9 +706,11 @@ export async function updateVehicleTaxAction(
 export async function deleteVehiclePhotoAction(photoId: string, vehicleId: string) {
   try {
     const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    let deletedFileUrl: string | null = null;
     await prisma.$transaction(async (tx) => {
       const photo = await tx.vehiclePhoto.findUnique({ where: { id: photoId } });
       if (!photo) return;
+      deletedFileUrl = photo.fileUrl;
       await tx.vehiclePhoto.delete({ where: { id: photoId } });
       await tx.auditLog.create({
         data: {
@@ -719,22 +722,27 @@ export async function deleteVehiclePhotoAction(photoId: string, vehicleId: strin
         },
       });
     });
+    if (deletedFileUrl) {
+      await deleteUploadFileIfUnused(deletedFileUrl);
+    }
     revalidatePath(`/admin/inventory/${vehicleId}`);
     revalidatePath(`/admin/inventory/${vehicleId}/media`);
     revalidatePath(`/katalog`);
     return { success: true };
   } catch (error: any) {
     console.error("Error deleting vehicle photo:", error);
-    return { success: false, error: error.message || "Gagal menghapus foto" };
+    return { success: false, error: sanitizeActionError(error, "Gagal menghapus foto") };
   }
 }
 
 export async function deleteVehicleDocumentAction(documentId: string, vehicleId: string) {
   try {
     const session = await requireRole(["OWNER", "ADMIN", "STAFF_ADMIN"]);
+    let deletedFileUrl: string | null = null;
     await prisma.$transaction(async (tx) => {
       const doc = await tx.vehicleDocument.findUnique({ where: { id: documentId } });
       if (!doc) return;
+      deletedFileUrl = doc.fileUrl;
       await tx.vehicleDocument.delete({ where: { id: documentId } });
       await tx.auditLog.create({
         data: {
@@ -746,12 +754,15 @@ export async function deleteVehicleDocumentAction(documentId: string, vehicleId:
         },
       });
     });
+    if (deletedFileUrl) {
+      await deleteUploadFileIfUnused(deletedFileUrl);
+    }
     revalidatePath(`/admin/inventory/${vehicleId}`);
     revalidatePath(`/admin/inventory/${vehicleId}/media`);
     return { success: true };
   } catch (error: any) {
     console.error("Error deleting vehicle document:", error);
-    return { success: false, error: error.message || "Gagal menghapus dokumen" };
+    return { success: false, error: sanitizeActionError(error, "Gagal menghapus dokumen") };
   }
 }
 

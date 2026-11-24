@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { requireRole } from "@/lib/auth/session";
-import { formatRupiah, parseProofUrls } from "@/lib/utils";
+import { formatRupiah, parseProofUrls, sanitizeActionError } from "@/lib/utils";
 
 export interface CreateSupplyInput {
   name: string;
@@ -429,7 +429,7 @@ export async function recordSupplyUsageAction(input: RecordUsageInput) {
     };
   } catch (error: any) {
     console.error("Gagal mencatat pemakaian barang habis pakai:", error);
-    return { success: false, error: error.message || "Gagal mencatat pemakaian barang" };
+    return { success: false, error: sanitizeActionError(error, "Gagal mencatat pemakaian barang") };
   }
 }
 

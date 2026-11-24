@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireRole } from "@/lib/auth/session";
 import { cashTransactionSchema, CashTransactionInput } from "@/lib/validations/cash-transaction";
+import { sanitizeActionError } from "@/lib/utils";
 import Decimal from "decimal.js";
 
 export async function getCashBalanceSummary() {
@@ -183,6 +184,6 @@ export async function recordManualCashTransaction(
     revalidatePath("/admin/finance");
     return { success: true, data: result };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal mencatat transaksi kas" };
+    return { success: false, error: sanitizeActionError(error, "Gagal mencatat transaksi kas") };
   }
 }

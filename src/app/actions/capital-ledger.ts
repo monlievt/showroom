@@ -9,7 +9,7 @@ import {
   type CapitalLedgerInput,
   type WithdrawInvestorCapitalInput,
 } from "@/lib/validations/capital-ledger";
-import { formatRupiah } from "@/lib/utils";
+import { formatRupiah, sanitizeActionError } from "@/lib/utils";
 import Decimal from "decimal.js";
 
 /**
@@ -178,7 +178,7 @@ export async function depositInvestorCapital(
     revalidatePath("/investor");
     return { success: true, data: result };
   } catch (error: any) {
-    return { success: false, error: error.message || "Gagal mencatat setoran modal" };
+    return { success: false, error: sanitizeActionError(error, "Gagal mencatat setoran modal") };
   }
 }
 
@@ -317,7 +317,7 @@ export async function withdrawInvestorCapital(
   } catch (error: any) {
     return {
       success: false,
-      error: error.message || "Gagal mencatat pencairan dana pemodal",
+      error: sanitizeActionError(error, "Gagal mencatat pencairan dana pemodal"),
     };
   }
 }

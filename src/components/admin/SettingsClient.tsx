@@ -87,7 +87,7 @@ export function SettingsClient({
   >("api_keys");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [typeFilter, setTypeFilter] = useState("ALL");
-  const [testPhone, setTestPhone] = useState("081234567890");
+  const [testPhone, setTestPhone] = useState("");
   const [testType, setTestType] = useState<string>("UNIT_SOLD");
   const [testLoading, setTestLoading] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);

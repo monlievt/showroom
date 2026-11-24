@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/session";
+import { sanitizeActionError } from "@/lib/utils";
 import {
   sendWhatsAppNotification,
   sendUnitSoldNotification,
@@ -12,6 +14,7 @@ import {
 
 export async function sendTestWhatsAppAction(type: NotificationLogType, phone: string, name?: string) {
   try {
+    await requireRole(["OWNER", "ADMIN"]);
     if (!phone) throw new Error("Nomor WhatsApp wajib diisi");
 
     let result;
@@ -65,10 +68,11 @@ export async function sendTestWhatsAppAction(type: NotificationLogType, phone: s
     revalidatePath("/admin/settings");
     return { success: true, data: result };
   } catch (err: any) {
-    return { success: false, error: err.message || "Gagal mengirim pesan uji coba" };
+    return { success: false, error: sanitizeActionError(err, "Gagal mengirim pesan uji coba") };
   }
 }
 
 export async function getWahaHealthAction() {
+  await requireRole(["OWNER", "ADMIN"]);
   return await checkWahaHealth();
 }

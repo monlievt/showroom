@@ -16,7 +16,7 @@ export async function GET() {
       );
     }
 
-    // Ambil seluruh data esensial showroom
+    // Ambil seluruh data operasional showroom (kecualikan API key rahasia dari export JSON)
     const [
       vehicles,
       sales,
@@ -24,10 +24,17 @@ export async function GET() {
       expenses,
       buyers,
       investors,
+      vehicleInvestments,
       capitalLedgers,
+      profitShareRules,
+      profitDistributions,
       cashTransactions,
       operationalExpenses,
       showroomAssets,
+      inspections,
+      workshopSupplies,
+      workshopSupplyUsages,
+      historicalSales,
       auditLogs,
       systemSettings,
     ] = await Promise.all([
@@ -37,12 +44,19 @@ export async function GET() {
       prisma.expense.findMany(),
       prisma.buyer.findMany(),
       prisma.investor.findMany({ include: { ledgerEntries: true } }),
+      prisma.vehicleInvestment.findMany(),
       prisma.capitalLedger.findMany(),
+      prisma.profitShareRule.findMany(),
+      prisma.profitDistribution.findMany(),
       prisma.cashTransaction.findMany(),
       prisma.operationalExpense.findMany(),
       prisma.showroomAsset.findMany(),
+      prisma.inspection.findMany({ include: { panels: true } }),
+      prisma.workshopSupply.findMany(),
+      prisma.workshopSupplyUsage.findMany(),
+      prisma.historicalSale.findMany(),
       prisma.auditLog.findMany({ orderBy: { createdAt: "desc" }, take: 500 }),
-      prisma.systemSetting.findMany(),
+      prisma.systemSetting.findMany({ where: { isSecret: false } }),
     ]);
 
     const backupPayload = {
@@ -50,10 +64,12 @@ export async function GET() {
         appName: "Nur Mobil Showroom App",
         exportDate: new Date().toISOString(),
         exportedBy: session.fullName,
-        version: "2.5.0-production",
+        version: "2.6.0-production",
+        secretsExcluded: true,
         totalVehicles: vehicles.length,
         totalSales: sales.length,
         totalTransactions: cashTransactions.length,
+        totalHistoricalSales: historicalSales.length,
       },
       data: {
         vehicles,
@@ -62,10 +78,17 @@ export async function GET() {
         expenses,
         buyers,
         investors,
+        vehicleInvestments,
         capitalLedgers,
+        profitShareRules,
+        profitDistributions,
         cashTransactions,
         operationalExpenses,
         showroomAssets,
+        inspections,
+        workshopSupplies,
+        workshopSupplyUsages,
+        historicalSales,
         auditLogs,
         systemSettings,
       },

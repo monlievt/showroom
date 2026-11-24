@@ -192,7 +192,7 @@ export function SaleNewClient({
 
   const handleFileUpload = async (
     file: File,
-    uploadType: "PHOTO" | "DOCUMENT",
+    uploadType: "PHOTO" | "DOCUMENT" | "RECEIPT",
     setLoadingState: (val: boolean) => void,
     setUrlState: (url: string) => void,
     docType?: string,
@@ -728,12 +728,9 @@ export function SaleNewClient({
                   onSelect={(file) =>
                     handleFileUpload(
                       file,
-                      "PHOTO",
+                      "RECEIPT",
                       setUploadingPhoto,
-                      setHandoverPhotoUrl,
-                      undefined,
-                      "HANDOVER_DELIVERY",
-                      "Foto Serah Terima Unit"
+                      setHandoverPhotoUrl
                     )
                   }
                 />
