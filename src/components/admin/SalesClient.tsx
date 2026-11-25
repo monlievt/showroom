@@ -410,7 +410,11 @@ export function SalesClient({ initialSales }: SalesClientProps) {
                       <td className="py-4 px-4 align-top text-xs">
                         <div className="font-bold text-[var(--ink)]">{formatDate(sale.saleDate)}</div>
                         <span className="inline-block mt-1 px-2 py-0.5 rounded bg-[var(--bg)] text-[var(--muted)] border border-[var(--line)] text-[11px] font-medium">
-                          {sale.saleType === "SHOWROOM" ? "Showroom" : "Pembeli Langsung"}
+                          {/lelang|jba|ibid|auksi|smartbid|legoas|caready/i.test(sale.buyer.name)
+                            ? "Balai Lelang"
+                            : sale.saleType === "SHOWROOM"
+                            ? "Showroom"
+                            : "Pembeli Langsung"}
                         </span>
                       </td>
 

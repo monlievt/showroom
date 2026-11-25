@@ -68,11 +68,26 @@ const DEFAULT_CHECKLIST = [
   { id: "SPARE_TIRE_TOOLKIT", label: "Ban Serep & Dongkrak" },
 ];
 
-const FALLBACK_PARTNERS = [
-  { name: "Showroom Kcunk Motor", address: "Tulungagung, Jawa Timur", isShowroom: true },
-  { name: "Balai Lelang JBA Surabaya", address: "Sidoarjo / Surabaya", isShowroom: true },
-  { name: "Balai Lelang IBID Surabaya", address: "Surabaya", isShowroom: true },
+const DEFAULT_AUCTION_PARTNERS = [
+  { name: "Balai Lelang JBA Surabaya", address: "Sidoarjo / Surabaya" },
+  { name: "Balai Lelang IBID Surabaya", address: "Surabaya" },
+  { name: "Balai Lelang AUKSI", address: "Surabaya" },
+  { name: "Balai Lelang SmartBid", address: "Surabaya" },
+  { name: "Balai Lelang Legoas", address: "Surabaya" },
 ];
+
+function isAuctionBuyerName(name: string): boolean {
+  const lower = name.toLowerCase();
+  return (
+    lower.includes("lelang") ||
+    lower.includes("jba") ||
+    lower.includes("ibid") ||
+    lower.includes("auksi") ||
+    lower.includes("smartbid") ||
+    lower.includes("legoas") ||
+    lower.includes("caready")
+  );
+}
 
 function addDaysToDateStr(dateStr: string, days: number): string {
   const d = new Date(`${dateStr}T00:00:00`);
@@ -106,12 +121,16 @@ export function SaleNewClient({
     preselected?.id || availableVehicles[0]?.id || ""
   );
   const [saleDate, setSaleDate] = useState(() => getTodayWibDateString());
-  const [saleType, setSaleType] = useState<"DIRECT_CUSTOMER" | "SHOWROOM">("SHOWROOM");
+  const [buyerChannel, setBuyerChannel] = useState<"SHOWROOM" | "AUCTION" | "DIRECT_CUSTOMER">(
+    "SHOWROOM"
+  );
+  const saleType: "DIRECT_CUSTOMER" | "SHOWROOM" =
+    buyerChannel === "DIRECT_CUSTOMER" ? "DIRECT_CUSTOMER" : "SHOWROOM";
+  const buyerIsShowroom = buyerChannel !== "DIRECT_CUSTOMER";
   const [sellingPrice, setSellingPrice] = useState<number | "">("");
 
   const [buyerName, setBuyerName] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
-  const [buyerIsShowroom, setBuyerIsShowroom] = useState(true);
   const [buyerAddress, setBuyerAddress] = useState("");
 
   // Mode pembayaran sederhana: LUNAS vs TEMPO
@@ -172,18 +191,46 @@ export function SaleNewClient({
       : 0;
   const showLongTempoWarning = paymentMode === "TEMPO" && diffTempoDays > 30;
 
-  // Gabungkan rekanan dari database + fallback bila database buyer masih kosong
+  // Pilihan cepat sesuai jalur yang dipilih (Showroom vs Balai Lelang)
+  const showroomPartners = savedBuyers
+    .filter((b) => b.isShowroom && !isAuctionBuyerName(b.name))
+    .slice(0, 6);
+
+  const savedAuctionPartners = savedBuyers.filter((b) => isAuctionBuyerName(b.name));
+  const auctionPartnerNames = new Set(
+    savedAuctionPartners.map((b) => b.name.toLowerCase())
+  );
+  const auctionPartners = [
+    ...savedAuctionPartners,
+    ...DEFAULT_AUCTION_PARTNERS.filter(
+      (p) => !auctionPartnerNames.has(p.name.toLowerCase())
+    ).map((p, idx) => ({
+      id: `auction-preset-${idx}`,
+      name: p.name,
+      phone: "",
+      address: p.address,
+      isShowroom: true,
+      salesCount: 0,
+    })),
+  ].slice(0, 6);
+
   const quickPartners =
-    savedBuyers.length > 0
-      ? savedBuyers.slice(0, 6)
-      : FALLBACK_PARTNERS.map((p, idx) => ({
-          id: `fallback-${idx}`,
-          name: p.name,
-          phone: "",
-          address: p.address,
-          isShowroom: p.isShowroom,
-          salesCount: 0,
-        }));
+    buyerChannel === "AUCTION"
+      ? auctionPartners
+      : buyerChannel === "SHOWROOM"
+      ? showroomPartners.length > 0
+        ? showroomPartners
+        : [
+            {
+              id: "fallback-kcunk",
+              name: "Showroom Kcunk Motor",
+              phone: "",
+              address: "Tulungagung, Jawa Timur",
+              isShowroom: true,
+              salesCount: 0,
+            },
+          ]
+      : [];
 
   const showError = (msg: string) => {
     setErrorMsg(msg);
@@ -433,52 +480,81 @@ export function SaleNewClient({
           )}
         </section>
 
-        {/* ── 2. PEMBELI / SHOWROOM ── */}
+        {/* ── 2. PEMBELI / SHOWROOM / BALAI LELANG ── */}
         <section className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4 sm:p-5 space-y-3.5">
           <div className="flex items-center gap-2">
             <User className="w-4 h-4 text-[var(--accent)]" />
-            <h2 className="text-sm font-bold text-[var(--ink)]">2. Pembeli / Showroom</h2>
+            <h2 className="text-sm font-bold text-[var(--ink)]">
+              2. Tujuan Jual (Showroom / Lelang / Pembeli)
+            </h2>
           </div>
 
-          {/* Toggle Tipe Pembeli */}
-          <div className="grid grid-cols-2 gap-2">
+          {/* Toggle 3 Jalur Penjualan */}
+          <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
               onClick={() => {
-                setSaleType("SHOWROOM");
-                setBuyerIsShowroom(true);
+                setBuyerChannel("SHOWROOM");
+                if (isAuctionBuyerName(buyerName)) {
+                  setBuyerName("");
+                  setBuyerPhone("");
+                  setBuyerAddress("");
+                }
               }}
               className={cn(
-                "px-3 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-bold border transition-colors cursor-pointer",
-                saleType === "SHOWROOM"
+                "px-2.5 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-bold border transition-colors cursor-pointer",
+                buyerChannel === "SHOWROOM"
                   ? "bg-[var(--accent)] text-white border-[var(--accent)]"
                   : "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
               )}
             >
-              Showroom / Rekanan
+              Showroom
             </button>
             <button
               type="button"
               onClick={() => {
-                setSaleType("DIRECT_CUSTOMER");
-                setBuyerIsShowroom(false);
+                setBuyerChannel("AUCTION");
+                if (buyerName && !isAuctionBuyerName(buyerName)) {
+                  setBuyerName("");
+                  setBuyerPhone("");
+                  setBuyerAddress("");
+                }
               }}
               className={cn(
-                "px-3 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-bold border transition-colors cursor-pointer",
-                saleType === "DIRECT_CUSTOMER"
+                "px-2.5 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-bold border transition-colors cursor-pointer",
+                buyerChannel === "AUCTION"
                   ? "bg-[var(--accent)] text-white border-[var(--accent)]"
                   : "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
               )}
             >
-              Pembeli Langsung
+              Balai Lelang
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setBuyerChannel("DIRECT_CUSTOMER");
+                setBuyerName("");
+                setBuyerPhone("");
+                setBuyerAddress("");
+              }}
+              className={cn(
+                "px-2.5 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-bold border transition-colors cursor-pointer",
+                buyerChannel === "DIRECT_CUSTOMER"
+                  ? "bg-[var(--accent)] text-white border-[var(--accent)]"
+                  : "bg-[var(--bg)] text-[var(--ink)] border-[var(--line)]"
+              )}
+            >
+              Langsung
             </button>
           </div>
 
-          {/* Pilihan Cepat Rekanan Tersimpan */}
+          {/* Pilihan Cepat sesuai Jalur */}
           {quickPartners.length > 0 && (
             <div className="space-y-1.5">
               <div className="text-xs text-[var(--muted)] font-medium">
-                Pilih cepat langganan:
+                {buyerChannel === "AUCTION"
+                  ? "Pilih balai lelang (atau ketik manual di bawah):"
+                  : "Pilih cepat langganan (atau ketik manual di bawah):"}
               </div>
               <div className="flex flex-wrap gap-2">
                 {quickPartners.map((partner) => {
@@ -488,8 +564,6 @@ export function SaleNewClient({
                       key={partner.id}
                       type="button"
                       onClick={() => {
-                        setSaleType(partner.isShowroom ? "SHOWROOM" : "DIRECT_CUSTOMER");
-                        setBuyerIsShowroom(partner.isShowroom);
                         setBuyerName(partner.name);
                         setBuyerPhone(partner.phone || "");
                         setBuyerAddress(partner.address || "");
@@ -512,12 +586,22 @@ export function SaleNewClient({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
-                Nama Pembeli / Showroom *
+                {buyerChannel === "AUCTION"
+                  ? "Nama Balai Lelang *"
+                  : buyerChannel === "SHOWROOM"
+                  ? "Nama Showroom / Rekanan *"
+                  : "Nama Pembeli *"}
               </label>
               <input
                 required
                 type="text"
-                placeholder="Contoh: Showroom Kcunk Motor / Pak Budi"
+                placeholder={
+                  buyerChannel === "AUCTION"
+                    ? "Contoh: Balai Lelang JBA Surabaya"
+                    : buyerChannel === "SHOWROOM"
+                    ? "Contoh: Showroom Kcunk Motor"
+                    : "Contoh: Pak Budi Santoso"
+                }
                 value={buyerName}
                 onChange={(e) => setBuyerName(e.target.value)}
                 className="w-full px-3.5 py-2.5 min-h-[46px] bg-[var(--bg)] border border-[var(--line-input)] rounded-xl text-sm font-medium text-[var(--ink)]"
